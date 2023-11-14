@@ -1,11 +1,11 @@
 import { Button, Form, FormItem, Input } from "@ui5/webcomponents-react";
-import { getObjectFromFormData } from "../Utils";
+import { FC } from "react";
 
 
 
 
 
-export default function CreateContractForm() {
+const CreateContractForm: FC = () => {
     const submitForm = async () => {
         //const form: HTMLFormElement = document.getElementById("test-form") as HTMLFormElement
         //console.log("erimgeieigmerign")
@@ -14,31 +14,39 @@ export default function CreateContractForm() {
         //    console.log(test)
         //}
 
-        const contract = {
-            workingWage: 123.456,
-            workTime: 12,
-            conclusionDate: new Date(2023, 7, 20),
-        }
+        //const contract = {
+        //    workingWage: 123.456,
+        //    workTime: 12,
+        //    conclusionDate: new Date(2023, 7, 20),
+        //}
 
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(contract),
-        };
+        //const contract = {
+        //    "workingWage": 0,
+        //    "workTime": 0,
+        //    "conclusionDate": "0001-01-01"
+        //}
 
-        fetch("hr/contracts", options)
-            .then((response) => {
-                if (response.ok) {
-                    console.log(response);
-                } else {
-                    console.log(response.statusText);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        //const options = {
+        //    method: "POST",
+        //    headers: {
+        //        "Content-Type": "application/json",
+        //    },
+        //    body: JSON.stringify(contract),
+        //    mode: "no-cors",
+        //};
+
+        //fetch("https://localhost:7057/create1", options)
+        //    .then((response) => {
+        //        if (response.ok) {
+        //            console.log(response);
+        //        } else {
+        //            console.log(response.statusText);
+        //        }
+        //    })
+        //    .catch((error) => {
+        //        console.log(error);
+        //    });
+        console.log("HEIWINWINIENFEI")
     };
 
     return (
@@ -61,3 +69,5 @@ export default function CreateContractForm() {
         </Form>
     )
 }
+
+export default CreateContractForm;

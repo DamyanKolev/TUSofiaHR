@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@ui5/webcomponents-react';
 import { createRoot } from 'react-dom/client';
-import App from './App1.tsx'
+import App from './App.tsx'
 import './index.css'
 
 import "@ui5/webcomponents/dist/Assets.js";

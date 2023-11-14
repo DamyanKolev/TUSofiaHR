@@ -7,26 +7,26 @@ using webapi.Services.HR;
 namespace webapi.Controllers.HR
 {
     //[Authorize]
-    [ApiController]
     [Route("hr/contracts")]
+    [ApiController]
     public class ContractController: ControllerBase
     {
-        public readonly ContractService _contractService;
+        public readonly IContractService _contractService;
 
-        public ContractController(ContractService contractService)
+        public ContractController(IContractService contractService)
         {
             _contractService = contractService;
         }
 
-        //[HttpPost(Name = "PagePostContract")]
-        //public IActionResult PagePost([FromBody] Page data)
-        //{
-        //    var response = _contractService.PageSelectContracts(data.PageNumber, data.PageSize);
+        [HttpPost(Name = "PagePostContract")]
+        public IActionResult PagePost([FromBody] Page data)
+        {
+            var response = _contractService.PageSelectContracts(data.PageNumber, data.PageSize);
 
-        //    return Ok(response);
-        //}
+            return Ok(response);
+        }
 
-        [HttpPost(Name = "PostContract")]
+        [HttpPost("/create1", Name = "PostContract")]
         public IActionResult Post([FromBody] ContractInsertRequest data)
         {
             //var response = _contractService.CreateContract(data);
@@ -35,7 +35,6 @@ namespace webapi.Controllers.HR
 
             return Ok(data);
         }
-
 
 
         [HttpPut(Name = "PutContract")]

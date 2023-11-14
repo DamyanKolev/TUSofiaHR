@@ -1,30 +1,40 @@
-import { useEffect, useState } from "react";
-import SmartTable from "../../components/SmartTable"
+import { useState } from "react";
+import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
+import { createTableProps } from "../../components/SmartTable";
+import FlexibleColumn, { createFlexibleColumnProps } from "../../components/FlexibleColumn/FlexibleColumn";
+import CreateContractForm from "../../components/forms/create-forms/CreateContractForm";
+import UpdateContractForm from "../../components/forms/update-forms/UpdateContractForm";
 
 
+
+
+const columns: AnalyticalTableColumnDefinition[] = [
+    {
+        accessor: "WorkingWage",
+        Header: "Заплата",
+    },
+    {
+        accessor: "WorkTime",
+        Header: "Часове на седмица",
+    },
+    {
+        accessor: "ConclusionDate",
+        Header: "Дата на сключване",
+    },
+
+]
 
 export default function Contract() {
     const [tableTitle] = useState("Contracts");
-    const [data, setData] = useState({
-        items: []
-    });
+    const [dataURL] = useState("/api/contracts");
 
-    useEffect(() => {
-        fetch("/api/contracts")
-            .then((response) => response.json())
-            .then((data) => {
-                setData(data);
-            });
-    }, []);
+    const tableProps = createTableProps(dataURL, columns, tableTitle)
+    const flexibleColumnProps = createFlexibleColumnProps(UpdateContractForm({}), CreateContractForm({}), tableProps)
 
-    const tableProps = {
-        data,
-        tableTitle
-    };
-
+    
     return (
-        <div>
-            <SmartTable props={tableProps} />
-        </div>
+        <FlexibleColumn
+            flexibleColumnProps={flexibleColumnProps}
+        />
     )
 }

@@ -1,75 +1,98 @@
-import { AnalyticalTable } from "@ui5/webcomponents-react";
+import { AnalyticalTable, AnalyticalTableColumnDefinition} from "@ui5/webcomponents-react";
+import { FC, useEffect, useState } from "react";
 
-interface TableProps {
-    data: [],
-    columns: [],
+//export function createAnalyticalTableColumnDefinition(
+//    options: Partial<AnalyticalTableColumnDefinition>
+//): AnalyticalTableColumnDefinition {
+//    const columnDefinition: AnalyticalTableColumnDefinition = {};
+
+//    // Ignore deprecated properties
+//    const deprecatedProperties = [
+//        "canReorder",
+//    ];
+
+//    for (const [key, value] of Object.entries(options)) {
+//        if (deprecatedProperties.includes(key)) {
+//            continue;
+//        }
+
+//        if (typeof value === "undefined" || value === null) {
+//            continue;
+//        }
+
+//        columnDefinition[key] = value;
+//    }
+
+//    return columnDefinition;
+//}
+
+
+const data = [
+    {
+        WorkingWage: 1500.00,
+        WorkTime: 32,
+        ConclusionDate: new Date(2023, 11, 12),
+    },
+    {
+        WorkingWage: 2000.00,
+        WorkTime: 32,
+        ConclusionDate: new Date(2023, 11, 12),
+    }
+]
+
+export interface TableProps {
+    dataURL: string,
+    columns: AnalyticalTableColumnDefinition[],
     tableTitle: string,
 }
 
+export function createTableProps(dataURL: string, columns: AnalyticalTableColumnDefinition[], tableTitle: string): TableProps {
+    return {
+        dataURL,
+        columns,
+        tableTitle
+    }
+}
 
-export default function SmartTable({ props }: TableProps) {
-    const { data, tableTitle } = props;
+export const SmartTable: FC<{ tableProps: TableProps }> = ({ tableProps }) => {
+    const { dataURL, columns, tableTitle } = tableProps
+    //const [data, setData] = useState([]);
+
+    //useEffect(() => {
+    //    fetch(dataURL, {
+    //        method: "POST",
+    //        headers: {
+    //            "Content-Type": "application/json",
+    //        },
+    //        body: JSON.stringify({
+    //            data: {
+    //            },
+    //        }),
+    //    })
+    //        .then((response) => response.json())
+    //        .then((data) => {
+    //            setData(data);
+    //        });
+    //}, []);
+
+    //useEffect(() => {
+    //    fetch(dataURL)
+    //        .then((response) => response.json())
+    //        .then((data) => {
+    //            setData(data);
+    //        });
+    //}, []);
 
     return (
         <AnalyticalTable
-            columns={[
-                {
-                    Header: 'Name',
-                    accessor: 'name',
-                    headerTooltip: 'Full Name'
-                },
-                {
-                    Header: 'Age',
-                    accessor: 'age',
-                    className: 'superCustomClass',
-                    disableFilters: false,
-                    disableGroupBy: true,
-                    disableSortBy: false,
-                    hAlign: 'End'
-                },
-                {
-                    Header: 'Friend Name',
-                    accessor: 'friend.name'
-                },
-                {
-                    Filter: function Ta() { },
-                    Header: function Ta() { },
-                    accessor: 'friend.age',
-                    filter: function Ta() { },
-                    hAlign: 'End',
-                    headerLabel: 'Friend Age'
-                },
-                {
-                    Cell: function Ta() { },
-                    Header: 'Actions',
-                    accessor: '.',
-                    disableFilters: true,
-                    disableGroupBy: true,
-                    disableResizing: true,
-                    disableSortBy: true,
-                    id: 'actions',
-                    minWidth: 100,
-                    width: 100
-                }
-            ]}
+            className="table"
+            columns={columns}
             data={data}
             filterable
             header={tableTitle}
             infiniteScroll
-            //onColumnsReorder={function Ta() { }}
-            //onGroup={function Ta() { }}
-            //onLoadMore={function Ta() { }}
-            //onRowClick={function Ta() { }}
-            //onRowExpandChange={function Ta() { }}
-            //onRowSelect={function Ta() { }}
-            //onSort={function Ta() { }}
-            //onTableScroll={function Ta() { }}
-            //selectedRowIds={{
-            //    '3': true
-            //}}
-            //selectionMode="SingleSelect"
-            //tableHooks={[]}
             withRowHighlight
-        />
+        >
+        </AnalyticalTable>
     )
 }

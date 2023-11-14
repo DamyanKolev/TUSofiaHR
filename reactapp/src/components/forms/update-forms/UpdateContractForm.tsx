@@ -1,53 +1,64 @@
-import { Button, Form, FormItem, Input, InputType } from "@ui5/webcomponents-react";
+import { FC, ChangeEvent, useReducer } from 'react';
+import { Bar, Button, Form, FormItem, } from '@ui5/webcomponents-react';
+import React from 'react';
+import { StandardField } from './StandartField';
 
+interface FormState {
+    WorkingWage: number;
+    WorkTime: number;
+    ConclusionDate: string;
+}
 
+type FormAction = {
+    field: keyof FormState;
+    value: string | number | undefined;
+};
 
-//const StandardField = ({ editMode, value, inputType = InputType.None, onInput, ...rest }) => {
-//    if (editMode) {
-//        return <Input value={value} style={{ width: '100%' }} type={inputType} onInput={onInput} {...rest} />;
-//    }
-//    if (inputType === InputType.URL || inputType === InputType.Email) {
-//        return (
-//            <Link href={inputType === InputType.Email ? `mailto:${value}` : value} target="_blank" {...rest}>
-//                {value}
-//            </Link>
-//        );
-//    }
-//    return <Text {...rest}>{value}</Text>;
-//};
+const reducer = (state: FormState, { field, value }: FormAction): FormState => {
+    return { ...state, [field]: value };
+};
 
+const UpdateEmployeeForm: FC = () => {
+    const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
+    const [formState, dispatch] = useReducer(
+        reducer,
+        {
+            WorkingWage: 32,
+            WorkTime: 8,
+            ConclusionDate: '2023-11-11',
+        },
+        undefined
+    );
+    const { WorkingWage, WorkTime, ConclusionDate } = formState;
 
-
-export default function UpdateContractForm(props) {
-    //const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
-    //const [formState, dispatch] = useReducer(
-    //    reducer,
-    //    {
-    //        WorkingWage: 32,
-    //        WorkTime: 8,
-    //        ConclusionDate: "2023/11/11",
-    //    },
-    //    undefined
-    //);
-    //const { WorkingWage, WorkTime, WorkTime } = formState;
+    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+        dispatch({ field: Object.keys(e.target.dataset)[0] as keyof FormState, value: e.target.value });
+    };
 
     return (
-        <Form id="create-form">
-            <FormItem label="Working Wage">
-                <Input name="WorkingWage"></Input>
-            </FormItem>
+        <React.Fragment>
+            <Button onClick={toggleEditMode}>Toggle {editMode ? 'Display-Only Mode' : 'Edit Mode'}</Button>
+            <div className="form-container">
+                <Form id="create-form">
+                    <FormItem label="Working Wage">
+                        <StandardField editMode={editMode} value={WorkingWage.toString()} onInput={handleInput} data-name />
+                    </FormItem>
 
-            <FormItem label="Work Time">
-                <Input name="WorkTime"></Input>
-            </FormItem>
+                    <FormItem label="Work Time">
+                        <StandardField editMode={editMode} value={WorkTime.toString()} onInput={handleInput} data-name />
+                    </FormItem>
 
-            <FormItem label="Conclusion Date">
-                <Input name="ConclusionDate"></Input>
-            </FormItem>
+                    <FormItem label="Conclusion Date">
+                        <StandardField editMode={editMode} value={ConclusionDate} onInput={handleInput} data-name />
+                    </FormItem>
+                </Form>
+            </div>
 
-            <FormItem>
-                <Button onClick={}>Create</Button>
-            </FormItem>
-        </Form>
-    )
-}
+            <Bar design="Footer">
+                <Button slot="endContent">Update</Button>
+            </Bar>
+        </React.Fragment>
+    );
+};
+
+export default UpdateEmployeeForm;

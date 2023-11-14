@@ -1,10 +1,7 @@
-﻿using System.Xml.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Models.HR;
 using webapi.Services.HR;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static webapi.Models.HR.EmployeeUpdate;
 
 namespace webapi.Controllers.HR
 {
@@ -12,9 +9,9 @@ namespace webapi.Controllers.HR
     [Route("hr/employees")]
     public class EmployeeController : ControllerBase
     {
-        public readonly EmployeeService _employeeService;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeeController(EmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
         }
@@ -27,12 +24,13 @@ namespace webapi.Controllers.HR
             return Ok(response);
         }
 
-        [HttpPost(Name = "PostEmployee")]
+
+        [HttpPost("/create", Name = "PostEmployee")]
         public IActionResult Post([FromBody] EmployeeInsertRequest data)
         {
-            var response = _employeeService.CreateEmployee(data);
+            //var response = _employeeService.CreateEmployee(data);
 
-            return Ok(response);
+            return Ok(data);
         }
 
 

@@ -1,7 +1,7 @@
+import { FC } from 'react';
 import { Form, FormItem, Input, Tab, TabContainer } from "@ui5/webcomponents-react";
 
-
-export default function CreateEmployeeForm() {
+const CreateEmployeeForm: FC = () => {
     return (
         <Form>
             <FormItem label="First Name">
@@ -35,3 +35,5 @@ export default function CreateEmployeeForm() {
         </Form>
     )
 }
+
+export default CreateEmployeeForm;

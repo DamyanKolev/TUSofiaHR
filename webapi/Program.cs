@@ -37,6 +37,12 @@ builder.Services.AddAuthorization(options =>
         p.RequireClaim(Identity.AdminUserClaimName, "true"));
 });
 
+// dependency injection of the services
+builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MapperProfile>(); });
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,11 +51,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseContext")));
 
-// dependency injection of the services
-builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MapperProfile>(); });
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<IContractService, ContractService>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
 
 
 

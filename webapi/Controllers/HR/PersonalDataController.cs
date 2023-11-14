@@ -10,9 +10,9 @@ namespace webapi.Controllers.HR
     [Route("hr/personal-data")]
     public class PersonalDataController : ControllerBase
     {
-        public readonly PersonalDataService _personalDataService;
+        public readonly IPersonalDataService _personalDataService;
 
-        public PersonalDataController(PersonalDataService personalDataService)
+        public PersonalDataController(IPersonalDataService personalDataService)
         {
             _personalDataService = personalDataService;
         }

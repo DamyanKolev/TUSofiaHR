@@ -26,15 +26,17 @@ export default defineConfig({
     plugins: [plugin()],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
-        }
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+            '@components': '/src/components'
+        },
     },
     server: {
         proxy: {
             //'^/weatherforecast': {
-            '*': {
-                target: 'https://localhost:7057/',
-                secure: false
+            '/api': {
+                target: 'https://localhost:7057',
+                secure: false,
+                rewrite: (path) => path.replace(/^\/api/, ''),
             }
         },
         port: 5173,

@@ -1,6 +1,4 @@
-import { AnalyticalTableColumnDefinition } from '@ui5/webcomponents-react'
-import { createTableProps } from '../../components/SmartTable'
-
+ï»¿import { AnalyticalTableColumnDefinition } from '@ui5/webcomponents-react'
 import './Table.css'
 import { FC, useState } from 'react'
 import UpdateEmployeeForm from '../../components/forms/update-forms/UpdateContractForm'
@@ -12,15 +10,15 @@ import FlexibleColumn, { createFlexibleColumnProps } from '../../components/Flex
 const columns: AnalyticalTableColumnDefinition[] = [
     {
         accessor: "firstName",
-        Header: "Èìå",
+        Header: "Ð˜Ð¼Ðµ",
     },
     {
         accessor: "surname",
-        Header: "Ïðåçèìå",
+        Header: "ÐŸÑ€ÐµÐ·Ð¸Ð¼Ðµ",
     },
     {
         accessor: "lastName",
-        Header: "Ôàìèëèÿ",
+        Header: "Ð¤Ð°Ð¼Ð¸Ð»Ð¸Ñ",
     },
 
 ]
@@ -31,8 +29,7 @@ const Employee: FC = () => {
     const [tableTitle] = useState("Contracts");
     const [dataURL] = useState("/api/employees");
 
-    const tableProps = createTableProps(dataURL, columns, tableTitle)
-    const flexibleColumnProps = createFlexibleColumnProps(UpdateEmployeeForm({}), CreateEmployeeForm({}), tableProps)
+    const flexibleColumnProps = createFlexibleColumnProps(UpdateEmployeeForm({}), CreateEmployeeForm({}), tableTitle, dataURL, columns)
 
 
     return (

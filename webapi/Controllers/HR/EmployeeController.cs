@@ -6,7 +6,6 @@ using webapi.Services.HR;
 namespace webapi.Controllers.HR
 {
     [ApiController]
-    [Route("hr/employees")]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
@@ -16,8 +15,8 @@ namespace webapi.Controllers.HR
             _employeeService = employeeService;
         }
 
-        [HttpPost(Name = "PagePostEmployee")]
-        public IActionResult PagePost([FromBody] Page data)
+        [HttpPost("/api/employees/page", Name = "Get_Page_Data")]
+        public IActionResult PagePost([FromBody] PageRequest data)
         {
             var response = _employeeService.PageSelectEmployees(data.PageNumber, data.PageSize);
 
@@ -25,7 +24,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/create", Name = "PostEmployee")]
+        [HttpPost("/api/employees/create", Name = "Create_Employee")]
         public IActionResult Post([FromBody] EmployeeInsertRequest data)
         {
             //var response = _employeeService.CreateEmployee(data);
@@ -35,7 +34,7 @@ namespace webapi.Controllers.HR
 
 
 
-        [HttpPut(Name = "PutEmployee")]
+        [HttpPut("/api/employees/update", Name = "Update_Employee")]
         public IActionResult Put([FromBody] EmployeeUpdateRequest data)
         {
             var response = _employeeService.UpdateEmployee(data);

@@ -1,20 +1,15 @@
-import { FC, ChangeEvent, useReducer } from 'react';
+﻿import { FC, ChangeEvent, useReducer } from 'react';
 import { Bar, Button, Form, FormItem } from '@ui5/webcomponents-react';
 import React from 'react';
 import { StandardField } from './StandartField';
-
-interface FormState {
-    FirstName: string;
-    Surname: string;
-    LastName: string;
-}
+import { EmployeeFormState } from '../../../FormStates/EmployeeFormState';
 
 type FormAction = {
-    field: keyof FormState;
+    field: keyof EmployeeFormState;
     value: string | number | undefined;
 };
 
-const reducer = (state: FormState, { field, value }: FormAction): FormState => {
+const reducer = (state: EmployeeFormState, { field, value }: FormAction): EmployeeFormState => {
     return { ...state, [field]: value };
 };
 
@@ -32,7 +27,7 @@ const UpdateEmployeeForm: FC = () => {
     const { FirstName, Surname, LastName } = formState;
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ field: Object.keys(e.target.dataset)[0] as keyof FormState, value: e.target.value });
+        dispatch({ field: Object.keys(e.target.dataset)[0] as keyof EmployeeFormState, value: e.target.value });
     };
 
     return (

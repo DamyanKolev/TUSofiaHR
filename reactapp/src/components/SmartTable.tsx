@@ -1,87 +1,55 @@
-import { AnalyticalTable, AnalyticalTableColumnDefinition} from "@ui5/webcomponents-react";
+﻿import {
+    AnalyticalTable, AnalyticalTableColumnDefinition, AnalyticalTableSelectionBehavior, AnalyticalTableSelectionMode, Bar, Button,
+    ButtonDesign
+} from "@ui5/webcomponents-react";
+import React from "react";
 import { FC, useEffect, useState } from "react";
 
-//export function createAnalyticalTableColumnDefinition(
-//    options: Partial<AnalyticalTableColumnDefinition>
-//): AnalyticalTableColumnDefinition {
-//    const columnDefinition: AnalyticalTableColumnDefinition = {};
 
-//    // Ignore deprecated properties
-//    const deprecatedProperties = [
-//        "canReorder",
-//    ];
-
-//    for (const [key, value] of Object.entries(options)) {
-//        if (deprecatedProperties.includes(key)) {
-//            continue;
-//        }
-
-//        if (typeof value === "undefined" || value === null) {
-//            continue;
-//        }
-
-//        columnDefinition[key] = value;
-//    }
-
-//    return columnDefinition;
-//}
-
-
-const data = [
-    {
-        WorkingWage: 1500.00,
-        WorkTime: 32,
-        ConclusionDate: new Date(2023, 11, 12),
-    },
-    {
-        WorkingWage: 2000.00,
-        WorkTime: 32,
-        ConclusionDate: new Date(2023, 11, 12),
-    }
-]
+interface PageRequest {
+    PageNumber: int,
+    PageSize: int,
+}
 
 export interface TableProps {
     dataURL: string,
     columns: AnalyticalTableColumnDefinition[],
-    tableTitle: string,
 }
 
-export function createTableProps(dataURL: string, columns: AnalyticalTableColumnDefinition[], tableTitle: string): TableProps {
+export function createTableProps(dataURL: string, columns: AnalyticalTableColumnDefinition[]): TableProps {
     return {
         dataURL,
         columns,
-        tableTitle
     }
 }
 
-export const SmartTable: FC<{ tableProps: TableProps }> = ({ tableProps }) => {
-    const { dataURL, columns, tableTitle } = tableProps
-    //const [data, setData] = useState([]);
+export const SmartTable: FC<{ tableProps: TableProps, createOnClick: () => void, updateOnClick: () => void }> = ({ tableProps, createOnClick,
+    updateOnClick }) => {
+    const { dataURL, columns} = tableProps
+    const [ isLoading, setIsLoading ] = useState<boolean>(true)
+    const [ pageReq ] = useState<PageRequest>({
+        PageNumber: 1,
+        PageSize: 50,
+    })
+    const [data, setData] = useState([]);
 
-    //useEffect(() => {
-    //    fetch(dataURL, {
-    //        method: "POST",
-    //        headers: {
-    //            "Content-Type": "application/json",
-    //        },
-    //        body: JSON.stringify({
-    //            data: {
-    //            },
-    //        }),
-    //    })
-    //        .then((response) => response.json())
-    //        .then((data) => {
-    //            setData(data);
-    //        });
-    //}, []);
+    const initTable = () => {
+        return fetch(`${dataURL}/page`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(pageReq),
+        })
+            .then((response) => response.json())
+            .then((res) => setData(res))
+            .catch(console.error);
+    }
 
-    //useEffect(() => {
-    //    fetch(dataURL)
-    //        .then((response) => response.json())
-    //        .then((data) => {
-    //            setData(data);
-    //        });
-    //}, []);
+    useEffect(() => {
+        initTable().then(() => {
+            setIsLoading(false);
+        });
+    }, []);
+
 
     return (
         <AnalyticalTable
@@ -89,10 +57,36 @@ export const SmartTable: FC<{ tableProps: TableProps }> = ({ tableProps }) => {
             columns={columns}
             data={data}
             filterable
-            header={tableTitle}
+            header={<><TableHeader createOnClick={createOnClick} updateOnClick={updateOnClick} /></>}
+            selectionMode={AnalyticalTableSelectionMode.SingleSelect}
+            selectionBehavior={AnalyticalTableSelectionBehavior.RowOnly}
+            loading={isLoading }
             infiniteScroll
             withRowHighlight
         >
         </AnalyticalTable>
+    )
+}
+
+
+interface TableHeaderProps {
+    createOnClick: () => void,
+    updateOnClick: () => void,
+}
+
+const TableHeader: FC<TableHeaderProps> = ({createOnClick, updateOnClick }) => {
+
+    return (
+        <React.Fragment>
+            <Bar
+                endContent={
+                    <React.Fragment>
+                        <Button design={ButtonDesign.Transparent} onClick={createOnClick}>Create</Button>
+                        <Button design={ButtonDesign.Transparent} onClick={updateOnClick}>Update</Button>
+                    </React.Fragment>
+                }
+            >
+            </Bar>
+        </React.Fragment>
     )
 }

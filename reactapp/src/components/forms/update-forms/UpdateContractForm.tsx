@@ -1,20 +1,15 @@
-import { FC, ChangeEvent, useReducer } from 'react';
+﻿import { FC, ChangeEvent, useReducer } from 'react';
 import { Bar, Button, Form, FormItem, } from '@ui5/webcomponents-react';
 import React from 'react';
 import { StandardField } from './StandartField';
-
-interface FormState {
-    WorkingWage: number;
-    WorkTime: number;
-    ConclusionDate: string;
-}
+import { ContractFormData } from '../../../FormStates/ContractFormState';
 
 type FormAction = {
-    field: keyof FormState;
+    field: keyof ContractFormData;
     value: string | number | undefined;
 };
 
-const reducer = (state: FormState, { field, value }: FormAction): FormState => {
+const reducer = (state: ContractFormData, { field, value }: FormAction): ContractFormData => {
     return { ...state, [field]: value };
 };
 
@@ -23,16 +18,16 @@ const UpdateEmployeeForm: FC = () => {
     const [formState, dispatch] = useReducer(
         reducer,
         {
-            WorkingWage: 32,
-            WorkTime: 8,
-            ConclusionDate: '2023-11-11',
+            workingWage: 32,
+            workTime: 8,
+            conclusionDate: '2023-11-11',
         },
         undefined
     );
-    const { WorkingWage, WorkTime, ConclusionDate } = formState;
+    const { workingWage, workTime, conclusionDate } = formState;
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ field: Object.keys(e.target.dataset)[0] as keyof FormState, value: e.target.value });
+        dispatch({ field: Object.keys(e.target.dataset)[0] as keyof ContractFormData, value: e.target.value });
     };
 
     return (
@@ -41,15 +36,15 @@ const UpdateEmployeeForm: FC = () => {
             <div className="form-container">
                 <Form id="create-form">
                     <FormItem label="Working Wage">
-                        <StandardField editMode={editMode} value={WorkingWage.toString()} onInput={handleInput} data-name />
+                        <StandardField editMode={editMode} value={workingWage.toString()} onInput={handleInput} data-name />
                     </FormItem>
 
                     <FormItem label="Work Time">
-                        <StandardField editMode={editMode} value={WorkTime.toString()} onInput={handleInput} data-name />
+                        <StandardField editMode={editMode} value={workTime.toString()} onInput={handleInput} data-name />
                     </FormItem>
 
                     <FormItem label="Conclusion Date">
-                        <StandardField editMode={editMode} value={ConclusionDate} onInput={handleInput} data-name />
+                        <StandardField editMode={editMode} value={conclusionDate} onInput={handleInput} data-name />
                     </FormItem>
                 </Form>
             </div>

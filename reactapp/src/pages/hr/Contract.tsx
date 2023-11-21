@@ -1,6 +1,5 @@
-import { useState } from "react";
+п»їimport { useState } from "react";
 import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
-import { createTableProps } from "../../components/SmartTable";
 import FlexibleColumn, { createFlexibleColumnProps } from "../../components/FlexibleColumn/FlexibleColumn";
 import CreateContractForm from "../../components/forms/create-forms/CreateContractForm";
 import UpdateContractForm from "../../components/forms/update-forms/UpdateContractForm";
@@ -10,16 +9,16 @@ import UpdateContractForm from "../../components/forms/update-forms/UpdateContra
 
 const columns: AnalyticalTableColumnDefinition[] = [
     {
-        accessor: "WorkingWage",
-        Header: "Заплата",
+        accessor: "workingWage",
+        Header: "Р—Р°РїР»Р°С‚Р°",
     },
     {
-        accessor: "WorkTime",
-        Header: "Часове на седмица",
+        accessor: "workTime",
+        Header: "Р§Р°СЃРѕРІРµ РЅР° СЃРµРґРјРёС†Р°",
     },
     {
-        accessor: "ConclusionDate",
-        Header: "Дата на сключване",
+        accessor: "conclusionDate",
+        Header: "Р”Р°С‚Р° РЅР° СЃРєР»СЋС‡РІР°РЅРµ",
     },
 
 ]
@@ -28,8 +27,7 @@ export default function Contract() {
     const [tableTitle] = useState("Contracts");
     const [dataURL] = useState("/api/contracts");
 
-    const tableProps = createTableProps(dataURL, columns, tableTitle)
-    const flexibleColumnProps = createFlexibleColumnProps(UpdateContractForm({}), CreateContractForm({}), tableProps)
+    const flexibleColumnProps = createFlexibleColumnProps(UpdateContractForm({}), CreateContractForm({}), tableTitle, dataURL, columns)
 
     
     return (

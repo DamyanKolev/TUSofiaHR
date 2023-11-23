@@ -2,13 +2,14 @@
 using webapi.Models;
 using AutoMapper;
 using webapi.Constants;
+using System.Net;
 
 namespace webapi.Services.HR
 {
     public interface IPersonalDataService
     {
-        public Response CreatePersonalData(PersonalDataInsertRequest insertRequest);
-        public Response UpdatePersonalData(PersonalDataUpdateRequest updateRequest);
+        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataInsertRequest insertRequest);
+        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateRequest updateRequest);
     }
     public class PersonalDataService
     {
@@ -20,22 +21,21 @@ namespace webapi.Services.HR
             _context = context;
             _mapper = mapper;
         }
-        public Response CreatePersonalData(PersonalDataInsertRequest insertRequest)
+        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataInsertRequest insertRequest)
         {
             var data = _mapper.Map<PersonalData>(insertRequest);
-            var result = _context.PersonalDatas.Add(data);
+            _context.PersonalDatas.Add(data);
+            var changes = _context.SaveChanges();
 
-            if (result != null)
+            if (changes > 0)
             {
-                return new Response("Created", MessageConstants.MESSAGE_INSERT_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }
 
-            _context.SaveChanges();
-
-            return new Response("Created", MessageConstants.MESSAGE_INSERT_SUCCESS);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public Response UpdatePersonalData(PersonalDataUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateRequest updateRequest)
         {
             var product = _context.PersonalDatas.Find(updateRequest.UpdateId);
 
@@ -46,13 +46,13 @@ namespace webapi.Services.HR
 
                 if (changes > 0)
                 {
-                    return new Response("Failed", MessageConstants.MESSAGE_UPDATE_FAILED);
+                    return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
                 }
 
-                return new Response("Success", MessageConstants.MESSAGE_UPDATE_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
             }
 
-            return new Response("Failed", MessageConstants.MESSAGE_UPDATE_FAILED);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
         }
     }
 }

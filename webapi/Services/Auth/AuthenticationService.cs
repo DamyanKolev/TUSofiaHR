@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
@@ -11,8 +12,8 @@ namespace webapi.Services.Auth
 {
     public interface IAuthenticationService
     {
-        public Task<DataResponse<string>> SingIn(LoginModel model);
-        public Task<Response> Register(RegisterModel model);
+        public Task<ResponseWithStatus<DataResponse<string>>> SingIn(LoginModel model);
+        public Task<ResponseWithStatus<Response>> Register(RegisterModel model);
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -28,7 +29,7 @@ namespace webapi.Services.Auth
             _configuration = configuration;
         }
 
-        public async Task<DataResponse<string>> SingIn(LoginModel model)
+        public async Task<ResponseWithStatus<DataResponse<string>>> SingIn(LoginModel model)
         {
             var user = await userManager.FindByNameAsync(model.Username);
 
@@ -59,18 +60,22 @@ namespace webapi.Services.Auth
 
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-                return new DataResponse<string>("OK", MessageConstants.MESSAGE_SUCCESS_SIGN_IN, tokenString);
+                return ResponseBuilder.CreateDataResponseWithStatus<string>(
+                    HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, tokenString);
             }
 
-            return new DataResponse<string>("OK", MessageConstants.MESSAGE_SUCCESS_SIGN_IN, "Test");
+            return ResponseBuilder.CreateDataResponseWithStatus<string>(
+                HttpStatusCode.BadRequest, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, "");
         }
 
 
-        public async Task<Response> Register(RegisterModel model)
+        public async Task<ResponseWithStatus<Response>> Register(RegisterModel model)
         {
             var userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return new Response("Error", MessageConstants.MESSAGE_USERNAME_EXIST);
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.Conflict, MessageConstants.MESSAGE_USERNAME_EXIST);
+            }
 
             User user = new User()
             {
@@ -78,13 +83,15 @@ namespace webapi.Services.Auth
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
+
             var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return new Response("Error", MessageConstants.MESSAGE_REGISTRATION_FAILED);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_REGISTRATION);
             }
 
-            return new Response("OK", MessageConstants.MESSAGE_SUCCESS_REGISTRATION);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_REGISTRATION_FAILED);
         }
+
     }
 }

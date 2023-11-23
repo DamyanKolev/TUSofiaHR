@@ -1,28 +1,30 @@
 import { FC, useEffect, useState } from 'react';
 import './Layout.css';
 import NavBar from '../components/NavBar';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import '@ui5/webcomponents-icons/dist/menu';
 import ShellBarMenu from '../components/ShellBarMenu';
 
 
 const Layout: FC = () => {
     const [collapsed, setCollapsed] = useState<boolean>(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        const isLoginString = localStorage.getItem("isLogin")
+        const token = localStorage.getItem("token")
 
-        if (isLoginString != null) {
-            const isLogin = isLoginString.localeCompare("true") == 0 ? true : false
-
-            if (isLogin && token != null) {
+        fetch("/api/auth/validate-token", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(token)
+        }).then(response => {
+            if (true) {
 
             }
             else {
-
+                navigate("/")
             }
-        }
+        })
     }, [])
 
     const hideShowSideNav = () => {

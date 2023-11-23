@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using System.Threading.Channels;
+using AutoMapper;
 using webapi.Constants;
 using webapi.Models;
 using webapi.Models.HR;
@@ -8,9 +10,9 @@ namespace webapi.Services.HR
 {
     public interface IEmployeeService
     {
-        public Response CreateEmployee(EmployeeInsertRequest insertRequest);
-        public Response UpdateEmployee(EmployeeUpdateRequest updateRequest);
-        public DataResponse<List<Employee>> PageSelectEmployees(int pageNumber, int pageSize);
+        public ResponseWithStatus<Response> CreateEmployee(EmployeeInsertRequest insertRequest);
+        public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateRequest updateRequest);
+        public ResponseWithStatus<DataResponse<List<Employee>>> PageSelectEmployees(int pageNumber, int pageSize);
     }
 
     public class EmployeeService : IEmployeeService
@@ -24,22 +26,21 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public Response CreateEmployee(EmployeeInsertRequest insertRequest)
+        public ResponseWithStatus<Response> CreateEmployee(EmployeeInsertRequest insertRequest)
         {
             var data = _mapper.Map<Employee>(insertRequest);
-            var result = _context.Employees.Add(data);
+            _context.Employees.Add(data);
+            var changes = _context.SaveChanges();
 
-            if (result != null)
+            if (changes > 0)
             {
-                return new Response("Created", MessageConstants.MESSAGE_INSERT_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }
 
-            _context.SaveChanges();
-
-            return new Response("Created", MessageConstants.MESSAGE_INSERT_SUCCESS);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public Response UpdateEmployee(EmployeeUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateRequest updateRequest)
         {
             var product = _context.Employees.Find(updateRequest.UpdateId);
 
@@ -50,17 +51,17 @@ namespace webapi.Services.HR
 
                 if (changes > 0)
                 {
-                    return new Response("Failed", MessageConstants.MESSAGE_UPDATE_FAILED);
+                    return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
                 }
 
-                return new Response("Success", MessageConstants.MESSAGE_UPDATE_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
             }
 
-            return new Response("Failed", MessageConstants.MESSAGE_UPDATE_FAILED);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
         }
 
 
-        public DataResponse<List<Employee>> PageSelectEmployees(int pageNumber, int pageSize)
+        public ResponseWithStatus<DataResponse<List<Employee>>> PageSelectEmployees(int pageNumber, int pageSize)
         {
             var employees = _context.Employees
                 .OrderBy(p => p.Id)
@@ -68,9 +69,7 @@ namespace webapi.Services.HR
                 .Take(pageSize)
                 .ToList();
 
-            var response = new DataResponse<List<Employee>>("OK", MessageConstants.MESSAGE_SUCCESS_SELECT, employees);
-
-            return response;
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, employees);
         }
     }
 }

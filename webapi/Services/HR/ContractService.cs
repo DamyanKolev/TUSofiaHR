@@ -3,14 +3,15 @@ using webapi.Models;
 using webapi.Constants;
 using AutoMapper;
 using static webapi.Models.HR.EmployeeUpdate;
+using System.Net;
 
 namespace webapi.Services.HR
 {
     public interface IContractService
     {
-        public Response CreateContract(ContractInsertRequest insertRequest);
-        public Response UpdateContract(ContractUpdateRequest updateRequest);
-        public DataResponse<List<Contract>> PageSelectContracts(int pageNumber, int pageSize);
+        public ResponseWithStatus<Response> CreateContract(ContractInsertRequest insertRequest);
+        public ResponseWithStatus<Response> UpdateContract(ContractUpdateRequest updateRequest);
+        public ResponseWithStatus<DataResponse<List<Contract>>> PageSelectContracts(int pageNumber, int pageSize);
     }
 
     public class ContractService : IContractService
@@ -24,22 +25,21 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public Response CreateContract(ContractInsertRequest insertRequest)
+        public ResponseWithStatus<Response> CreateContract(ContractInsertRequest insertRequest)
         {
             var data = _mapper.Map<Contract>(insertRequest);
-            var result = _context.Contracts.Add(data);
+            _context.Employees.Add(data);
+            var changes = _context.SaveChanges();
 
-            if (result != null)
+            if (changes > 0)
             {
-                return new Response("Created", MessageConstants.MESSAGE_INSERT_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }
 
-            _context.SaveChanges();
-
-            return new Response("Created", MessageConstants.MESSAGE_INSERT_SUCCESS);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS)
         }
 
-        public Response UpdateContract(ContractUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdateContract(ContractUpdateRequest updateRequest)
         {
             var product = _context.Contracts.Find(updateRequest.UpdateId);
 
@@ -50,17 +50,17 @@ namespace webapi.Services.HR
 
                 if (changes > 0)
                 {
-                    return new Response("Failed", MessageConstants.MESSAGE_UPDATE_FAILED);
+                    return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
                 }
 
-                return new Response("Success", MessageConstants.MESSAGE_UPDATE_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
             }
 
-            return new Response("Failed", MessageConstants.MESSAGE_UPDATE_FAILED);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
         }
 
 
-        public DataResponse<List<Contract>> PageSelectContracts(int pageNumber, int pageSize)
+        public ResponseWithStatus<DataResponse<List<Contract>>> PageSelectContracts(int pageNumber, int pageSize)
         {
             var contracts = _context.Contracts
                 .OrderBy(p => p.Id)
@@ -68,9 +68,7 @@ namespace webapi.Services.HR
                 .Take(pageSize)
                 .ToList();
 
-            var response = new DataResponse<List<Contract>>("OK", MessageConstants.MESSAGE_SUCCESS_SELECT, contracts);
-
-            return response;
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, contracts);
         }
     }
 }

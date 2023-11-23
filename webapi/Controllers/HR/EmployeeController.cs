@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Models.HR;
 using webapi.Services.HR;
@@ -29,6 +30,9 @@ namespace webapi.Controllers.HR
         {
             //var response = _employeeService.CreateEmployee(data);
 
+            //if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
+            //    return BadRequest(response);
+
             return Ok(data);
         }
 
@@ -38,6 +42,9 @@ namespace webapi.Controllers.HR
         public IActionResult Put([FromBody] EmployeeUpdateRequest data)
         {
             var response = _employeeService.UpdateEmployee(data);
+
+            if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(response);
 
             return Ok(response);
         }

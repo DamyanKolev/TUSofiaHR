@@ -22,12 +22,9 @@ export default function Login() {
         setData({ ...data, [name]: value });
     };
 
-    useEffect(() => {
-        localStorage.setItem("isLogin", "false");
-    }, []);
 
     const submitHandler = async () => {
-        const response = await fetch("/api/login", {
+        const response = await fetch("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -36,7 +33,6 @@ export default function Login() {
         if (response.ok) {
             const res = await response.json();
             localStorage.setItem("token", res.data);
-            localStorage.setItem("isLogin", "true");
             navigate("/");
         } else {
             alert("invalid username or password");

@@ -1,15 +1,15 @@
 import { FC } from 'react';
 import { Avatar, Button, ShellBar } from "@ui5/webcomponents-react";
+import { useNavigate } from 'react-router-dom';
 
 interface ShellBarMenuProps {
     hideShowSideNav: () => void;
 }
 
 const ShellBarMenu: FC<ShellBarMenuProps> = ({ hideShowSideNav }) => {
+    const navigate = useNavigate();
 
-    const onProfileClick = () => {
-        () => window.location.href = "/"
-    }
+    const onProfileClick = () => { navigate("/") }
 
     return (
         <ShellBar

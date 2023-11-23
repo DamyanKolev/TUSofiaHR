@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Models.HR;
@@ -52,7 +53,8 @@ namespace webapi.Controllers.HR
         {
             //var response = _contractService.CreateContract(data);
 
-            Console.WriteLine(data);
+            //if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
+            //    return BadRequest(response);
 
             return Ok(data);
         }
@@ -62,6 +64,9 @@ namespace webapi.Controllers.HR
         public IActionResult Put([FromBody] ContractUpdateRequest data)
         {
             var response = _contractService.UpdateContract(data);
+
+            if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(response);
 
             return Ok(response);
         }

@@ -41,6 +41,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MapperProfile>(); });
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddControllers();

@@ -28,7 +28,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreateContract(ContractInsertRequest insertRequest)
         {
             var data = _mapper.Map<Contract>(insertRequest);
-            _context.Employees.Add(data);
+            _context.Contracts.Add(data);
             var changes = _context.SaveChanges();
 
             if (changes > 0)

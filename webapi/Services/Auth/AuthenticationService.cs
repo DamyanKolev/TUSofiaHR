@@ -14,6 +14,8 @@ namespace webapi.Services.Auth
     {
         public Task<ResponseWithStatus<DataResponse<string>>> SingIn(LoginModel model);
         public Task<ResponseWithStatus<Response>> Register(RegisterModel model);
+
+        public ResponseWithStatus<Response> ValidateToken(string token);
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -48,7 +50,7 @@ namespace webapi.Services.Auth
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
 
                 var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],
@@ -93,5 +95,41 @@ namespace webapi.Services.Auth
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_REGISTRATION_FAILED);
         }
 
+
+        public ResponseWithStatus<Response> ValidateToken(string token)
+        {
+            if (token == null)
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_NULL_TOKEN);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!);
+
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var username = jwtToken.Claims.First(x => x.Type == ClaimTypes.Name).Value;
+
+
+                if (username == null)
+                {
+                    return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INVALID_TOKEN);
+                }
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_VALID_TOKEN);
+            }
+            catch
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INVALID_TOKEN);
+
+            }
+        }
     }
 }

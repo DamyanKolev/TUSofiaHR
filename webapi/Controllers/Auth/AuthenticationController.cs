@@ -45,9 +45,12 @@ namespace webapi.Controllers.Auth
         [HttpPost("/api/auth/validate-token", Name="Token_Validation")]
         public async Task<IActionResult> TokenValidation([FromBody] String token)
         {
-            //var result = await _authenticationService.ValidateToken(token);
+            var result = _authenticationService.ValidateToken(token);
 
-            return Ok(token);
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest)) 
+                return BadRequest();
+
+            return Ok();
 
         }
     }

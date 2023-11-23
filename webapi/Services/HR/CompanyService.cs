@@ -1,30 +1,30 @@
 ﻿using webapi.Models.HR;
 using webapi.Models;
 using AutoMapper;
-using webapi.Constants;
 using System.Net;
+using webapi.Constants;
 
 namespace webapi.Services.HR
 {
-    public interface IPersonalDataService
+    public interface ICompanyService
     {
-        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataInsertRequest insertRequest);
-        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateRequest updateRequest);
+        public ResponseWithStatus<Response> CreateCompany(CompanyInsertRequest insertRequest);
+        public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateRequest updateRequest);
     }
-    public class PersonalDataService : IPersonalDataService
+    public class CompanyService : ICompanyService
     {
         public readonly DatabaseContext _context;
         public readonly IMapper _mapper;
 
-        public PersonalDataService(DatabaseContext context, IMapper mapper)
+        public CompanyService(DatabaseContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataInsertRequest insertRequest)
+        public ResponseWithStatus<Response> CreateCompany(CompanyInsertRequest insertRequest)
         {
-            var data = _mapper.Map<PersonalData>(insertRequest);
-            _context.PersonalDatas.Add(data);
+            var data = _mapper.Map<Company>(insertRequest);
+            _context.Companies.Add(data);
             var changes = _context.SaveChanges();
 
             if (changes > 0)
@@ -35,9 +35,9 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateRequest updateRequest)
         {
-            var product = _context.PersonalDatas.Find(updateRequest.UpdateId);
+            var product = _context.Companies.Find(updateRequest.UpdateId);
 
             if (product != null)
             {

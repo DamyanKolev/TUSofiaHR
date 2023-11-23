@@ -18,5 +18,10 @@
 
         public const string MESSAGE_USERNAME_EXIST = "User already exists!";
         public const string MESSAGE_REGISTRATION_FAILED = "User creation failed! Please check user details and try again.";
+
+        public const string MESSAGE_VALID_TOKEN = "Token is valid!";
+        public const string MESSAGE_INVALID_TOKEN = "Token is invalid!";
+        public const string MESSAGE_NULL_TOKEN = "Token is null!";
+
     }
 }

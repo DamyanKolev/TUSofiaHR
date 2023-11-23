@@ -16,15 +16,15 @@ const CreateEmployeeForm: FC = () => {
     const isClicked = useContext(EndColumnContext)
 
     const submitForm = async () => {
-        //const response = await fetch("/api/employees/create", {
-        //    method: 'POST',
-        //    headers: { 'Content-Type': 'application/json' },
-        //    body: JSON.stringify(data),
-        //});
+        const response = await fetch("/api/employees/create", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
 
-        //const res = await response.json();
-        //console.log(res);
-        console.log(data);
+        if (!response.ok) {
+
+        }
     };
 
     //reset create form after nav back

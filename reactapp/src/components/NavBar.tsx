@@ -1,42 +1,37 @@
-import { SideNavigation, SideNavigationItem, SideNavigationSubItem } from "@ui5/webcomponents-react";
+import { FC } from 'react';
+import { SideNavigation, SideNavigationItem } from "@ui5/webcomponents-react";
 import { useNavigate } from "react-router-dom";
 import "@ui5/webcomponents-icons/home"
+import "@ui5/webcomponents-icons/settings"
+import "@ui5/webcomponents-icons/chain-link"
 
 
-export default function NavBar({ collapsed }: Boolean) {
+interface NavBarProps {
+    collapsed: boolean;
+}
+
+const NavBar: FC<NavBarProps> = ({ collapsed }) => {
     const navigate = useNavigate();
 
     return (
         <SideNavigation
             collapsed={collapsed}
-            fixedItems={<><SideNavigationItem icon="chain-link" text="Useful Links" /><SideNavigationItem icon="history" text="History" /></>}
+            fixedItems={
+                <>
+                    <SideNavigationItem icon="chain-link" text="Useful Links" />
+                    <SideNavigationItem icon="settings" text="Settings" />
+                </>
+            }
         >
+
             <SideNavigationItem
                 icon="home"
                 text="Home"
                 onClick={() => navigate("/")}
             />
-            <SideNavigationItem
-                icon="employee"
-                text="Employees"
-                onClick={() => navigate("/employee")}
-            />
-            <SideNavigationItem
-                expanded
-                icon="group"
-                text="People"
-            >
-                <SideNavigationSubItem text="From My Team" />
-                <SideNavigationSubItem text="From Other Teams" />
-            </SideNavigationItem>
 
-            <SideNavigationItem
-                icon="calendar"
-                text="Events"
-            >
-                <SideNavigationSubItem text="Local" />
-                <SideNavigationSubItem text="Others" />
-            </SideNavigationItem>
         </SideNavigation>
     )
 }
+
+export default NavBar;

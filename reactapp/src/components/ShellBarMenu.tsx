@@ -20,7 +20,7 @@ const ShellBarMenu: FC<ShellBarMenuProps> = ({ hideShowSideNav }) => {
                     colorScheme="Accent6"
                     icon="employee"
                     shape="Circle"
-                    size="S"
+                    size="XS"
                 />
             }
             showCoPilot

@@ -51,7 +51,6 @@ const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, handl
     return (
         <React.Fragment>
             <StartColumnBar tableTitle={tableTitle} />
-            <TableFilterBar/>
             <AnalyticalTable
                 className="table"
                 columns={columns}

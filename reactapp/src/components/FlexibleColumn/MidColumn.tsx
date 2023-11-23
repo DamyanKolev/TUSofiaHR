@@ -1,12 +1,19 @@
-import { FC, ReactNode } from 'react';
-import { Bar, Button } from "@ui5/webcomponents-react";
+import { FC, useContext } from 'react';
+import { Bar, Button, FCLLayout } from "@ui5/webcomponents-react";
+import UpdateContractForm from '../forms/update-forms/UpdateContractForm';
+import { TableContext } from './FlexibleColumn';
+import UpdateEmployeeForm from '../forms/update-forms/UpdateEmployeeForm';
 
 interface MidColumnProps {
-    children: ReactNode;
-    onClick: () => void;
+    handleLayoutState: (layout: FCLLayout) => void,
 }
 
-const MidColumn: FC<MidColumnProps> = ({ children, onClick }) => {
+const MidColumn: FC<MidColumnProps> = ({ handleLayoutState }) => {
+
+    const navBackClick = () => {
+        handleLayoutState(FCLLayout.OneColumn)
+    }
+
     return (
         <div>
             <div className="table-header-bar">
@@ -14,16 +21,29 @@ const MidColumn: FC<MidColumnProps> = ({ children, onClick }) => {
                     <Button
                         design="Transparent"
                         icon="nav-back"
-                        onClick={onClick}
+                        onClick={navBackClick}
                     >
                     </Button>
                 }
                 >
                 </Bar>
             </div>
-            {children}
+            <StandartUpdateForm />
         </div>
     )
 }
+
+
+const StandartUpdateForm: FC = () => {
+    const tableName = useContext(TableContext)
+
+    if (tableName.localeCompare("employee") == 0) {
+        return (<UpdateEmployeeForm />)
+    }
+    else if (tableName.localeCompare("contract") == 0) {
+        return (<UpdateContractForm />)
+    }
+}
+
 
 export default MidColumn;

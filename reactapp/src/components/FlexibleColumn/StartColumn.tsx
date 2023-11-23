@@ -1,17 +1,16 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import {
     AnalyticalTable, AnalyticalTableColumnDefinition, AnalyticalTableSelectionBehavior, AnalyticalTableSelectionMode, Bar, Button,
-    ButtonDesign,
-    Title,
-    TitleLevel
+    ButtonDesign,FCLLayout, Title, TitleLevel
 } from '@ui5/webcomponents-react';
+import TableFilterBar from '../TableFilterBar';
 
 interface StartColumnProps {
     dataURL: string,
     columns: AnalyticalTableColumnDefinition[],
     tableTitle: string,
-    createOnClick: () => void;
-    updateOnClick: () => void;
+    handleLayoutState: (layout: FCLLayout) => void,
+    onRowSelect: (event: any) => void,
 }
 
 interface PageRequest {
@@ -20,9 +19,9 @@ interface PageRequest {
 }
 
 
-const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, createOnClick, updateOnClick }) => {
+const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, handleLayoutState, onRowSelect }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [selectedRow, setSelectedRow] = useState(null);
+    const table = useRef<Record<string, any>>(null);
     const [pageReq] = useState<PageRequest>({
         PageNumber: 1,
         PageSize: 50,
@@ -47,27 +46,24 @@ const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, creat
     }, []);
 
 
-    const onRowSelect = (event: any) => {
-        setSelectedRow(event.detail.row);
-        console.log(selectedRow)
-    };
-
+    
 
     return (
         <React.Fragment>
             <StartColumnBar tableTitle={tableTitle} />
+            <TableFilterBar/>
             <AnalyticalTable
                 className="table"
                 columns={columns}
                 data={data}
                 filterable
-                header={<><TableHeader createOnClick={createOnClick} updateOnClick={updateOnClick} /></>}
+                header={<><TableHeader handleLayoutState={handleLayoutState}/></>}
                 selectionMode={AnalyticalTableSelectionMode.SingleSelect}
                 selectionBehavior={AnalyticalTableSelectionBehavior.RowOnly}
                 loading={isLoading}
                 infiniteScroll
-                withRowHighlight
                 onRowClick={onRowSelect}
+                tableInstance={table }
             >
             </AnalyticalTable>
         </React.Fragment>
@@ -77,11 +73,11 @@ const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, creat
 
 
 interface TableHeaderProps {
-    createOnClick: () => void,
-    updateOnClick: () => void,
+    handleLayoutState: (layout: FCLLayout) => void,
 }
 
-const TableHeader: FC<TableHeaderProps> = ({ createOnClick, updateOnClick }) => {
+const TableHeader: FC<TableHeaderProps> = ({ handleLayoutState }) => {
+    const createOnClick = () => { handleLayoutState(FCLLayout.EndColumnFullScreen) }
 
     return (
         <React.Fragment>
@@ -89,7 +85,6 @@ const TableHeader: FC<TableHeaderProps> = ({ createOnClick, updateOnClick }) => 
                 endContent={
                     <React.Fragment>
                         <Button design={ButtonDesign.Transparent} onClick={createOnClick}>Create</Button>
-                        <Button design={ButtonDesign.Transparent} onClick={updateOnClick}>Update</Button>
                     </React.Fragment>
                 }
             >

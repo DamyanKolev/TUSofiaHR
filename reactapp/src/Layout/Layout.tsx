@@ -1,14 +1,29 @@
-import './Layout.css'
-import NavBar from "../components/NavBar";
-import { Outlet } from "react-router-dom";
-import "@ui5/webcomponents-icons/dist/menu";
-import { useState } from "react";
-import ShellBarMenu from "../components/ShellBarMenu";
+import { FC, useEffect, useState } from 'react';
+import './Layout.css';
+import NavBar from '../components/NavBar';
+import { Outlet } from 'react-router-dom';
+import '@ui5/webcomponents-icons/dist/menu';
+import ShellBarMenu from '../components/ShellBarMenu';
 
 
-export default function Layout() {
+const Layout: FC = () => {
+    const [collapsed, setCollapsed] = useState<boolean>(true);
 
-    const [collapsed, setCollapsed] = useState<Boolean>(true);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const isLoginString = localStorage.getItem("isLogin")
+
+        if (isLoginString != null) {
+            const isLogin = isLoginString.localeCompare("true") == 0 ? true : false
+
+            if (isLogin && token != null) {
+
+            }
+            else {
+
+            }
+        }
+    }, [])
 
     const hideShowSideNav = () => {
         setCollapsed(!collapsed);
@@ -16,7 +31,7 @@ export default function Layout() {
 
     return (
         <>
-            <ShellBarMenu hideShowSideNav={hideShowSideNav}/>
+            <ShellBarMenu hideShowSideNav={hideShowSideNav} />
 
             <div className="container">
                 <NavBar collapsed={collapsed} />
@@ -24,10 +39,9 @@ export default function Layout() {
                 <div className="content-container">
                     <Outlet />
                 </div>
-
             </div>
-
         </>
-    )
-}
+    );
+};
 
+export default Layout;

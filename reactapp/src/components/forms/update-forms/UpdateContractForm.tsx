@@ -1,54 +1,56 @@
-﻿import { FC, ChangeEvent, useReducer } from 'react';
+﻿import { FC, ChangeEvent, useContext, useState, useReducer, useEffect } from 'react';
 import { Bar, Button, Form, FormItem, } from '@ui5/webcomponents-react';
 import React from 'react';
 import { StandardField } from './StandartField';
-import { ContractFormData } from '../../../FormStates/ContractFormState';
+import { FlexibleContext } from '../../FlexibleColumn/FlexibleColumn';
+import { Contract } from '../../../FormStates/ContractFormState';
 
-type FormAction = {
-    field: keyof ContractFormData;
-    value: string | number | undefined;
-};
 
-const reducer = (state: ContractFormData, { field, value }: FormAction): ContractFormData => {
-    return { ...state, [field]: value };
-};
 
-const UpdateEmployeeForm: FC = () => {
+const UpdateContractForm: FC = () => {
+    const selectedRow = useContext(FlexibleContext)
+    const [formData, setFormData] = useState<Contract>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
-    const [formState, dispatch] = useReducer(
-        reducer,
-        {
-            workingWage: 32,
-            workTime: 8,
-            conclusionDate: '2023-11-11',
-        },
-        undefined
-    );
-    const { workingWage, workTime, conclusionDate } = formState;
+    const isSelected = formData ? true : false
+
+    useEffect(() => {
+        if (selectedRow) {
+            setFormData(selectedRow);
+        }
+    }, [selectedRow]);
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ field: Object.keys(e.target.dataset)[0] as keyof ContractFormData, value: e.target.value });
+        const value = e.target.value;
+        const dataType = e.target.type;
+        const field = e.target.dataset.name
+        if (field) {
+            if (dataType == "Number") {
+                setFormData({ ...formData, [field]: Number(value) });
+            }
+            else {
+                setFormData({ ...formData, [field]: value });
+            }
+        }
     };
 
     return (
         <React.Fragment>
             <Button onClick={toggleEditMode}>Toggle {editMode ? 'Display-Only Mode' : 'Edit Mode'}</Button>
             <div className="form-container">
-                <Form id="create-form">
-                    <FormItem label="Working Wage">
-                        <StandardField editMode={editMode} value={workingWage.toString()} onInput={handleInput} data-name />
-                    </FormItem>
-
-                    <FormItem label="Work Time">
-                        <StandardField editMode={editMode} value={workTime.toString()} onInput={handleInput} data-name />
-                    </FormItem>
-
-                    <FormItem label="Conclusion Date">
-                        <StandardField editMode={editMode} value={conclusionDate} onInput={handleInput} data-name />
-                    </FormItem>
-                </Form>
+                {isSelected &&
+                    <Form id="create-form">
+                        <FormItem label="Working Wage">
+                            <StandardField editMode={editMode} value={formData.workingWage} onInput={handleInput} data-name={"workingWage"} />
+                        </FormItem>
+                        <FormItem label="Working Wage">
+                            <StandardField editMode={editMode} value={formData.workTime} onInput={handleInput} data-name={"workTime"} />
+                        </FormItem>
+                        <FormItem label="Working Wage">
+                            <StandardField editMode={editMode} value={formData.conclusionDate} onInput={handleInput} data-name={"conclusionDate"} />
+                        </FormItem>
+                    </Form>
+                }
             </div>
-
             <Bar design="Footer">
                 <Button slot="endContent">Update</Button>
             </Bar>
@@ -56,4 +58,4 @@ const UpdateEmployeeForm: FC = () => {
     );
 };
 
-export default UpdateEmployeeForm;
+export default UpdateContractForm;

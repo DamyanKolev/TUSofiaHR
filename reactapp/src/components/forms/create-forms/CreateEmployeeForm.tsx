@@ -1,13 +1,19 @@
-﻿import { ChangeEvent, FC, useEffect, useState } from 'react';
+﻿import { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
 import { Button, Form, FormItem, Input, Tab, TabContainer } from "@ui5/webcomponents-react";
-import { EmployeeFormState } from '../../../FormStates/EmployeeFormState';
+import { EmployeeRequest } from '../../../FormStates/EmployeeFormState';
+import { EndColumnContext } from '../../FlexibleColumn/EndColumn';
+
+
+const defaultEmployeeRequest = {
+    "firstName": "",
+    "surname": "",
+    "lastName": ""
+}
+
 
 const CreateEmployeeForm: FC = () => {
-    const [data, setData] = useState<EmployeeFormState>({
-        "FirstName": "",
-        "Surname": "",
-        "LastName": ""
-    });
+    const [data, setData] = useState<EmployeeRequest>(defaultEmployeeRequest);
+    const isClicked = useContext(EndColumnContext)
 
     const submitForm = async () => {
         //const response = await fetch("/api/employees/create", {
@@ -21,13 +27,10 @@ const CreateEmployeeForm: FC = () => {
         console.log(data);
     };
 
+    //reset create form after nav back
     useEffect(() => {
-        setData({
-            "FirstName": "",
-            "Surname": "",
-            "LastName": ""
-        });
-    }, []);
+        setData(defaultEmployeeRequest);
+    }, [isClicked]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -39,7 +42,7 @@ const CreateEmployeeForm: FC = () => {
             <FormItem label="Име">
                 <Input
                     name="FirstName"
-                    value={data.FirstName}
+                    value={data.firstName}
                     onChange={handleInputChange}
                 />
             </FormItem>
@@ -47,7 +50,7 @@ const CreateEmployeeForm: FC = () => {
             <FormItem label="Презиме">
                 <Input
                     name="Surname"
-                    value={data.Surname}
+                    value={data.surname}
                     onChange={handleInputChange}
                 />
             </FormItem>
@@ -55,7 +58,7 @@ const CreateEmployeeForm: FC = () => {
             <FormItem label="Фамилия">
                 <Input
                     name="LastName"
-                    value={data.LastName}
+                    value={data.lastName}
                     onChange={handleInputChange}
                 />
             </FormItem>

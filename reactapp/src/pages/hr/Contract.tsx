@@ -1,8 +1,6 @@
 ﻿import { useState } from "react";
 import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
-import FlexibleColumn, { createFlexibleColumnProps } from "../../components/FlexibleColumn/FlexibleColumn";
-import CreateContractForm from "../../components/forms/create-forms/CreateContractForm";
-import UpdateContractForm from "../../components/forms/update-forms/UpdateContractForm";
+import FlexibleColumn from "../../components/FlexibleColumn/FlexibleColumn";
 
 
 
@@ -25,14 +23,11 @@ const columns: AnalyticalTableColumnDefinition[] = [
 
 export default function Contract() {
     const [tableTitle] = useState("Contracts");
+    const [tableName] = useState("contract");
     const [dataURL] = useState("/api/contracts");
-
-    const flexibleColumnProps = createFlexibleColumnProps(UpdateContractForm({}), CreateContractForm({}), tableTitle, dataURL, columns)
 
     
     return (
-        <FlexibleColumn
-            flexibleColumnProps={flexibleColumnProps}
-        />
+        <FlexibleColumn tableName={tableName} tableTitle={tableTitle} dataURL={dataURL} columns={columns} />
     )
 }

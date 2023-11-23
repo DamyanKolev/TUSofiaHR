@@ -1,52 +1,57 @@
-﻿import { FC, ChangeEvent, useReducer } from 'react';
+﻿import { FC, ChangeEvent, useReducer, useContext, useState, useEffect } from 'react';
 import { Bar, Button, Form, FormItem } from '@ui5/webcomponents-react';
 import React from 'react';
 import { StandardField } from './StandartField';
-import { EmployeeFormState } from '../../../FormStates/EmployeeFormState';
+import { FlexibleContext } from '../../FlexibleColumn/FlexibleColumn';
+import { Employee } from '../../../FormStates/EmployeeFormState';
 
-type FormAction = {
-    field: keyof EmployeeFormState;
-    value: string | number | undefined;
-};
 
-const reducer = (state: EmployeeFormState, { field, value }: FormAction): EmployeeFormState => {
-    return { ...state, [field]: value };
-};
 
 const UpdateEmployeeForm: FC = () => {
+    const selectedRow = useContext(FlexibleContext)
+    const [formData, setFormData] = useState<Employee>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
-    const [formState, dispatch] = useReducer(
-        reducer,
-        {
-            FirstName: "Damyan",
-            Surname: "Kolev",
-            LastName: 'Kolev',
-        },
-        undefined
-    );
-    const { FirstName, Surname, LastName } = formState;
+    const isSelected = formData ? true : false
+
+    useEffect(() => {
+        if (selectedRow) {
+            setFormData(selectedRow);
+        }
+    }, [selectedRow]);
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ field: Object.keys(e.target.dataset)[0] as keyof EmployeeFormState, value: e.target.value });
+        const value = e.target.value;
+        const dataType = e.target.type;
+        const field = e.target.dataset.name
+        if (field) {
+            if (dataType == "Number") {
+                setFormData({ ...formData, [field]: Number(value) });
+            }
+            else {
+                setFormData({ ...formData, [field]: value });
+            }
+        }
     };
 
     return (
         <React.Fragment>
             <Button onClick={toggleEditMode}>Toggle {editMode ? 'Display-Only Mode' : 'Edit Mode'}</Button>
             <div className="form-container">
-                <Form id="create-form">
-                    <FormItem label="First Name">
-                        <StandardField editMode={editMode} value={FirstName.toString()} onInput={handleInput} data-name />
-                    </FormItem>
+                {isSelected &&
+                    <Form id="create-form">
+                        <FormItem label="First Name">
+                            <StandardField editMode={editMode} value={formData.firstName} onInput={handleInput} data-name={"firstName"} />
+                        </FormItem>
 
-                    <FormItem label="Surname">
-                        <StandardField editMode={editMode} value={Surname.toString()} onInput={handleInput} data-name />
-                    </FormItem>
+                        <FormItem label="Surname">
+                            <StandardField editMode={editMode} value={formData.surname} onInput={handleInput} data-name={"surname"} />
+                        </FormItem>
 
-                    <FormItem label="Last Name">
-                        <StandardField editMode={editMode} value={LastName.toString()} onInput={handleInput} data-name />
-                    </FormItem>
-                </Form>
+                        <FormItem label="Last Name">
+                            <StandardField editMode={editMode} value={formData.lastName} onInput={handleInput} data-name={"lastName"} />
+                        </FormItem>
+                    </Form>
+                }
             </div>
 
             <Bar design="Footer">

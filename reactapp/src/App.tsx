@@ -7,8 +7,8 @@ import Login from './pages/auth/Login'
 import Contract from './pages/hr/Contract'
 
 
-function App() {
 
+function App() {
     return (
         <BrowserRouter>
             <Routes>

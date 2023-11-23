@@ -1,13 +1,19 @@
-﻿import { FC, useEffect, useState, ChangeEvent } from "react";
+﻿import { FC, useEffect, useState, ChangeEvent, useContext } from "react";
 import { Button, Form, FormItem, Input } from "@ui5/webcomponents-react";
-import { ContractFormData } from "../../../FormStates/ContractFormState";
+import { ContractRequest } from "../../../FormStates/ContractFormState";
+import { EndColumnContext } from "../../FlexibleColumn/EndColumn";
+
+
+const defaultContractRequest = {
+    workingWage: 0,
+    workTime: 0,
+    conclusionDate: "",
+}
+
 
 const CreateContractForm: FC = () => {
-    const [data, setData] = useState<ContractFormData>({
-        workingWage: 0,
-        workTime: 0,
-        conclusionDate: "",
-    });
+    const [data, setData] = useState<ContractRequest>(defaultContractRequest);
+    const isClicked = useContext(EndColumnContext)
 
     const submitForm = async () => {
         const response = await fetch("/api/contracts/create", {
@@ -20,13 +26,10 @@ const CreateContractForm: FC = () => {
         console.log(res);
     };
 
+    //reset create form after nav back
     useEffect(() => {
-        setData({
-            workingWage: 0,
-            workTime: 0,
-            conclusionDate: "",
-        });
-    }, []);
+        setData(defaultContractRequest);
+    }, [isClicked]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -36,16 +39,12 @@ const CreateContractForm: FC = () => {
     return (
         <Form id="create-form">
             <FormItem label="Working Wage">
-                <Input
-                    name="WorkingWage"
-                    value={data.workingWage.toString()}
-                    onChange={handleInputChange}
-                />
+                <Input name="workingWage" value={data.workingWage.toString()} onChange={handleInputChange} />
             </FormItem>
 
             <FormItem label="Work Time">
                 <Input
-                    name="WorkTime"
+                    name="workTime"
                     value={data.workTime.toString()}
                     onChange={handleInputChange}
                 />
@@ -53,7 +52,7 @@ const CreateContractForm: FC = () => {
 
             <FormItem label="Conclusion Date">
                 <Input
-                    name="ConclusionDate"
+                    name="conclusionDate"
                     value={data.conclusionDate}
                     onChange={handleInputChange}
                 />

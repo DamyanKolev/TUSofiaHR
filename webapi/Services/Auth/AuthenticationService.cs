@@ -14,20 +14,17 @@ namespace webapi.Services.Auth
     {
         public Task<ResponseWithStatus<DataResponse<string>>> SingIn(LoginModel model);
         public Task<ResponseWithStatus<Response>> Register(RegisterModel model);
-
         public ResponseWithStatus<Response> ValidateToken(string token);
     }
 
     public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<User> userManager;
-        private readonly RoleManager<Role> roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationService(UserManager<User> userManager, RoleManager<Role> roleManager, IConfiguration configuration)
+        public AuthenticationService(UserManager<User> userManager, IConfiguration configuration)
         {
             this.userManager = userManager;
-            this.roleManager = roleManager;
             _configuration = configuration;
         }
 

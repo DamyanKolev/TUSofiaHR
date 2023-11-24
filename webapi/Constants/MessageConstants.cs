@@ -23,5 +23,9 @@
         public const string MESSAGE_INVALID_TOKEN = "Token is invalid!";
         public const string MESSAGE_NULL_TOKEN = "Token is null!";
 
+        public const string MESSAGE_CREATE_CLAIM_FAILED = "Failed to create claim";
+
+        public const string MESSAGE_RECORD_NOT_FOUND = "Record not found";
+
     }
 }

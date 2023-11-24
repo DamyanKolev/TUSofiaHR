@@ -8,4 +8,11 @@ namespace webapi.Models.Auth
         public DateOnly CreatedAt { get; set; }
         public DateOnly UpdatedAt { get; set; }
     }
+
+
+    public struct RoleRequest
+    {
+        public string Name { get; set; }
+        public HashSet<string> Policies { get; set; }
+    }
 }

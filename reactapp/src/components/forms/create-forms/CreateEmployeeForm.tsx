@@ -1,6 +1,6 @@
 ﻿import { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
-import { Button, Form, FormItem, Input, Tab, TabContainer } from "@ui5/webcomponents-react";
-import { EmployeeRequest } from '../../../FormStates/EmployeeFormState';
+import { Button, Form, FormItem, Input, Tab, TabContainer, ValueState } from "@ui5/webcomponents-react";
+import { EmployeeFormState, EmployeeRequest } from '../../../FormStates/EmployeeFormState';
 import { EndColumnContext } from '../../FlexibleColumn/EndColumn';
 
 
@@ -10,10 +10,43 @@ const defaultEmployeeRequest = {
     "lastName": ""
 }
 
+const defaultFormState = {
+    "firstName": { isFilled: false, valueState: ValueState.None },
+    "surname": { isFilled: false, valueState: ValueState.None },
+    "lastName": { isFilled: false, valueState: ValueState.None }
+}
+
 
 const CreateEmployeeForm: FC = () => {
     const [data, setData] = useState<EmployeeRequest>(defaultEmployeeRequest);
+    const [formState, setFormState] = useState<EmployeeFormState>(defaultFormState);
     const isClicked = useContext(EndColumnContext)
+
+    const isFilledForm = (): boolean => {
+        let isFilled: boolean = true;
+
+        const setValueState = (valueState: ValueState): void => {
+            let currentState = formState
+            for (const [key, value] of Object.entries(formState)) {
+
+                if (!value.isFilled) {
+                    currentState = { ...currentState, [key]: { ...value, "valueState": valueState } }
+                    isFilled = false;
+                }
+            }
+            setFormState(currentState);
+        };
+
+        setValueState(ValueState.Error);
+
+        if (!isFilled) {
+            setTimeout(() => {
+                setValueState(ValueState.None);
+            }, 1000);
+        }
+
+        return isFilled;
+    };
 
     const submitForm = async () => {
         const response = await fetch("/api/employees/create", {

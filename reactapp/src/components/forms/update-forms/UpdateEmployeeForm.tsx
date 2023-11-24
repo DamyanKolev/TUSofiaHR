@@ -13,6 +13,18 @@ const UpdateEmployeeForm: FC = () => {
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
     const isSelected = formData ? true : false
 
+    const submitForm = async () => {
+        const response = await fetch("/api/employees/update", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+
+        }
+    };
+
     useEffect(() => {
         if (selectedRow) {
             setFormData(selectedRow);
@@ -24,7 +36,7 @@ const UpdateEmployeeForm: FC = () => {
         const dataType = e.target.type;
         const field = e.target.dataset.name
         if (field) {
-            if (dataType == "Number") {
+            if (dataType.localeCompare("Number") == 0) {
                 setFormData({ ...formData, [field]: Number(value) });
             }
             else {
@@ -55,7 +67,7 @@ const UpdateEmployeeForm: FC = () => {
             </div>
 
             <Bar design="Footer">
-                <Button slot="endContent">Update</Button>
+                <Button slot="endContent" onClick={submitForm }>Update</Button>
             </Bar>
         </React.Fragment>
     );

@@ -1,3 +1,4 @@
+import { FormFieldState } from "./FormState";
 
 //Employee model 
 export interface Employee {
@@ -12,4 +13,11 @@ export interface EmployeeRequest {
     firstName: string;
     surname: string;
     lastName: string;
+}
+
+
+export interface EmployeeFormState {
+    firstName: FormFieldState;
+    surname: FormFieldState;
+    lastName: FormFieldState;
 }

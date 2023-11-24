@@ -1,7 +1,7 @@
 import { FC, createContext, useContext, useState } from 'react';
 import { Bar, Button, FCLLayout } from "@ui5/webcomponents-react";
-import CreateEmployeeForm from '../forms/create-forms/CreateEmployeeForm';
-import CreateContractForm from '../forms/create-forms/CreateContractForm';
+import CreateEmployeeForm from '@components/forms/create-forms/CreateEmployeeForm';
+import CreateContractForm from '@components/forms/create-forms/CreateContractForm';
 import { TableContext } from './FlexibleColumn';
 
 

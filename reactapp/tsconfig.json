@@ -18,7 +18,16 @@
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+
+        //"moduleResolution": "nodenext",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [ "src/*" ],
+            "@assets": [ "src/assets/*"],
+            "@components/*": [ "src/components/*" ],
+            "@form-states/*": [ "src/form-states/*" ]
+        }
     },
     "include": [ "src" ],
     "references": [ { "path": "./tsconfig.node.json" } ]

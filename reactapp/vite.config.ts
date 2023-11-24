@@ -5,30 +5,36 @@ import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 
-const baseFolder =
+const baseFolder: string =
     process.env.APPDATA !== undefined && process.env.APPDATA !== ''
         ? `${process.env.APPDATA}/ASP.NET/https`
         : `${process.env.HOME}/.aspnet/https`;
 
-const certificateArg = process.argv.map(arg => arg.match(/--name=(?<value>.+)/i)).filter(Boolean)[0];
-const certificateName = certificateArg ? certificateArg.groups.value : "reactapp";
+const certificateArg = process.argv.map((arg: string) => arg.match(/--name=(?<value>.+)/i)).filter(Boolean)[0];
+const certificateName: string = certificateArg ? certificateArg.groups.value : "reactapp";
 
 if (!certificateName) {
     console.error('Invalid certificate name. Run this script in the context of an npm/yarn script or pass --name=<<app>> explicitly.')
     process.exit(-1);
 }
 
-const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
-const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
+const certFilePath: string = path.join(baseFolder, `${certificateName}.pem`);
+const keyFilePath: string = path.join(baseFolder, `${certificateName}.key`);
 
+
+//const __filename = url.fileURLToPath(import.meta.url);
+//const __dirname = path.dirname(__filename);
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [plugin()],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
-            '@components': '/src/components'
+            '@assets': path.resolve(__dirname, './src/assets'),
+            '@components': path.resolve(__dirname, './src/components'),
+            '@form-states': path.resolve(__dirname, './src/form-states')
         },
+
     },
     server: {
         proxy: {

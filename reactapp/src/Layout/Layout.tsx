@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import './Layout.css';
-import NavBar from '../components/NavBar';
+import NavBar from '@components/NavBar';
 import { Outlet, useNavigate } from 'react-router-dom';
 import '@ui5/webcomponents-icons/dist/menu';
-import ShellBarMenu from '../components/ShellBarMenu';
+import ShellBarMenu from '@components/ShellBarMenu';
 
 
 const Layout: FC = () => {

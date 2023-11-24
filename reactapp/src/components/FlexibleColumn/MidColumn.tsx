@@ -1,8 +1,9 @@
 import { FC, useContext } from 'react';
 import { Bar, Button, FCLLayout } from "@ui5/webcomponents-react";
-import UpdateContractForm from '../forms/update-forms/UpdateContractForm';
+import UpdateContractForm from '@components/forms/update-forms/UpdateContractForm';
 import { TableContext } from './FlexibleColumn';
-import UpdateEmployeeForm from '../forms/update-forms/UpdateEmployeeForm';
+import UpdateEmployeeForm from '@components/forms/update-forms/UpdateEmployeeForm'
+
 
 interface MidColumnProps {
     handleLayoutState: (layout: FCLLayout) => void,

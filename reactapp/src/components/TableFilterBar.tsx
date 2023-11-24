@@ -1,4 +1,7 @@
-import { ComboBox, Option, ComboBoxItem, DateRangePicker, FilterBar, FilterGroupItem, Input, MultiComboBox, MultiComboBoxItem, MultiInput, Select, StepInput, Switch, Title, RatingIndicator, Token } from "@ui5/webcomponents-react";
+import {
+    ComboBox, Option, ComboBoxItem, DateRangePicker, FilterBar, FilterGroupItem, Input, MultiComboBox,
+    MultiComboBoxItem, MultiInput, Select, StepInput, Switch, Title, RatingIndicator, Token
+} from "@ui5/webcomponents-react";
 import { FC } from "react";
 
 

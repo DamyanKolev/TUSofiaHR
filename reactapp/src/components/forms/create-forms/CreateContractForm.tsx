@@ -1,7 +1,7 @@
 ﻿import { FC, useEffect, useState, ChangeEvent, useContext } from "react";
 import { Button, Form, FormItem, Input, ValueState } from "@ui5/webcomponents-react";
-import { ContractFormState, ContractRequest } from "../../../FormStates/ContractFormState";
-import { EndColumnContext } from "../../FlexibleColumn/EndColumn";
+import { ContractFormState, ContractRequest } from "@form-states/ContractFormState";
+import { EndColumnContext } from "@components/FlexibleColumn/EndColumn";
 
 
 

@@ -3,7 +3,6 @@ import {
     AnalyticalTable, AnalyticalTableColumnDefinition, AnalyticalTableSelectionBehavior, AnalyticalTableSelectionMode, Bar, Button,
     ButtonDesign,FCLLayout, Title, TitleLevel
 } from '@ui5/webcomponents-react';
-import TableFilterBar from '../TableFilterBar';
 
 interface StartColumnProps {
     dataURL: string,

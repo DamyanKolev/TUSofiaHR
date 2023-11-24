@@ -1,7 +1,7 @@
 ﻿import { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
 import { Button, Form, FormItem, Input, Tab, TabContainer, ValueState } from "@ui5/webcomponents-react";
-import { EmployeeFormState, EmployeeRequest } from '../../../FormStates/EmployeeFormState';
-import { EndColumnContext } from '../../FlexibleColumn/EndColumn';
+import { EmployeeFormState, EmployeeRequest } from '@form-states/EmployeeFormState';
+import { EndColumnContext } from '@components/FlexibleColumn/EndColumn';
 
 
 const defaultEmployeeRequest = {
@@ -18,7 +18,7 @@ const defaultFormState = {
 
 
 const CreateEmployeeForm: FC = () => {
-    const [data, setData] = useState<EmployeeRequest>(defaultEmployeeRequest);
+    const [formData, setFormData] = useState<EmployeeRequest>(defaultEmployeeRequest);
     const [formState, setFormState] = useState<EmployeeFormState>(defaultFormState);
     const isClicked = useContext(EndColumnContext)
 
@@ -49,25 +49,29 @@ const CreateEmployeeForm: FC = () => {
     };
 
     const submitForm = async () => {
-        const response = await fetch("/api/employees/create", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
+        const isFilled = isFilledForm()
 
-        if (!response.ok) {
+        if (isFilled) {
+            const response = await fetch("/api/employees/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
 
+            if (!response.ok) {
+
+            }
         }
     };
 
     //reset create form after nav back
     useEffect(() => {
-        setData(defaultEmployeeRequest);
+        setFormData(defaultEmployeeRequest);
     }, [isClicked]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setData({ ...data, [name]: value });
+        setFormData({ ...formData, [name]: value });
     };
 
     return (
@@ -75,7 +79,7 @@ const CreateEmployeeForm: FC = () => {
             <FormItem label="Име">
                 <Input
                     name="FirstName"
-                    value={data.firstName}
+                    value={formData.firstName}
                     onChange={handleInputChange}
                 />
             </FormItem>
@@ -83,7 +87,7 @@ const CreateEmployeeForm: FC = () => {
             <FormItem label="Презиме">
                 <Input
                     name="Surname"
-                    value={data.surname}
+                    value={formData.surname}
                     onChange={handleInputChange}
                 />
             </FormItem>
@@ -91,7 +95,7 @@ const CreateEmployeeForm: FC = () => {
             <FormItem label="Фамилия">
                 <Input
                     name="LastName"
-                    value={data.lastName}
+                    value={formData.lastName}
                     onChange={handleInputChange}
                 />
             </FormItem>

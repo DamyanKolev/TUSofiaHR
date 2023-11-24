@@ -1,6 +1,6 @@
 ﻿import { useState } from "react";
 import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
-import FlexibleColumn from "../../components/FlexibleColumn/FlexibleColumn";
+import FlexibleColumn from "@components/FlexibleColumn/FlexibleColumn";
 
 
 

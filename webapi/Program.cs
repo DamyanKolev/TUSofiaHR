@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using webapi;
 using webapi.Identity;
+using webapi.Models.Auth;
 using webapi.Services.Auth;
 using webapi.Services.HR;
 
@@ -36,6 +37,10 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(Identity.AdminUserPolicyName, p =>
         p.RequireClaim(Identity.AdminUserClaimName, "true"));
 });
+
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<DatabaseContext>();
+
 
 // dependency injection of the services
 builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MapperProfile>(); });

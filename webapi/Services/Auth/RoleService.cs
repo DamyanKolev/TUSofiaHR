@@ -32,7 +32,8 @@ namespace webapi.Services.Auth
 
             if (!createdRole.Succeeded)
             {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
+                
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, createdRole.Errors.ToString());
             }
 
             foreach (var policy in roleRequest.Policies)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace webapi.Models.Auth
 {
@@ -6,7 +7,7 @@ namespace webapi.Models.Auth
     {
         public string Name { get; set; }
         public DateOnly CreatedAt { get; set; }
-        public DateOnly UpdatedAt { get; set; }
+        public DateOnly? UpdatedAt { get; set; }
     }
 
 

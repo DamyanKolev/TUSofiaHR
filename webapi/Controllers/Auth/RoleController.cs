@@ -7,9 +7,9 @@ namespace webapi.Controllers.Auth
 {
     public class RoleController : ControllerBase
     {
-        public readonly RoleService _roleService;
+        public readonly IRoleService _roleService;
 
-        public RoleController(RoleService roleService)
+        public RoleController(IRoleService roleService)
         {
             _roleService = roleService;
         }
@@ -27,15 +27,15 @@ namespace webapi.Controllers.Auth
 
 
 
-        [HttpPost("/api/auth/role/update", Name = "Create_Role")]
+        [HttpPost("/api/auth/role/update", Name = "Update_Role")]
         public async Task<IActionResult> UpdateRole([FromBody] RoleRequest roleRequest)
         {
-            var result = await _roleService.UpdateRoleAsync(roleRequest);
+            //var result = await _roleService.UpdateRoleAsync(roleRequest);
 
-            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(result);
+            //if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+            //    return BadRequest(result);
 
-            return Ok(result);
+            return Ok();
         }
     }
 }

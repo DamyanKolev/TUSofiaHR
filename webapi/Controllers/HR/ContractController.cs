@@ -60,12 +60,14 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPut(Name = "PutContract")]
+        [HttpPut("/api/contracts/update", Name = "PutContract")]
         public IActionResult Put([FromBody] ContractUpdateRequest data)
         {
             var response = _contractService.UpdateContract(data);
 
-            if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
+            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(response);
+            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(response);
 
             return Ok(response);

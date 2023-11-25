@@ -37,22 +37,21 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateRequest updateRequest)
         {
-            var product = _context.PersonalDatas.Find(updateRequest.UpdateId);
+            var personalData = _context.Employees.Find(updateRequest.UpdateId);
 
-            if (product != null)
+            if (personalData == null)
             {
-                _mapper.Map(updateRequest.Data, product);
-                var changes = _context.SaveChanges();
-
-                if (changes > 0)
-                {
-                    return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
-                }
-
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
+            _mapper.Map(updateRequest.Data, personalData);
+            var result = _context.SaveChanges();
+
+            if (result > 0)
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
+            }
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
         }
     }
 }

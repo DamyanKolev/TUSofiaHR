@@ -8,9 +8,9 @@ namespace webapi.Controllers.Auth
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        public readonly AuthenticationService _authenticationService;
+        public readonly IAuthenticationService _authenticationService;
 
-        public AuthenticationController(AuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
         }
@@ -21,21 +21,6 @@ namespace webapi.Controllers.Auth
             var result = await _authenticationService.SingIn(model);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
-
-        [HttpPost("/api/auth/register", Name="User_Registration")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
-        {
-            var result = await _authenticationService.Register(model);
-
-            //Check status from service
-            if (result.StatusCode.Equals(HttpStatusCode.Conflict)) 
-                return Conflict(result);
-            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result);
 
             return Ok(result);

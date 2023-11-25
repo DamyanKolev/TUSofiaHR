@@ -34,7 +34,9 @@ namespace webapi.Controllers.HR
         {
             var response = _personalDataService.UpdatePersonalData(data);
 
-            if (Response.StatusCode.Equals(HttpStatusCode.BadRequest))
+            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(response);
+            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(response);
 
             return Ok(response);

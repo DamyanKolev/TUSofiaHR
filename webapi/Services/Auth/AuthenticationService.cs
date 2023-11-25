@@ -13,28 +13,28 @@ namespace webapi.Services.Auth
     public interface IAuthenticationService
     {
         public Task<ResponseWithStatus<DataResponse<string>>> SingIn(LoginModel model);
-        public Task<ResponseWithStatus<Response>> Register(RegisterModel model);
         public ResponseWithStatus<Response> ValidateToken(string token);
     }
 
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
 
         public AuthenticationService(UserManager<User> userManager, IConfiguration configuration)
         {
-            this.userManager = userManager;
+            _userManager = userManager;
             _configuration = configuration;
         }
 
         public async Task<ResponseWithStatus<DataResponse<string>>> SingIn(LoginModel model)
         {
-            var user = await userManager.FindByNameAsync(model.Username);
+            var user = await _userManager.FindByNameAsync(model.Username);
 
-            if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                var userRoles = await userManager.GetRolesAsync(user);
+                var userRoles = await _userManager.GetRolesAsync(user);
 
                 var authClaims = new List<Claim>
                 {
@@ -65,31 +65,6 @@ namespace webapi.Services.Auth
 
             return ResponseBuilder.CreateDataResponseWithStatus<string>(
                 HttpStatusCode.BadRequest, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, "");
-        }
-
-
-        public async Task<ResponseWithStatus<Response>> Register(RegisterModel model)
-        {
-            var userExists = await userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.Conflict, MessageConstants.MESSAGE_USERNAME_EXIST);
-            }
-
-            User user = new User()
-            {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
-            };
-
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_REGISTRATION);
-            }
-
-            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_REGISTRATION_FAILED);
         }
 
 

@@ -5,7 +5,7 @@ using webapi.Models.HR;
 
 namespace webapi
 {
-    public class DatabaseContext : IdentityDbContext<User, Role, string>
+    public class DatabaseContext : IdentityDbContext<User, Role, int>
     {
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<PersonalData> PersonalDatas { get; set; }

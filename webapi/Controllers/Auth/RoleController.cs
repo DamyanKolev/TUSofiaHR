@@ -15,7 +15,7 @@ namespace webapi.Controllers.Auth
         }
 
         [HttpPost("/api/auth/role/create", Name = "Create_Role")]
-        public async Task<IActionResult> CreateRole([FromBody] RoleRequest roleRequest)
+        public async Task<IActionResult> CreateRoleAsync([FromBody] RoleRequest roleRequest)
         {
             var result = await _roleService.CreateRoleAsync(roleRequest);
 
@@ -27,15 +27,32 @@ namespace webapi.Controllers.Auth
 
 
 
-        [HttpPost("/api/auth/role/update", Name = "Update_Role")]
-        public async Task<IActionResult> UpdateRole([FromBody] RoleRequest roleRequest)
+        [HttpPut("/api/auth/role-claims/create", Name = "Create_Role_Claims")]
+        public async Task<IActionResult> UpdateRoleAsync([FromBody] ClaimRequest claimRequest)
         {
-            //var result = await _roleService.UpdateRoleAsync(roleRequest);
+            var result = await _roleService.CreateRoleClaimsAsync(claimRequest);
 
-            //if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-            //    return BadRequest(result);
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result);
+            else if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result);
 
-            return Ok();
+            return Ok(result);
+        }
+
+
+
+        [HttpDelete("/api/auth/role-claims/delete", Name = "Delete_Role_Claims")]
+        public async Task<IActionResult> DeleteRoleAsync([FromBody] ClaimRequest claimRequest)
+        {
+            var result = await _roleService.DeleteRoleClaimsAsync(claimRequest);
+
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result);
+            else if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result);
+
+            return Ok(result);
         }
     }
 }

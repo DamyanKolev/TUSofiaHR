@@ -3,8 +3,8 @@
     public class Company
     {
         public int Id { get; set; }
-        public string CompanyName {  get; set; }
-        public string CompanyEIC { get; set; }
+        public required string CompanyName {  get; set; }
+        public required string CompanyEIC { get; set; }
     }
 
     public struct CompanyInsertRequest

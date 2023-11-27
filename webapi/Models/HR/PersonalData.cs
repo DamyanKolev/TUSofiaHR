@@ -3,7 +3,7 @@
     public class PersonalData
     {
         public int Id { get; set; }
-        public string EGN { get; set; }
+        public required string EGN { get; set; }
     }
 
     public struct PersonalDataInsertRequest

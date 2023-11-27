@@ -3,10 +3,9 @@
     public class Contract
     {
         public Int64 Id { get; set; }
-         
-        public decimal WorkingWage { get; set; }
-        public Int16 WorkTime { get; set; }
-        public DateOnly ConclusionDate { get; set; }
+        public required decimal WorkingWage { get; set; }
+        public required Int16 WorkTime { get; set; }
+        public required DateOnly ConclusionDate { get; set; }
     }
 
     public struct ContractInsertRequest

@@ -12,15 +12,18 @@ namespace webapi.Services.Auth
     {
         public Task<ResponseWithStatus<Response>> CreateUserAsync(UserRequest userRequest);
         public Task<ResponseWithStatus<Response>> UpdateUserAsync(UserUpdateRequest updateRequest);
+        public Task<ResponseWithStatus<Response>> AddUserRole(UserRoleRequest userRoleRequest);
     }
 
     public class UserService
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         public readonly IMapper _mapper;
-        public UserService(UserManager<User> userManager, IMapper mapper) {
+        public UserService(UserManager<User> userManager, IMapper mapper, RoleManager<Role> roleManager) {
             _userManager = userManager;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         public async Task<ResponseWithStatus<Response>> CreateUserAsync(UserRequest userRequest)
@@ -62,6 +65,30 @@ namespace webapi.Services.Auth
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
             }
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
+        }
+
+        public async Task<ResponseWithStatus<Response>> AddUserRole(UserRoleRequest userRoleRequest)
+        {
+            var user = await _userManager.FindByIdAsync(userRoleRequest.UserId.ToString());
+            var role = await _roleManager.FindByNameAsync(userRoleRequest.RoleName);
+
+            if (user == null)
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_USER_NOT_FOUND);
+            }
+
+            if (role == null)
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_ROLE_NOT_FOUND);
+            }
+
+            var result = await _userManager.AddToRoleAsync(user, userRoleRequest.RoleName);
+
+            if (!result.Succeeded)
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_FAILED_ADD_USER_ROLE);
+            }
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_ADD_USER_ROLE);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using webapi.Models.Auth;
 using webapi.Models.HR;
 
 namespace webapi
@@ -9,6 +10,7 @@ namespace webapi
         {
             CreateMap<Employee, EmployeeInsertRequest>();
             CreateMap<Employee, EmployeeUpdate>();
+            CreateMap<RoleRequest, Role>();
         }
     }
 }

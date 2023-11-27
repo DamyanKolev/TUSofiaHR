@@ -27,16 +27,14 @@ namespace webapi.Services.Auth
 
         public async Task<ResponseWithStatus<Response>> CreateRoleAsync(RoleRequest roleRequest) {
             // Create the role object
-            Role role = _mapper.Map<Role>(roleRequest);
+            var role = _mapper.Map<Role>(roleRequest);
             role.CreatedAt = DateOnly.FromDateTime(DateTime.Now);
-
             // Add the role to the database
-            var createdRole = await _roleManager.CreateAsync(role);
+            var result = await _roleManager.CreateAsync(role);
 
-            if (!createdRole.Succeeded)
+            if (!result.Succeeded)
             {
-                
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, result.Errors.ToString());
             }
 
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);

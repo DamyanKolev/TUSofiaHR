@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using webapi.Models;
 using webapi.Models.Auth;
 using webapi.Services.Auth;
 
@@ -32,6 +33,21 @@ namespace webapi.Controllers.Auth
         public async Task<IActionResult> UpdateUserAsync([FromBody] UserUpdateRequest userRequest)
         {
             var result = await _userService.UpdateUserAsync(userRequest);
+
+            //Check status from service
+            if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result);
+            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+
+        [HttpPost("/api/auth/user/add-role", Name = "Create_User_Role")]
+        public async Task<IActionResult> AddUserRole([FromBody] UserRoleRequest userRoleRequest)
+        {
+            var result = await _userService.AddUserRole(userRoleRequest);
 
             //Check status from service
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))

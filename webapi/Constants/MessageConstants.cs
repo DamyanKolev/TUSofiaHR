@@ -1,6 +1,6 @@
 ﻿namespace webapi.Constants
 {
-    public static class MessageConstants
+    public record MessageConstants
     {
         public const string MESSAGE_SUCCESS_SELECT = "Success selection";
         public const string MESSAGE_FAILED_SELECT = "Failed selection";
@@ -26,6 +26,10 @@
         public const string MESSAGE_CREATE_CLAIM_FAILED = "Failed to create claim";
 
         public const string MESSAGE_RECORD_NOT_FOUND = "Record not found";
+        public const string MESSAGE_USER_NOT_FOUND = "User not found";
+        public const string MESSAGE_ROLE_NOT_FOUND = "Role not found";
 
+        public const string MESSAGE_SUCCESS_ADD_USER_ROLE = "Role successfully added";
+        public const string MESSAGE_FAILED_ADD_USER_ROLE = "Role failed added";
     }
 }

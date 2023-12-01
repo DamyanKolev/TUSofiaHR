@@ -4,16 +4,15 @@ namespace webapi.Models.Auth
 {
     public class User : IdentityUser<int>
     {
-        public override required string UserName { get; set; }
-        public override required string PasswordHash { get; set; }
-        public override required string Email {get; set;}
-        public required string LoginSession { get; set; }
+        //public override required string UserName { get; set; }
+        //public override required string PasswordHash { get; set; }
+        //public override required string Email {get; set;}
     }
 
     public struct UserRequest
     {
         public string UserName { get; set; }
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
         public string Email { get; set; }
     }
 
@@ -25,7 +24,7 @@ namespace webapi.Models.Auth
 
     public struct UserRoleRequest
     {
-        public int UserId { get; set; }
+        public string UserName { get; set; }
         public string RoleName { get; set; }
     }
 }

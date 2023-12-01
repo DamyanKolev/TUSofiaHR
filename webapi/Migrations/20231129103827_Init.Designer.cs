@@ -12,7 +12,7 @@ using webapi;
 namespace webapi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231127203948_Init")]
+    [Migration("20231129103827_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -189,10 +189,6 @@ namespace webapi.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LoginSession")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)

@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 using webapi.Constants;
 using webapi.Models;
 using webapi.Models.Auth;
@@ -15,7 +15,7 @@ namespace webapi.Services.Auth
         public Task<ResponseWithStatus<Response>> AddUserRole(UserRoleRequest userRoleRequest);
     }
 
-    public class UserService
+    public class UserService: IUserService
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
@@ -35,14 +35,16 @@ namespace webapi.Services.Auth
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.Conflict, MessageConstants.MESSAGE_USERNAME_EXIST);
             }
 
-            User user = _mapper.Map<User>(userRequest);
-            user.SecurityStamp = Guid.NewGuid().ToString();
+            User user = new User() { 
+                Email= userRequest.Email, 
+                UserName= userRequest.UserName
+            };
 
-            var result = await _userManager.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user, userRequest.Password);
 
             if (!result.Succeeded)
             {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_REGISTRATION_FAILED);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, result.Errors.ToString());
             }
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_REGISTRATION);
         }
@@ -69,7 +71,7 @@ namespace webapi.Services.Auth
 
         public async Task<ResponseWithStatus<Response>> AddUserRole(UserRoleRequest userRoleRequest)
         {
-            var user = await _userManager.FindByIdAsync(userRoleRequest.UserId.ToString());
+            var user = await _userManager.FindByNameAsync(userRoleRequest.UserName);
             var role = await _roleManager.FindByNameAsync(userRoleRequest.RoleName);
 
             if (user == null)

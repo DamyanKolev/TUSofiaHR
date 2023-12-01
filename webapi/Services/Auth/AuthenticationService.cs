@@ -37,8 +37,8 @@ namespace webapi.Services.Auth
 
                 var authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserName!),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
                 foreach (var userRole in userRoles)
@@ -46,24 +46,14 @@ namespace webapi.Services.Auth
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
-
-                var token = new JwtSecurityToken(
-                    issuer: _configuration["JWT:ValidIssuer"],
-                    audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddHours(3),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
-
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                string token = GenerateToken(authClaims);
 
                 return ResponseBuilder.CreateDataResponseWithStatus<string>(
-                    HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, tokenString);
+                    HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, token);
             }
 
             return ResponseBuilder.CreateDataResponseWithStatus<string>(
-                HttpStatusCode.BadRequest, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, "");
+                HttpStatusCode.BadRequest, MessageConstants.MESSAGE_FAILED_SIGN_IN, (user == null).ToString());
         }
 
 
@@ -101,6 +91,24 @@ namespace webapi.Services.Auth
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INVALID_TOKEN);
 
             }
+        }
+
+        private string GenerateToken(IEnumerable<Claim> claims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _configuration["JWT:ValidIssuer"],
+                Audience = _configuration["JWT:ValidAudience"],
+                Expires = DateTime.UtcNow.AddHours(3),
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
+                Subject = new ClaimsIdentity(claims)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

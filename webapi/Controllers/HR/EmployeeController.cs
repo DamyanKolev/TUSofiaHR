@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Models.HR;
@@ -6,6 +7,7 @@ using webapi.Services.HR;
 
 namespace webapi.Controllers.HR
 {
+    //[Authorize]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -25,6 +27,8 @@ namespace webapi.Controllers.HR
         }
 
 
+        //[Authorize(Roles = "Employee")]
+        [Authorize]
         [HttpPost("/api/employees/create", Name = "Create_Employee")]
         public IActionResult Post([FromBody] EmployeeInsertRequest data)
         {

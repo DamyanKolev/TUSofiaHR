@@ -27,7 +27,7 @@ namespace webapi.Controllers.Auth
 
 
 
-        [HttpPut("/api/auth/role-claims/create", Name = "Create_Role_Claims")]
+        [HttpPost("/api/auth/role-claims/create", Name = "Create_Role_Claims")]
         public async Task<IActionResult> UpdateRoleAsync([FromBody] ClaimRequest claimRequest)
         {
             var result = await _roleService.CreateRoleClaimsAsync(claimRequest);

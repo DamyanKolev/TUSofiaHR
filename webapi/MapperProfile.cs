@@ -11,6 +11,7 @@ namespace webapi
             CreateMap<Employee, EmployeeInsertRequest>();
             CreateMap<Employee, EmployeeUpdate>();
             CreateMap<RoleRequest, Role>();
+            CreateMap<UserRequest, User>();
         }
     }
 }

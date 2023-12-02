@@ -2,15 +2,27 @@
 using Microsoft.EntityFrameworkCore;
 using webapi.Models.Auth;
 using webapi.Models.HR;
+using webapi.Models.System;
 
 namespace webapi
 {
     public class DatabaseContext : IdentityDbContext<User, Role, int>
     {
+        //Employee Tables
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<PersonalData> PersonalDatas { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Position> Positions { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
+        //System Tables
+        public DbSet<SysAdministrativeTerritory> SysAdministrativeTerritories { get; set; }
+        public DbSet<SysContractTerminationType> SysContractTerminationTypes { get; set; }
+        public DbSet<SysContractType> SysContractTypes { get; set; }
+        public DbSet<SysIconomicActivity> SysIconomicActivities { get; set; }
+        public DbSet<SysPosition> SysPositions { get; set; }
 
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) 
@@ -22,10 +34,17 @@ namespace webapi
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Contract>().ToTable("Contracts");
-            builder.Entity<PersonalData>().ToTable("PersonalDatas");
-            builder.Entity<Employee>().ToTable("Employees");
-            builder.Entity<Company>().ToTable("Companies");
+            //builder.Entity<Contract>().ToTable("Contracts");
+            //builder.Entity<PersonalData>().ToTable("PersonalDatas");
+            //builder.Entity<Employee>().ToTable("Employees");
+            //builder.Entity<Company>().ToTable("Companies");
+
+            //system tables 
+            //builder.Entity<SysAdministrativeTerritory>().ToTable("SysAdministrativeTerritories");
+            //builder.Entity<SysContractTerminationType>().ToTable("SysContractTerminationTypes");
+            //builder.Entity<SysContractType>().ToTable("SysContractTypes");
+            //builder.Entity<SysIconomicActivity>().ToTable("SysIconomicActivities");
+            //builder.Entity<SysPosition>().ToTable("SysPositions");
         }
     }
 }

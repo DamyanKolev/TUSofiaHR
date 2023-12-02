@@ -28,15 +28,15 @@ namespace webapi.Controllers.Auth
         }
 
 
-        //[Authorize]
-        [HttpGet("/api/auth/refresh-token", Name = "Refresh_Token")]
+        [Authorize]
+        [HttpPost("/api/auth/refresh-token", Name = "Refresh_Token")]
         public async Task<IActionResult> RefreshToken()
         {
             var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];
-            //var result = await _authenticationService.RefreshToken(token);
+            var result = await _authenticationService.RefreshToken(token);
 
-            //if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-            //    return BadRequest();
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest();
 
             return Ok(token);
 
@@ -44,8 +44,9 @@ namespace webapi.Controllers.Auth
 
 
         [HttpPost("/api/auth/validate-token", Name="Token_Validation")]
-        public IActionResult TokenValidation([FromBody] String token)
+        public IActionResult TokenValidation()
         {
+            var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];
             var result = _authenticationService.ValidateToken(token);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest)) 

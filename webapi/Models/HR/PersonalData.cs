@@ -1,9 +1,17 @@
-﻿namespace webapi.Models.HR
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace webapi.Models.HR
 {
     public class PersonalData
     {
+        [Key]
         public int Id { get; set; }
+        [Required]
         public required string EGN { get; set; }
+        public DateOnly BirthDate { get; set; }
+        public Gender Gender { get; set; }
+        public DateOnly PersonalIdIssueDate { get; set; }
+        public Address? Address { get; set; }
     }
 
     public struct PersonalDataInsertRequest

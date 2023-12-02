@@ -22,11 +22,13 @@ namespace webapi.Services.Auth
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IJWTService _jwtService;
 
-        public AuthenticationService(UserManager<User> userManager, IConfiguration configuration)
+        public AuthenticationService(UserManager<User> userManager, IConfiguration configuration, IJWTService jwtService)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _jwtService = jwtService;
         }
 
         public async Task<ResponseWithStatus<DataResponse<string>>> SingIn(LoginModel model)
@@ -35,7 +37,8 @@ namespace webapi.Services.Auth
 
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                string token = await GenerateUserToken(user);
+                var userRoles = await _userManager.GetRolesAsync(user);
+                string token = _jwtService.GenerateUserToken(user, userRoles);
 
                 return ResponseBuilder.CreateDataResponseWithStatus<string>(
                     HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, token);
@@ -67,7 +70,8 @@ namespace webapi.Services.Auth
                     HttpStatusCode.BadRequest, MessageConstants.MESSAGE_REFRESH_TOKEN_FAILED, "");
             }
 
-            var newToken = await GenerateUserToken(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            string newToken = _jwtService.GenerateUserToken(user, userRoles);
 
             return ResponseBuilder.CreateDataResponseWithStatus<string>(
                     HttpStatusCode.OK, MessageConstants.MESSAGE_REFRESH_TOKEN_SUCCESS, newToken);
@@ -79,71 +83,14 @@ namespace webapi.Services.Auth
             if (token == null)
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_NULL_TOKEN);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!);
+            var isTokenValid = _jwtService.IsTokenValid(token);
 
-            try
-            {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
-
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var username = jwtToken.Claims.First(x => x.Type == ClaimTypes.Name).Value;
-
-
-                if (username == null)
-                {
-                    return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INVALID_TOKEN);
-                }
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_VALID_TOKEN);
-            }
-            catch
+            if (!isTokenValid)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INVALID_TOKEN);
-
             }
-        }
 
-        private string GenerateToken(IEnumerable<Claim> claims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Issuer = _configuration["JWT:ValidIssuer"],
-                Audience = _configuration["JWT:ValidAudience"],
-                Expires = DateTime.UtcNow.AddHours(3),
-                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
-                Subject = new ClaimsIdentity(claims)
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
-        private async Task<string> GenerateUserToken(User user)
-        {
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserName!),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
-
-            foreach (var userRole in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }
-            
-            return GenerateToken(authClaims);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_VALID_TOKEN);
         }
     }
 }

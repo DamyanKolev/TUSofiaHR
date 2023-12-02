@@ -1,9 +1,14 @@
-﻿namespace webapi.Models.HR
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace webapi.Models.HR
 {
     public class Company
     {
+        [Key]
         public int Id { get; set; }
+        [Required]
         public required string CompanyName {  get; set; }
+        [Required]
         public required string CompanyEIC { get; set; }
     }
 

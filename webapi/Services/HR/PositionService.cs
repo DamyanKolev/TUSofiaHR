@@ -8,7 +8,7 @@ namespace webapi.Services.HR
 {
     public interface IPositionService
     {
-        public ResponseWithStatus<Response> CreatePosition(PositionRequest insertRequest);
+        public ResponseWithStatus<Response> CreatePosition(PositionDTO insertRequest);
         public ResponseWithStatus<Response> UpdatePosition(PositionUpdateRequest updateRequest);
         public ResponseWithStatus<Response> DeletePosition(int positionId);
     }
@@ -22,7 +22,7 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public ResponseWithStatus<Response> CreatePosition(PositionRequest insertRequest)
+        public ResponseWithStatus<Response> CreatePosition(PositionDTO insertRequest)
         {
             var position = _mapper.Map<Position>(insertRequest);
             _context.Positions.Add(position);

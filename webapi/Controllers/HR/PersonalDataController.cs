@@ -17,8 +17,11 @@ namespace webapi.Controllers.HR
             _personalDataService = personalDataService;
         }
 
+
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Accountant")]
         [HttpPost("/api/personal-data/create", Name = "Create_PersonalData")]
-        public IActionResult Post([FromBody] PersonalDataInsertRequest data)
+        public IActionResult Post([FromBody] PersonalDataDTO data)
         {
             var response = _personalDataService.CreatePersonalData(data);
 
@@ -29,6 +32,8 @@ namespace webapi.Controllers.HR
         }
 
 
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Accountant")]
         [HttpPut("/api/personal-data/update", Name = "Update_PersonalData")]
         public IActionResult Put([FromBody] PersonalDataUpdateRequest data)
         {

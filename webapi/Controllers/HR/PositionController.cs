@@ -18,7 +18,7 @@ namespace webapi.Controllers.HR
         [Authorize(Roles = "Admin")]
         [Authorize(Roles = "Accountant")]
         [HttpPost("/api/positions/create", Name = "Create_Position")]
-        public IActionResult CreatePosition([FromBody] PositionRequest positionRequest)
+        public IActionResult CreatePosition([FromBody] PositionDTO positionRequest)
         {
             var response = _positionService.CreatePosition(positionRequest);
 

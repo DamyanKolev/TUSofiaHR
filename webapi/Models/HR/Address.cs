@@ -14,4 +14,19 @@ namespace webapi.Models.HR
         [Required]
         public required SysAdministrativeTerritory Territory { get; set; }
     }
+
+
+    public record AddressDTO
+    {
+        public string? StreetAddress { get; set; }
+        public string? PostalCode { get; set; }
+        public SysAdministrativeTerritory? Territory { get; set; }
+    }
+
+
+    public record AddressUpdateRequest
+    {
+        public Int64 UpdateId { get; set; }
+        public required AddressDTO Data { get; set; }
+    }
 }

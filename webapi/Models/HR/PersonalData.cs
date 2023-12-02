@@ -14,19 +14,19 @@ namespace webapi.Models.HR
         public Address? Address { get; set; }
     }
 
-    public record PersonalDataInsertRequest
+    public record PersonalDataDTO
     {
-        public required string EGN { get; set; }
+        public string? EGN { get; set; }
+        public DateOnly BirthDate { get; set; }
+        public Gender Gender { get; set; }
+        public DateOnly PersonalIdIssueDate { get; set; }
+        public Address? Address { get; set; }
     }
 
-    public record PersonalDataUpdate
-    {
-        public required string EGN { get; set; }
-    }
 
     public record PersonalDataUpdateRequest
     {
         public required Int64 UpdateId { get; set; }
-        public required PersonalDataUpdate Data { get; set; }
+        public required PersonalDataDTO Data { get; set; }
     }
 }

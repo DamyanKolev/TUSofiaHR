@@ -14,16 +14,16 @@ namespace webapi.Models.HR
         public required decimal MaxSalary { get; set ; }
     }
 
-    public record PositionRequest
+    public record PositionDTO
     {
-        public required string PositionName { get; set; }
-        public required decimal MinSalary { get; set; }
-        public required decimal MaxSalary { get; set; }
+        public string? PositionName { get; set; }
+        public decimal MinSalary { get; set; }
+        public decimal MaxSalary { get; set; }
     }
 
     public record PositionUpdateRequest
     {
         public required int PositionId { get; set; }
-        public required PositionRequest PositionRequest { get; set; }
+        public required PositionDTO PositionRequest { get; set; }
     }
 }

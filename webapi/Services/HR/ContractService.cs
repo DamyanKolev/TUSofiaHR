@@ -2,14 +2,13 @@
 using webapi.Models;
 using webapi.Constants;
 using AutoMapper;
-using static webapi.Models.HR.EmployeeUpdate;
 using System.Net;
 
 namespace webapi.Services.HR
 {
     public interface IContractService
     {
-        public ResponseWithStatus<Response> CreateContract(ContractInsertRequest insertRequest);
+        public ResponseWithStatus<Response> CreateContract(ContractDTO insertRequest);
         public ResponseWithStatus<Response> UpdateContract(ContractUpdateRequest updateRequest);
         public ResponseWithStatus<DataResponse<List<Contract>>> PageSelectContracts(int pageNumber, int pageSize);
     }
@@ -25,7 +24,7 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public ResponseWithStatus<Response> CreateContract(ContractInsertRequest insertRequest)
+        public ResponseWithStatus<Response> CreateContract(ContractDTO insertRequest)
         {
             var data = _mapper.Map<Contract>(insertRequest);
             _context.Contracts.Add(data);

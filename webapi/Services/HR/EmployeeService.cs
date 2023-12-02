@@ -1,16 +1,14 @@
 ﻿using System.Net;
-using System.Threading.Channels;
 using AutoMapper;
 using webapi.Constants;
 using webapi.Models;
 using webapi.Models.HR;
-using static webapi.Models.HR.EmployeeUpdate;
 
 namespace webapi.Services.HR
 {
     public interface IEmployeeService
     {
-        public ResponseWithStatus<Response> CreateEmployee(EmployeeInsertRequest insertRequest);
+        public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO insertRequest);
         public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateRequest updateRequest);
         public ResponseWithStatus<DataResponse<List<Employee>>> PageSelectEmployees(int pageNumber, int pageSize);
     }
@@ -26,7 +24,7 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public ResponseWithStatus<Response> CreateEmployee(EmployeeInsertRequest insertRequest)
+        public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO insertRequest)
         {
             var data = _mapper.Map<Employee>(insertRequest);
             _context.Employees.Add(data);

@@ -19,37 +19,20 @@ namespace webapi.Controllers.HR
             _contractService = contractService;
         }
 
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Accountant")]
         [HttpPost("/api/contracts/page", Name = "Contract_Page")]
         public IActionResult PagePost([FromBody] PageRequest data)
         {
             //var response = _contractService.PageSelectContracts(data.PageNumber, data.PageSize);
 
-            var contract = new Contract
-            {
-                Id = 0,
-                WorkingWage = 1200,
-                WorkTime = 40,
-                ConclusionDate = new DateOnly()
-            };
-
-            var contract1 = new Contract
-            {
-                Id = 5,
-                WorkingWage = 1500,
-                WorkTime = 48,
-                ConclusionDate = new DateOnly()
-            };
-
-            var contracts = new List<Contract>();
-            contracts.Add(contract);
-            contracts.Add(contract1);
-
-
-            return Ok(contracts);
+            return Ok();
         }
 
+        //[Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Accountant")]
         [HttpPost("/api/contracts/create", Name = "PostContract")]
-        public IActionResult Post([FromBody] ContractInsertRequest data)
+        public IActionResult Post([FromBody] ContractDTO data)
         {
             //var response = _contractService.CreateContract(data);
 
@@ -59,7 +42,8 @@ namespace webapi.Controllers.HR
             return Ok(data);
         }
 
-
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Accountant")]
         [HttpPut("/api/contracts/update", Name = "PutContract")]
         public IActionResult Put([FromBody] ContractUpdateRequest data)
         {

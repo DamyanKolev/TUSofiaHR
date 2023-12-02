@@ -8,9 +8,7 @@ namespace webapi
     {
         public MapperProfile()
         {
-            CreateMap<Employee, EmployeeInsertRequest>();
-            CreateMap<Employee, EmployeeUpdate>();
-
+            CreateMap<Employee, EmployeeDTO>();
             CreateMap<Position, PositionRequest>();
 
             CreateMap<RoleRequest, Role>();

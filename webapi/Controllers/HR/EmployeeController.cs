@@ -30,7 +30,7 @@ namespace webapi.Controllers.HR
         //[Authorize(Roles = "Employee")]
         [Authorize]
         [HttpPost("/api/employees/create", Name = "Create_Employee")]
-        public IActionResult Post([FromBody] EmployeeInsertRequest data)
+        public IActionResult Post([FromBody] EmployeeDTO data)
         {
             //var response = _employeeService.CreateEmployee(data);
 

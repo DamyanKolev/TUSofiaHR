@@ -8,7 +8,7 @@ namespace webapi.Services.HR
 {
     public interface IPersonalDataService
     {
-        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataInsertRequest insertRequest);
+        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataDTO insertRequest);
         public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateRequest updateRequest);
     }
     public class PersonalDataService : IPersonalDataService
@@ -21,7 +21,7 @@ namespace webapi.Services.HR
             _context = context;
             _mapper = mapper;
         }
-        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataInsertRequest insertRequest)
+        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataDTO insertRequest)
         {
             var data = _mapper.Map<PersonalData>(insertRequest);
             _context.PersonalDatas.Add(data);

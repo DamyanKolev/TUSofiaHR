@@ -3,13 +3,12 @@ using webapi.Models;
 using AutoMapper;
 using System.Net;
 using webapi.Constants;
-using System.Diagnostics.Contracts;
 
 namespace webapi.Services.HR
 {
     public interface ICompanyService
     {
-        public ResponseWithStatus<Response> CreateCompany(CompanyRequest insertRequest);
+        public ResponseWithStatus<Response> CreateCompany(CompanyDTO insertRequest);
         public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateRequest updateRequest);
     }
     public class CompanyService : ICompanyService
@@ -22,7 +21,7 @@ namespace webapi.Services.HR
             _context = context;
             _mapper = mapper;
         }
-        public ResponseWithStatus<Response> CreateCompany(CompanyRequest insertRequest)
+        public ResponseWithStatus<Response> CreateCompany(CompanyDTO insertRequest)
         {
             var data = _mapper.Map<Company>(insertRequest);
             _context.Companies.Add(data);

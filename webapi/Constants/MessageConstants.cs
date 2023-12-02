@@ -31,5 +31,8 @@
 
         public const string MESSAGE_SUCCESS_ADD_USER_ROLE = "Role successfully added";
         public const string MESSAGE_FAILED_ADD_USER_ROLE = "Role failed added";
+
+        public const string MESSAGE_REFRESH_TOKEN_FAILED = "Failed to refresh token";
+        public const string MESSAGE_REFRESH_TOKEN_SUCCESS = "Success to refresh token";
     }
 }

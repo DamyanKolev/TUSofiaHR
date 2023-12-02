@@ -14,6 +14,8 @@ namespace webapi.Services.Auth
     {
         public Task<ResponseWithStatus<DataResponse<string>>> SingIn(LoginModel model);
         public ResponseWithStatus<Response> ValidateToken(string token);
+
+        public Task<ResponseWithStatus<DataResponse<string>>> RefreshToken(string token);
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -33,27 +35,42 @@ namespace webapi.Services.Auth
 
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserName!),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
-
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-
-                string token = GenerateToken(authClaims);
+                string token = await GenerateUserToken(user);
 
                 return ResponseBuilder.CreateDataResponseWithStatus<string>(
                     HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, token);
             }
 
             return ResponseBuilder.CreateDataResponseWithStatus<string>(
-                HttpStatusCode.BadRequest, MessageConstants.MESSAGE_FAILED_SIGN_IN, (user == null).ToString());
+                HttpStatusCode.BadRequest, MessageConstants.MESSAGE_FAILED_SIGN_IN, "");
+        }
+
+
+        public async Task<ResponseWithStatus<DataResponse<string>>> RefreshToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userName = jwtToken.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
+
+            if (userName == null)
+            {
+                return ResponseBuilder.CreateDataResponseWithStatus<string>(
+                    HttpStatusCode.BadRequest, MessageConstants.MESSAGE_REFRESH_TOKEN_FAILED, "");
+            }
+
+            var user = await _userManager.FindByNameAsync(userName.Value);
+
+            if (user == null)
+            {
+                return ResponseBuilder.CreateDataResponseWithStatus<string>(
+                    HttpStatusCode.BadRequest, MessageConstants.MESSAGE_REFRESH_TOKEN_FAILED, "");
+            }
+
+            var newToken = await GenerateUserToken(user);
+
+            return ResponseBuilder.CreateDataResponseWithStatus<string>(
+                    HttpStatusCode.OK, MessageConstants.MESSAGE_REFRESH_TOKEN_SUCCESS, newToken);
         }
 
 
@@ -109,6 +126,24 @@ namespace webapi.Services.Auth
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        private async Task<string> GenerateUserToken(User user)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.UserName!),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                };
+
+            foreach (var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
+            
+            return GenerateToken(authClaims);
         }
     }
 }

@@ -50,6 +50,7 @@ namespace webapi.Services.HR
             }
 
             _mapper.Map(updateRequest.Data, employee);
+            _context.Update(employee);
             var result = _context.SaveChanges();
 
             if (result > 0)

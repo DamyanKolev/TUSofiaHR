@@ -3,6 +3,7 @@ using webapi.Models;
 using AutoMapper;
 using System.Net;
 using webapi.Constants;
+using System.Diagnostics.Contracts;
 
 namespace webapi.Services.HR
 {
@@ -45,6 +46,7 @@ namespace webapi.Services.HR
             }
 
             _mapper.Map(updateRequest.Data, company);
+            _context.Update(company);
             var result = _context.SaveChanges();
 
             if (result > 0)

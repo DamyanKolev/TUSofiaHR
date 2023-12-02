@@ -19,13 +19,19 @@ var config = builder.Configuration;
 //        p.RequireClaim(Identity.AdminUserClaimName, "true"));
 //});
 
-
-// dependency injection of the services
+//Automapper service
 builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MapperProfile>(); });
+
+// Human Resources services
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IContractService, ContractService>();
 builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IPositionService, PositionService>();
+
+
+// Auth services
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IJWTService, JWTService>();
 builder.Services.AddScoped<IUserService, UserService>();

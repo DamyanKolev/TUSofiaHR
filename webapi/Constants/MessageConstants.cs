@@ -15,6 +15,8 @@
         public const string MESSAGE_INSERT_FAILED = "Failed insertion";
         public const string MESSAGE_UPDATE_SUCCESS = "Successful update";
         public const string MESSAGE_UPDATE_FAILED = "Failed update";
+        public const string MESSAGE_DELETE_SUCCESS = "Successful deletion";
+        public const string MESSAGE_DELETE_FAILED = "Failed deletion";
 
         public const string MESSAGE_USERNAME_EXIST = "User already exists!";
         public const string MESSAGE_REGISTRATION_FAILED = "User creation failed! Please check user details and try again.";

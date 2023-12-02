@@ -10,6 +10,9 @@ namespace webapi
         {
             CreateMap<Employee, EmployeeInsertRequest>();
             CreateMap<Employee, EmployeeUpdate>();
+
+            CreateMap<Position, PositionRequest>();
+
             CreateMap<RoleRequest, Role>();
             CreateMap<UserRequest, User>();
         }

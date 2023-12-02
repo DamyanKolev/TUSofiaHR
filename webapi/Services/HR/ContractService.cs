@@ -49,6 +49,7 @@ namespace webapi.Services.HR
             }
 
             _mapper.Map(updateRequest.Data, contract);
+            _context.Update(contract);
             var result = _context.SaveChanges();
 
             if (result > 0)

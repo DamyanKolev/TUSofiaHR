@@ -1,9 +1,14 @@
-﻿namespace webapi.Models.System
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace webapi.Models.System
 {
-    public class SysContractTerminationType
+    public record SysContractTerminationType
     {
+        [Key]
         public int Id { get; set; }
-        public string? Code { get; set; }
-        public string? TerminationType { get; set; }
+        [Required]
+        public required string Code { get; set; }
+        [Required]
+        public required string TerminationType { get; set; }
     }
 }

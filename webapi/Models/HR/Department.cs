@@ -2,7 +2,7 @@
 
 namespace webapi.Models.HR
 {
-    public class Department
+    public record Department
     {
         [Key]
         public int Id { get; set; }

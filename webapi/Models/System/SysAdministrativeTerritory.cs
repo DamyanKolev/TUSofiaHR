@@ -1,12 +1,20 @@
-﻿namespace webapi.Models.System
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace webapi.Models.System
 {
-    public class SysAdministrativeTerritory
+    public record SysAdministrativeTerritory
     {
+        [Key]
         public int Id { get; set; }
-        public string? Ekatte { get; set; }
-        public string? TerritoryName { get; set; }
-        public string? TerritoryType { get; set; }
-        public string? RegionName { get; set; }
-        public string? MunicipalityName { get; set; }
+        [Required]
+        public required string Ekatte { get; set; }
+        [Required]
+        public required string TerritoryName { get; set; }
+        [Required]
+        public required string TerritoryType { get; set; }
+        [Required]
+        public required string RegionName { get; set; }
+        [Required]
+        public required string MunicipalityName { get; set; }
     }
 }

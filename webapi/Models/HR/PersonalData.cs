@@ -2,7 +2,7 @@
 
 namespace webapi.Models.HR
 {
-    public class PersonalData
+    public record PersonalData
     {
         [Key]
         public int Id { get; set; }
@@ -14,19 +14,19 @@ namespace webapi.Models.HR
         public Address? Address { get; set; }
     }
 
-    public struct PersonalDataInsertRequest
+    public record PersonalDataInsertRequest
     {
-        public string EGN { get; set; }
+        public required string EGN { get; set; }
     }
 
-    public struct PersonalDataUpdate
+    public record PersonalDataUpdate
     {
-        public string EGN { get; set; }
+        public required string EGN { get; set; }
     }
 
-    public struct PersonalDataUpdateRequest
+    public record PersonalDataUpdateRequest
     {
-        public Int64 UpdateId { get; set; }
-        public PersonalDataUpdate Data { get; set; }
+        public required Int64 UpdateId { get; set; }
+        public required PersonalDataUpdate Data { get; set; }
     }
 }

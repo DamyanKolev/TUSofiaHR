@@ -2,7 +2,7 @@
 
 namespace webapi.Models.HR
 {
-    public class Company
+    public record Company
     {
         [Key]
         public int Id { get; set; }
@@ -12,21 +12,15 @@ namespace webapi.Models.HR
         public required string CompanyEIC { get; set; }
     }
 
-    public struct CompanyInsertRequest
+    public record CompanyRequest
     {
-        public string CompanyName { get; set; }
-        public string CompanyEIC { get; set; }
+        public required string CompanyName { get; set; }
+        public required string CompanyEIC { get; set; }
     }
 
-    public struct CompanyUpdate
+    public record CompanyUpdateRequest
     {
-        public string CompanyName { get; set; }
-        public string CompanyEIC { get; set; }
-    }
-
-    public struct CompanyUpdateRequest
-    {
-        public Int64 UpdateId { get; set; }
-        public PersonalDataUpdate Data { get; set; }
+        public required Int64 UpdateId { get; set; }
+        public required CompanyRequest CompanyRequest { get; set; }
     }
 }

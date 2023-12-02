@@ -9,22 +9,22 @@ namespace webapi.Models.Auth
         //public override required string Email {get; set;}
     }
 
-    public struct UserRequest
+    public record UserRequest
     {
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
+        public required string UserName { get; set; }
+        public required string Password { get; set; }
+        public required string Email { get; set; }
     }
 
-    public struct UserUpdateRequest
+    public record UserUpdateRequest
     {
-        public int Id { get; set; }
-        public UserRequest UpdateData { get; set; }
+        public required int Id { get; set; }
+        public required UserRequest UpdateData { get; set; }
     }
 
-    public struct UserRoleRequest
+    public record UserRoleRequest
     {
-        public string UserName { get; set; }
-        public string RoleName { get; set; }
+        public required string UserName { get; set; }
+        public required string RoleName { get; set; }
     }
 }

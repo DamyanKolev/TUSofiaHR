@@ -1,10 +1,16 @@
-﻿namespace webapi.Models.System
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace webapi.Models.System
 {
-    public class SysPosition
+    public record SysPosition
     {
+        [Key]
         public int Id { get; set; }
-        public string? NPKDBase { get; set; }
-        public string? NPKDSlave { get; set; }
-        public string? PositionName { get; set; }
+        [Required]
+        public required string NPKDBase { get; set; }
+        [Required]
+        public required string NPKDSlave { get; set; }
+        [Required]
+        public required string PositionName { get; set; }
     }
 }

@@ -1,12 +1,18 @@
-﻿namespace webapi.Models.System
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace webapi.Models.System
 {
     public class SysIconomicActivity
     {
+        [Key]
         public int Id { get; set; }
-        public string? Nkid { get; set; }
-
-        public string? NkidIdText { get; set; }
-        public string? ActivityName { get; set; }
-        public string? NkidId {  get; set; }
+        [Required]  
+        public required string Nkid { get; set; }
+        [Required]  
+        public required string NkidIdText { get; set; }
+        [Required]  
+        public required string ActivityName { get; set; }
+        [Required]  
+        public required string NkidId {  get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace webapi.Models
 {
-    public struct PageRequest
+    public record PageRequest
     {
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
+        public required int PageNumber { get; set; }
+        public required int PageSize { get; set; }
     }
 }

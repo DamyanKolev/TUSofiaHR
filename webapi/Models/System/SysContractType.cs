@@ -1,9 +1,14 @@
-﻿namespace webapi.Models.System
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace webapi.Models.System
 {
-    public class SysContractType
+    public record SysContractType
     {
+        [Key]
         public int Id { get; set; }
-        public string? Code { get; set; }
-        public string? ContractType { get; set; }
+        [Required]
+        public required string Code { get; set; }
+        [Required]
+        public required string ContractType { get; set; }
     }
 }

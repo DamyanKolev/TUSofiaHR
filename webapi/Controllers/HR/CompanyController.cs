@@ -18,7 +18,7 @@ namespace webapi.Controllers.HR
         }
 
         [HttpPost("/api/company/create", Name = "Create_Company")]
-        public IActionResult Post([FromBody] CompanyInsertRequest data)
+        public IActionResult Post([FromBody] CompanyRequest data)
         {
             var response = _companyService.CreateCompany(data);
 

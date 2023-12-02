@@ -3,7 +3,7 @@ using webapi.Models.System;
 
 namespace webapi.Models.HR
 {
-    public class Address
+    public record Address
     {
         [Key]
         public int Id { get; set; }

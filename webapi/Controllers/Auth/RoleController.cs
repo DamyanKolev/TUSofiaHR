@@ -7,7 +7,7 @@ namespace webapi.Controllers.Auth
 {
     public class RoleController : ControllerBase
     {
-        public readonly IRoleService _roleService;
+        private readonly IRoleService _roleService;
 
         public RoleController(IRoleService roleService)
         {

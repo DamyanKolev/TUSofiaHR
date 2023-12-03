@@ -9,7 +9,7 @@ namespace webapi.Controllers.Auth
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        public readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationService _authenticationService;
 
         public AuthenticationController(IAuthenticationService authenticationService)
         {

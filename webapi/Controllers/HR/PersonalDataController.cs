@@ -10,7 +10,7 @@ namespace webapi.Controllers.HR
     [ApiController]
     public class PersonalDataController : ControllerBase
     {
-        public readonly IPersonalDataService _personalDataService;
+        private readonly IPersonalDataService _personalDataService;
 
         public PersonalDataController(IPersonalDataService personalDataService)
         {

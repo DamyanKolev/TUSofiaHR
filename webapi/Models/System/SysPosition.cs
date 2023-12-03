@@ -9,6 +9,8 @@ namespace webapi.Models.System
         [Required]
         public required string NPKDBase { get; set; }
         [Required]
+        public required string NPKDId { get; set; }
+        [Required]
         public required string NPKDSlave { get; set; }
         [Required]
         public required string PositionName { get; set; }

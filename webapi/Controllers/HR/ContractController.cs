@@ -7,8 +7,6 @@ using webapi.Services.HR;
 
 namespace webapi.Controllers.HR
 {
-    //[Authorize]
-    [Route("hr/contracts")]
     [ApiController]
     public class ContractController: ControllerBase
     {

@@ -10,7 +10,7 @@ namespace webapi.Controllers.HR
     [ApiController]
     public class CompanyController : ControllerBase
     {
-        public readonly ICompanyService _companyService;
+        private readonly ICompanyService _companyService;
 
         public CompanyController(ICompanyService companyService)
         {

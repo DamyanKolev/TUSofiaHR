@@ -8,7 +8,7 @@ namespace webapi.Controllers.Auth
 {
     public class UserController : ControllerBase
     {
-        public readonly IUserService _userService;
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {

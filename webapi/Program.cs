@@ -8,6 +8,7 @@ using webapi.Identity;
 using webapi.Models.Auth;
 using webapi.Services.Auth;
 using webapi.Services.HR;
+using webapi.Services.System;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -38,6 +39,15 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IJWTService, JWTService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+
+
+// System service
+builder.Services.AddScoped<ISysAdministrativeTerritoryService, SysAdministrativeTerritoryService>();
+builder.Services.AddScoped<ISysContractTerminationTypeService, SysContractTerminationTypeService>();
+builder.Services.AddScoped<ISysContractTypeService, SysContractTypeService>();
+builder.Services.AddScoped<ISysIconomicActivityService, SysIconomicActivityService>();
+builder.Services.AddScoped<ISysPositionService, SysPositionService>();
+
 
 
 builder.Services.AddIdentity<User, Role>()

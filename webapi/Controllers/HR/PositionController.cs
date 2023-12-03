@@ -3,6 +3,8 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models.HR;
 using webapi.Services.HR;
+using webapi.Services;
+using webapi.Models.System;
 
 namespace webapi.Controllers.HR
 {
@@ -34,14 +36,16 @@ namespace webapi.Controllers.HR
         [HttpPatch("/api/positions/update", Name = "Update_Position")]
         public IActionResult UpdateDepartment([FromBody] PositionUpdateRequest updateRequest)
         {
-            var response = _positionService.UpdatePosition(updateRequest);
+            //var response = _positionService.UpdatePosition(updateRequest);
 
-            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(response.Response);
-            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response.Response);
+            //if (response.StatusCode.Equals(HttpStatusCode.NotFound))
+            //    return NotFound(response.Response);
+            //else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
+            //    return BadRequest(response.Response);
 
-            return Ok(response.Response);
+            var test = CSVFileProcessor.ParseCSVToList<SysContractDocumentType>("Sys_Contract_Document_Types.csv");
+
+            return Ok(/*response.Response*/ test);
         }
 
         [Authorize(Roles = "Admin")]

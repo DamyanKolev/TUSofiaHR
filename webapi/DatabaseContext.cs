@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using webapi.Models.Auth;
 using webapi.Models.HR;
@@ -33,18 +34,7 @@ namespace webapi
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            //builder.Entity<Contract>().ToTable("Contracts");
-            //builder.Entity<PersonalData>().ToTable("PersonalDatas");
-            //builder.Entity<Employee>().ToTable("Employees");
-            //builder.Entity<Company>().ToTable("Companies");
-
-            //system tables 
-            //builder.Entity<SysAdministrativeTerritory>().ToTable("SysAdministrativeTerritories");
-            //builder.Entity<SysContractTerminationType>().ToTable("SysContractTerminationTypes");
-            //builder.Entity<SysContractType>().ToTable("SysContractTypes");
-            //builder.Entity<SysIconomicActivity>().ToTable("SysIconomicActivities");
-            //builder.Entity<SysPosition>().ToTable("SysPositions");
+            builder.Seed();
         }
     }
 }

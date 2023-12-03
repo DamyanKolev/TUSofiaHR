@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using webapi;
 using webapi.Identity;
 using webapi.Models.Auth;
+using webapi.Services;
 using webapi.Services.Auth;
 using webapi.Services.HR;
 using webapi.Services.System;
@@ -47,7 +48,6 @@ builder.Services.AddScoped<ISysContractTerminationTypeService, SysContractTermin
 builder.Services.AddScoped<ISysContractTypeService, SysContractTypeService>();
 builder.Services.AddScoped<ISysIconomicActivityService, SysIconomicActivityService>();
 builder.Services.AddScoped<ISysPositionService, SysPositionService>();
-
 
 
 builder.Services.AddIdentity<User, Role>()

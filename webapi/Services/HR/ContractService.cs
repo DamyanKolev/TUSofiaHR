@@ -47,11 +47,14 @@ namespace webapi.Services.HR
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-            _mapper.Map(updateRequest.Data, contract);
+            var contractToPatch = _mapper.Map<ContractDTO>(contract);
+            updateRequest.Contract.ApplyTo(contractToPatch);
+
+            _mapper.Map(contractToPatch, contract);
             _context.Update(contract);
             var result = _context.SaveChanges();
 
-            if (result > 0)
+            if (result == 0)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
             }

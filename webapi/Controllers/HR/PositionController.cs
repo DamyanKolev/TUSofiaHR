@@ -29,9 +29,9 @@ namespace webapi.Controllers.HR
         }
 
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPut("/api/positions/update", Name = "Update_Position")]
+        //[Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Accountant")]
+        [HttpPatch("/api/positions/update", Name = "Update_Position")]
         public IActionResult UpdateDepartment([FromBody] PositionUpdateRequest updateRequest)
         {
             var response = _positionService.UpdatePosition(updateRequest);

@@ -46,11 +46,11 @@ namespace webapi.Controllers.Auth
         [HttpPost("/api/auth/validate-token", Name="Token_Validation")]
         public IActionResult TokenValidation()
         {
-            var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];
-            var result = _authenticationService.ValidateToken(token);
+            //var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];
+            //var result = _authenticationService.ValidateToken(token);
 
-            if (result.StatusCode.Equals(HttpStatusCode.BadRequest)) 
-                return BadRequest();
+            //if (result.StatusCode.Equals(HttpStatusCode.BadRequest)) 
+            //    return BadRequest();
 
             return Ok();
 

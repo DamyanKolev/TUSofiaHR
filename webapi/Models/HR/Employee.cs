@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Models.HR
 {
@@ -51,6 +52,6 @@ namespace webapi.Models.HR
     public record EmployeeUpdateRequest
     {
         public required Int64 UpdateId { get; set; }
-        public required EmployeeDTO Data { get; set; }
+        public required JsonPatchDocument<EmployeeDTO> Employee { get; set; }
     }
 }

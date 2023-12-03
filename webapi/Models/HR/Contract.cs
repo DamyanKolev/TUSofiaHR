@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.JsonPatch;
 using webapi.Models.System;
 
 namespace webapi.Models.HR
@@ -63,6 +64,6 @@ namespace webapi.Models.HR
     public record ContractUpdateRequest
     {
         public Int64 UpdateId { get; set; }
-        public required ContractDTO Data { get; set; }
+        public required JsonPatchDocument<ContractDTO> Contract { get; set; }
     }
 }

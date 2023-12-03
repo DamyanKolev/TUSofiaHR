@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Models.HR
 {
@@ -16,7 +17,7 @@ namespace webapi.Models.HR
 
     public record PositionDTO
     {
-        public string? PositionName { get; set; }
+        public required string PositionName { get; set; }
         public decimal MinSalary { get; set; }
         public decimal MaxSalary { get; set; }
     }
@@ -24,6 +25,6 @@ namespace webapi.Models.HR
     public record PositionUpdateRequest
     {
         public required int PositionId { get; set; }
-        public required PositionDTO PositionRequest { get; set; }
+        public required JsonPatchDocument<PositionDTO> Position { get; set; }
     }
 }

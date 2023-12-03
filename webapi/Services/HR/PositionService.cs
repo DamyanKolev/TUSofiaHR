@@ -3,6 +3,8 @@ using webapi.Models;
 using System.Net;
 using webapi.Constants;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
+using webapi.Identity;
 
 namespace webapi.Services.HR
 {
@@ -40,18 +42,21 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<Response> UpdatePosition(PositionUpdateRequest updateRequest)
         {
-            var position = _context.Departments.Find(updateRequest.PositionId);
+            var position = _context.Positions.Find(updateRequest.PositionId);
 
             if (position == null)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-            _mapper.Map(updateRequest.PositionRequest, position);
+            var positionToPatch = _mapper.Map<PositionDTO>(position);
+            updateRequest.Position.ApplyTo(positionToPatch);
+
+            _mapper.Map(positionToPatch, position);
             _context.Update(position);
             var result = _context.SaveChanges();
 
-            if (result > 0)
+            if (result == 0)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
             }

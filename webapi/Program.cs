@@ -1,5 +1,4 @@
 using System.Text;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +17,9 @@ var config = builder.Configuration;
 //    options.AddPolicy(Identity.AdminUserPolicyName, p =>
 //        p.RequireClaim(Identity.AdminUserClaimName, "true"));
 //});
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson();
 
 //Automapper service
 builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MapperProfile>(); });

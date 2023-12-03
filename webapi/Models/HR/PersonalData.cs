@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Models.HR
 {
@@ -27,6 +28,6 @@ namespace webapi.Models.HR
     public record PersonalDataUpdateRequest
     {
         public required Int64 UpdateId { get; set; }
-        public required PersonalDataDTO Data { get; set; }
+        public required JsonPatchDocument<PersonalDataDTO> PersonalData { get; set; }
     }
 }

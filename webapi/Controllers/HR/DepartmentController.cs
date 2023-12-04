@@ -32,7 +32,7 @@ namespace webapi.Controllers.HR
 
         [Authorize(Roles = "Admin")]
         [Authorize(Roles = "Accountant")]
-        [HttpPut("/api/departments/update", Name = "Update_Departemnt")]
+        [HttpPatch("/api/departments/update", Name = "Update_Departemnt")]
         public IActionResult UpdateDepartment([FromBody] Department department)
         {
             var response = _departmentService.UpdateDepartment(department);

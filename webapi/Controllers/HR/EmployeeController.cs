@@ -23,7 +23,7 @@ namespace webapi.Controllers.HR
         {
             var response = _employeeService.PageSelectEmployees(data.PageNumber, data.PageSize);
 
-            return Ok(response);
+            return Ok(response.Response);
         }
 
 
@@ -42,7 +42,7 @@ namespace webapi.Controllers.HR
 
 
 
-        [HttpPut("/api/employees/update", Name = "Update_Employee")]
+        [HttpPatch("/api/employees/update", Name = "Update_Employee")]
         public IActionResult Put([FromBody] EmployeeUpdateRequest data)
         {
             var response = _employeeService.UpdateEmployee(data);

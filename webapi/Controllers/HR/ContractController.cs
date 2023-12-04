@@ -42,7 +42,7 @@ namespace webapi.Controllers.HR
 
         [Authorize(Roles = "Admin")]
         [Authorize(Roles = "Accountant")]
-        [HttpPut("/api/contracts/update", Name = "PutContract")]
+        [HttpPatch("/api/contracts/update", Name = "PutContract")]
         public IActionResult Put([FromBody] ContractUpdateRequest data)
         {
             var response = _contractService.UpdateContract(data);

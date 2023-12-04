@@ -34,7 +34,7 @@ namespace webapi.Controllers.HR
 
         [Authorize(Roles = "Admin")]
         [Authorize(Roles = "Accountant")]
-        [HttpPut("/api/personal-data/update", Name = "Update_PersonalData")]
+        [HttpPatch("/api/personal-data/update", Name = "Update_PersonalData")]
         public IActionResult Put([FromBody] PersonalDataUpdateRequest data)
         {
             var response = _personalDataService.UpdatePersonalData(data);

@@ -19,7 +19,7 @@ namespace webapi.Controllers.System
         }
 
 
-        [HttpPost("/api/sys/positions/page", Name = "GetPositionsPage")]
+        [HttpPost("/api/sys/positions/page", Name = "GetSysPositionsPage")]
         public IActionResult GetPositionsPage([FromBody] PageFilterInfo pageInfo)
         {
             var result = _positionService.GetPositionsPage(pageInfo);

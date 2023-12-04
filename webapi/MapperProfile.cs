@@ -23,8 +23,8 @@ namespace webapi
             CreateMap<Company, CompanyDTO>();
             CreateMap<CompanyDTO, Company>();
 
-            CreateMap<RoleRequest, Role>();
-            CreateMap<UserRequest, User>();
+            CreateMap<RoleDTO, Role>();
+            CreateMap<UserDTO, User>();
         }
     }
 }

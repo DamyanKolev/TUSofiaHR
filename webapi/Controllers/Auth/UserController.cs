@@ -46,9 +46,9 @@ namespace webapi.Controllers.Auth
 
 
         [HttpPost("/api/auth/user/add-role", Name = "AddUserRole")]
-        public async Task<IActionResult> AddUserRole([FromBody] UserUpdateDTO updateDTO)
+        public async Task<IActionResult> AddUserRole([FromBody] UserRoleDTO userRoleDTO)
         {
-            var result = await _userService.AddUserRole(updateDTO);
+            var result = await _userService.AddUserRole(userRoleDTO);
 
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))
                 return NotFound(result.Response);

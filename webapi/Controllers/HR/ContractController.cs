@@ -21,15 +21,6 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/contracts/page", Name = "GetContractsPage")]
-        public IActionResult GetContractsPage([FromBody] PageInfo pageInfo)
-        {
-            var result = _contractService.GetContractsPage(pageInfo);
-
-            return Ok(result.Response);
-        }
-
-
         [HttpPost("/api/contracts/create", Name = "CreateContract")]
         public IActionResult Post([FromBody] ContractDTO contractDTO)
         {
@@ -51,6 +42,15 @@ namespace webapi.Controllers.HR
                 return NotFound(result.Response);
             else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result.Response);
+
+            return Ok(result.Response);
+        }
+
+
+        [HttpPost("/api/contracts/page", Name = "GetContractsPage")]
+        public IActionResult GetContractsPage([FromBody] PageInfo pageInfo)
+        {
+            var result = _contractService.GetContractsPage(pageInfo);
 
             return Ok(result.Response);
         }

@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Cryptography;
 using webapi.Constants;
 using webapi.Models;
 using webapi.Models.Auth;
@@ -59,7 +58,7 @@ namespace webapi.Services.Auth
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-            _mapper.Map(updateDTO.UpdateData, user);
+            _mapper.Map(updateDTO.User, user);
             var result = await _userManager.UpdateAsync(user);
 
             if(!result.Succeeded)

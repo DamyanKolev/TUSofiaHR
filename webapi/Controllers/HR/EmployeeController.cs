@@ -20,15 +20,6 @@ namespace webapi.Controllers.HR
             _employeeService = employeeService;
         }
 
-        [HttpPost("/api/employees/page", Name = "GetEmployeesPage")]
-        public IActionResult GetEmployeesPage([FromBody] PageInfo pageInfo)
-        {
-            var result = _employeeService.GetEmployeesPage(pageInfo);
-
-            return Ok(result.Response);
-        }
-
-
         [HttpPost("/api/employees/create", Name = "CreateEmployee")]
         public IActionResult Post([FromBody] EmployeeDTO data)
         {
@@ -50,6 +41,14 @@ namespace webapi.Controllers.HR
                 return NotFound(result.Response);
             else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result.Response);
+
+            return Ok(result.Response);
+        }
+
+        [HttpPost("/api/employees/page", Name = "GetEmployeesPage")]
+        public IActionResult GetEmployeesPage([FromBody] PageInfo pageInfo)
+        {
+            var result = _employeeService.GetEmployeesPage(pageInfo);
 
             return Ok(result.Response);
         }

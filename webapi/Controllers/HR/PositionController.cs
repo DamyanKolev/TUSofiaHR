@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using webapi.Models.HR;
 using webapi.Services.HR;
 using webapi.Models.Auth;
+using webapi.Models;
 
 namespace webapi.Controllers.HR
 {
@@ -54,6 +55,14 @@ namespace webapi.Controllers.HR
                 return NotFound(result.Response);
             else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result.Response);
+
+            return Ok(result.Response);
+        }
+
+        [HttpPost("/api/positions/page", Name = "GetPositionsPage")]
+        public IActionResult GetPositionsPage([FromBody] PageInfo pageInfo)
+        {
+            var result = _positionService.GetPositionsPage(pageInfo);
 
             return Ok(result.Response);
         }

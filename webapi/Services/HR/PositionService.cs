@@ -3,8 +3,6 @@ using webapi.Models;
 using System.Net;
 using webapi.Constants;
 using AutoMapper;
-using Microsoft.AspNetCore.JsonPatch;
-using webapi.Identity;
 
 namespace webapi.Services.HR
 {
@@ -13,6 +11,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreatePosition(PositionDTO positionDTO);
         public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO);
         public ResponseWithStatus<Response> DeletePosition(int positionId);
+        public ResponseWithStatus<DataResponse<List<Position>>> GetPositionsPage(PageInfo pageInfo);
     }
     public class PositionService : IPositionService
     {
@@ -37,7 +36,6 @@ namespace webapi.Services.HR
 
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
-
 
 
         public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO)
@@ -82,6 +80,18 @@ namespace webapi.Services.HR
             }
 
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_DELETE_SUCCESS);
+        }
+
+
+        public ResponseWithStatus<DataResponse<List<Position>>> GetPositionsPage(PageInfo pageInfo)
+        {
+            var positions = _context.Positions
+                .OrderBy(p => p.Id)
+                .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
+                .Take(pageInfo.PageSize)
+                .ToList();
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, positions);
         }
     }
 }

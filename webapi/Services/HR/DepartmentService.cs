@@ -10,6 +10,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreateDepartment(string departmentName);
         public ResponseWithStatus<Response> UpdateDepartment(Department updateRequest);
         public ResponseWithStatus<Response> DeleteDepartment(int departmentId);
+        public ResponseWithStatus<DataResponse<List<Department>>> GetDepartmentsPage(PageInfo pageInfo);
     }
     public class DepartmentService : IDepartmentService
     {
@@ -74,6 +75,18 @@ namespace webapi.Services.HR
             }
 
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_DELETE_SUCCESS);
+        }
+
+
+        public ResponseWithStatus<DataResponse<List<Department>>> GetDepartmentsPage(PageInfo pageInfo)
+        {
+            var departments = _context.Departments
+                .OrderBy(p => p.Id)
+                .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
+                .Take(pageInfo.PageSize)
+                .ToList();
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, departments);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using webapi.Models;
 using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Services.HR;
@@ -55,6 +56,15 @@ namespace webapi.Controllers.HR
                 return NotFound(result.Response);
             else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result.Response);
+
+            return Ok(result.Response);
+        }
+
+
+        [HttpPost("/api/department/page", Name = "GetDepartmentsPage")]
+        public IActionResult GetDepartmentsPage([FromBody] PageInfo pageInfo)
+        {
+            var result = _departmentService.GetDepartmentsPage(pageInfo);
 
             return Ok(result.Response);
         }

@@ -8,8 +8,8 @@ namespace webapi.Services.HR
 {
     public interface ICompanyService
     {
-        public ResponseWithStatus<Response> CreateCompany(CompanyDTO insertRequest);
-        public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateRequest updateRequest);
+        public ResponseWithStatus<Response> CreateCompany(CompanyDTO companyDTO);
+        public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateDTO updateDTO);
     }
     public class CompanyService : ICompanyService
     {
@@ -21,9 +21,9 @@ namespace webapi.Services.HR
             _context = context;
             _mapper = mapper;
         }
-        public ResponseWithStatus<Response> CreateCompany(CompanyDTO insertRequest)
+        public ResponseWithStatus<Response> CreateCompany(CompanyDTO companyDTO)
         {
-            var data = _mapper.Map<Company>(insertRequest);
+            var data = _mapper.Map<Company>(companyDTO);
             _context.Companies.Add(data);
             var changes = _context.SaveChanges();
 
@@ -35,9 +35,9 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateDTO updateDTO)
         {
-            var company = _context.Employees.Find(updateRequest.UpdateId);
+            var company = _context.Employees.Find(updateDTO.UpdateId);
 
             if (company == null)
             {
@@ -45,7 +45,7 @@ namespace webapi.Services.HR
             }
 
             var companyToPatch = _mapper.Map<CompanyDTO>(company);
-            updateRequest.Company.ApplyTo(companyToPatch);
+            updateDTO.Company.ApplyTo(companyToPatch);
 
             _mapper.Map(companyToPatch, company);
             _context.Update(company);

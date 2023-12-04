@@ -25,7 +25,7 @@ namespace webapi.Models.HR
     }
 
 
-    public record PersonalDataUpdateRequest
+    public record PersonalDataUpdateDTO
     {
         public required Int64 UpdateId { get; set; }
         public required JsonPatchDocument<PersonalDataDTO> PersonalData { get; set; }

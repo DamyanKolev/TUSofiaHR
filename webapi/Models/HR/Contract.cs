@@ -61,7 +61,7 @@ namespace webapi.Models.HR
         public Int16 CodeCorection { get; set; }
         public Boolean Article62Flag { get; set; }
     }
-    public record ContractUpdateRequest
+    public record ContractUpdateDTO
     {
         public Int64 UpdateId { get; set; }
         public required JsonPatchDocument<ContractDTO> Contract { get; set; }

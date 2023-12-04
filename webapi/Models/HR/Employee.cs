@@ -49,7 +49,7 @@ namespace webapi.Models.HR
         public Boolean Article132Flag { get; set; }
     }
 
-    public record EmployeeUpdateRequest
+    public record EmployeeUpdateDTO
     {
         public required Int64 UpdateId { get; set; }
         public required JsonPatchDocument<EmployeeDTO> Employee { get; set; }

@@ -7,7 +7,7 @@ namespace webapi.Services.System
 {
     public interface ISysContractTypeService
     {
-        public ResponseWithStatus<DataResponse<List<SysContractType>>> SelectAll();
+        public ResponseWithStatus<DataResponse<List<SysContractType>>> GetContractTypes();
     }
     public class SysContractTypeService : ISysContractTypeService
     {
@@ -18,7 +18,7 @@ namespace webapi.Services.System
             _context = context;
         }
 
-        public ResponseWithStatus<DataResponse<List<SysContractType>>> SelectAll()
+        public ResponseWithStatus<DataResponse<List<SysContractType>>> GetContractTypes()
         {
             var administrativeTeritories = _context.SysContractTypes
                 .OrderBy(p => p.Id)

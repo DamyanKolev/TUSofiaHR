@@ -3,11 +3,13 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models.HR;
 using webapi.Services.HR;
-using webapi.Services;
-using webapi.Models.System;
+using webapi.Models.Auth;
 
 namespace webapi.Controllers.HR
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
+    [ApiController]
     public class PositionController : ControllerBase
     {
         private readonly IPositionService _positionService;
@@ -17,50 +19,43 @@ namespace webapi.Controllers.HR
             _positionService = positionService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/positions/create", Name = "Create_Position")]
-        public IActionResult CreatePosition([FromBody] PositionDTO positionRequest)
+        [HttpPost("/api/positions/create", Name = "CreatePosition")]
+        public IActionResult CreatePosition([FromBody] PositionDTO positionDTO)
         {
-            var response = _positionService.CreatePosition(positionRequest);
+            var result = _positionService.CreatePosition(positionDTO);
 
-            if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response.Response);
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
 
 
-        //[Authorize(Roles = "Admin")]
-        //[Authorize(Roles = "Accountant")]
-        [HttpPatch("/api/positions/update", Name = "Update_Position")]
-        public IActionResult UpdateDepartment([FromBody] PositionUpdateRequest updateRequest)
+        [HttpPatch("/api/positions/update", Name = "UpdatePosition")]
+        public IActionResult UpdateDepartment([FromBody] PositionUpdateDTO updateDTO)
         {
-            //var response = _positionService.UpdatePosition(updateRequest);
+            var result = _positionService.UpdatePosition(updateDTO);
 
-            //if (response.StatusCode.Equals(HttpStatusCode.NotFound))
-            //    return NotFound(response.Response);
-            //else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-            //    return BadRequest(response.Response);
+            if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result.Response);
+            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            var test = CSVFileProcessor.ParseCSVToList<SysContractDocumentType>("Sys_Contract_Document_Types.csv");
-
-            return Ok(/*response.Response*/ test);
+            return Ok(result.Response);
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpDelete("/api/positions/delete", Name = "Delete_Position")]
+
+        [HttpDelete("/api/positions/delete", Name = "DeletePosition")]
         public IActionResult DeleteDepartment([FromBody] int positionId)
         {
-            var response = _positionService.DeletePosition(positionId);
+            var result = _positionService.DeletePosition(positionId);
 
-            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(response.Response);
-            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response.Response);
+            if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result.Response);
+            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
     }
 }

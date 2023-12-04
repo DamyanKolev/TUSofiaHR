@@ -9,20 +9,20 @@ namespace webapi.Models.Auth
         //public override required string Email {get; set;}
     }
 
-    public record UserRequest
+    public record UserDTO
     {
         public required string UserName { get; set; }
         public required string Password { get; set; }
         public required string Email { get; set; }
     }
 
-    public record UserUpdateRequest
+    public record UserUpdateDTO
     {
         public required int Id { get; set; }
-        public required UserRequest UpdateData { get; set; }
+        public required UserDTO User { get; set; }
     }
 
-    public record UserRoleRequest
+    public record UserRoleDTO
     {
         public required string UserName { get; set; }
         public required string RoleName { get; set; }

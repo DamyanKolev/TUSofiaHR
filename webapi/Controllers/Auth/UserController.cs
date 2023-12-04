@@ -1,11 +1,12 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using webapi.Models;
 using webapi.Models.Auth;
 using webapi.Services.Auth;
 
 namespace webapi.Controllers.Auth
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -15,47 +16,46 @@ namespace webapi.Controllers.Auth
             _userService = userService;
         }
 
-        [HttpPost("/api/auth/user/create", Name = "Create_User")]
-        public async Task<IActionResult> CreateUserAsync([FromBody] UserRequest userRequest)
+        [HttpPost("/api/auth/user/create", Name = "CreateUser")]
+        public async Task<IActionResult> CreateUser([FromBody] UserDTO userDTO)
         {
-            var result = await _userService.CreateUserAsync(userRequest);
+            var result = await _userService.CreateUser(userDTO);
 
             //Check status from service
             if (result.StatusCode.Equals(HttpStatusCode.Conflict))
-                return Conflict(result);
+                return Conflict(result.Response);
             else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(result);
+                return BadRequest(result.Response);
 
-            return Ok(result);
+            return Ok(result.Response);
         }
 
-        [HttpPut("/api/auth/user/update", Name = "Update_User")]
-        public async Task<IActionResult> UpdateUserAsync([FromBody] UserUpdateRequest userRequest)
+        [HttpPatch("/api/auth/user/update", Name = "UpdateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO updateDTO)
         {
-            var result = await _userService.UpdateUserAsync(userRequest);
+            var result = await _userService.UpdateUser(updateDTO);
 
             //Check status from service
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(result);
+                return NotFound(result.Response);
             else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(result);
+                return BadRequest(result.Response);
 
-            return Ok(result);
+            return Ok(result.Response);
         }
 
 
-        [HttpPost("/api/auth/user/add-role", Name = "Create_User_Role")]
-        public async Task<IActionResult> AddUserRole([FromBody] UserRoleRequest userRoleRequest)
+        [HttpPost("/api/auth/user/add-role", Name = "AddUserRole")]
+        public async Task<IActionResult> AddUserRole([FromBody] UserUpdateDTO updateDTO)
         {
-            var result = await _userService.AddUserRole(userRoleRequest);
+            var result = await _userService.AddUserRole(updateDTO);
 
-            //Check status from service
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(result);
+                return NotFound(result.Response);
             else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(result);
+                return BadRequest(result.Response);
 
-            return Ok(result);
+            return Ok(result.Response);
         }
     }
 }

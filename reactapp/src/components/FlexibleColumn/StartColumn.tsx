@@ -34,7 +34,7 @@ const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, handl
             body: JSON.stringify(pageReq),
         })
             .then((response) => response.json())
-            .then((res) => setData(res))
+            .then((res) => setData(res.data))
             .catch(console.error);
     }
 

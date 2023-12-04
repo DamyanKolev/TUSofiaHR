@@ -10,8 +10,8 @@ namespace webapi.Services.HR
 {
     public interface IPositionService
     {
-        public ResponseWithStatus<Response> CreatePosition(PositionDTO insertRequest);
-        public ResponseWithStatus<Response> UpdatePosition(PositionUpdateRequest updateRequest);
+        public ResponseWithStatus<Response> CreatePosition(PositionDTO positionDTO);
+        public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO);
         public ResponseWithStatus<Response> DeletePosition(int positionId);
     }
     public class PositionService : IPositionService
@@ -24,9 +24,9 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public ResponseWithStatus<Response> CreatePosition(PositionDTO insertRequest)
+        public ResponseWithStatus<Response> CreatePosition(PositionDTO positionDTO)
         {
-            var position = _mapper.Map<Position>(insertRequest);
+            var position = _mapper.Map<Position>(positionDTO);
             _context.Positions.Add(position);
             var changes = _context.SaveChanges();
 
@@ -40,9 +40,9 @@ namespace webapi.Services.HR
 
 
 
-        public ResponseWithStatus<Response> UpdatePosition(PositionUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO)
         {
-            var position = _context.Positions.Find(updateRequest.PositionId);
+            var position = _context.Positions.Find(updateDTO.PositionId);
 
             if (position == null)
             {
@@ -50,7 +50,7 @@ namespace webapi.Services.HR
             }
 
             var positionToPatch = _mapper.Map<PositionDTO>(position);
-            updateRequest.Position.ApplyTo(positionToPatch);
+            updateDTO.Position.ApplyTo(positionToPatch);
 
             _mapper.Map(positionToPatch, position);
             _context.Update(position);

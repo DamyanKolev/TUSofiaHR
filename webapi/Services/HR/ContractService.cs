@@ -8,9 +8,9 @@ namespace webapi.Services.HR
 {
     public interface IContractService
     {
-        public ResponseWithStatus<Response> CreateContract(ContractDTO insertRequest);
-        public ResponseWithStatus<Response> UpdateContract(ContractUpdateRequest updateRequest);
-        public ResponseWithStatus<DataResponse<List<Contract>>> PageSelectContracts(int pageNumber, int pageSize);
+        public ResponseWithStatus<Response> CreateContract(ContractDTO contractDTO);
+        public ResponseWithStatus<Response> UpdateContract(ContractUpdateDTO updateDTO);
+        public ResponseWithStatus<DataResponse<List<Contract>>> GetContractsPage(PageInfo pageInfo);
     }
 
     public class ContractService : IContractService
@@ -24,9 +24,9 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public ResponseWithStatus<Response> CreateContract(ContractDTO insertRequest)
+        public ResponseWithStatus<Response> CreateContract(ContractDTO contractDTO)
         {
-            var data = _mapper.Map<Contract>(insertRequest);
+            var data = _mapper.Map<Contract>(contractDTO);
             _context.Contracts.Add(data);
             var changes = _context.SaveChanges();
 
@@ -38,9 +38,9 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdateContract(ContractUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdateContract(ContractUpdateDTO updateDTO)
         {
-            var contract = _context.Employees.Find(updateRequest.UpdateId);
+            var contract = _context.Employees.Find(updateDTO.UpdateId);
 
             if (contract == null)
             {
@@ -48,7 +48,7 @@ namespace webapi.Services.HR
             }
 
             var contractToPatch = _mapper.Map<ContractDTO>(contract);
-            updateRequest.Contract.ApplyTo(contractToPatch);
+            updateDTO.Contract.ApplyTo(contractToPatch);
 
             _mapper.Map(contractToPatch, contract);
             _context.Update(contract);
@@ -62,12 +62,12 @@ namespace webapi.Services.HR
         }
 
 
-        public ResponseWithStatus<DataResponse<List<Contract>>> PageSelectContracts(int pageNumber, int pageSize)
+        public ResponseWithStatus<DataResponse<List<Contract>>> GetContractsPage(PageInfo pageInfo)
         {
             var contracts = _context.Contracts
                 .OrderBy(p => p.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
+                .Take(pageInfo.PageSize)
                 .ToList();
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, contracts);

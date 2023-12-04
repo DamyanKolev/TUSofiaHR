@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using webapi;
-using webapi.Identity;
 using webapi.Models.Auth;
-using webapi.Services;
 using webapi.Services.Auth;
 using webapi.Services.HR;
 using webapi.Services.System;
@@ -14,11 +12,6 @@ using webapi.Services.System;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy(Identity.AdminUserPolicyName, p =>
-//        p.RequireClaim(Identity.AdminUserClaimName, "true"));
-//});
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();

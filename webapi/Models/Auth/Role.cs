@@ -8,12 +8,12 @@ namespace webapi.Models.Auth
         public required DateOnly CreatedAt { get; set; }
     }
 
-    public record RoleRequest
+    public record RoleDTO
     {
         public required string Name { get; set; }
     }
 
-    public record ClaimRequest
+    public record ClaimDTO
     {
         public required string Name { get; set; }
         public required HashSet<string> Policies { get; set; }

@@ -8,9 +8,9 @@ namespace webapi.Services.HR
 {
     public interface IEmployeeService
     {
-        public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO insertRequest);
-        public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateRequest updateRequest);
-        public ResponseWithStatus<DataResponse<List<Employee>>> PageSelectEmployees(int pageNumber, int pageSize);
+        public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO employeeDTO);
+        public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateDTO updateDTO);
+        public ResponseWithStatus<DataResponse<List<Employee>>> GetEmployeesPage(PageInfo pageInfo);
     }
 
     public class EmployeeService : IEmployeeService
@@ -24,9 +24,9 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO insertRequest)
+        public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO employeeDTO)
         {
-            var data = _mapper.Map<Employee>(insertRequest);
+            var data = _mapper.Map<Employee>(employeeDTO);
             _context.Employees.Add(data);
             var changes = _context.SaveChanges();
 
@@ -38,9 +38,9 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateDTO updateDTO)
         {
-            var employee = _context.Employees.Find(updateRequest.UpdateId);
+            var employee = _context.Employees.Find(updateDTO.UpdateId);
 
             if (employee == null)
             {
@@ -48,7 +48,7 @@ namespace webapi.Services.HR
             }
 
             var employeeToPatch = _mapper.Map<EmployeeDTO>(employee);
-            updateRequest.Employee.ApplyTo(employeeToPatch);
+            updateDTO.Employee.ApplyTo(employeeToPatch);
 
             _mapper.Map(employeeToPatch, employee);
             _context.Update(employee);
@@ -61,13 +61,12 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
         }
 
-
-        public ResponseWithStatus<DataResponse<List<Employee>>> PageSelectEmployees(int pageNumber, int pageSize)
+        public ResponseWithStatus<DataResponse<List<Employee>>> GetEmployeesPage(PageInfo pageInfo)
         {
             var employees = _context.Employees
                 .OrderBy(p => p.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
+                .Take(pageInfo.PageSize)
                 .ToList();
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, employees);

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using AutoMapper;
 using webapi.Constants;
 using webapi.Models;
 using webapi.Models.System;
@@ -8,7 +7,7 @@ namespace webapi.Services.System
 {
     public interface ISysAdministrativeTerritoryService
     {
-        public ResponseWithStatus<DataResponse<List<SysAdministrativeTerritory>>> FilteredPageSelect(PageFilterInfo pageFilterInfo);
+        public ResponseWithStatus<DataResponse<List<SysAdministrativeTerritory>>> GetAdministrativeTerritoriesPage(PageFilterInfo pageFilterInfo);
     }
     public class SysAdministrativeTerritoryService : ISysAdministrativeTerritoryService
     {
@@ -19,7 +18,7 @@ namespace webapi.Services.System
             _context = context;
         }
 
-        public ResponseWithStatus<DataResponse<List<SysAdministrativeTerritory>>> FilteredPageSelect(PageFilterInfo pageFilterInfo)
+        public ResponseWithStatus<DataResponse<List<SysAdministrativeTerritory>>> GetAdministrativeTerritoriesPage(PageFilterInfo pageFilterInfo)
         {
             var administrativeTeritories = _context.SysAdministrativeTerritories
                 .OrderBy(p => p.Id)

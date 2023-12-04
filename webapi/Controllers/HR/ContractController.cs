@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
+using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Services.HR;
 
 namespace webapi.Controllers.HR
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class ContractController: ControllerBase
     {
@@ -17,42 +20,39 @@ namespace webapi.Controllers.HR
             _contractService = contractService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/contracts/page", Name = "Contract_Page")]
-        public IActionResult PagePost([FromBody] PageRequest data)
-        {
-            //var response = _contractService.PageSelectContracts(data.PageNumber, data.PageSize);
 
-            return Ok();
+        [HttpPost("/api/contracts/page", Name = "GetContractsPage")]
+        public IActionResult GetContractsPage([FromBody] PageInfo pageInfo)
+        {
+            var result = _contractService.GetContractsPage(pageInfo);
+
+            return Ok(result.Response);
         }
 
-        //[Authorize(Roles = "Admin")]
-        //[Authorize(Roles = "Accountant")]
-        [HttpPost("/api/contracts/create", Name = "PostContract")]
-        public IActionResult Post([FromBody] ContractDTO data)
+
+        [HttpPost("/api/contracts/create", Name = "CreateContract")]
+        public IActionResult Post([FromBody] ContractDTO contractDTO)
         {
-            //var response = _contractService.CreateContract(data);
+            var result = _contractService.CreateContract(contractDTO);
 
-            //if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-            //    return BadRequest(response);
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(data);
+            return Ok(result.Response);
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPatch("/api/contracts/update", Name = "PutContract")]
-        public IActionResult Put([FromBody] ContractUpdateRequest data)
+
+        [HttpPatch("/api/contracts/update", Name = "UpdateContract")]
+        public IActionResult Patch([FromBody] ContractUpdateDTO updateDTO)
         {
-            var response = _contractService.UpdateContract(data);
+            var result = _contractService.UpdateContract(updateDTO);
 
-            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(response);
-            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response);
+            if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result.Response);
+            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response);
+            return Ok(result.Response);
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models.Auth;
 using webapi.Services.Auth;
 
 namespace webapi.Controllers.Auth
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
@@ -14,23 +16,23 @@ namespace webapi.Controllers.Auth
             _roleService = roleService;
         }
 
-        [HttpPost("/api/auth/role/create", Name = "Create_Role")]
-        public async Task<IActionResult> CreateRoleAsync([FromBody] RoleRequest roleRequest)
+        [HttpPost("/api/auth/role/create", Name = "CreateRole")]
+        public async Task<IActionResult> CreateRole([FromBody] RoleDTO roleDTO)
         {
-            var result = await _roleService.CreateRoleAsync(roleRequest);
+            var result = await _roleService.CreateRole(roleDTO);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(result);
+                return BadRequest(result.Response);
 
-            return Ok(result);
+            return Ok(result.Response);
         }
 
 
 
-        [HttpPost("/api/auth/role-claims/create", Name = "Create_Role_Claims")]
-        public async Task<IActionResult> UpdateRoleAsync([FromBody] ClaimRequest claimRequest)
+        [HttpPost("/api/auth/role-claims/create", Name = "CreateRoleClaims")]
+        public async Task<IActionResult> CreateRoleClaims([FromBody] ClaimDTO claimDTO)
         {
-            var result = await _roleService.CreateRoleClaimsAsync(claimRequest);
+            var result = await _roleService.CreateRoleClaims(claimDTO);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result);
@@ -42,10 +44,10 @@ namespace webapi.Controllers.Auth
 
 
 
-        [HttpDelete("/api/auth/role-claims/delete", Name = "Delete_Role_Claims")]
-        public async Task<IActionResult> DeleteRoleAsync([FromBody] ClaimRequest claimRequest)
+        [HttpDelete("/api/auth/role-claims/delete", Name = "DeleteRoleClaims")]
+        public async Task<IActionResult> DeleteRoleAsync([FromBody] ClaimDTO claimDTO)
         {
-            var result = await _roleService.DeleteRoleClaimsAsync(claimRequest);
+            var result = await _roleService.DeleteRoleClaims(claimDTO);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result);

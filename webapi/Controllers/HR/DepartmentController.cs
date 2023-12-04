@@ -1,11 +1,14 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Services.HR;
 
 namespace webapi.Controllers.HR
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class DepartmentController: ControllerBase
     {
@@ -16,48 +19,44 @@ namespace webapi.Controllers.HR
             _departmentService = departmentService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/departments/create", Name = "Create_Department")]
+
+        [HttpPost("/api/departments/create", Name = "CreateDepartment")]
         public IActionResult CreateDepartment([FromBody] string departmentName)
         {
-            var response = _departmentService.CreateDepartment(departmentName);
+            var result = _departmentService.CreateDepartment(departmentName);
 
-            if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response.Response);
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
 
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPatch("/api/departments/update", Name = "Update_Departemnt")]
+        [HttpPatch("/api/departments/update", Name = "UpdateDepartemnt")]
         public IActionResult UpdateDepartment([FromBody] Department department)
         {
-            var response = _departmentService.UpdateDepartment(department);
+            var result = _departmentService.UpdateDepartment(department);
 
-            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(response.Response);
-            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response.Response);
+            if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result.Response);
+            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpDelete("/api/department/delete", Name = "Delete_Department")]
+
+        [HttpDelete("/api/department/delete", Name = "DeleteDepartment")]
         public IActionResult DeleteDepartment([FromBody] int departmentId)
         {
-            var response = _departmentService.DeleteDepartment(departmentId);
+            var result = _departmentService.DeleteDepartment(departmentId);
 
-            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(response.Response);
-            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response.Response);
+            if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result.Response);
+            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
     }
 }

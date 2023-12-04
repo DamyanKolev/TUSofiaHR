@@ -3,14 +3,13 @@ using webapi.Models;
 using AutoMapper;
 using webapi.Constants;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
 
 namespace webapi.Services.HR
 {
     public interface IPersonalDataService
     {
-        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataDTO insertRequest);
-        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateRequest updateRequest);
+        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataDTO personalDataDTO);
+        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateDTO updateDTO);
     }
     public class PersonalDataService : IPersonalDataService
     {
@@ -22,9 +21,9 @@ namespace webapi.Services.HR
             _context = context;
             _mapper = mapper;
         }
-        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataDTO insertRequest)
+        public ResponseWithStatus<Response> CreatePersonalData(PersonalDataDTO personalDataDTO)
         {
-            var data = _mapper.Map<PersonalData>(insertRequest);
+            var data = _mapper.Map<PersonalData>(personalDataDTO);
             _context.PersonalDatas.Add(data);
             var changes = _context.SaveChanges();
 
@@ -36,9 +35,9 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateRequest updateRequest)
+        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateDTO updateDTO)
         {
-            var personalData = _context.Employees.Find(updateRequest.UpdateId);
+            var personalData = _context.Employees.Find(updateDTO.UpdateId);
 
             if (personalData == null)
             {
@@ -47,7 +46,7 @@ namespace webapi.Services.HR
 
 
             var personalDataToPatch = _mapper.Map<PersonalDataDTO>(personalData);
-            updateRequest.PersonalData.ApplyTo(personalDataToPatch);
+            updateDTO.PersonalData.ApplyTo(personalDataToPatch);
 
             _mapper.Map(personalDataToPatch, personalData);
             _context.Update(personalData);

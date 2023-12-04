@@ -10,9 +10,9 @@ namespace webapi.Services.Auth
 {
     public interface IRoleService
     {
-        public Task<ResponseWithStatus<Response>> CreateRoleAsync(RoleRequest roleRequest);
-        public Task<ResponseWithStatus<Response>> CreateRoleClaimsAsync(ClaimRequest updateRequest);
-        public Task<ResponseWithStatus<Response>> DeleteRoleClaimsAsync(ClaimRequest claimRequest);
+        public Task<ResponseWithStatus<Response>> CreateRole(RoleDTO roleDTO);
+        public Task<ResponseWithStatus<Response>> CreateRoleClaims(ClaimDTO claimDTO);
+        public Task<ResponseWithStatus<Response>> DeleteRoleClaims(ClaimDTO ClaimDTO);
     }
 
     public class RoleService : IRoleService
@@ -25,9 +25,9 @@ namespace webapi.Services.Auth
             _mapper = mapper;
         }
 
-        public async Task<ResponseWithStatus<Response>> CreateRoleAsync(RoleRequest roleRequest) {
+        public async Task<ResponseWithStatus<Response>> CreateRole(RoleDTO roleDTO) {
             // Create the role object
-            var role = _mapper.Map<Role>(roleRequest);
+            var role = _mapper.Map<Role>(roleDTO);
             role.CreatedAt = DateOnly.FromDateTime(DateTime.Now);
             // Add the role to the database
             var result = await _roleManager.CreateAsync(role);
@@ -41,9 +41,9 @@ namespace webapi.Services.Auth
         }
 
 
-        public async Task<ResponseWithStatus<Response>> CreateRoleClaimsAsync(ClaimRequest claimRequest)
+        public async Task<ResponseWithStatus<Response>> CreateRoleClaims(ClaimDTO claimDTO)
         {
-            var role = _roleManager.Roles.FirstOrDefault(x => x.Name == claimRequest.Name);
+            var role = _roleManager.Roles.FirstOrDefault(x => x.Name == claimDTO.Name);
 
             if (role == null)
             {
@@ -51,7 +51,7 @@ namespace webapi.Services.Auth
             }
 
             var roleClaims = await _roleManager.GetClaimsAsync(role);
-            foreach (var policy in claimRequest.Policies)
+            foreach (var policy in claimDTO.Policies)
             {
                 Claim newClaim = new Claim(policy,  "true");
                 if (!roleClaims.Contains(newClaim))
@@ -67,10 +67,9 @@ namespace webapi.Services.Auth
         }
 
 
-
-        public async Task<ResponseWithStatus<Response>> DeleteRoleClaimsAsync(ClaimRequest claimRequest)
+        public async Task<ResponseWithStatus<Response>> DeleteRoleClaims(ClaimDTO claimDTO)
         {
-            var role = _roleManager.Roles.FirstOrDefault(x => x.Name == claimRequest.Name);
+            var role = _roleManager.Roles.FirstOrDefault(x => x.Name == claimDTO.Name);
 
             if (role == null)
             {
@@ -79,7 +78,7 @@ namespace webapi.Services.Auth
 
             var roleClaims = await _roleManager.GetClaimsAsync(role);
 
-            foreach (var policy in claimRequest.Policies)
+            foreach (var policy in claimDTO.Policies)
             {
                 var claim = roleClaims.FirstOrDefault(x => x.Type == policy);
 

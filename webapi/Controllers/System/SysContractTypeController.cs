@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using webapi.Models.Auth;
 using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
+    [ApiController]
     public class SysContractTypeController : ControllerBase
     {
         private readonly ISysContractTypeService _contractTypeService;
@@ -13,14 +17,13 @@ namespace webapi.Controllers.System
             _contractTypeService = contractTypeService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/sys/contract-type/select-all", Name = "Select_All_Contract_Types")]
-        public IActionResult SelectAll()
+        
+        [HttpPost("/api/sys/contract-type/all", Name = "GetContractTypes")]
+        public IActionResult GetContractTypes()
         {
-            var response = _contractTypeService.SelectAll();
+            var result = _contractTypeService.GetContractTypes();
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace webapi.Services.System
 {
     public interface ISysPositionService
     {
-        public ResponseWithStatus<DataResponse<List<SysPosition>>> FilteredPageSelect(PageFilterInfo pageFilterInfo);
+        public ResponseWithStatus<DataResponse<List<SysPosition>>> GetPositionsPage(PageFilterInfo pageFilterInfo);
     }
     public class SysPositionService : ISysPositionService
     {
@@ -18,7 +18,7 @@ namespace webapi.Services.System
             _context = context;
         }
 
-        public ResponseWithStatus<DataResponse<List<SysPosition>>> FilteredPageSelect(PageFilterInfo pageFilterInfo)
+        public ResponseWithStatus<DataResponse<List<SysPosition>>> GetPositionsPage(PageFilterInfo pageFilterInfo)
         {
             var administrativeTeritories = _context.SysPositions
                 .OrderBy(p => p.Id)

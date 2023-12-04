@@ -24,7 +24,7 @@ namespace webapi.Models.HR
     }
 
 
-    public record AddressUpdateRequest
+    public record AddressUpdateDTO
     {
         public Int64 UpdateId { get; set; }
         public required AddressDTO Data { get; set; }

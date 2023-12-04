@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Services.HR;
 
 namespace webapi.Controllers.HR
 {
-    [Authorize]
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class CompanyController : ControllerBase
     {
@@ -17,33 +19,30 @@ namespace webapi.Controllers.HR
             _companyService = companyService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/company/create", Name = "Create_Company")]
-        public IActionResult Post([FromBody] CompanyDTO data)
+        
+        [HttpPost("/api/company/create", Name = "CreateCompany")]
+        public IActionResult Post([FromBody] CompanyDTO companyDTO)
         {
-            var response = _companyService.CreateCompany(data);
+            var result = _companyService.CreateCompany(companyDTO);
 
-            if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response);
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response);
+            return Ok(result.Response);
         }
 
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPatch("/api/company/update", Name = "Update_Company")]
-        public IActionResult Put([FromBody] CompanyUpdateRequest data)
+        [HttpPatch("/api/company/update", Name = "UpdateCompany")]
+        public IActionResult Put([FromBody] CompanyUpdateDTO updateDTO)
         {
-            var response = _companyService.UpdateCompany(data);
+            var result = _companyService.UpdateCompany(updateDTO);
 
-            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(response);
-            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response);
+            if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result.Response);
+            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response);
+            return Ok(result.Response);
         }
     }
 }

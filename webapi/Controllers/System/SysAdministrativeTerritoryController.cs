@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
+using webapi.Models.Auth;
 using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
+    [ApiController]
     public class SysAdministrativeTerritoryController : ControllerBase
     {
         private readonly ISysAdministrativeTerritoryService _admnistrativeTerritoryService;
@@ -14,14 +18,12 @@ namespace webapi.Controllers.System
             _admnistrativeTerritoryService = admnistrativeTerritoryService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/sys/administrative-territory/page", Name = "Filter_Select_Administrative_Territories")]
-        public IActionResult FilteredPageSelect([FromBody] PageFilterInfo pageInfo)
+        [HttpPost("/api/sys/administrative-territory/page", Name = "GetAdministrativeTerritoriesPage")]
+        public IActionResult GetAdministrativeTerritoriesPage([FromBody] PageFilterInfo pageInfo)
         {
-            var response = _admnistrativeTerritoryService.FilteredPageSelect(pageInfo);
+            var result = _admnistrativeTerritoryService.GetAdministrativeTerritoriesPage(pageInfo);
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
     }
 }

@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
+using webapi.Models.Auth;
 using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
+    [ApiController]
     public class SysPositionController : ControllerBase
     {
         private readonly ISysPositionService _positionService;
@@ -14,14 +18,13 @@ namespace webapi.Controllers.System
             _positionService = positionService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/sys/positions/page", Name = "Filter_Select_Positions")]
-        public IActionResult FilteredPageSelect([FromBody] PageFilterInfo pageInfo)
-        {
-            var response = _positionService.FilteredPageSelect(pageInfo);
 
-            return Ok(response.Response);
+        [HttpPost("/api/sys/positions/page", Name = "GetPositionsPage")]
+        public IActionResult GetPositionsPage([FromBody] PageFilterInfo pageInfo)
+        {
+            var result = _positionService.GetPositionsPage(pageInfo);
+
+            return Ok(result.Response);
         }
     }
 }

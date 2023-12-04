@@ -16,41 +16,41 @@ namespace webapi.Controllers.Auth
             _authenticationService = authenticationService;
         }
 
-        [HttpPost("/api/auth/login", Name = "User_Login")]
+        [HttpPost("/api/auth/login", Name = "Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             var result = await _authenticationService.SingIn(model);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(result);
+                return BadRequest(result.Response);
 
-            return Ok(result);
+            return Ok(result.Response);
         }
 
 
-        [Authorize]
-        [HttpPost("/api/auth/refresh-token", Name = "Refresh_Token")]
+        [Authorize(Roles = IdentityRoles.Admin)]
+        [HttpPost("/api/auth/refresh-token", Name = "RefreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
             var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];
             var result = await _authenticationService.RefreshToken(token);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest();
+                return BadRequest(result.Response);
 
-            return Ok(token);
+            return Ok(result.Response);
 
         }
 
-
-        [HttpPost("/api/auth/validate-token", Name="Token_Validation")]
+        [Authorize(Roles = IdentityRoles.Admin)]
+        [HttpPost("/api/auth/validate-token", Name="TokenValidation")]
         public IActionResult TokenValidation()
         {
-            //var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];
-            //var result = _authenticationService.ValidateToken(token);
+            var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];
+            var result = _authenticationService.ValidateToken(token);
 
-            //if (result.StatusCode.Equals(HttpStatusCode.BadRequest)) 
-            //    return BadRequest();
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest();
 
             return Ok();
 

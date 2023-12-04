@@ -10,22 +10,22 @@ const Layout: FC = () => {
     const [collapsed, setCollapsed] = useState<boolean>(true);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = localStorage.getItem("token")
+    //useEffect(() => {
+    //    const token = localStorage.getItem("token")
 
-        fetch("/api/auth/validate-token", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(token)
-        }).then(response => {
-            if (true) {
-
-            }
-            else {
-                navigate("/")
-            }
-        })
-    }, [])
+    //    fetch("/api/auth/validate-token", {
+    //        method: "POST",
+    //        headers: { "Content-Type": "application/json" },
+    //        body: JSON.stringify(token)
+    //    }).then(response => {
+    //        if (response.ok) {
+    //            navigate("/")
+    //        }
+    //        else {
+    //            navigate("/login")
+    //        }
+    //    })
+    //}, [])
 
     const hideShowSideNav = () => {
         setCollapsed(!collapsed);

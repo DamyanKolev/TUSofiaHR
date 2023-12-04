@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
+using webapi.Models.Auth;
 using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
+    [ApiController]
     public class SysIconomicActivityController : ControllerBase
     {
         private readonly ISysIconomicActivityService _iconomicActivityService;
@@ -14,14 +18,12 @@ namespace webapi.Controllers.System
             _iconomicActivityService = iconomicActivityService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/sys/iconomic-activity/page", Name = "Filter_Select_Iconomic_Activities")]
-        public IActionResult FilteredPageSelect([FromBody] PageFilterInfo pageInfo)
+        [HttpPost("/api/sys/iconomic-activity/page", Name = "GetIconomicActivitiesPage")]
+        public IActionResult GetIconomicActivitiesPage([FromBody] PageFilterInfo pageInfo)
         {
-            var response = _iconomicActivityService.FilteredPageSelect(pageInfo);
+            var result = _iconomicActivityService.GetIconomicActivitiesPage(pageInfo);
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
     }
 }

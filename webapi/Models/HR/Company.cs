@@ -19,7 +19,7 @@ namespace webapi.Models.HR
         public string? CompanyEIC { get; set; }
     }
 
-    public record CompanyUpdateRequest
+    public record CompanyUpdateDTO
     {
         public required Int64 UpdateId { get; set; }
         public required JsonPatchDocument<CompanyDTO> Company { get; set; }

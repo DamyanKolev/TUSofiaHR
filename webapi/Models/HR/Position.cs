@@ -22,7 +22,7 @@ namespace webapi.Models.HR
         public decimal MaxSalary { get; set; }
     }
 
-    public record PositionUpdateRequest
+    public record PositionUpdateDTO
     {
         public required int PositionId { get; set; }
         public required JsonPatchDocument<PositionDTO> Position { get; set; }

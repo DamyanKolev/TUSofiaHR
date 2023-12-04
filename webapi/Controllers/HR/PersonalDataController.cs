@@ -1,12 +1,14 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Services.HR;
 
 namespace webapi.Controllers.HR
 {
-    [Authorize]
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class PersonalDataController : ControllerBase
     {
@@ -18,26 +20,22 @@ namespace webapi.Controllers.HR
         }
 
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/personal-data/create", Name = "Create_PersonalData")]
-        public IActionResult Post([FromBody] PersonalDataDTO data)
+        [HttpPost("/api/personal-data/create", Name = "CreatePersonalData")]
+        public IActionResult Post([FromBody] PersonalDataDTO personalDataDTO)
         {
-            var response = _personalDataService.CreatePersonalData(data);
+            var response = _personalDataService.CreatePersonalData(personalDataDTO);
 
             if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response);
+                return BadRequest(response.Response);
 
-            return Ok(response);
+            return Ok(response.Response);
         }
 
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPatch("/api/personal-data/update", Name = "Update_PersonalData")]
-        public IActionResult Put([FromBody] PersonalDataUpdateRequest data)
+        [HttpPatch("/api/personal-data/update", Name = "UpdatePersonalData")]
+        public IActionResult Put([FromBody] PersonalDataUpdateDTO updateDTO)
         {
-            var response = _personalDataService.UpdatePersonalData(data);
+            var response = _personalDataService.UpdatePersonalData(updateDTO);
 
             if (response.StatusCode.Equals(HttpStatusCode.NotFound))
                 return NotFound(response);

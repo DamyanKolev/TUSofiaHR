@@ -10,9 +10,9 @@ namespace webapi.Services.Auth
 {
     public interface IUserService
     {
-        public Task<ResponseWithStatus<Response>> CreateUserAsync(UserRequest userRequest);
-        public Task<ResponseWithStatus<Response>> UpdateUserAsync(UserUpdateRequest updateRequest);
-        public Task<ResponseWithStatus<Response>> AddUserRole(UserRoleRequest userRoleRequest);
+        public Task<ResponseWithStatus<Response>> CreateUser(UserDTO userRequest);
+        public Task<ResponseWithStatus<Response>> UpdateUser(UserUpdateDTO updateRequest);
+        public Task<ResponseWithStatus<Response>> AddUserRole(UserRoleDTO userRoleRequest);
     }
 
     public class UserService: IUserService
@@ -26,9 +26,9 @@ namespace webapi.Services.Auth
             _roleManager = roleManager;
         }
 
-        public async Task<ResponseWithStatus<Response>> CreateUserAsync(UserRequest userRequest)
+        public async Task<ResponseWithStatus<Response>> CreateUser(UserDTO userDTO)
         {
-            var userExists = await _userManager.FindByNameAsync(userRequest.UserName);
+            var userExists = await _userManager.FindByNameAsync(userDTO.UserName);
 
             if (userExists != null)
             {
@@ -36,30 +36,30 @@ namespace webapi.Services.Auth
             }
 
             User user = new User() { 
-                Email= userRequest.Email, 
-                UserName= userRequest.UserName
+                Email= userDTO.Email, 
+                UserName= userDTO.UserName
             };
 
-            var result = await _userManager.CreateAsync(user, userRequest.Password);
+            var result = await _userManager.CreateAsync(user, userDTO.Password);
 
             if (!result.Succeeded)
             {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, result.Errors.ToString());
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_FAILED_REGISTRATION);
             }
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_REGISTRATION);
         }
 
 
-        public async Task<ResponseWithStatus<Response>> UpdateUserAsync(UserUpdateRequest updateRequest)
+        public async Task<ResponseWithStatus<Response>> UpdateUser(UserUpdateDTO updateDTO)
         {
-            var user = await _userManager.FindByIdAsync(updateRequest.Id.ToString());
+            var user = await _userManager.FindByIdAsync(updateDTO.Id.ToString());
 
             if (user == null)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-            _mapper.Map(updateRequest.UpdateData, user);
+            _mapper.Map(updateDTO.UpdateData, user);
             var result = await _userManager.UpdateAsync(user);
 
             if(!result.Succeeded)
@@ -69,10 +69,11 @@ namespace webapi.Services.Auth
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
         }
 
-        public async Task<ResponseWithStatus<Response>> AddUserRole(UserRoleRequest userRoleRequest)
+
+        public async Task<ResponseWithStatus<Response>> AddUserRole(UserRoleDTO userRoleDTO)
         {
-            var user = await _userManager.FindByNameAsync(userRoleRequest.UserName);
-            var role = await _roleManager.FindByNameAsync(userRoleRequest.RoleName);
+            var user = await _userManager.FindByNameAsync(userRoleDTO.UserName);
+            var role = await _roleManager.FindByNameAsync(userRoleDTO.RoleName);
 
             if (user == null)
             {
@@ -84,7 +85,7 @@ namespace webapi.Services.Auth
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_ROLE_NOT_FOUND);
             }
 
-            var result = await _userManager.AddToRoleAsync(user, userRoleRequest.RoleName);
+            var result = await _userManager.AddToRoleAsync(user, userRoleDTO.RoleName);
 
             if (!result.Succeeded)
             {

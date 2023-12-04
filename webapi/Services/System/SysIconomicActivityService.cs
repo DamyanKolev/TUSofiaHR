@@ -7,7 +7,7 @@ namespace webapi.Services.System
 {
     public interface ISysIconomicActivityService
     {
-        public ResponseWithStatus<DataResponse<List<SysIconomicActivity>>> FilteredPageSelect(PageFilterInfo pageFilterInfo);
+        public ResponseWithStatus<DataResponse<List<SysIconomicActivity>>> GetIconomicActivitiesPage(PageFilterInfo pageFilterInfo);
     }
     public class SysIconomicActivityService : ISysIconomicActivityService
     {
@@ -18,7 +18,7 @@ namespace webapi.Services.System
             _context = context;
         }
 
-        public ResponseWithStatus<DataResponse<List<SysIconomicActivity>>> FilteredPageSelect(PageFilterInfo pageFilterInfo)
+        public ResponseWithStatus<DataResponse<List<SysIconomicActivity>>> GetIconomicActivitiesPage(PageFilterInfo pageFilterInfo)
         {
             var administrativeTeritories = _context.SysIconomicActivities
                 .OrderBy(p => p.Id)

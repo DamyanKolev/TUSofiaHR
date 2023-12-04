@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using webapi.Models.Auth;
 using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
+    [ApiController]
     public class SysContractTerminationTypeController : ControllerBase
     {
         private readonly ISysContractTerminationTypeService _terminationTypeService;
@@ -13,14 +17,13 @@ namespace webapi.Controllers.System
             _terminationTypeService = terminationTypeService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Accountant")]
-        [HttpPost("/api/sys/termination-types/select-all", Name = "Select_All_Contract_Termination_Types")]
-        public IActionResult SelectAll()
-        {
-            var response = _terminationTypeService.SelectAll();
 
-            return Ok(response.Response);
+        [HttpPost("/api/sys/termination-types/all", Name = "GetContractTerminationTypesPage")]
+        public IActionResult GetContractTerminationTypesPage()
+        {
+            var result = _terminationTypeService.GetContractTerminationTypesPage();
+
+            return Ok(result.Response);
         }
     }
 }

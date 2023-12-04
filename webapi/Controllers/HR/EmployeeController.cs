@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
+using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Services.HR;
 
 namespace webapi.Controllers.HR
 {
-    //[Authorize]
+    [Authorize(Roles = IdentityRoles.Admin)]
+    [Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -18,41 +20,38 @@ namespace webapi.Controllers.HR
             _employeeService = employeeService;
         }
 
-        [HttpPost("/api/employees/page", Name = "Get_Page_Data")]
-        public IActionResult PagePost([FromBody] PageRequest data)
+        [HttpPost("/api/employees/page", Name = "GetEmployeesPage")]
+        public IActionResult GetEmployeesPage([FromBody] PageInfo pageInfo)
         {
-            var response = _employeeService.PageSelectEmployees(data.PageNumber, data.PageSize);
+            var result = _employeeService.GetEmployeesPage(pageInfo);
 
-            return Ok(response.Response);
+            return Ok(result.Response);
         }
 
 
-        //[Authorize(Roles = "Employee")]
-        [Authorize]
-        [HttpPost("/api/employees/create", Name = "Create_Employee")]
+        [HttpPost("/api/employees/create", Name = "CreateEmployee")]
         public IActionResult Post([FromBody] EmployeeDTO data)
         {
-            //var response = _employeeService.CreateEmployee(data);
+            var result = _employeeService.CreateEmployee(data);
 
-            //if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-            //    return BadRequest(response);
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(data);
+            return Ok(result.Response);
         }
 
 
-
-        [HttpPatch("/api/employees/update", Name = "Update_Employee")]
-        public IActionResult Put([FromBody] EmployeeUpdateRequest data)
+        [HttpPatch("/api/employees/update", Name = "UpdateEmployee")]
+        public IActionResult Put([FromBody] EmployeeUpdateDTO updateDTO)
         {
-            var response = _employeeService.UpdateEmployee(data);
+            var result = _employeeService.UpdateEmployee(updateDTO);
 
-            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
-                return NotFound(response);
-            else if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest(response);
+            if (result.StatusCode.Equals(HttpStatusCode.NotFound))
+                return NotFound(result.Response);
+            else if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
 
-            return Ok(response);
+            return Ok(result.Response);
         }
     }
 }

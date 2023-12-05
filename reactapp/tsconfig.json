@@ -26,7 +26,7 @@
             "@/*": [ "src/*" ],
             "@assets": [ "src/assets/*"],
             "@components/*": [ "src/components/*" ],
-            "@form-states/*": [ "src/form-states/*" ]
+            "@models/*": [ "src/models/*" ]
         }
     },
     "include": [ "src" ],

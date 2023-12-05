@@ -1,25 +1,27 @@
-﻿import { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
-import { Button, Form, FormItem, Input, Tab, TabContainer, ValueState } from "@ui5/webcomponents-react";
-import { EmployeeFormState, EmployeeRequest } from '@form-states/EmployeeFormState';
-import { EndColumnContext } from '@components/FlexibleColumn/EndColumn';
+﻿import { FC, useEffect, useState, ChangeEvent, useContext } from "react";
+import { Button, Form, FormItem, Input, ValueState } from "@ui5/webcomponents-react";
+import { ContractDTO } from "@models/HR/Contract";
+import { ContractFormState } from "@models/FormStates/ContractFormState";
+import { EndColumnContext } from "../../FlexibleColumn/EndColumn";
 
 
-const defaultEmployeeRequest = {
-    "firstName": "",
-    "surname": "",
-    "lastName": ""
+
+const defaultContractRequest = {
+    workingWage: "",
+    workTime: "",
+    conclusionDate: "",
 }
 
 const defaultFormState = {
-    "firstName": { isFilled: false, valueState: ValueState.None },
-    "surname": { isFilled: false, valueState: ValueState.None },
-    "lastName": { isFilled: false, valueState: ValueState.None }
+    workingWage: { isFilled: false, valueState: ValueState.None },
+    workTime: { isFilled: false, valueState: ValueState.None },
+    conclusionDate: { isFilled: false, valueState: ValueState.None },
 }
 
 
-const CreateEmployeeForm: FC = () => {
-    const [formData, setFormData] = useState<EmployeeRequest>(defaultEmployeeRequest);
-    const [formState, setFormState] = useState<EmployeeFormState>(defaultFormState);
+const CreateContractForm: FC = () => {
+    const [formData, setFormData] = useState<ContractDTO>(defaultContractRequest);
+    const [formState, setFormState] = useState<ContractFormState>(defaultFormState);
     const isClicked = useContext(EndColumnContext)
 
     const isFilledForm = (): boolean => {
@@ -52,7 +54,7 @@ const CreateEmployeeForm: FC = () => {
         const isFilled = isFilledForm()
 
         if (isFilled) {
-            const response = await fetch("/api/employees/create", {
+            const response = await fetch("/api/contracts/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
@@ -66,62 +68,52 @@ const CreateEmployeeForm: FC = () => {
 
     //reset create form after nav back
     useEffect(() => {
-        setFormData(defaultEmployeeRequest);
+        setFormData(defaultContractRequest);
     }, [isClicked]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+
+        if (value)
+            setFormState({ ...formState, [name]: { isFilled: true, valueState: ValueState.None } })
+
         setFormData({ ...formData, [name]: value });
     };
 
     return (
-        <Form>
-            <FormItem label="Име">
+        <Form id="create-form">
+            <FormItem label="Working Wage">
                 <Input
-                    name="FirstName"
-                    value={formData.firstName}
+                    name="workingWage"
+                    value={formData.workingWage.toString()}
                     onChange={handleInputChange}
+                    valueState={formState.workingWage.valueState}
                 />
             </FormItem>
 
-            <FormItem label="Презиме">
+            <FormItem label="Work Time">
                 <Input
-                    name="Surname"
-                    value={formData.surname}
+                    name="workTime"
+                    value={formData.workTime.toString()}
                     onChange={handleInputChange}
+                    valueState={formState.workTime.valueState}
                 />
             </FormItem>
 
-            <FormItem label="Фамилия">
+            <FormItem label="Conclusion Date">
                 <Input
-                    name="LastName"
-                    value={formData.lastName}
+                    name="conclusionDate"
+                    value={formData.conclusionDate}
                     onChange={handleInputChange}
+                    valueState={formState.conclusionDate.valueState}
                 />
-            </FormItem>
-
-            <FormItem>
-                <TabContainer>
-                    <Tab
-                        selected
-                        text="Лична информация"
-                    >
-                        Content Tab 1
-                    </Tab>
-
-                    <Tab
-                        text="Договор"
-                    >
-                        Content Tab 1
-                    </Tab>
-                </TabContainer>
             </FormItem>
 
             <FormItem>
                 <Button onClick={submitForm}>Create</Button>
             </FormItem>
         </Form>
-    )
-}
+    );
+};
 
-export default CreateEmployeeForm;
+export default CreateContractForm;

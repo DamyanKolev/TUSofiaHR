@@ -1,8 +1,6 @@
-﻿import { useState } from "react";
-import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
-import FlexibleColumn from "@components/FlexibleColumn/FlexibleColumn";
-
-
+﻿import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
+import FlexibleColumn from "@/components/FlexibleColumn/FlexibleColumn";
+import { FC } from "react";
 
 
 const columns: AnalyticalTableColumnDefinition[] = [
@@ -18,16 +16,23 @@ const columns: AnalyticalTableColumnDefinition[] = [
         accessor: "conclusionDate",
         Header: "Дата на сключване",
     },
+];
 
-]
 
-export default function Contract() {
-    const [tableTitle] = useState("Contracts");
-    const [tableName] = useState("contract");
-    const [dataURL] = useState("/api/contracts");
+const Contract: FC = () => {
+    const tableTitle = "Contracts";
+    const tableName = "contract";
+    const dataURL = "/api/contracts";
 
-    
+
     return (
-        <FlexibleColumn tableName={tableName} tableTitle={tableTitle} dataURL={dataURL} columns={columns} />
-    )
-}
+        <FlexibleColumn
+            tableName={tableName}
+            tableTitle={tableTitle}
+            dataURL={dataURL}
+            columns={columns}
+        />
+    );
+};
+
+export default Contract;

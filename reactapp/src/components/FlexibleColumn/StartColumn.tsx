@@ -1,118 +1,42 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import {
-    AnalyticalTable, AnalyticalTableColumnDefinition, AnalyticalTableSelectionBehavior, AnalyticalTableSelectionMode, Bar, Button,
-    ButtonDesign,FCLLayout, Title, TitleLevel
-} from '@ui5/webcomponents-react';
+import { FC, Fragment} from 'react';
+import { AnalyticalTableColumnDefinition, Bar, Button, ButtonDesign,FCLLayout } from '@ui5/webcomponents-react';
+import PageBar from '../PageBar';
+import SmartTable from '../Table/SmartTable';
+
 
 interface StartColumnProps {
     dataURL: string,
     columns: AnalyticalTableColumnDefinition[],
     tableTitle: string,
     handleLayoutState: (layout: FCLLayout) => void,
-    onRowSelect: (event: any) => void,
-}
-
-interface PageRequest {
-    PageNumber: int,
-    PageSize: int,
+    onRowClick: (event: any) => void,
 }
 
 
-const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, handleLayoutState, onRowSelect }) => {
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const table = useRef<Record<string, any>>(null);
-    const [pageReq] = useState<PageRequest>({
-        PageNumber: 1,
-        PageSize: 50,
-    })
-    const [data, setData] = useState([]);
-
-    const initTable = () => {
-        return fetch(`${dataURL}/page`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(pageReq),
-        })
-            .then((response) => response.json())
-            .then((res) => setData(res.data))
-            .catch(console.error);
-    }
-
-    useEffect(() => {
-        initTable().then(() => {
-            setIsLoading(false);
-        });
-    }, []);
-
-
-    
-
-    return (
-        <React.Fragment>
-            <StartColumnBar tableTitle={tableTitle} />
-            <AnalyticalTable
-                className="table"
-                columns={columns}
-                data={data}
-                filterable
-                header={<><TableHeader handleLayoutState={handleLayoutState}/></>}
-                selectionMode={AnalyticalTableSelectionMode.SingleSelect}
-                selectionBehavior={AnalyticalTableSelectionBehavior.RowOnly}
-                loading={isLoading}
-                infiniteScroll
-                onRowClick={onRowSelect}
-                tableInstance={table }
-            >
-            </AnalyticalTable>
-        </React.Fragment>
-    )
-}
-
-
-
-interface TableHeaderProps {
-    handleLayoutState: (layout: FCLLayout) => void,
-}
-
-const TableHeader: FC<TableHeaderProps> = ({ handleLayoutState }) => {
+const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, handleLayoutState, onRowClick }) => {
     const createOnClick = () => { handleLayoutState(FCLLayout.EndColumnFullScreen) }
 
     return (
-        <React.Fragment>
-            <Bar
-                endContent={
-                    <React.Fragment>
-                        <Button design={ButtonDesign.Transparent} onClick={createOnClick}>Create</Button>
-                    </React.Fragment>
+        <Fragment>
+            <PageBar title={tableTitle} />
+            <SmartTable
+                dataURL={dataURL}
+                columns={columns}
+                onRowClick={onRowClick}
+                header={
+                    <Fragment>
+                        <Bar
+                            endContent={
+                                <Fragment>
+                                    <Button design={ButtonDesign.Transparent} onClick={createOnClick}>Create</Button>
+                                </Fragment>
+                            }
+                        >
+                        </Bar>
+                    </Fragment>
                 }
-            >
-            </Bar>
-        </React.Fragment>
-    )
-}
-
-
-interface StartColumnBarProps {
-    tableTitle: string;
-}
-
-const StartColumnBar: FC<StartColumnBarProps> = ({ tableTitle }) => {
-    return (
-        <div className="table-header-bar">
-            <Bar
-                startContent={
-                    <React.Fragment>
-                        <Button
-                            design={ButtonDesign.Transparent}
-                            icon="nav-back"
-                            onClick={() => window.location.href = "/"}
-                        />
-                        <Title level={TitleLevel.H2}>{tableTitle}</Title>
-                    </React.Fragment>
-                }
-            >
-            </Bar>
-        </div>
+            />
+        </Fragment>
     )
 }
 

@@ -1,10 +1,7 @@
 import './App.css'
-import Layout from './Layout/Layout'
+import Layout from './layout/Layout'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Employee from './pages/hr/Employee'
-import Home from './pages/Home'
-import Login from './pages/auth/Login'
-import Contract from './pages/hr/Contract'
+import { Contract, Employee, Home, Login, Position } from '@components/pages/PagesBundle'
 
 
 
@@ -16,6 +13,7 @@ function App() {
                     <Route index element={<Home />} />
                     <Route path="employee" element={<Employee />} />
                     <Route path="contract" element={<Contract />} />
+                    <Route path="position" element={<Position />} />
                 </Route>
                 <Route path="/login" element={<Login />}/>
             </Routes>

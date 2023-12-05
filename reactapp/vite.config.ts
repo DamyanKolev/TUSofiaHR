@@ -32,7 +32,7 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url)),
             '@assets': path.resolve(__dirname, './src/assets'),
             '@components': path.resolve(__dirname, './src/components'),
-            '@form-states': path.resolve(__dirname, './src/form-states')
+            '@models': path.resolve(__dirname, './src/models')
         },
 
     },

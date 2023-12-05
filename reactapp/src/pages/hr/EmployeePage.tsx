@@ -2,6 +2,8 @@
 import './Table.css'
 import { FC, useState } from 'react'
 import FlexibleColumn from '@components/FlexibleColumn/FlexibleColumn'
+import CreateEmployeeForm from '@components/Forms/Create/CreateEmployeeForm'
+import UpdateEmployeeForm from '@components/Forms/Update/UpdateEmployeeForm'
 
 
 
@@ -23,15 +25,21 @@ const columns: AnalyticalTableColumnDefinition[] = [
 
 
 
-const Employee: FC = () => {
+const EmployeePage: FC = () => {
     const [tableTitle] = useState("Employees");
-    const [tableName] = useState("employee");
     const [dataURL] = useState("/api/employees");
 
 
     return (
-        <FlexibleColumn tableName={ tableName} tableTitle={tableTitle} dataURL={dataURL} columns={columns} />
+        <FlexibleColumn
+            tableTitle={tableTitle}
+            dataURL={dataURL}
+            columns={columns}
+            createForm={<><CreateEmployeeForm /></>}
+            updateForm={<><UpdateEmployeeForm /></>}
+        />
+
     )
 }
 
-export default Employee
+export default EmployeePage

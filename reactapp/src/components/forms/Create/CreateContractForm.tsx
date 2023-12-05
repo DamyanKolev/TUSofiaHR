@@ -20,7 +20,7 @@ const defaultFormState = {
 
 
 const CreateContractForm: FC = () => {
-    const [formData, setFormData] = useState<ContractDTO>(defaultContractRequest);
+    const [formData, setFormData] = useState<ContractDTO | Record<string, never>>({});
     const [formState, setFormState] = useState<ContractFormState>(defaultFormState);
     const isClicked = useContext(EndColumnContext)
 

@@ -1,8 +1,5 @@
-import { FC, createContext, useContext, useState } from 'react';
+import { FC, ReactNode, createContext, useState } from 'react';
 import { Bar, Button, FCLLayout } from "@ui5/webcomponents-react";
-import CreateEmployeeForm from '@components/forms/create-forms/CreateEmployeeForm';
-import CreateContractForm from '@components/forms/create-forms/CreateContractForm';
-import { TableContext } from './FlexibleColumn';
 
 
 export const EndColumnContext = createContext<boolean>(false);
@@ -10,9 +7,10 @@ export const EndColumnContext = createContext<boolean>(false);
 
 interface EndColumnProps {
     handleLayoutState: (layout: FCLLayout) => void,
+    createForm: ReactNode
 }
 
-const EndColumn: FC<EndColumnProps> = ({ handleLayoutState }) => {
+const EndColumn: FC<EndColumnProps> = ({ handleLayoutState, createForm }) => {
     const [isClicked, setIsClicked] = useState<boolean>(false)
 
     const navBackClick = () => {
@@ -34,22 +32,9 @@ const EndColumn: FC<EndColumnProps> = ({ handleLayoutState }) => {
                 >
                 </Bar>
             </div>
-            <StandartCreateForm />
+            {createForm}
         </EndColumnContext.Provider>
     )
-}
-
-
-const StandartCreateForm: FC = () => {
-    const tableName = useContext(TableContext)
-
-    if (tableName.localeCompare("employee") == 0) {
-        return (<CreateEmployeeForm />)
-    }
-    else if (tableName.localeCompare("contract") == 0) {
-        return (<CreateContractForm />)
-    }
-    
 }
 
 export default EndColumn;

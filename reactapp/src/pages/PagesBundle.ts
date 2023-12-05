@@ -1,10 +1,10 @@
-import Employee from './hr/Employee'
+import EmployeePage from './hr/EmployeePage'
 import Home from './Home'
 import Login from './auth/Login'
-import Contract from './hr/Contract'
-import Position from './hr/Position'
+import ContractPage from './hr/ContractPage'
+import PositionPage from './hr/PositionPage'
 
 
 export {
-    Employee, Home, Login, Contract, Position
+    EmployeePage, Home, Login, ContractPage, PositionPage
 }

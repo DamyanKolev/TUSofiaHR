@@ -1,15 +1,13 @@
-import { FC, useContext } from 'react';
+import { FC, ReactNode } from 'react';
 import { Bar, Button, FCLLayout } from "@ui5/webcomponents-react";
-import UpdateContractForm from '@components/forms/update-forms/UpdateContractForm';
-import { TableContext } from './FlexibleColumn';
-import UpdateEmployeeForm from '@components/forms/update-forms/UpdateEmployeeForm'
 
 
 interface MidColumnProps {
     handleLayoutState: (layout: FCLLayout) => void,
+    updateForm: ReactNode
 }
 
-const MidColumn: FC<MidColumnProps> = ({ handleLayoutState }) => {
+const MidColumn: FC<MidColumnProps> = ({ handleLayoutState, updateForm }) => {
 
     const navBackClick = () => {
         handleLayoutState(FCLLayout.OneColumn)
@@ -29,21 +27,9 @@ const MidColumn: FC<MidColumnProps> = ({ handleLayoutState }) => {
                 >
                 </Bar>
             </div>
-            <StandartUpdateForm />
+            {updateForm}
         </div>
     )
-}
-
-
-const StandartUpdateForm: FC = () => {
-    const tableName = useContext(TableContext)
-
-    if (tableName.localeCompare("employee") == 0) {
-        return (<UpdateEmployeeForm />)
-    }
-    else if (tableName.localeCompare("contract") == 0) {
-        return (<UpdateContractForm />)
-    }
 }
 
 

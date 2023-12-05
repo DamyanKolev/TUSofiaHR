@@ -1,7 +1,7 @@
 import { FC, Fragment} from 'react';
 import { AnalyticalTableColumnDefinition, Bar, Button, ButtonDesign,FCLLayout } from '@ui5/webcomponents-react';
-import PageBar from '../PageBar';
 import SmartTable from '../Table/SmartTable';
+import PageBar from '../Bars/PageBar';
 
 
 interface StartColumnProps {

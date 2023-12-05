@@ -6,7 +6,7 @@ export type Contract = {
 }
 
 export type ContractDTO = {
-    workingWage: number | string;
-    workTime: number | string;
+    workingWage: number;
+    workTime: number;
     conclusionDate: string;
 }

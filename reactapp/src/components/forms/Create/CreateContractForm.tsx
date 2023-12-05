@@ -3,14 +3,10 @@ import { Button, Form, FormItem, Input, ValueState } from "@ui5/webcomponents-re
 import { ContractDTO } from "@models/HR/Contract";
 import { ContractFormState } from "@models/FormStates/ContractFormState";
 import { EndColumnContext } from "../../FlexibleColumn/EndColumn";
+import { parseValueByType } from "../Utils";
+import DataType from "@app-types/DataType";
 
 
-
-const defaultContractRequest = {
-    workingWage: "",
-    workTime: "",
-    conclusionDate: "",
-}
 
 const defaultFormState = {
     workingWage: { isFilled: false, valueState: ValueState.None },
@@ -20,7 +16,8 @@ const defaultFormState = {
 
 
 const CreateContractForm: FC = () => {
-    const [formData, setFormData] = useState<ContractDTO | Record<string, never>>({});
+    const defaultFormData = {} as ContractDTO
+    const [formData, setFormData] = useState<ContractDTO>(defaultFormData);
     const [formState, setFormState] = useState<ContractFormState>(defaultFormState);
     const isClicked = useContext(EndColumnContext)
 
@@ -68,16 +65,18 @@ const CreateContractForm: FC = () => {
 
     //reset create form after nav back
     useEffect(() => {
-        setFormData(defaultContractRequest);
+        setFormData(defaultFormData);
     }, [isClicked]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+        const valueType = e.target.dataset.type? e.target.dataset.type : "invalid"
+        const newFormData = parseValueByType<ContractDTO>(formData, name, value, valueType);
 
         if (value)
             setFormState({ ...formState, [name]: { isFilled: true, valueState: ValueState.None } })
 
-        setFormData({ ...formData, [name]: value });
+        setFormData(newFormData);
     };
 
     return (
@@ -85,18 +84,20 @@ const CreateContractForm: FC = () => {
             <FormItem label="Working Wage">
                 <Input
                     name="workingWage"
-                    value={formData.workingWage.toString()}
+                    value={formData.workingWage ? formData.workingWage.toString() : ""}
                     onChange={handleInputChange}
                     valueState={formState.workingWage.valueState}
+                    data-type={DataType.Float}
                 />
             </FormItem>
 
             <FormItem label="Work Time">
                 <Input
                     name="workTime"
-                    value={formData.workTime.toString()}
+                    value={formData.workTime ? formData.workTime.toString() : ""}
                     onChange={handleInputChange}
                     valueState={formState.workTime.valueState}
+                    data-type={DataType.Float}
                 />
             </FormItem>
 
@@ -106,6 +107,7 @@ const CreateContractForm: FC = () => {
                     value={formData.conclusionDate}
                     onChange={handleInputChange}
                     valueState={formState.conclusionDate.valueState}
+                    data-type={DataType.Float}
                 />
             </FormItem>
 

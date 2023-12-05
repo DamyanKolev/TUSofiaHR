@@ -3,7 +3,7 @@ import { Bar, Button, Form, FormItem, } from '@ui5/webcomponents-react';
 import React from 'react';
 import { StandardField } from './StandartField';
 import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
-import { Contract } from '@form-states/ContractFormState';
+import { Contract } from '@models/HR/Contract';
 
 
 

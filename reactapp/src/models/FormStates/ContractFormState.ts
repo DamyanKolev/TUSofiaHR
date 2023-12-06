@@ -1,6 +1,6 @@
-import { FormFieldState } from "./FormFieldState"
+import { FormFieldState, FormState } from "./FormState"
 
-export interface ContractFormState {
+export interface ContractFormState extends FormState{
     workingWage: FormFieldState
     workTime: FormFieldState
     conclusionDate: FormFieldState

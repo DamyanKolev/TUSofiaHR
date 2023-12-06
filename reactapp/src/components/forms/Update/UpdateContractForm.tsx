@@ -4,6 +4,7 @@ import React from 'react';
 import { StandardField } from './StandartField';
 import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { Contract } from '@models/HR/Contract';
+import { parseValueByType } from '../Utils';
 
 
 
@@ -32,16 +33,17 @@ const UpdateContractForm: FC = () => {
     }, [selectedRow]);
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        const dataType = e.target.type;
-        const field = e.target.dataset.name
-        if (field) {
-            if (dataType == "Number") {
-                setFormData({ ...formData, [field]: Number(value) });
-            }
-            else {
-                setFormData({ ...formData, [field]: value });
-            }
+        const target = e.target
+        const value = target.value;
+        const valueType = target.type ? target.type : target.dataset.type
+        const name = target.name ? target.name : target.dataset.name 
+
+        if (name && valueType) {
+            const newFormData = parseValueByType<Contract>(formData, name, value, valueType);
+            setFormData(newFormData)
+        }
+        else {
+            setFormData(formData)
         }
     };
 

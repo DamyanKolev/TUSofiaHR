@@ -4,7 +4,7 @@ import { EmployeeDTO } from '@models/HR/Employee';
 import { EmployeeFormState } from '@models/FormStates/EmployeeFormState';
 import { EndColumnContext } from '../../FlexibleColumn/EndColumn';
 import { parseValueByType } from '../Utils';
-import DataType from '../../../types/DataType';
+import DataType from '@app-types/DataType';
 
 
 const defaultFormState = {
@@ -68,14 +68,19 @@ const CreateEmployeeForm: FC = () => {
     }, [isClicked]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        const valueType = e.target.dataset.type ? e.target.dataset.type : "invalid"
-        const newFormData = parseValueByType<EmployeeDTO>(formData, name, value, valueType);
+        const target = e.target
+        const value = target.value;
+        const valueType = target.type ? target.type : target.dataset.type
+        const name = target.name ? target.name : target.dataset.name
 
-        if (value)
-            setFormState({ ...formState, [name]: { isFilled: true, valueState: ValueState.None } })
+        if (name && valueType) {
+            const newFormData = parseValueByType<EmployeeDTO>(formData, name, value, valueType);
+            if (value) {
+                setFormState({ ...formState, [name]: { isFilled: true, valueState: ValueState.None } })
+            }
 
-        setFormData(newFormData);
+            setFormData(newFormData);
+        }
     };
 
     return (
@@ -85,6 +90,7 @@ const CreateEmployeeForm: FC = () => {
                     name="FirstName"
                     value={formData.firstName}
                     onChange={handleInputChange}
+                    valueState={formState.firstName.valueState}
                     data-type={DataType.String}
                 />
             </FormItem>
@@ -94,6 +100,7 @@ const CreateEmployeeForm: FC = () => {
                     name="Surname"
                     value={formData.surname}
                     onChange={handleInputChange}
+                    valueState={formState.surname.valueState}
                     data-type={DataType.String}
                 />
             </FormItem>
@@ -103,6 +110,7 @@ const CreateEmployeeForm: FC = () => {
                     name="LastName"
                     value={formData.lastName}
                     onChange={handleInputChange}
+                    valueState={formState.lastName.valueState}
                     data-type={DataType.String}
                 />
             </FormItem>

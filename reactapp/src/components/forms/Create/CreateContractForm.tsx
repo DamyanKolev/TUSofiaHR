@@ -69,14 +69,19 @@ const CreateContractForm: FC = () => {
     }, [isClicked]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        const valueType = e.target.dataset.type? e.target.dataset.type : "invalid"
-        const newFormData = parseValueByType<ContractDTO>(formData, name, value, valueType);
+        const target = e.target
+        const value = target.value;
+        const valueType = target.type ? target.type : target.dataset.type
+        const name = target.name ? target.name : target.dataset.name
 
-        if (value)
-            setFormState({ ...formState, [name]: { isFilled: true, valueState: ValueState.None } })
+        if (name && valueType) {
+            const newFormData = parseValueByType<ContractDTO>(formData, name, value, valueType);
+            if (value) {
+                setFormState({ ...formState, [name]: { isFilled: true, valueState: ValueState.None } })
+            }
 
-        setFormData(newFormData);
+            setFormData(newFormData);
+        }
     };
 
     return (

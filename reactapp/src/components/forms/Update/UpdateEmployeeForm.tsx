@@ -4,6 +4,7 @@ import React from 'react';
 import { StandardField } from './StandartField';
 import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { Employee } from '@models/HR/Employee';
+import { parseValueByType } from '../Utils';
 
 
 
@@ -32,16 +33,14 @@ const UpdateEmployeeForm: FC = () => {
     }, [selectedRow]);
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        const dataType = e.target.type;
-        const field = e.target.dataset.name
-        if (field) {
-            if (dataType.localeCompare("Number") == 0) {
-                setFormData({ ...formData, [field]: Number(value) });
-            }
-            else {
-                setFormData({ ...formData, [field]: value });
-            }
+        const target = e.target
+        const value = target.value;
+        const valueType = target.type ? target.type : target.dataset.type
+        const name = target.name ? target.name : target.dataset.name
+
+        if (name && valueType) {
+            const newFormData = parseValueByType<Employee>(formData, name, value, valueType);
+            setFormData(newFormData)
         }
     };
 

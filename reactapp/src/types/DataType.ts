@@ -1,6 +1,6 @@
 
 
-declare enum DataType {
+enum DataType {
     String = "string",
 
     Float = "float",

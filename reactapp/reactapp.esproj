@@ -12,5 +12,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\models\HR\" />
+    <Folder Include="src\types\" />
   </ItemGroup>
 </Project>

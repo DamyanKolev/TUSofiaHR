@@ -1,24 +1,20 @@
-﻿import { FC, useEffect, useState, ChangeEvent, useContext } from "react";
-import { Button, Form, FormItem, Input, ValueState } from "@ui5/webcomponents-react";
+﻿import { FC, useEffect, useState, useContext } from "react";
+import { Button, Form, FormItem, Input, InputDomRef, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
 import { ContractDTO } from "@models/HR/Contract";
-import { ContractFormState } from "@models/FormStates/ContractFormState";
+import { ContractFormState, contractFormState } from "@models/FormStates/ContractFormState";
 import { EndColumnContext } from "../../FlexibleColumn/EndColumn";
 import { parseValueByType } from "../Utils";
 import DataType from "@app-types/DataType";
 
 
 
-const defaultFormState = {
-    workingWage: { isFilled: false, valueState: ValueState.None },
-    workTime: { isFilled: false, valueState: ValueState.None },
-    conclusionDate: { isFilled: false, valueState: ValueState.None },
-}
+
 
 
 const CreateContractForm: FC = () => {
     const defaultFormData = {} as ContractDTO
     const [formData, setFormData] = useState<ContractDTO>(defaultFormData);
-    const [formState, setFormState] = useState<ContractFormState>(defaultFormState);
+    const [formState, setFormState] = useState<ContractFormState>(contractFormState);
     const isClicked = useContext(EndColumnContext)
 
     const isFilledForm = (): boolean => {
@@ -68,13 +64,13 @@ const CreateContractForm: FC = () => {
         setFormData(defaultFormData);
     }, [isClicked]);
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
         const target = e.target
         const value = target.value;
         const valueType = target.type ? target.type : target.dataset.type
         const name = target.name ? target.name : target.dataset.name
 
-        if (name && valueType) {
+        if (name && valueType && value) {
             const newFormData = parseValueByType<ContractDTO>(formData, name, value, valueType);
             if (value) {
                 setFormState({ ...formState, [name]: { isFilled: true, valueState: ValueState.None } })

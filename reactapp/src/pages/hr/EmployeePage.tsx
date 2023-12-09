@@ -1,5 +1,5 @@
 ﻿import { AnalyticalTableColumnDefinition } from '@ui5/webcomponents-react'
-import './Table.css'
+//import './Table.css'
 import { FC, useState } from 'react'
 import FlexibleColumn from '@components/FlexibleColumn/FlexibleColumn'
 import CreateEmployeeForm from '@components/Forms/Create/CreateEmployeeForm'

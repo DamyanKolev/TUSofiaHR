@@ -1,53 +1,49 @@
-﻿import { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
-import { Button, Form, FormItem, Input, Tab, TabContainer, ValueState } from "@ui5/webcomponents-react";
+﻿import { FC, useContext, useEffect, useState } from 'react';
+import { Button, Form, FormItem, Input, InputDomRef, Tab, TabContainer, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
 import { EmployeeDTO } from '@models/HR/Employee';
-import { EmployeeFormState } from '@models/FormStates/EmployeeFormState';
+import { EmployeeFormState, employeeFormState } from '@models/FormStates/EmployeeFormState';
 import { EndColumnContext } from '../../FlexibleColumn/EndColumn';
-import { parseValueByType } from '../Utils';
+import { isFilledForm, parseValueByType } from '../Utils';
 import DataType from '@app-types/DataType';
 
 
-const defaultFormState = {
-    "firstName": { isFilled: false, valueState: ValueState.None },
-    "surname": { isFilled: false, valueState: ValueState.None },
-    "lastName": { isFilled: false, valueState: ValueState.None }
-}
+
 
 
 const CreateEmployeeForm: FC = () => {
     const defaultFormData = {} as EmployeeDTO
     const [formData, setFormData] = useState<EmployeeDTO>(defaultFormData);
-    const [formState, setFormState] = useState<EmployeeFormState>(defaultFormState);
+    const [formState, setFormState] = useState<EmployeeFormState>(employeeFormState);
     const isClicked = useContext(EndColumnContext)
 
-    const isFilledForm = (): boolean => {
-        let isFilled: boolean = true;
+    //const isFilledForm = (): boolean => {
+    //    let isFilled: boolean = true;
 
-        const setValueState = (valueState: ValueState): void => {
-            let currentState = formState
-            for (const [key, value] of Object.entries(formState)) {
+    //    const setValueState = (valueState: ValueState): void => {
+    //        let currentState = formState
+    //        for (const [key, value] of Object.entries(formState)) {
 
-                if (!value.isFilled) {
-                    currentState = { ...currentState, [key]: { ...value, "valueState": valueState } }
-                    isFilled = false;
-                }
-            }
-            setFormState(currentState);
-        };
+    //            if (!value.isFilled) {
+    //                currentState = { ...currentState, [key]: { ...value, "valueState": valueState } }
+    //                isFilled = false;
+    //            }
+    //        }
+    //        setFormState(currentState);
+    //    };
 
-        setValueState(ValueState.Error);
+    //    setValueState(ValueState.Error);
 
-        if (!isFilled) {
-            setTimeout(() => {
-                setValueState(ValueState.None);
-            }, 1000);
-        }
+    //    if (!isFilled) {
+    //        setTimeout(() => {
+    //            setValueState(ValueState.None);
+    //        }, 1000);
+    //    }
 
-        return isFilled;
-    };
+    //    return isFilled;
+    //};
 
     const submitForm = async () => {
-        const isFilled = isFilledForm()
+        const isFilled = isFilledForm<EmployeeDTO>(formData, setFormData)
 
         if (isFilled) {
             const response = await fetch("/api/employees/create", {
@@ -67,13 +63,13 @@ const CreateEmployeeForm: FC = () => {
         setFormData(defaultFormData);
     }, [isClicked]);
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
         const target = e.target
         const value = target.value;
         const valueType = target.type ? target.type : target.dataset.type
         const name = target.name ? target.name : target.dataset.name
 
-        if (name && valueType) {
+        if (name && valueType && value) {
             const newFormData = parseValueByType<EmployeeDTO>(formData, name, value, valueType);
             if (value) {
                 setFormState({ ...formState, [name]: { isFilled: true, valueState: ValueState.None } })

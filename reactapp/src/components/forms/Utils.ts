@@ -1,4 +1,6 @@
 import DataType from "@app-types/DataType";
+import { ValueState } from "@ui5/webcomponents-react";
+import { FormFieldState, FormState } from "@models/FormStates/FormState";
 
 
 export function formatDate(date: Date): string {
@@ -39,4 +41,36 @@ export function parseValueByType<Type>(
                 throw new Error("Invalid Type");
             }
     }
+}
+
+
+
+export function isFilledForm<T extends FormState>(
+    formState: T,
+    setFormState: (formState: T) => void,
+): boolean {
+    let isFilled: boolean = true;
+
+    const setValueState = (valueState: ValueState): void => {
+        let currentState = formState
+        let key: keyof typeof formState
+        for (key in formState) {
+            const fieldState = formState[key] as FormFieldState
+
+            if (!fieldState.isFilled) {
+                currentState = { ...currentState, [key]: { ...fieldState, "valueState": valueState } }
+                isFilled = false;
+            }
+        }
+        setFormState(currentState);
+    };
+
+    if (!isFilled) {
+        setValueState(ValueState.Error);
+        setTimeout(() => {
+            setValueState(ValueState.None);
+        }, 1000);
+    }
+
+    return isFilled;
 }

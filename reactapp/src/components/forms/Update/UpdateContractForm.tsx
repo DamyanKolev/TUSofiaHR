@@ -1,10 +1,11 @@
-﻿import { FC, ChangeEvent, useContext, useState, useReducer, useEffect } from 'react';
-import { Bar, Button, Form, FormItem, } from '@ui5/webcomponents-react';
+﻿import { FC, useContext, useState, useReducer, useEffect } from 'react';
+import { Bar, Button, Form, FormItem, InputDomRef, Ui5CustomEvent, } from '@ui5/webcomponents-react';
 import React from 'react';
-import { StandardField } from './StandartField';
+import { StandardInputField } from './StandartField';
 import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { Contract } from '@models/HR/Contract';
 import { parseValueByType } from '../Utils';
+import DataType from '@app-types/DataType';
 
 
 
@@ -32,13 +33,13 @@ const UpdateContractForm: FC = () => {
         }
     }, [selectedRow]);
 
-    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
         const target = e.target
         const value = target.value;
         const valueType = target.type ? target.type : target.dataset.type
-        const name = target.name ? target.name : target.dataset.name 
+        const name = target.name ? target.name : target.dataset.name
 
-        if (name && valueType) {
+        if (name && valueType && value) {
             const newFormData = parseValueByType<Contract>(formData, name, value, valueType);
             setFormData(newFormData)
         }
@@ -54,13 +55,31 @@ const UpdateContractForm: FC = () => {
                 {isSelected &&
                     <Form id="create-form">
                         <FormItem label="Working Wage">
-                            <StandardField editMode={editMode} value={formData.workingWage} onInput={handleInput} data-name={"workingWage"} />
+                            <StandardInputField
+                                editMode={editMode}
+                                value={formData.workingWage.toString()}
+                                onChange={handleInputChange}
+                                name={"workingWage"}
+                                dataType={DataType.Float}
+                            />
                         </FormItem>
                         <FormItem label="Working Wage">
-                            <StandardField editMode={editMode} value={formData.workTime} onInput={handleInput} data-name={"workTime"} />
+                            <StandardInputField
+                                editMode={editMode}
+                                value={formData.workTime.toString()}
+                                onChange={handleInputChange}
+                                name={"workTime"}
+                                dataType={DataType.Float}
+                            />
                         </FormItem>
                         <FormItem label="Working Wage">
-                            <StandardField editMode={editMode} value={formData.conclusionDate} onInput={handleInput} data-name={"conclusionDate"} />
+                            <StandardInputField
+                                editMode={editMode}
+                                value={formData.conclusionDate}
+                                onChange={handleInputChange}
+                                name={"conclusionDate"}
+                                dataType={DataType.Date}
+                            />
                         </FormItem>
                     </Form>
                 }

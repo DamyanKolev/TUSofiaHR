@@ -1,7 +1,9 @@
-﻿import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
+﻿import { AnalyticalTableColumnDefinition, FlexBox } from "@ui5/webcomponents-react";
 import { FC, Fragment } from "react"
 import SmartTable from "@components/Table/SmartTable";
 import PageBar from "@/components/Bars/PageBar";
+import CreatePositionForm from "../../components/Forms/Create/CreatePositionForm";
+import { FlexBoxAlignItems } from "@ui5/webcomponents-react/wrappers";
 
 
 const columns: AnalyticalTableColumnDefinition[] = [
@@ -29,10 +31,13 @@ const PositionPage: FC = () => {
     return (
         <Fragment>
             <PageBar title={tableTile} />
-            <SmartTable
-                columns={columns}
-                dataURL={dataURL}
-            />
+            <FlexBox alignItems={FlexBoxAlignItems.Center} >
+                <SmartTable
+                    columns={columns}
+                    dataURL={dataURL}
+                />
+                {/*<CreatePositionForm />*/}
+            </FlexBox>
         </Fragment>
     )
 }

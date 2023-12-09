@@ -1,5 +1,5 @@
 export type PositionDTO = {
-    PositionName: string,
-    MinSalary: number
-    MaxSalary: number
+    positionName: string,
+    minSalary: number
+    maxSalary: number
 }

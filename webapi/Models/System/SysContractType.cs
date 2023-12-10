@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace webapi.Models.System
 {
@@ -6,9 +7,9 @@ namespace webapi.Models.System
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [NotNull]
         public required string Code { get; set; }
-        [Required]
+        [NotNull]
         public required string ContractType { get; set; }
     }
 }

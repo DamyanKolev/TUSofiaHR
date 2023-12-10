@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.JsonPatch;
 using webapi.Models.System;
 
@@ -8,62 +9,90 @@ namespace webapi.Models.HR
     {
         [Key]
         public Int64 Id { get; set; }
-        [Required]
+        [NotNull]
         public required decimal WorkingWage { get; set; }
-        [Required]
+        [NotNull]
         public required Int16 WorkTime { get; set; }
-        [Required]
+        [NotNull]
         public required Int16 AnnualLeave { get; set; }
-        [Required]
+        [NotNull]
         public required DateOnly ConclusionDate { get; set; }
-        [Required]
+        [NotNull]
         public required DateOnly ExecutionnDate { get; set; }
         public DateOnly ContractTerm { get; set; }
         public DateOnly AdditionalAgreementDate { get; set; }
         public DateOnly TerminationDate { get; set; }
         public DateOnly ChangeDate { get; set; }
-        [Required]
+
+
+        [NotNull]
+        public int CompanyId { get; set; }
         public required Company Company { get; set; }
-        [Required]
+
+
+        [NotNull]
+        public int ContractTypeId { get; set; }
         public required SysContractType ContractType { get; set; }
-        [Required]
+
+
+        [NotNull]
+        public int PositionId { get; set; }
         public required SysPosition Position { get; set; }
-        [Required]
+
+
+        [NotNull]
+        public int IconomicActivityId { get; set; }
         public required SysIconomicActivity IconomicActivity { get; set; }
         //[Required]
         //public SysContractDocumentType? DocumentType { get; set; }
+
+        public int? TerminationTypeId { get; set; }
         public SysContractTerminationType? TerminationType { get; set; }
+
+
+        public int? AdministrativeTerritoryId { get; set; }
         public SysAdministrativeTerritory? AdministrativeTerritory { get; set; }
-        [Required]
+
+
+        [NotNull]
         public required Int16 CodeCorection { get; set; }
-        [Required]
+        [NotNull]
         public required Boolean Article62Flag {  get; set; }
     }
 
+
+
+
+
     public record ContractDTO
     {
-        public decimal WorkingWage { get; set; }
-        public Int16 WorkTime { get; set; }
-        public Int16 AnnualLeave { get; set; }
-        public DateOnly ConclusionDate { get; set; }
-        public DateOnly ExecutionnDate { get; set; }
-        public DateOnly ContractTerm { get; set; }
-        public DateOnly AdditionalAgreementDate { get; set; }
-        public DateOnly TerminationDate { get; set; }
-        public DateOnly ChangeDate { get; set; }
-        public Company? Company { get; set; }
-        public SysContractType? ContractType { get; set; }
-        public SysPosition? Position { get; set; }
-        public SysIconomicActivity? IconomicActivity { get; set; }
+        public required decimal WorkingWage { get; set; }
+        public required Int16 WorkTime { get; set; }
+        public required Int16 AnnualLeave { get; set; }
+        public required DateOnly ConclusionDate { get; set; }
+        public required DateOnly ExecutionnDate { get; set; }
+        public DateOnly? ContractTerm { get; set; }
+        public DateOnly? AdditionalAgreementDate { get; set; }
+        public DateOnly? TerminationDate { get; set; }
+        public DateOnly? ChangeDate { get; set; }
+        public required int CompanyId { get; set; }
+        public required int ContractTypeId { get; set; }
+        public required int PositionId { get; set; }
+        public required int IconomicActivityId { get; set; }
         //public SysContractDocumentType? DocumentType { get; set; }
-        public SysContractTerminationType? TerminationType { get; set; }
-        public SysAdministrativeTerritory? AdministrativeTerritory { get; set; }
-        public Int16 CodeCorection { get; set; }
-        public Boolean Article62Flag { get; set; }
+        public int TerminationTypeId { get; set; }
+        public int AdministrativeTerritoryId { get; set; }
+        public required Int16 CodeCorection { get; set; }
+        public required Boolean Article62Flag { get; set; }
     }
+
+
+
+
+
     public record ContractUpdateDTO
     {
-        public Int64 UpdateId { get; set; }
+        public required Int64 UpdateId { get; set; }
         public required JsonPatchDocument<ContractDTO> Contract { get; set; }
     }
 }

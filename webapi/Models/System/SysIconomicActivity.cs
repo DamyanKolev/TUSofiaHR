@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace webapi.Models.System
 {
@@ -6,13 +7,13 @@ namespace webapi.Models.System
     {
         [Key]
         public int Id { get; set; }
-        [Required]  
+        [NotNull]  
         public required string Nkid { get; set; }
-        [Required]  
+        [NotNull]  
         public required string NkidIdText { get; set; }
-        [Required]  
+        [NotNull]  
         public required string ActivityName { get; set; }
-        [Required]  
+        [NotNull]  
         public required string NkidId {  get; set; }
     }
 }

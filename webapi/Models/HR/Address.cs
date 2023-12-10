@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using webapi.Models.System;
 
 namespace webapi.Models.HR
@@ -7,26 +8,28 @@ namespace webapi.Models.HR
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [NotNull]
         public required string StreetAddress { get; set; }
-        [Required]
+        [NotNull]
         public required string PostalCode { get; set; }
-        [Required]
+        [NotNull]
+        public int TerritoryId { get; set; }
         public required SysAdministrativeTerritory Territory { get; set; }
     }
 
 
     public record AddressDTO
     {
-        public string? StreetAddress { get; set; }
-        public string? PostalCode { get; set; }
-        public SysAdministrativeTerritory? Territory { get; set; }
+        public required string StreetAddress { get; set; }
+        public required string PostalCode { get; set; }
+        public required int TerritoryId { get; set; }
+
     }
 
 
     public record AddressUpdateDTO
     {
-        public Int64 UpdateId { get; set; }
+        public required Int64 UpdateId { get; set; }
         public required AddressDTO Data { get; set; }
     }
 }

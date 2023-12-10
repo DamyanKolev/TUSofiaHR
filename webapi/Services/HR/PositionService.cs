@@ -37,7 +37,6 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-
         public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO)
         {
             var position = _context.Positions.Find(updateDTO.PositionId);

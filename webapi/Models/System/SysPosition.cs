@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace webapi.Models.System
 {
@@ -6,13 +7,13 @@ namespace webapi.Models.System
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [NotNull]
         public required string NPKDBase { get; set; }
-        [Required]
+        [NotNull]
         public required string NPKDId { get; set; }
-        [Required]
+        [NotNull]
         public required string NPKDSlave { get; set; }
-        [Required]
+        [NotNull]
         public required string PositionName { get; set; }
     }
 }

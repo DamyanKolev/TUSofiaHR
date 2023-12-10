@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Models.HR
@@ -7,16 +8,16 @@ namespace webapi.Models.HR
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [NotNull]
         public required string CompanyName {  get; set; }
-        [Required]
+        [NotNull]
         public required string CompanyEIC { get; set; }
     }
 
     public record CompanyDTO
     {
-        public string? CompanyName { get; set; }
-        public string? CompanyEIC { get; set; }
+        public required string CompanyName { get; set; }
+        public required string CompanyEIC { get; set; }
     }
 
     public record CompanyUpdateDTO

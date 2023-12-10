@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.JsonPatch;
+using System.Diagnostics.CodeAnalysis;
 
 namespace webapi.Models.HR
 {
@@ -7,7 +7,7 @@ namespace webapi.Models.HR
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [NotNull]
         public required string DepartmentName { get; set; }
     }
 }

@@ -20,6 +20,8 @@ namespace webapi
             CreateMap<PersonalData, PersonalDataDTO>();
             CreateMap<PersonalDataDTO, PersonalData>();
 
+            CreateMap<AddressDTO, Address>();
+
             CreateMap<Company, CompanyDTO>();
             CreateMap<CompanyDTO, Company>();
 

@@ -43,12 +43,14 @@ namespace webapi.Models.HR
         [NotNull]
         public int IconomicActivityId { get; set; }
         public required SysIconomicActivity IconomicActivity { get; set; }
-        //[Required]
-        //public SysContractDocumentType? DocumentType { get; set; }
+
+
+        [NotNull]
+        public int? DocumentTypeId { get; set; }
+        public SysContractDocumentType? DocumentType { get; set; }
 
         public int? TerminationTypeId { get; set; }
         public SysContractTerminationType? TerminationType { get; set; }
-
 
         public int? AdministrativeTerritoryId { get; set; }
         public SysAdministrativeTerritory? AdministrativeTerritory { get; set; }
@@ -79,7 +81,7 @@ namespace webapi.Models.HR
         public required int ContractTypeId { get; set; }
         public required int PositionId { get; set; }
         public required int IconomicActivityId { get; set; }
-        //public SysContractDocumentType? DocumentType { get; set; }
+        public SysContractDocumentType? DocumentType { get; set; }
         public int TerminationTypeId { get; set; }
         public int AdministrativeTerritoryId { get; set; }
         public required Int16 CodeCorection { get; set; }

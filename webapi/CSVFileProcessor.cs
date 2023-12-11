@@ -8,7 +8,7 @@ namespace webapi
     {
         public static IEnumerable<Т> ParseCSVToList<Т>(string fileName)
         {
-            const string baseDir = "Resources\\";
+            const string baseDir = "Resources\\DataSeed\\";
             var filePath = Path.Combine(baseDir, fileName);
 
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)

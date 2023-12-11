@@ -1,6 +1,7 @@
 ﻿using System.Reflection.Emit;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using webapi.Extensions;
 using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Models.System;
@@ -27,6 +28,7 @@ namespace webapi
         public DbSet<SysContractType> SysContractTypes { get; set; }
         public DbSet<SysIconomicActivity> SysIconomicActivities { get; set; }
         public DbSet<SysPosition> SysPositions { get; set; }
+        public DbSet<SysContractDocumentType> sysContractDocumentTypes { get; set; }
 
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) 

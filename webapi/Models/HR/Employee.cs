@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.JsonPatch;
 
@@ -26,8 +25,7 @@ namespace webapi.Models.HR
         public required PersonalData PersonalData { get; set; }
 
 
-        [ForeignKey("ManagerId")]
-        public int? ManagerId { get; set; }
+        public long? ManagerId { get; set; }
         public Employee? Manager { get; set; }
 
 

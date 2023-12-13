@@ -4,15 +4,15 @@ import { PositionDTO } from "@models/HR/Position"
 import { PositionFormState, positionFormState } from "@models/FormStates/PositionFormState"
 import { isFilledForm, parseValueByType } from "../Utils"
 import DataType from "@app-types/DataType"
+import FormProps from "../FormProps"
 
 
 
-
-
-const CreatePositionForm: FC = () => {
+const CreatePositionForm: FC<FormProps> = ({ isSuccessSetter }) => {
     const defaultFormData = {} as PositionDTO
     const [formData, setFormData] = useState<PositionDTO>(defaultFormData);
     const [formState, setFormState] = useState<PositionFormState>(positionFormState);
+
 
     const submitForm = async () => {
         const isFilled = isFilledForm<PositionDTO>(formData, setFormData);
@@ -25,7 +25,7 @@ const CreatePositionForm: FC = () => {
             });
 
             if (!response.ok) {
-
+                isSuccessSetter(true)
             }
         }
     };

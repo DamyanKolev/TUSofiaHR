@@ -26,17 +26,27 @@ const columns: AnalyticalTableColumnDefinition[] = [
 
 
 const EmployeePage: FC = () => {
-    const [tableTitle] = useState("Employees");
-    const [dataURL] = useState("/api/employees");
+    const tableTitle = "Employees";
+    const dataURL = "/api/employees";
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
+    const isSuccessGetter = () => {
+        return isSuccess
+    }
+
+    const isSuccessSetter = (value: boolean) => {
+        setIsSuccess(value)
+    }
 
     return (
         <FlexibleColumn
             tableTitle={tableTitle}
             dataURL={dataURL}
             columns={columns}
-            createForm={<><CreateEmployeeForm /></>}
-            updateForm={<><UpdateEmployeeForm /></>}
+            createForm={<><CreateEmployeeForm isSuccessSetter={isSuccessSetter} /></>}
+            updateForm={<><UpdateEmployeeForm isSuccessSetter={isSuccessSetter} /></>}
+            isSuccessGetter={isSuccessGetter}
+            isSuccessSetter={isSuccessSetter }
         />
 
     )

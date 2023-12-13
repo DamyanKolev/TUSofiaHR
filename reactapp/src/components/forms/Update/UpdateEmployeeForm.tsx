@@ -5,10 +5,12 @@ import { StandardInputField } from './StandartField';
 import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { EmployeeDTO } from '@models/HR/Employee';
 import { parseValueByType } from '../Utils';
+import FormProps from '../FormProps';
 
 
 
-const UpdateEmployeeForm: FC = () => {
+
+const UpdateEmployeeForm: FC<FormProps> = ({ isSuccessSetter }) => {
     const selectedRow = useContext(FlexibleContext)
     const [formData, setFormData] = useState<EmployeeDTO>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
@@ -22,7 +24,7 @@ const UpdateEmployeeForm: FC = () => {
         });
 
         if (!response.ok) {
-
+            isSuccessSetter(true)
         }
     };
 

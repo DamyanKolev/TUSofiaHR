@@ -1,26 +1,26 @@
-import { FC, ReactNode, useState } from 'react';
-import {
-    AnalyticalTableColumnDefinition, FCLLayout, FlexibleColumnLayout,
-} from '@ui5/webcomponents-react';
+import { FC, ReactNode, useRef, useState } from 'react';
+import { AnalyticalTableColumnDefinition, FCLLayout, FlexibleColumnLayout } from '@ui5/webcomponents-react';
 import StartColumn from './StartColumn';
 import MidColumn from './MidColumn';
 import EndColumn from './EndColumn';
 import React from 'react';
 
 export const FlexibleContext = React.createContext<any>(null);
-export const TableContext = React.createContext<string>("");
+
 
 interface FlexibleColumnProps {
     tableTitle: string,
     dataURL: string,
     columns: AnalyticalTableColumnDefinition[],
     createForm: ReactNode,
-    updateForm: ReactNode
+    updateForm: ReactNode,
+    isSuccessGetter: () => boolean,
+    isSuccessSetter: (value: boolean) => void,
 }
 
 
 
-const FlexibleColumn: FC<FlexibleColumnProps> = ({ tableTitle, dataURL, columns, updateForm, createForm }) => {
+const FlexibleColumn: FC<FlexibleColumnProps> = ({ tableTitle, dataURL, columns, updateForm, createForm, isSuccessGetter, isSuccessSetter }) => {
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<any>(null);
 
@@ -36,29 +36,31 @@ const FlexibleColumn: FC<FlexibleColumnProps> = ({ tableTitle, dataURL, columns,
     };
 
     return (
-        <FlexibleContext.Provider value={selectedRow}>
-            <FlexibleColumnLayout
-                className="flexible-columns ui5-content-density-compact"
-                layout={layout}
-                startColumn={
-                    <div>
-                        <StartColumn
-                            dataURL={dataURL}
-                            columns={columns}
-                            tableTitle={tableTitle}
-                            handleLayoutState={handleLayoutState}
-                            onRowClick={onRowClick}
-                        />
-                    </div>
-                }
-                midColumn={
-                    <div><MidColumn handleLayoutState={handleLayoutState} updateForm={updateForm} /></div>
-                }
-                endColumn={
-                    <div><EndColumn handleLayoutState={handleLayoutState} createForm={createForm} /></div>
-                }
+            <FlexibleContext.Provider value={selectedRow}>
+                <FlexibleColumnLayout
+                    className="flexible-columns ui5-content-density-compact"
+                    layout={layout}
+                    startColumn={
+                        <div>
+                            <StartColumn
+                                dataURL={dataURL}
+                                columns={columns}
+                                tableTitle={tableTitle}
+                                handleLayoutState={handleLayoutState}
+                                onRowClick={onRowClick}
+                                isSuccessGetter={isSuccessGetter}
+                                isSuccessSetter={isSuccessSetter}
+                            />
+                        </div>
+                    }
+                    midColumn={
+                        <div><MidColumn handleLayoutState={handleLayoutState} updateForm={updateForm} /></div>
+                    }
+                    endColumn={
+                        <div><EndColumn handleLayoutState={handleLayoutState} createForm={createForm} /></div>
+                    }
             />
-        </FlexibleContext.Provider>
+            </FlexibleContext.Provider>
     );
 };
 

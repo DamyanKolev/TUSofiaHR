@@ -6,10 +6,11 @@ import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { Contract } from '@models/HR/Contract';
 import { parseValueByType } from '../Utils';
 import DataType from '@app-types/DataType';
+import FormProps from '../FormProps';
 
 
 
-const UpdateContractForm: FC = () => {
+const UpdateContractForm: FC<FormProps> = ({ isSuccessSetter }) => {
     const selectedRow = useContext(FlexibleContext)
     const [formData, setFormData] = useState<Contract>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
@@ -17,13 +18,13 @@ const UpdateContractForm: FC = () => {
 
     const submitForm = async () => {
         const response = await fetch("/api/contracts/update", {
-            method: "PUT",
+            method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
         });
 
         if (!response.ok) {
-
+            isSuccessSetter(true)
         }
     };
 

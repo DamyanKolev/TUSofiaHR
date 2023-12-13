@@ -5,12 +5,10 @@ import { EmployeeFormState, employeeFormState } from '@models/FormStates/Employe
 import { EndColumnContext } from '../../FlexibleColumn/EndColumn';
 import { isFilledForm, parseValueByType } from '../Utils';
 import DataType from '@app-types/DataType';
+import FormProps from '../FormProps';
 
 
-
-
-
-const CreateEmployeeForm: FC = () => {
+const CreateEmployeeForm: FC<FormProps> = ({ isSuccessSetter }) => {
     const defaultFormData = {} as EmployeeDTO
     const [formData, setFormData] = useState<EmployeeDTO>(defaultFormData);
     const [formState, setFormState] = useState<EmployeeFormState>(employeeFormState);
@@ -53,7 +51,7 @@ const CreateEmployeeForm: FC = () => {
             });
 
             if (!response.ok) {
-
+                isSuccessSetter(true)
             }
         }
     };

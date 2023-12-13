@@ -5,11 +5,12 @@ import { StandardInputField } from './StandartField';
 import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { parseValueByType } from '../Utils';
 import { PositionDTO } from '@models/HR/Position';
-import DataType from '../../../types/DataType';
+import DataType from '@app-types/DataType';
+import FormProps from '../FormProps';
 
 
 
-const UpdatePositionForm: FC = () => {
+const UpdatePositionForm: FC<FormProps> = ({ isSuccessSetter }) => {
     const selectedRow = useContext(FlexibleContext)
     const [formData, setFormData] = useState<PositionDTO>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
@@ -23,7 +24,7 @@ const UpdatePositionForm: FC = () => {
         });
 
         if (!response.ok) {
-
+            isSuccessSetter(true)
         }
     };
 

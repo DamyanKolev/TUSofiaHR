@@ -1,22 +1,31 @@
-import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
-import { FC, Fragment } from "react"
+Ôªøimport { AnalyticalTableColumnDefinition, Bar, Button, ButtonDesign } from "@ui5/webcomponents-react";
+import { FC, Fragment, useState } from "react"
 import SmartTable from "@components/Table/SmartTable";
 import PageBar from "@/components/Bars/PageBar";
+import CreateDepartmentForm from "../../components/Forms/Create/CreateDepartmentForm";
 
 
 const columns: AnalyticalTableColumnDefinition[] = [
     {
         accessor: "departmentName",
-        Header: "ŒÚ‰ÂÎ",
+        Header: "–û—Ç–¥–µ–ª",
     },
 ];
 
 
 
-const PositionPage: FC = () => {
-    const tableTile = "ŒÚ‰ÂÎË"
+const DepartmentPage: FC = () => {
+    const tableTile = "–û—Ç–¥–µ–ª–∏"
     const dataURL = "/api/departments"
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
+    const isSuccessGetter = () => {
+        return isSuccess
+    }
+
+    const isSuccessSetter = (value: boolean) => {
+        setIsSuccess(value)
+    }
 
     return (
         <Fragment>
@@ -24,9 +33,23 @@ const PositionPage: FC = () => {
             <SmartTable
                 columns={columns}
                 dataURL={dataURL}
+                isSuccessGetter={isSuccessGetter}
+                isSuccessSetter={isSuccessSetter }
+                header={
+                    <Fragment>
+                        <Bar endContent={
+                            <Fragment>
+                                <Button design={ButtonDesign.Transparent}>Add</Button>
+                                <Button design={ButtonDesign.Transparent}>Edit</Button>
+                                <Button design={ButtonDesign.Transparent}>Delete</Button>
+                            </Fragment>
+                        } />
+                    </Fragment>
+                }
             />
+            <CreateDepartmentForm isSuccessSetter={isSuccessSetter} />
         </Fragment>
     )
 }
 
-export default PositionPage
+export default DepartmentPage

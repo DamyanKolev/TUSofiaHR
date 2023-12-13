@@ -1,7 +1,7 @@
 import './App.css'
 import Layout from './layout/Layout'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { ContractPage, EmployeePage, Home, Login, PositionPage } from './pages/PagesBundle'
+import { ContractPage, DepartmentPage, EmployeePage, Home, Login, PositionPage } from './pages/PagesBundle'
 
 
 
@@ -14,6 +14,7 @@ function App() {
                     <Route path="employee" element={<EmployeePage />} />
                     <Route path="contract" element={<ContractPage />} />
                     <Route path="position" element={<PositionPage />} />
+                    <Route path="department" element={<DepartmentPage />} />
                 </Route>
                 <Route path="/login" element={<Login />}/>
             </Routes>

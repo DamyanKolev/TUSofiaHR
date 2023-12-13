@@ -3,48 +3,20 @@ import { Button, Form, FormItem, Input, InputDomRef, Ui5CustomEvent, ValueState 
 import { ContractDTO } from "@models/HR/Contract";
 import { ContractFormState, contractFormState } from "@models/FormStates/ContractFormState";
 import { EndColumnContext } from "../../FlexibleColumn/EndColumn";
-import { parseValueByType } from "../Utils";
+import { isFilledForm, parseValueByType } from "../Utils";
 import DataType from "@app-types/DataType";
+import FormProps from "../FormProps";
 
 
 
-
-
-
-const CreateContractForm: FC = () => {
+const CreateContractForm: FC<FormProps> = ({ isSuccessSetter }) => {
     const defaultFormData = {} as ContractDTO
     const [formData, setFormData] = useState<ContractDTO>(defaultFormData);
     const [formState, setFormState] = useState<ContractFormState>(contractFormState);
     const isClicked = useContext(EndColumnContext)
 
-    const isFilledForm = (): boolean => {
-        let isFilled: boolean = true;
-
-        const setValueState = (valueState: ValueState): void => {
-            let currentState = formState
-            for (const [key, value] of Object.entries(formState)) {
-
-                if (!value.isFilled) {
-                    currentState = { ...currentState, [key]: { ...value, "valueState": valueState } }
-                    isFilled = false;
-                }
-            }
-            setFormState(currentState);
-        };
-
-        setValueState(ValueState.Error);
-
-        if (!isFilled) {
-            setTimeout(() => {
-                setValueState(ValueState.None);
-            }, 1000);
-        }
-
-        return isFilled;
-    };
-
     const submitForm = async () => {
-        const isFilled = isFilledForm()
+        const isFilled = isFilledForm<ContractDTO>(formData, setFormData)
 
         if (isFilled) {
             const response = await fetch("/api/contracts/create", {
@@ -54,7 +26,7 @@ const CreateContractForm: FC = () => {
             });
 
             if (!response.ok) {
-
+                isSuccessSetter(true)   
             }
         }
     };

@@ -2,6 +2,7 @@ import { AnalyticalTable, AnalyticalTableColumnDefinition, AnalyticalTableSelect
 import { FC, ReactNode, useEffect, useRef, useState } from "react";
 
 
+
 interface PageDTO {
     PageNumber: int,
     PageSize: int,
@@ -12,11 +13,12 @@ interface TableProps {
     columns: AnalyticalTableColumnDefinition[],
     header?: ReactNode,
     onRowClick?: (event: any) => void,
+    isSuccessGetter: () => boolean,
+    isSuccessSetter: (value: boolean) => void,
 }
 
 
-
-const SmartTable: FC<TableProps> = ({ dataURL, columns, header, onRowClick }) => {
+const SmartTable: FC<TableProps> = ({ dataURL, columns, header, onRowClick, isSuccessGetter, isSuccessSetter }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const table = useRef<Record<string, any>>(null);
     const [pageDTO] = useState<PageDTO>({
@@ -24,6 +26,8 @@ const SmartTable: FC<TableProps> = ({ dataURL, columns, header, onRowClick }) =>
         PageSize: 50,
     })
     const [data, setData] = useState([]);
+    const isSuccess = isSuccessGetter()
+
 
     const initTable = () => {
         return fetch(`${dataURL}/page`, {
@@ -41,6 +45,15 @@ const SmartTable: FC<TableProps> = ({ dataURL, columns, header, onRowClick }) =>
             setIsLoading(false);
         });
     }, []);
+
+    //chage the data after success update or insert into database
+    useEffect(() => {
+        if (isSuccess) {
+            initTable().then(() => {
+                isSuccessSetter(false)
+            });
+        }
+    }, [isSuccess])
 
     return (
         <AnalyticalTable

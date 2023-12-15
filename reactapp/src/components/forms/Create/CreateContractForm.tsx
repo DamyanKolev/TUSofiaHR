@@ -5,15 +5,17 @@ import { ContractFormState, contractFormState } from "@models/FormStates/Contrac
 import { EndColumnContext } from "../../FlexibleColumn/EndColumn";
 import { isFilledForm, parseValueByType } from "../Utils";
 import DataType from "@app-types/DataType";
-import FormProps from "../FormProps";
+import { useAppDispatch } from "@store/storeHooks";
+import { toggle } from "@store/slices/toggleSlice";
 
 
 
-const CreateContractForm: FC<FormProps> = ({ isSuccessSetter }) => {
+const CreateContractForm: FC = () => {
     const defaultFormData = {} as ContractDTO
     const [formData, setFormData] = useState<ContractDTO>(defaultFormData);
     const [formState, setFormState] = useState<ContractFormState>(contractFormState);
     const isClicked = useContext(EndColumnContext)
+    const dispatchIsSuccess = useAppDispatch()
 
     const submitForm = async () => {
         const isFilled = isFilledForm<ContractDTO>(formData, setFormData)
@@ -26,7 +28,7 @@ const CreateContractForm: FC<FormProps> = ({ isSuccessSetter }) => {
             });
 
             if (!response.ok) {
-                isSuccessSetter(true)   
+                dispatchIsSuccess(toggle())   
             }
         }
     };

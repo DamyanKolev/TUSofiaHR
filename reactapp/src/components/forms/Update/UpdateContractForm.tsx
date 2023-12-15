@@ -6,15 +6,17 @@ import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { Contract } from '@models/HR/Contract';
 import { parseValueByType } from '../Utils';
 import DataType from '@app-types/DataType';
-import FormProps from '../FormProps';
+import { toggle } from '@store/slices/toggleSlice';
+import { useAppDispatch } from '@store/storeHooks';
 
 
 
-const UpdateContractForm: FC<FormProps> = ({ isSuccessSetter }) => {
+const UpdateContractForm: FC = () => {
     const selectedRow = useContext(FlexibleContext)
     const [formData, setFormData] = useState<Contract>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
     const isSelected = formData ? true : false
+    const dispatchIsSuccess = useAppDispatch()
 
     const submitForm = async () => {
         const response = await fetch("/api/contracts/update", {
@@ -24,7 +26,7 @@ const UpdateContractForm: FC<FormProps> = ({ isSuccessSetter }) => {
         });
 
         if (!response.ok) {
-            isSuccessSetter(true)
+            dispatchIsSuccess(toggle())
         }
     };
 

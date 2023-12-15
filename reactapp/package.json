@@ -11,6 +11,7 @@
     "predev": "node aspnetcore-https.js"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1",
     "@types/jest": "^29.5.6",
     "@types/node": "^20.8.7",
     "@ui5/webcomponents": "^1.18.0",
@@ -23,6 +24,7 @@
     "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.0.4",
     "react-router-dom": "^6.17.0",
     "typescript": "^5.2.2"
   },

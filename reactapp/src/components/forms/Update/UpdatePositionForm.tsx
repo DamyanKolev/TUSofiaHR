@@ -6,15 +6,17 @@ import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { parseValueByType } from '../Utils';
 import { PositionDTO } from '@models/HR/Position';
 import DataType from '@app-types/DataType';
-import FormProps from '../FormProps';
+import { useAppDispatch } from '@store/storeHooks';
+import { toggle } from '@store/slices/toggleSlice';
 
 
 
-const UpdatePositionForm: FC<FormProps> = ({ isSuccessSetter }) => {
+const UpdatePositionForm: FC = () => {
     const selectedRow = useContext(FlexibleContext)
     const [formData, setFormData] = useState<PositionDTO>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
     const isSelected = formData ? true : false
+    const dispatchIsSuccess = useAppDispatch()
 
     const submitForm = async () => {
         const response = await fetch("/api/positions/update", {
@@ -24,7 +26,7 @@ const UpdatePositionForm: FC<FormProps> = ({ isSuccessSetter }) => {
         });
 
         if (!response.ok) {
-            isSuccessSetter(true)
+            dispatchIsSuccess(toggle())
         }
     };
 

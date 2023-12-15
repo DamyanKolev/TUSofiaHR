@@ -5,14 +5,16 @@ import { EmployeeFormState, employeeFormState } from '@models/FormStates/Employe
 import { EndColumnContext } from '../../FlexibleColumn/EndColumn';
 import { isFilledForm, parseValueByType } from '../Utils';
 import DataType from '@app-types/DataType';
-import FormProps from '../FormProps';
+import { useAppDispatch } from '@store/storeHooks';
+import { toggle } from '@store/slices/toggleSlice';
 
 
-const CreateEmployeeForm: FC<FormProps> = ({ isSuccessSetter }) => {
+const CreateEmployeeForm: FC = () => {
     const defaultFormData = {} as EmployeeDTO
     const [formData, setFormData] = useState<EmployeeDTO>(defaultFormData);
     const [formState, setFormState] = useState<EmployeeFormState>(employeeFormState);
     const isClicked = useContext(EndColumnContext)
+    const dispatchIsSuccess = useAppDispatch()
 
     //const isFilledForm = (): boolean => {
     //    let isFilled: boolean = true;
@@ -51,7 +53,7 @@ const CreateEmployeeForm: FC<FormProps> = ({ isSuccessSetter }) => {
             });
 
             if (!response.ok) {
-                isSuccessSetter(true)
+                dispatchIsSuccess(toggle())
             }
         }
     };

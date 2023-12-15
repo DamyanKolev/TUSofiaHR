@@ -5,16 +5,18 @@ import { StandardInputField } from './StandartField';
 import { FlexibleContext } from '@components/FlexibleColumn/FlexibleColumn';
 import { EmployeeDTO } from '@models/HR/Employee';
 import { parseValueByType } from '../Utils';
-import FormProps from '../FormProps';
+import { toggle } from '@store/slices/toggleSlice';
+import { useAppDispatch } from '@store/storeHooks';
 
 
 
 
-const UpdateEmployeeForm: FC<FormProps> = ({ isSuccessSetter }) => {
+const UpdateEmployeeForm: FC = () => {
     const selectedRow = useContext(FlexibleContext)
     const [formData, setFormData] = useState<EmployeeDTO>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
     const isSelected = formData ? true : false
+    const dispatchIsSuccess = useAppDispatch()
 
     const submitForm = async () => {
         const response = await fetch("/api/employees/update", {
@@ -24,7 +26,7 @@ const UpdateEmployeeForm: FC<FormProps> = ({ isSuccessSetter }) => {
         });
 
         if (!response.ok) {
-            isSuccessSetter(true)
+            dispatchIsSuccess(toggle())
         }
     };
 

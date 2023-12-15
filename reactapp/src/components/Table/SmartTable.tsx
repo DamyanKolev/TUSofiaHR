@@ -1,5 +1,7 @@
 import { AnalyticalTable, AnalyticalTableColumnDefinition, AnalyticalTableSelectionBehavior, AnalyticalTableSelectionMode } from "@ui5/webcomponents-react";
 import { FC, ReactNode, useEffect, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@store/storeHooks";
+import { toggle } from "@store/slices/toggleSlice";
 
 
 
@@ -13,12 +15,10 @@ interface TableProps {
     columns: AnalyticalTableColumnDefinition[],
     header?: ReactNode,
     onRowClick?: (event: any) => void,
-    isSuccessGetter: () => boolean,
-    isSuccessSetter: (value: boolean) => void,
 }
 
 
-const SmartTable: FC<TableProps> = ({ dataURL, columns, header, onRowClick, isSuccessGetter, isSuccessSetter }) => {
+const SmartTable: FC<TableProps> = ({ dataURL, columns, header, onRowClick }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const table = useRef<Record<string, any>>(null);
     const [pageDTO] = useState<PageDTO>({
@@ -26,7 +26,8 @@ const SmartTable: FC<TableProps> = ({ dataURL, columns, header, onRowClick, isSu
         PageSize: 50,
     })
     const [data, setData] = useState([]);
-    const isSuccess = isSuccessGetter()
+    const isSuccess = useAppSelector((state) => state.isSuccess.value)
+    const dispatchIsSuccess = useAppDispatch()
 
 
     const initTable = () => {
@@ -49,9 +50,7 @@ const SmartTable: FC<TableProps> = ({ dataURL, columns, header, onRowClick, isSu
     //chage the data after success update or insert into database
     useEffect(() => {
         if (isSuccess) {
-            initTable().then(() => {
-                isSuccessSetter(false)
-            });
+            dispatchIsSuccess(toggle())
         }
     }, [isSuccess])
 

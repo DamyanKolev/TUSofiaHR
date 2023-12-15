@@ -1,4 +1,4 @@
-import { FC, Fragment, MutableRefObject} from 'react';
+import { FC, Fragment } from 'react';
 import { AnalyticalTableColumnDefinition, Bar, Button, ButtonDesign,FCLLayout } from '@ui5/webcomponents-react';
 import SmartTable from '../Table/SmartTable';
 import PageBar from '../Bars/PageBar';
@@ -10,12 +10,10 @@ interface StartColumnProps {
     tableTitle: string,
     handleLayoutState: (layout: FCLLayout) => void,
     onRowClick: (event: any) => void,
-    isSuccessGetter: () => boolean,
-    isSuccessSetter: (value: boolean) => void,
 }
 
 
-const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, handleLayoutState, onRowClick, isSuccessGetter, isSuccessSetter }) => {
+const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, handleLayoutState, onRowClick}) => {
     const createOnClick = () => { handleLayoutState(FCLLayout.EndColumnFullScreen) }
 
     return (
@@ -25,8 +23,6 @@ const StartColumn: FC<StartColumnProps> = ({ dataURL, columns, tableTitle, handl
                 dataURL={dataURL}
                 columns={columns}
                 onRowClick={onRowClick}
-                isSuccessGetter={isSuccessGetter}
-                isSuccessSetter={isSuccessSetter }
                 header={
                     <Fragment>
                         <Bar

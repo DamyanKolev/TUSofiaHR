@@ -14,13 +14,11 @@ interface FlexibleColumnProps {
     columns: AnalyticalTableColumnDefinition[],
     createForm: ReactNode,
     updateForm: ReactNode,
-    isSuccessGetter: () => boolean,
-    isSuccessSetter: (value: boolean) => void,
 }
 
 
 
-const FlexibleColumn: FC<FlexibleColumnProps> = ({ tableTitle, dataURL, columns, updateForm, createForm, isSuccessGetter, isSuccessSetter }) => {
+const FlexibleColumn: FC<FlexibleColumnProps> = ({ tableTitle, dataURL, columns, updateForm, createForm}) => {
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<any>(null);
 
@@ -48,8 +46,6 @@ const FlexibleColumn: FC<FlexibleColumnProps> = ({ tableTitle, dataURL, columns,
                                 tableTitle={tableTitle}
                                 handleLayoutState={handleLayoutState}
                                 onRowClick={onRowClick}
-                                isSuccessGetter={isSuccessGetter}
-                                isSuccessSetter={isSuccessSetter}
                             />
                         </div>
                     }

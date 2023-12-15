@@ -33,7 +33,8 @@ export default defineConfig({
             '@assets': path.resolve(__dirname, './src/assets'),
             '@components': path.resolve(__dirname, './src/components'),
             '@models': path.resolve(__dirname, './src/models'),
-            '@app-types': path.resolve(__dirname, './src/types')
+            '@app-types': path.resolve(__dirname, './src/types'),
+            '@store': path.resolve(__dirname, './src/store')
         },
 
     },

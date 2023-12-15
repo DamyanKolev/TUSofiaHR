@@ -1,5 +1,5 @@
 ﻿import { AnalyticalTableColumnDefinition, Bar, Button, ButtonDesign, FlexBox } from "@ui5/webcomponents-react";
-import { FC, Fragment, useState } from "react"
+import { FC, Fragment } from "react"
 import SmartTable from "@components/Table/SmartTable";
 import PageBar from "@/components/Bars/PageBar";
 import CreatePositionForm from "@components/Forms/Create/CreatePositionForm";
@@ -26,15 +26,7 @@ const columns: AnalyticalTableColumnDefinition[] = [
 const PositionPage: FC = () => {
     const tableTile = "Позиции"
     const dataURL = "/api/positions"
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
-    const isSuccessGetter = () => {
-        return isSuccess
-    }
-
-    const isSuccessSetter = (value: boolean) => {
-        setIsSuccess(value)
-    }
 
     return (
         <Fragment>
@@ -43,8 +35,6 @@ const PositionPage: FC = () => {
                 <SmartTable
                     columns={columns}
                     dataURL={dataURL}
-                    isSuccessGetter={isSuccessGetter}
-                    isSuccessSetter={isSuccessSetter }
                     header={
                         <Fragment>
                             <Bar endContent={
@@ -57,7 +47,7 @@ const PositionPage: FC = () => {
                         </Fragment>
                     }
                 />
-                <CreatePositionForm isSuccessSetter={isSuccessSetter} />
+                <CreatePositionForm/>
             </FlexBox>
         </Fragment>
     )

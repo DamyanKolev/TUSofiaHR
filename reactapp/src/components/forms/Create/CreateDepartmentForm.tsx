@@ -4,13 +4,15 @@ import { isFilledForm, parseValueByType } from "../Utils"
 import DataType from "@app-types/DataType"
 import { DepartmentDTO } from "@models/HR/Departmnet"
 import { DepartmentFormState, departmentFormState } from "@models/FormStates/DepartmentFormState"
-import FormProps from "../FormProps"
+import { useAppDispatch } from "@store/storeHooks"
+import { toggle } from "@store/slices/toggleSlice"
 
 
-const CreateDepartmentForm: FC<FormProps> = ({ isSuccessSetter }) => {
+const CreateDepartmentForm: FC = () => {
     const defaultFormData = {} as DepartmentDTO
     const [formData, setFormData] = useState<DepartmentDTO>(defaultFormData);
     const [formState, setFormState] = useState<DepartmentFormState>(departmentFormState);
+    const dispatchIsSuccess = useAppDispatch()
 
     const submitForm = async () => {
         const isFilled = isFilledForm<DepartmentDTO>(formData, setFormData);
@@ -23,7 +25,7 @@ const CreateDepartmentForm: FC<FormProps> = ({ isSuccessSetter }) => {
             });
 
             if (!response.ok) {
-                isSuccessSetter(true)
+                dispatchIsSuccess(toggle())
             }
         }
     };

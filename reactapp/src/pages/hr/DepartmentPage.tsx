@@ -1,5 +1,5 @@
 ﻿import { AnalyticalTableColumnDefinition, Bar, Button, ButtonDesign } from "@ui5/webcomponents-react";
-import { FC, Fragment, useState } from "react"
+import { FC, Fragment } from "react"
 import SmartTable from "@components/Table/SmartTable";
 import PageBar from "@/components/Bars/PageBar";
 import CreateDepartmentForm from "../../components/Forms/Create/CreateDepartmentForm";
@@ -17,15 +17,6 @@ const columns: AnalyticalTableColumnDefinition[] = [
 const DepartmentPage: FC = () => {
     const tableTile = "Отдели"
     const dataURL = "/api/departments"
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
-
-    const isSuccessGetter = () => {
-        return isSuccess
-    }
-
-    const isSuccessSetter = (value: boolean) => {
-        setIsSuccess(value)
-    }
 
     return (
         <Fragment>
@@ -33,8 +24,6 @@ const DepartmentPage: FC = () => {
             <SmartTable
                 columns={columns}
                 dataURL={dataURL}
-                isSuccessGetter={isSuccessGetter}
-                isSuccessSetter={isSuccessSetter }
                 header={
                     <Fragment>
                         <Bar endContent={
@@ -47,7 +36,7 @@ const DepartmentPage: FC = () => {
                     </Fragment>
                 }
             />
-            <CreateDepartmentForm isSuccessSetter={isSuccessSetter} />
+            <CreateDepartmentForm/>
         </Fragment>
     )
 }

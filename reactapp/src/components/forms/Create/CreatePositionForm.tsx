@@ -4,14 +4,16 @@ import { PositionDTO } from "@models/HR/Position"
 import { PositionFormState, positionFormState } from "@models/FormStates/PositionFormState"
 import { isFilledForm, parseValueByType } from "../Utils"
 import DataType from "@app-types/DataType"
-import FormProps from "../FormProps"
+import { useAppDispatch } from "@store/storeHooks"
+import { toggle } from "@store/slices/toggleSlice"
 
 
 
-const CreatePositionForm: FC<FormProps> = ({ isSuccessSetter }) => {
+const CreatePositionForm: FC = () => {
     const defaultFormData = {} as PositionDTO
     const [formData, setFormData] = useState<PositionDTO>(defaultFormData);
     const [formState, setFormState] = useState<PositionFormState>(positionFormState);
+    const dispatchIsSuccess = useAppDispatch()
 
 
     const submitForm = async () => {
@@ -25,7 +27,7 @@ const CreatePositionForm: FC<FormProps> = ({ isSuccessSetter }) => {
             });
 
             if (!response.ok) {
-                isSuccessSetter(true)
+                dispatchIsSuccess(toggle())
             }
         }
     };

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using webapi;
+using webapi.Controllers.System;
 using webapi.Models.Auth;
 using webapi.Services.Auth;
 using webapi.Services.HR;
@@ -40,7 +41,8 @@ builder.Services.AddScoped<ISysAdministrativeTerritoryService, SysAdministrative
 builder.Services.AddScoped<ISysContractTerminationTypeService, SysContractTerminationTypeService>();
 builder.Services.AddScoped<ISysContractTypeService, SysContractTypeService>();
 builder.Services.AddScoped<ISysIconomicActivityService, SysIconomicActivityService>();
-builder.Services.AddScoped<ISysPositionService, SysPositionService>();
+builder.Services.AddScoped<ISysPositionService, SysPositionService>(); 
+builder.Services.AddScoped<ISysContractDocumentTypeService, SysContractDocumentTypeService>();
 
 
 builder.Services.AddIdentity<User, Role>()

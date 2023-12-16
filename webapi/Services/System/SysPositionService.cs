@@ -24,7 +24,7 @@ namespace webapi.Services.System
                 .OrderBy(p => p.Id)
                 .Skip((pageFilterInfo.PageNumber - 1) * pageFilterInfo.PageSize)
                 .Take(pageFilterInfo.PageSize)
-                .Where(rec => rec.NPKDId.Contains(pageFilterInfo.FilterValue))
+                .Where(rec => rec.NpkdId.Contains(pageFilterInfo.FilterValue))
                 .ToList();
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, administrativeTeritories);

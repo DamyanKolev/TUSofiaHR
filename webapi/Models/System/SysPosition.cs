@@ -8,11 +8,11 @@ namespace webapi.Models.System
         [Key]
         public int Id { get; set; }
         [NotNull]
-        public required string NPKDBase { get; set; }
+        public required string NpkdBase { get; set; }
         [NotNull]
-        public required string NPKDId { get; set; }
+        public required string NpkdId { get; set; }
         [NotNull]
-        public required string NPKDSlave { get; set; }
+        public required string NpkdSlave { get; set; }
         [NotNull]
         public required string PositionName { get; set; }
     }

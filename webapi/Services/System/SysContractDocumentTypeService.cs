@@ -20,7 +20,7 @@ namespace webapi.Services.System
 
         public ResponseWithStatus<DataResponse<List<SysContractDocumentType>>> GetDocumnetTypes()
         {
-            var documentTypes = _context.sysContractDocumentTypes
+            var documentTypes = _context.SysContractDocumentTypes
                 .OrderBy(p => p.Id)
                 .ToList();
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.JsonPatch;
 
@@ -8,19 +9,17 @@ namespace webapi.Models.HR
     {
         [Key]
         public Int64 Id { get; set; }
-        [NotNull, StringLength(100)]
+        [StringLength(100)]
         public required string FirstName { get; set; }
-        [NotNull, StringLength(100)]
+        [StringLength(100)]
         public required string MiddleName {  get; set; }
-        [NotNull, StringLength(100)]
+        [StringLength(100)]
         public required string Surname { get; set; }
-        [NotNull, StringLength(15)]
+        [StringLength(15)]
         public required string PhoneNumber { get; set; }
-        [NotNull]
         public required Int32 CompanyEmployeeId { get; set; }
 
 
-        [NotNull]
         public int PersonalDataId { get; set; }
         public required PersonalData PersonalData { get; set; }
 
@@ -29,12 +28,10 @@ namespace webapi.Models.HR
         public Employee? Manager { get; set; }
 
 
-        [NotNull]
         public int DepartmentId { get; set; }
         public required Department Department { get; set; }
 
 
-        [NotNull]
         public int CompanyId { get; set; }
         public required Company Company { get; set; }
 
@@ -43,9 +40,10 @@ namespace webapi.Models.HR
         public Position? Position { get; set; }
 
 
-        public Int32 OldCompanyId { get; set; }
-        public DateOnly DateOfComapanyChange { get; set; }
-        public Boolean Article132Flag {  get; set; }
+        public Int32? OldCompanyId { get; set; }
+        public DateOnly? DateOfComapanyChange { get; set; }
+        [Column("article123_flag")]
+        public Boolean? Article132Flag {  get; set; }
     }
 
     public record EmployeeDTO

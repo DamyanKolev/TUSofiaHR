@@ -1,50 +1,65 @@
-CREATE VIEW EmployeeView AS
-SELECT 
-	Employee.Id as EmployeeId,
-    	Employee.FirstName,
-    	Employee.MiddleName,
-    	Employee.Surname,
-	Contracts.WorkingWage,
-	Contracts.WorkTime,
-	Contracts.AnnualLeave,
-	Employee.CompanyEmployeeId,
-	PersonalData.EGN,
-	Manager.FirstName as ManagerFirstName,
-	Departments.DepartmentName,
-	Contracts.Id as ContractId,
-    	Contracts.ConclusionDate,
-    	Contracts.ExecutionDate,
-	Contracts.ContractTerm,
-	Contracts.AdditionalAgreementDate,
-    	Contracts.TerminationDate,
-	Contracts.ChangeDate,
-    	Contracts.Article62Flag,
-    	Employee.Article123Flag,
-	Companies.CompanyName,
-	Companies.CompanyEic,
-	Positions.PositionName,
-	SysPositions.PositionName as StatePositionName,
-	SysPositions.NPKDId,
-	SysIconomicActivitys.ActivityName,
-	SysIconomicActivities.NkidId,
-	SysContractTerminationTypes.Code as TerminationCode,
-	SysAdministrativeTerritories.Ekatte,
-	SysContractTypes.ContractType,
-	SysContractTypes.Code as ContractTypeCode,
-	SysContractDocumentTypes.DocumentType,
-	SysContractDocumentTypes.Code as DocumentCode,
-	Contracts.code_corection
-FROM Employees Employee
-	LEFT JOIN Employees Manager ON Employee.Id = Manager.ManagerId
-	JOIN EmployeeContracts ON Employee.Id = EmployeeContracts.EmployeeId
-	JOIN Contracts ON Contracts.Id = EmployeeContracts.ContractId
-	JOIN Departments ON Departments.Id = Employee.DepartmentId
-	LEFT JOIN Positions ON Positions.Id = Employee.PositionId
-	JOIN Companies ON Companies.Id = Employee.CompanyId
-	JOIN PersonalData ON PersonalData.Id = Employee.PersonalDataId
-	JOIN SysPositions ON SysPositions.Id = Contracts.SysPositionId
-	JOIN SysIconomicActivities ON SysIconomicActivities.Id = Contracts.SysIconomicActivityId
-	LEFT JOIN SysContractTerminationTypes ON SysContractTerminationTypes.id = Contracts.TerminationTypeId
-	JOIN SysAdministrativeTerritories ON SysAdministrativeTerritories.Id = Contracts.SysAdministrativeTerritoryId
-	JOIN SysContractTypes ON SysContractTypes.Id = Contracts.ContractTypeId
-	JOIN SysContractDocumentTypes ON SysContractDocumentTypes.Id = Contracts.DocumentTypeId;
+CREATE VIEW employee_v
+AS
+  SELECT employee.id                         AS employee_id,
+         employee.first_name,
+         employee.middle_name,
+         employee.surname,
+         contracts.working_wage,
+         contracts.work_time,
+         contracts.annual_leave,
+         employee.company_employee_id,
+         personal_datas.egn,
+         manager.first_name                  AS manager_first_name,
+         departments.department_name,
+         contracts.id                        AS contract_id,
+         contracts.conclusion_date,
+         contracts.execution_date,
+         contracts.contract_term,
+         contracts.additional_agreement_date,
+         contracts.termination_date,
+         contracts.change_date,
+         contracts.article62_flag,
+         employee.article123_flag,
+         companies.company_name,
+         companies.company_eic,
+         positions.position_name,
+         sys_positions.position_name         AS state_position_name,
+         sys_positions.npkd_id,
+         sys_iconomic_activities.activity_name,
+         sys_iconomic_activities.nkid_id,
+         sys_contract_termination_types.code AS termination_code,
+         sys_administrative_territories.ekatte,
+         sys_contract_types.contract_type,
+         sys_contract_types.code             AS contract_type_code,
+         sys_contract_document_types.document_type,
+         sys_contract_document_types.code    AS document_code,
+         contracts.code_corection
+  FROM   employees employee
+         LEFT JOIN employees manager
+                ON employee.id = manager.manager_id
+         JOIN employee_contracts
+           ON employee.id = employee_contracts.employee_id
+         JOIN contracts
+           ON contracts.id = employee_contracts.contract_id
+         JOIN departments
+           ON departments.id = employee.department_id
+         LEFT JOIN positions
+                ON positions.id = employee.position_id
+         JOIN companies
+           ON companies.id = employee.company_id
+         JOIN personal_datas
+           ON personal_datas.id = employee.personal_data_id
+         JOIN sys_positions
+           ON sys_positions.id = contracts.position_id
+         JOIN sys_iconomic_activities
+           ON sys_iconomic_activities.id = contracts.iconomic_activity_id
+         LEFT JOIN sys_contract_termination_types
+                ON sys_contract_termination_types.id =
+                   contracts.termination_type_id
+         JOIN sys_administrative_territories
+           ON sys_administrative_territories.id =
+              contracts.administrative_territory_id
+         JOIN sys_contract_types
+           ON sys_contract_types.id = contracts.contract_type_id
+         JOIN sys_contract_document_types
+           ON sys_contract_document_types.id = contracts.document_type_id; 

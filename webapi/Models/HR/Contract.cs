@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.JsonPatch;
 using webapi.Models.System;
@@ -7,58 +8,48 @@ namespace webapi.Models.HR
 {
     public record Contract
     {
-        [Key]
         public Int64 Id { get; set; }
-        [NotNull]
         public required decimal WorkingWage { get; set; }
-        [NotNull]
         public required Int16 WorkTime { get; set; }
-        [NotNull]
         public required Int16 AnnualLeave { get; set; }
-        [NotNull]
         public required DateOnly ConclusionDate { get; set; }
-        [NotNull]
-        public required DateOnly ExecutionnDate { get; set; }
-        public DateOnly ContractTerm { get; set; }
-        public DateOnly AdditionalAgreementDate { get; set; }
-        public DateOnly TerminationDate { get; set; }
-        public DateOnly ChangeDate { get; set; }
+        public required DateOnly ExecutionDate { get; set; }
+        public DateOnly? ContractTerm { get; set; }
+        public DateOnly? AdditionalAgreementDate { get; set; }
+        public DateOnly? TerminationDate { get; set; }
+        public DateOnly? ChangeDate { get; set; }
 
 
-        [NotNull]
         public int CompanyId { get; set; }
         public required Company Company { get; set; }
 
 
-        [NotNull]
         public int ContractTypeId { get; set; }
         public required SysContractType ContractType { get; set; }
 
 
-        [NotNull]
         public int PositionId { get; set; }
         public required SysPosition Position { get; set; }
 
 
-        [NotNull]
         public int IconomicActivityId { get; set; }
         public required SysIconomicActivity IconomicActivity { get; set; }
 
 
-        [NotNull]
-        public int? DocumentTypeId { get; set; }
+        public int DocumentTypeId { get; set; }
         public SysContractDocumentType? DocumentType { get; set; }
+
 
         public int? TerminationTypeId { get; set; }
         public SysContractTerminationType? TerminationType { get; set; }
+
 
         public int? AdministrativeTerritoryId { get; set; }
         public SysAdministrativeTerritory? AdministrativeTerritory { get; set; }
 
 
-        [NotNull]
         public required Int16 CodeCorection { get; set; }
-        [NotNull]
+        [Column("article62_flag")]
         public required Boolean Article62Flag {  get; set; }
     }
 

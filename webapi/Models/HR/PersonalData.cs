@@ -10,9 +10,9 @@ namespace webapi.Models.HR
         public int Id { get; set; }
         [NotNull]
         public required string EGN { get; set; }
-        public DateOnly BirthDate { get; set; }
-        public Gender Gender { get; set; }
-        public DateOnly PersonalIdIssueDate { get; set; }
+        public DateOnly? BirthDate { get; set; }
+        public Gender? Gender { get; set; }
+        public DateOnly? PersonalIdIssueDate { get; set; }
         public Address? Address { get; set; }
     }
 

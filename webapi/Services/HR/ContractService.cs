@@ -3,6 +3,7 @@ using webapi.Models;
 using webapi.Constants;
 using AutoMapper;
 using System.Net;
+using webapi.Models.Views;
 
 namespace webapi.Services.HR
 {
@@ -10,7 +11,7 @@ namespace webapi.Services.HR
     {
         public ResponseWithStatus<Response> CreateContract(ContractDTO contractDTO);
         public ResponseWithStatus<Response> UpdateContract(ContractUpdateDTO updateDTO);
-        public ResponseWithStatus<DataResponse<List<Contract>>> GetContractsPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<List<ContractView>>> GetContractsPage(PageInfo pageInfo);
     }
 
     public class ContractService : IContractService
@@ -62,10 +63,11 @@ namespace webapi.Services.HR
         }
 
 
-        public ResponseWithStatus<DataResponse<List<Contract>>> GetContractsPage(PageInfo pageInfo)
+        public ResponseWithStatus<DataResponse<List<ContractView>>> GetContractsPage(PageInfo pageInfo)
         {
-            var contracts = _context.Contracts
-                .OrderBy(p => p.Id)
+            var contracts = _context.EmployeeV
+                .Select(v => _mapper.Map<ContractView>(v))
+                .OrderBy(p => p.ContractId)
                 .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
                 .Take(pageInfo.PageSize)
                 .ToList();

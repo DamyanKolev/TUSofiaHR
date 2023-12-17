@@ -1,1 +1,1 @@
-DROP VIEW IF EXISTS EmployeeView;  
+DROP VIEW IF EXISTS employee_v;  

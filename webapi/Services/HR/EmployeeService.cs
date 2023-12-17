@@ -3,6 +3,7 @@ using AutoMapper;
 using webapi.Constants;
 using webapi.Models;
 using webapi.Models.HR;
+using webapi.Models.Views;
 
 namespace webapi.Services.HR
 {
@@ -10,7 +11,7 @@ namespace webapi.Services.HR
     {
         public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO employeeDTO);
         public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateDTO updateDTO);
-        public ResponseWithStatus<DataResponse<List<Employee>>> GetEmployeesPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<List<EmployeeView>>> GetEmployeesPage(PageInfo pageInfo);
     }
 
     public class EmployeeService : IEmployeeService
@@ -61,10 +62,11 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
         }
 
-        public ResponseWithStatus<DataResponse<List<Employee>>> GetEmployeesPage(PageInfo pageInfo)
+        public ResponseWithStatus<DataResponse<List<EmployeeView>>> GetEmployeesPage(PageInfo pageInfo)
         {
-            var employees = _context.Employees
-                .OrderBy(p => p.Id)
+            var employees = _context.EmployeeV
+                .Select(v => _mapper.Map<EmployeeView>(v))
+                .OrderBy(p => p.EmployeeId)
                 .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
                 .Take(pageInfo.PageSize)
                 .ToList();

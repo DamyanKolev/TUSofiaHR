@@ -5,6 +5,7 @@ using webapi.Extensions;
 using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Models.System;
+using webapi.Models.Views;
 
 namespace webapi
 {
@@ -31,6 +32,10 @@ namespace webapi
         public DbSet<SysContractDocumentType> SysContractDocumentTypes { get; set; }
 
 
+        //Table Views
+        public DbSet<EmployeeV> EmployeeV { get; set; }
+
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) 
         {
 
@@ -41,6 +46,12 @@ namespace webapi
             base.OnModelCreating(builder);
             builder.Seed();
             builder.UpdateIdentityTablesNames();
+
+            builder.Entity<EmployeeV>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("employee_v");
+            });
         }
     }
 }

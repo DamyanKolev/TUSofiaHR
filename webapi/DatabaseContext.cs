@@ -28,7 +28,7 @@ namespace webapi
         public DbSet<SysContractType> SysContractTypes { get; set; }
         public DbSet<SysIconomicActivity> SysIconomicActivities { get; set; }
         public DbSet<SysPosition> SysPositions { get; set; }
-        public DbSet<SysContractDocumentType> sysContractDocumentTypes { get; set; }
+        public DbSet<SysContractDocumentType> SysContractDocumentTypes { get; set; }
 
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) 
@@ -40,6 +40,7 @@ namespace webapi
         {
             base.OnModelCreating(builder);
             builder.Seed();
+            builder.UpdateIdentityTablesNames();
         }
     }
 }

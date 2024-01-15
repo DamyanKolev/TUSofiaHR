@@ -1,3 +1,8 @@
+export type Department = {
+    id: int;
+    department_name: string,
+}
+
 export type DepartmentDTO = {
-    departmentName: string,
+    department_name: string,
 }

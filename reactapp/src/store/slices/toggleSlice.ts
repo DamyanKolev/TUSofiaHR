@@ -22,6 +22,6 @@ export const toggleSlice = createSlice({
 
 export const { toggle } = toggleSlice.actions
 
-export const selectToggle = (state: RootState) => state.isSuccess.value
+export const togleSelector = (state: RootState) => state.isSuccess.value
 
 export default toggleSlice.reducer

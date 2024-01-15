@@ -78,11 +78,13 @@ const CreatePositionForm: FC = () => {
                         data-type={DataType.String}
                     />
                 </FormItem>
+
+                <FormItem>
+                    <Button onClick={submitForm}>Create</Button>
+                </FormItem>
             </Form>
 
-            <FormItem>
-                <Button onClick={submitForm}>Create</Button>
-            </FormItem>
+
         </Fragment>
     )
 }

@@ -1,17 +1,27 @@
 import { Bar, Button, ButtonDesign, Title, TitleLevel } from "@ui5/webcomponents-react";
-import { useNavigate } from "react-router-dom";
 import { FC, Fragment } from "react";
-
-
-
+import { useLocation, useNavigate } from "react-router-dom";
+import "@ui5/webcomponents-icons/nav-back"
 
 interface PageBarProps {
-    title: string
+    title?: string
 }
 
 
 const PageBar: FC<PageBarProps> = ({ title }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const getNavBackURL = (): string => {
+        const url = location.pathname;
+        const lastIndex = url.lastIndexOf("/");
+        const newURL = url.slice(0, lastIndex)
+
+        if (newURL) {
+            return newURL;
+        }
+        return "/"
+    }
 
     return (
         <div className="table-header-bar">
@@ -21,7 +31,7 @@ const PageBar: FC<PageBarProps> = ({ title }) => {
                         <Button
                             design={ButtonDesign.Transparent}
                             icon="nav-back"
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate(getNavBackURL())}
                         />
                         <Title level={TitleLevel.H2}>{title}</Title>
                     </Fragment>

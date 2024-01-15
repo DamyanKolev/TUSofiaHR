@@ -18,7 +18,7 @@
         public required string ActivityName { get; set; }
         public required string ContractType { get; set; }
         public required Int16 CodeCorection { get; set; }
-        public required String DocumentType { get; set; }
+        public required string DocumentType { get; set; }
         public required string Ekatte { get; set; }
         public required Boolean Article62Flag { get; set; }
     }

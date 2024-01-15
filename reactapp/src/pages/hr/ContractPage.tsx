@@ -1,7 +1,7 @@
 ﻿import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
 import FlexibleColumn from "@/components/FlexibleColumn/FlexibleColumn";
 import { FC } from "react";
-import CreateContractForm from "@components/Forms/Create/CreateContractForm";
+import CreateContractForm from "@components/Forms/Create/CreateContractForm1";
 import UpdateContractForm from "@components/Forms/Update/UpdateContractForm";
 
 

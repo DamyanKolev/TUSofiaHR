@@ -12,7 +12,7 @@ import { useAppDispatch } from '@store/storeHooks';
 
 
 const UpdateContractForm: FC = () => {
-    const selectedRow = useContext(FlexibleContext)
+    const selectedRow = useContext<Contract>(FlexibleContext)
     const [formData, setFormData] = useState<Contract>(selectedRow)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
     const isSelected = formData ? true : false
@@ -78,7 +78,7 @@ const UpdateContractForm: FC = () => {
                         <FormItem label="Working Wage">
                             <StandardInputField
                                 editMode={editMode}
-                                value={formData.conclusionDate}
+                                value={formData.conclusionDate.toString()}
                                 onChange={handleInputChange}
                                 name={"conclusionDate"}
                                 dataType={DataType.Date}

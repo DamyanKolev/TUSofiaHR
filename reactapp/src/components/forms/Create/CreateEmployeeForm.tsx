@@ -1,5 +1,5 @@
 ﻿import { FC, useContext, useEffect, useState } from 'react';
-import { Button, Form, FormItem, Input, InputDomRef, Tab, TabContainer, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
+import { Button, FlexBox, Form, FormItem, Input, InputDomRef, Tab, TabContainer, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
 import { EmployeeDTO } from '@models/HR/Employee';
 import { EmployeeFormState, employeeFormState } from '@models/FormStates/EmployeeFormState';
 import { EndColumnContext } from '../../FlexibleColumn/EndColumn';
@@ -81,52 +81,60 @@ const CreateEmployeeForm: FC = () => {
 
     return (
         <Form>
-            <FormItem label="Име">
-                <Input
-                    name="FirstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    valueState={formState.firstName.valueState}
-                    data-type={DataType.String}
-                />
-            </FormItem>
+            <FlexBox>
+                <FormItem label="Име">
+                    <Input
+                        name="firstName "
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        valueState={formState.firstName.valueState}
+                        data-type={DataType.String}
+                    />
+                </FormItem>
 
-            <FormItem label="Презиме">
-                <Input
-                    name="Surname"
-                    value={formData.surname}
-                    onChange={handleInputChange}
-                    valueState={formState.surname.valueState}
-                    data-type={DataType.String}
-                />
-            </FormItem>
+                <FormItem label="Презиме">
+                    <Input
+                        name="surname"
+                        value={formData.surname}
+                        onChange={handleInputChange}
+                        valueState={formState.surname.valueState}
+                        data-type={DataType.String}
+                    />
+                </FormItem>
 
-            <FormItem label="Фамилия">
-                <Input
-                    name="LastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    valueState={formState.lastName.valueState}
-                    data-type={DataType.String}
-                />
-            </FormItem>
+                <FormItem label="Фамилия">
+                    <Input
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        valueState={formState.lastName.valueState}
+                        data-type={DataType.String}
+                    />
+                </FormItem>
 
-            <FormItem>
-                <TabContainer>
-                    <Tab
-                        selected
-                        text="Лична информация"
-                    >
-                        Content Tab 1
-                    </Tab>
+                <FormItem>
+                    <TabContainer>
+                        <Tab
+                            selected
+                            text="Лична информация"
+                        >
+                            <FlexBox>
+                                
+                            </FlexBox>
+                        </Tab>
 
-                    <Tab
-                        text="Договор"
-                    >
-                        Content Tab 1
-                    </Tab>
-                </TabContainer>
-            </FormItem>
+                        <Tab
+                            text="Договор"
+                        >
+                            <FlexBox>
+
+                            </FlexBox>
+                        </Tab>
+                    </TabContainer>
+                </FormItem>
+            </FlexBox>
+
+            
 
             <FormItem>
                 <Button onClick={submitForm}>Create</Button>

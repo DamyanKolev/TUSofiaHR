@@ -75,9 +75,9 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                 <Label>Дата на раждане</Label>
                 <StandardDateField
                         editMode={getEditMode()}
-                        value={setDateToInputDefaultValue(getFormData().birth_date)}
+                        value={setDateToInputDefaultValue(getFormData().birthDate)}
                         onChange={handleDateChange}
-                        name={"birth_date"}
+                        name={"birthDate"}
                     />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -94,8 +94,8 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                 <Label>Номер на лична карта</Label>
                 <StandardInputField
                     editMode={getEditMode()}
-                    name="personal_id_number"
-                    value={setInputDefaultValue(getFormData().personal_id_number)}
+                    name="personalIdNumber"
+                    value={setInputDefaultValue(getFormData().personalIdNumber)}
                     onChange={handleInputChange}
                     dataType={DataType.String}
                 />
@@ -104,17 +104,17 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                 <Label>Дата на издаване на ЛК</Label>
                 <StandardDateField
                         editMode={getEditMode()}
-                        value={setDateToInputDefaultValue(getFormData().personal_id_issue_date)}
+                        value={setDateToInputDefaultValue(getFormData().personalIdIssueDate)}
                         onChange={handleDateChange}
-                        name={"personal_id_issue_date"}
+                        name={"personalIdIssueDate"}
                     />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label>ЛК издадена от</Label>
                 <StandardInputField
                     editMode={getEditMode()}
-                    name="personal_id_issue_by"
-                    value={setInputDefaultValue(getFormData().personal_id_issue_by)}
+                    name="personalIdIssueBy"
+                    value={setInputDefaultValue(getFormData().personalIdIssueBy)}
                     onChange={handleInputChange}
                     dataType={DataType.String}
                 />

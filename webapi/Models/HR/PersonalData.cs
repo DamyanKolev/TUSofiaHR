@@ -12,7 +12,9 @@ namespace webapi.Models.HR
         public required string EGN { get; set; }
         public DateOnly? BirthDate { get; set; }
         public Gender? Gender { get; set; }
+        public string? PersonalIdNumber { get; set; }
         public DateOnly? PersonalIdIssueDate { get; set; }
+        public string? PersonalIdIssueBy { get; set; }
         public Address? Address { get; set; }
     }
 
@@ -21,7 +23,9 @@ namespace webapi.Models.HR
         public required string EGN { get; set; }
         public DateOnly BirthDate { get; set; }
         public Gender Gender { get; set; }
+        public string? PersonalIdNumber { get; set; }
         public DateOnly PersonalIdIssueDate { get; set; }
+        public string? PersonalIdIssueBy { get; set; }
         public Address? Address { get; set; }
     }
 

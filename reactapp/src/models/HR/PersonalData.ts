@@ -3,27 +3,27 @@ import Gender from "@app-types/Gender";
 export interface PersonalData {
     id: int
     egn: string,
-    birth_date: Date,
+    birthDate: Date,
     gender: Gender,
-    personal_id_number: string,
-    personal_id_issue_date: Date,
-    personal_id_issue_by: string,
+    personalIdNumber: string,
+    personalIdIssueDate: Date,
+    personalIdIssueBy: string,
     address_id: int
 }
 
 export interface PersonalDataDTO {
     egn: string,
-    birth_date: Date | null,
+    birthDate: Date | null,
     gender: Gender | null,
-    personal_id_number: string | null,
-    personal_id_issue_date: Date | null,
-    personal_id_issue_by: string | null,
+    personalIdNumber: string | null,
+    personalIdIssueDate: Date | null,
+    personalIdIssueBy: string | null,
 }
 export const defaultPersonalDataDTO: PersonalDataDTO = {
     egn: "",
-    birth_date: null,
+    birthDate: null,
     gender: null,
-    personal_id_number: null,
-    personal_id_issue_date: null,
-    personal_id_issue_by: null,
+    personalIdNumber: null,
+    personalIdIssueDate: null,
+    personalIdIssueBy: null,
 }

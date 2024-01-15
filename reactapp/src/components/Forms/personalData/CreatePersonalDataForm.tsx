@@ -47,8 +47,8 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label>Дата на раждане</Label>
                 <DatePicker
-                    name="birth_date"
-                    value={setDateToInputDefaultValue(getFormData().birth_date)}
+                    name="birthDate"
+                    value={setDateToInputDefaultValue(getFormData().birthDate)}
                     onChange={handleDateChange}
                     data-type={DataType.Date}
                 />
@@ -71,8 +71,8 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label>Номер на лична карта</Label>
                 <Input
-                    name="personal_id_number"
-                    value={setInputDefaultValue(getFormData().personal_id_number)}
+                    name="personalIdNumber"
+                    value={setInputDefaultValue(getFormData().personalIdNumber)}
                     onChange={handleInputChange}
                     data-type={DataType.String}
                 />
@@ -80,8 +80,8 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label>Дата на издаване на ЛК</Label>
                 <DatePicker
-                    name="personal_id_issue_date"
-                    value={setDateToInputDefaultValue(getFormData().personal_id_issue_date)}
+                    name="personalIdIssueDate"
+                    value={setDateToInputDefaultValue(getFormData().personalIdIssueDate)}
                     onChange={handleDateChange}
                     data-type={DataType.Date}
                 />
@@ -90,8 +90,8 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
                 <Label>ЛК издадена от</Label>
                 <Input
                     required
-                    name="personal_id_issue_by"
-                    value={setInputDefaultValue(getFormData().personal_id_issue_by)}
+                    name="personalIdIssueBy"
+                    value={setInputDefaultValue(getFormData().personalIdIssueBy)}
                     onChange={handleInputChange}
                     data-type={DataType.String}
                 />

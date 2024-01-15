@@ -33,28 +33,28 @@ const CreatePosition: FC<CreatePositionProps> = ({getFormState, getFormData, set
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={formItemsStyles}>
                 <Label>Позиция</Label>
                 <Input
-                    name="position_name"
-                    value={getFormData().position_name}
+                    name="positionName"
+                    value={getFormData().positionName}
                     onChange={handleInputChange}
-                    valueState={getFormState().position_name.valueState}
+                    valueState={getFormState().positionName.valueState}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={formItemsStyles}>
                 <Label>Минимална заплата</Label>
                 <Input
-                    name="min_salary"
-                    value={getFormData().min_salary ? getFormData().min_salary.toString() : ""}
+                    name="minSalary"
+                    value={getFormData().minSalary ? getFormData().minSalary.toString() : ""}
                     onChange={handleInputChange}
-                    valueState={getFormState().min_salary.valueState}
+                    valueState={getFormState().minSalary.valueState}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={formItemsStyles}>
                 <Label>Максимална заплата</Label>
                 <Input
-                    name="max_salary"
-                    value={getFormData().max_salary ? getFormData().max_salary.toString() : ""}
+                    name="maxSalary"
+                    value={getFormData().maxSalary ? getFormData().maxSalary.toString() : ""}
                     onChange={handleInputChange}
-                    valueState={getFormState().max_salary.valueState}
+                    valueState={getFormState().maxSalary.valueState}
                 />
             </FlexBox>
         </FlexBox>

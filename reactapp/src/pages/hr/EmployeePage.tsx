@@ -1,43 +1,57 @@
-﻿import { AnalyticalTableColumnDefinition } from '@ui5/webcomponents-react'
-//import './Table.css'
-import { FC} from 'react'
-import FlexibleColumn from '@components/FlexibleColumn/FlexibleColumn'
-import CreateEmployeeForm from '@components/Forms/Create/CreateEmployeeForm'
-import UpdateEmployeeForm from '@components/Forms/Update/UpdateEmployeeForm'
+﻿//import './Table.css'
+import { FC, createContext, useState} from 'react'
+import { employeeColumns } from '@models/TableColumns/EmployeeColumns'
+import { FCLLayout, FlexibleColumnLayout } from '@ui5/webcomponents-react'
+import StartColumn from '@components/FlexibleColumns/StartColumn'
+import EmployeeEndColumn from '@components/FlexibleColumns/employee/EmployeeEndColumn'
+import EmployeeMidColumn from '@components/FlexibleColumns/employee/EmployeeMidColumn'
 
 
-
-const columns: AnalyticalTableColumnDefinition[] = [
-    {
-        accessor: "firstName",
-        Header: "Име",
-    },
-    {
-        accessor: "surname",
-        Header: "Презиме",
-    },
-    {
-        accessor: "lastName",
-        Header: "Фамилия",
-    },
-
-]
-
+export const EmployeePageContext = createContext<any>(null);
 
 
 const EmployeePage: FC = () => {
     const tableTitle = "Employees";
-    const dataURL = "/api/employees";
+    const tableURL = "/backend/api/hr/employee";
+    const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
+    const [selectedRow, setSelectedRow] = useState<any>(null);
+
+
+    const handleLayoutState = (layout: FCLLayout) => {
+        setLayout(layout)
+    }
+
+    const onRowClick = (event: any) => {
+        const row = event.detail.row.original
+        setLayout(FCLLayout.MidColumnFullScreen)
+        setSelectedRow(row);
+    };
 
     return (
-        <FlexibleColumn
-            tableTitle={tableTitle}
-            dataURL={dataURL}
-            columns={columns}
-            createForm={<><CreateEmployeeForm/></>}
-            updateForm={<><UpdateEmployeeForm/></>}
-        />
-
+        <EmployeePageContext.Provider value={selectedRow}>
+                <FlexibleColumnLayout
+                    className="flexible-columns ui5-content-density-compact"
+                    style={{backgroundColor:"white"}}
+                    layout={layout}
+                    startColumn={
+                        <div>
+                            <StartColumn
+                                tableURL={tableURL}
+                                columns={employeeColumns}
+                                tableTitle={tableTitle}
+                                handleLayoutState={handleLayoutState}
+                                onRowClick={onRowClick}
+                            />  
+                        </div>
+                    }
+                    midColumn={
+                        <div><EmployeeMidColumn handleLayoutState={handleLayoutState} tableURL={tableURL}/></div>
+                    }
+                    endColumn={
+                        <div><EmployeeEndColumn handleLayoutState={handleLayoutState} tableURL={tableURL}/></div>
+                    }
+            />
+        </EmployeePageContext.Provider>
     )
 }
 

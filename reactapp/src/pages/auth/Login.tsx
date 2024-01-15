@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { BackgroundDesign, Button, Form, FormItem, Input } from "@ui5/webcomponents-react";
+import React, { useState } from "react";
+import { Button, Form, FormBackgroundDesign, FormItem, Input, InputDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";
 import { useNavigate } from "react-router-dom";
 
@@ -17,14 +17,16 @@ export default function Login() {
     const [data, setData] = useState<LoginRequest>(defaultLoginRequest);
     const navigate = useNavigate();
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
         const { name, value } = e.target;
-        setData({ ...data, [name]: value });
+        if (name) {
+            setData({ ...data, [name]: value });
+        }
     };
 
 
     const submitHandler = async () => {
-        const response = await fetch("/api/auth/login", {
+        const response = await fetch("/backend/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -44,7 +46,7 @@ export default function Login() {
         <React.Fragment>
             <Form
                 className="main-container"
-                backgroundDesign={BackgroundDesign.Transparent}
+                backgroundDesign={FormBackgroundDesign.Transparent}
                 titleText="Sign In"
             >
                 <FormItem label="Username">

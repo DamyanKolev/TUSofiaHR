@@ -1,8 +1,10 @@
-export type Department = {
+export interface Department {
     id: int;
     department_name: string,
 }
 
-export type DepartmentDTO = {
+export interface DepartmentDTO {
     department_name: string,
 }
+
+export const defualtDepartmentDTO: DepartmentDTO = {} as Department

@@ -1,0 +1,13 @@
+.container {
+    max-height: calc(100vh - 3.23rem);
+    height: calc(100vh - 3.23rem);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.content-container {
+    margin: 0.5rem 0.8rem 0 0.8rem;
+    width: calc(100vw - 5.1rem);
+    max-width: calc(100vw - 5.9rem);
+    height: calc(100vh - 6.2rem);
+}

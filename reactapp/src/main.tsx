@@ -1,4 +1,4 @@
-﻿import { ThemeProvider } from '@ui5/webcomponents-react';
+import { ThemeProvider } from '@ui5/webcomponents-react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx'
 import './index.css'
@@ -8,7 +8,7 @@ import "@ui5/webcomponents-fiori/dist/Assets.js";
 import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 setTheme("sap_horizon");
 
-const root = createRoot(document.getElementById("app-root"));
+const root = createRoot(document.getElementById("root")!);
 root.render(
     <ThemeProvider>
         <App />

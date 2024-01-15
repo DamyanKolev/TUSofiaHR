@@ -1,38 +1,56 @@
-﻿import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
-import FlexibleColumn from "@/components/FlexibleColumn/FlexibleColumn";
-import { FC } from "react";
-import CreateContractForm from "@components/Forms/Create/CreateContractForm1";
-import UpdateContractForm from "@components/Forms/Update/UpdateContractForm";
+﻿import { FC, createContext, useState } from "react";
+import contractColumns from "@models/TableColumns/ContractColumns";
+import { FCLLayout, FlexibleColumnLayout } from "@ui5/webcomponents-react";
+import ContractStartColumn from "@components/FlexibleColumns/contract/ContractStartColumn";
+import ContractMidColumn from "@components/FlexibleColumns/contract/ContractMidColumn";
+import ContractEndColumn from "@components/FlexibleColumns/contract/ContractEndColumn";
 
 
-const columns: AnalyticalTableColumnDefinition[] = [
-    {
-        accessor: "workingWage",
-        Header: "Заплата",
-    },
-    {
-        accessor: "workTime",
-        Header: "Часове на седмица",
-    },
-    {
-        accessor: "conclusionDate",
-        Header: "Дата на сключване",
-    },
-];
+export const ContractPageContext = createContext<any>(null);
 
 
 const ContractPage: FC = () => {
     const tableTitle = "Contracts";
-    const dataURL = "/api/contracts";
+    const tableURL = "/backend/api/hr/contract";
+    const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
+    const [selectedRow, setSelectedRow] = useState<any>(null);
+
+
+    const handleLayoutState = (layout: FCLLayout) => {
+        setLayout(layout)
+    }
+
+    const onRowClick = (event: any) => {
+        const row = event.detail.row.original
+        setLayout(FCLLayout.MidColumnFullScreen)
+        setSelectedRow(row);
+    };
 
     return (
-        <FlexibleColumn
-            tableTitle={tableTitle}
-            dataURL={dataURL}
-            columns={columns}
-            createForm={<><CreateContractForm/></>}
-            updateForm={<><UpdateContractForm/></>}
-        />
+        <ContractPageContext.Provider value={selectedRow}>
+            <FlexibleColumnLayout
+                className="flexible-columns ui5-content-density-compact"
+                style={{backgroundColor:"white"}}
+                layout={layout}
+                startColumn={
+                    <div>
+                        <ContractStartColumn
+                            tableURL={tableURL}
+                            columns={contractColumns}
+                            tableTitle={tableTitle}
+                            handleLayoutState={handleLayoutState}
+                            onRowClick={onRowClick}
+                        />  
+                    </div>
+                }
+                midColumn={
+                    <div><ContractMidColumn tableURL={tableURL} handleLayoutState={handleLayoutState}/></div>
+                }
+                endColumn={
+                    <div><ContractEndColumn tableURL={tableURL} handleLayoutState={handleLayoutState}/></div>
+                }
+            />
+        </ContractPageContext.Provider>
     );
 };
 

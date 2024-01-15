@@ -1,5 +1,5 @@
 // select type
-export type Position = {
+export interface Position {
     id: int;
     position_name: string,
     min_salary: number
@@ -7,8 +7,10 @@ export type Position = {
 }
 
 //insert and update represention type
-export type PositionDTO = {
+export interface PositionDTO {
     position_name: string,
     min_salary: number
     max_salary: number
 }
+
+export const defaultPositionDTO: PositionDTO= {} as PositionDTO

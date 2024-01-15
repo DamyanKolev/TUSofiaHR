@@ -1,13 +1,15 @@
 export type JoinTableInfo = {
-    filterField: string;
-    contentField: string;
-    headerText: string;
-    tableURL: string;
+    filterField: string,
+    description: string,
+    contentFields: Array<string>,
+    headerText: string,
+    tableURL: string,
 }
 
-export const joinTableInfo = {
+export const joinTableInfo: JoinTableInfo = {
     filterField: "",
-    contentField: "",
+    description: "",
+    contentFields: [],
     headerText: "",
     tableURL: "",
 }

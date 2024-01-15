@@ -1,13 +1,13 @@
 
 
 enum DataType {
-    String = "string",
+    String = "Text",
 
-    Float = "float",
+    Float = "Float",
 
-    Number = "number",
+    Int = "Number",
 
-    Date = "date",
+    Date = "Date",
 }
 
 export default DataType

@@ -6,38 +6,51 @@ export type ContractJoinTablesInfo = {
     iconomicActivityId: JoinTableInfo;
     documentTypeId: JoinTableInfo;
     administrativeTerritoryId: JoinTableInfo;
+    terminationTypeId: JoinTableInfo;
 }
 
 
 export const contractJoinTablesInfo: ContractJoinTablesInfo = {
     contractTypeId: {
         filterField: "code",
-        contentField: "contractType",
-        headerText: "Тип Договор",
-        tableURL: "/api/sys/contract-type/all"
+        description: "code",
+        contentFields: ["contract_type"],
+        headerText: "РўРёРї Р”РѕРіРѕРІРѕСЂ",
+        tableURL: "/backend/api/sys/contract-type/all"
     },
     positionId: {
-        filterField: "npkdId",
-        contentField: "positionName",
-        headerText: "Позиция",
-        tableURL: "/api/sys/positions/page"
+        filterField: "npkd_id",
+        description: "npkd_id",
+        contentFields: ["position_name"],
+        headerText: "РџРѕР·РёС†РёСЏ",
+        tableURL: "/backend/api/sys/positions/page"
     },
     iconomicActivityId: {
-        filterField: "nkidId",
-        contentField: "activityName",
-        headerText: "Икономическа дейност",
-        tableURL: "/api/sys/iconomic-activity/page"
+        filterField: "nkid_id",
+        description: "nkid_id",
+        contentFields: ["activity_name"],
+        headerText: "РРєРѕРЅРѕРјРёС‡РµСЃРєР° Р°РєС‚РёРІРЅРѕСЃС‚",
+        tableURL: "/backend/api/sys/iconomic-activity/page"
     },
     documentTypeId: {
         filterField: "code",
-        contentField: "documentType",
-        headerText: "Документ",
-        tableURL: "/api/sys/document-type/all"
+        description: "code",
+        contentFields: ["document_type"],
+        headerText: "Р”РѕРєСѓРјРµРЅС‚",
+        tableURL: "/backend/api/sys/document-type/all"
     },
     administrativeTerritoryId: {
         filterField: "ekatte",
-        contentField: "territoryName",
-        headerText: "Административна територия",
-        tableURL: "/api/sys/administrative-territory/page"
+        description: "ekatte",
+        contentFields: ["territory_name"],
+        headerText: "РђРґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅР° С‚РµСЂРёС‚РѕСЂРёСЏ",
+        tableURL: "/backend/api/sys/administrative-territory/page"
+    },
+    terminationTypeId: {
+        filterField: "code",
+        description: "code",
+        contentFields: ["termination_type"],
+        headerText: "РўРёРї С‚РµСЂРјРёРЅРёСЂР°РЅРµ",
+        tableURL: "/backend/api/sys/termination-type/all"
     },
 }

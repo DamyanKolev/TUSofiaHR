@@ -19,7 +19,7 @@ const NavBar: FC<NavBarProps> = ({ collapsed }) => {
             fixedItems={
                 <>
                     <SideNavigationItem icon="chain-link" text="Useful Links" />
-                    <SideNavigationItem icon="settings" text="Settings" onClick={() => navigate("/settings")} />
+                    <SideNavigationItem icon="settings" text="Settings" onClick={() => navigate("/settings")}/>
                 </>
             }
         >
@@ -27,7 +27,7 @@ const NavBar: FC<NavBarProps> = ({ collapsed }) => {
             <SideNavigationItem
                 icon="home"
                 text="Home"
-                onClick={() => navigate("/hr")}
+                onClick={() => navigate("/api/hr")}
             />
 
         </SideNavigation>

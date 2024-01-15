@@ -1,9 +1,9 @@
 import { FormFieldState, FormState, defaultFormFieldState } from "../FormState";
 
 export interface DepartmentFormState extends FormState {
-    department_name: FormFieldState,
+    departmentName: FormFieldState,
 }
 
 export const defaultDepartmentFormState: DepartmentFormState = {
-    department_name: defaultFormFieldState,
+    departmentName: defaultFormFieldState,
 }

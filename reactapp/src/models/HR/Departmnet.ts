@@ -1,10 +1,10 @@
 export interface Department {
     id: int;
-    department_name: string,
+    departmentName: string,
 }
 
 export interface DepartmentDTO {
-    department_name: string,
+    departmentName: string,
 }
 
 export const defualtDepartmentDTO: DepartmentDTO = {} as Department

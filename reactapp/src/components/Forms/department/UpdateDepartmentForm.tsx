@@ -86,9 +86,9 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
                         <FormItem label="Отдел">
                             <StandardInputField
                                 editMode={editMode}
-                                value={formData.department_name}
+                                value={formData.departmentName}
                                 onChange={handleInputChange}
-                                name={"department_name"}
+                                name={"departmentName"}
                             />
                         </FormItem>
                     </Form>

@@ -22,10 +22,10 @@ const CreateDepartment: FC<CreateDepartmentProps> = ({getFormState, getFormData,
         <FlexBox alignItems={FlexBoxAlignItems.Center} style={{padding: "1rem 2rem", gap: ".5rem"}}>
             <Label>Отдел</Label>
             <Input
-                name="department_name"
-                value={getFormData().department_name}
+                name="departmentName"
+                value={getFormData().departmentName}
                 onChange={handleInputChange}
-                valueState={getFormState().department_name.valueState}
+                valueState={getFormState().departmentName.valueState}
                 data-type={DataType.String}
             />
         </FlexBox>

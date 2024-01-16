@@ -50,10 +50,10 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Работна заплата</Label>
                     <Input
                         style={largeFormItem}
-                        name="working_wage"
-                        value={setInputDefaultValue(getFormData().working_wage)}
+                        name="workingWage"
+                        value={setInputDefaultValue(getFormData().workingWage)}
                         onChange={handleInputChange}
-                        valueState={getFormState().working_wage.valueState}
+                        valueState={getFormState().workingWage.valueState}
                         data-type={DataType.String}
                         />
                 </FlexBox>
@@ -62,10 +62,10 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Седмични часове</Label>
                     <Input
                         style={largeFormItem}
-                        name="work_time"
-                        value={setInputDefaultValue(getFormData().work_time)}
+                        name="workTime"
+                        value={setInputDefaultValue(getFormData().workTime)}
                         onChange={handleInputChange}
-                        valueState={getFormState().work_time.valueState}
+                        valueState={getFormState().workTime.valueState}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -74,10 +74,10 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Отпуска</Label>
                     <Input
                         style={largeFormItem}
-                        name="annual_leave"
-                        value={setInputDefaultValue(getFormData().annual_leave)}
+                        name="annualLeave"
+                        value={setInputDefaultValue(getFormData().annualLeave)}
                         onChange={handleInputChange}
-                        valueState={getFormState().annual_leave.valueState}
+                        valueState={getFormState().annualLeave.valueState}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -86,10 +86,10 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Дата на сключване</Label>
                     <DatePicker
                         style={largeFormItem}
-                        name="conclusion_date"
-                        value={setDateToInputDefaultValue(getFormData().conclusion_date)}
+                        name="conclusionDate"
+                        value={setDateToInputDefaultValue(getFormData().conclusionDate)}
                         onChange={handleDateChange}
-                        valueState={getFormState().conclusion_date.valueState}
+                        valueState={getFormState().conclusionDate.valueState}
                         data-type={DataType.Date}
                     />
                 </FlexBox>
@@ -98,10 +98,10 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Дата на започване</Label>
                     <DatePicker
                         style={largeFormItem}
-                        name="execution_date"
-                        value={setDateToInputDefaultValue(getFormData().execution_date)}
+                        name="executionDate"
+                        value={setDateToInputDefaultValue(getFormData().executionDate)}
                         onChange={handleDateChange}
-                        valueState={getFormState().execution_date.valueState}
+                        valueState={getFormState().executionDate.valueState}
                         data-type={DataType.Date}
                     />
                 </FlexBox>
@@ -110,10 +110,10 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label>Дата на започване</Label>
                     <DatePicker
                         style={largeFormItem}
-                        name="contract_term"
-                        value={setDateToInputDefaultValue(getFormData().execution_date)}
+                        name="contractTerm"
+                        value={setDateToInputDefaultValue(getFormData().contractTerm)}
                         onChange={handleDateChange}
-                        valueState={getFormState().contract_term.valueState}
+                        valueState={getFormState().contractTerm.valueState}
                         data-type={DataType.Date}
                     />
                 </FlexBox>
@@ -124,17 +124,17 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label>Дата на Допълнително споразумение</Label>
                     <DatePicker
                         style={largeFormItem}
-                        name="additional_agreement_date"
-                        value={setDateToInputDefaultValue(getFormData().additional_agreement_date)}
+                        name="additionalAgreementDate"
+                        value={setDateToInputDefaultValue(getFormData().additionalAgreementDate)}
                         onChange={handleDateChange}
-                        valueState={getFormState().additional_agreement_date.valueState}
+                        valueState={getFormState().additionalAgreementDate.valueState}
                         data-type={DataType.Date}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label required>Тип Договор</Label>
                     <SmallTableSelect
-                        name="contract_type_id"
+                        name="contractTypeId"
                         joinInfo={contractJoinTablesInfo.contractTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -142,7 +142,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label required>Позиция</Label>
                     <LargeTableSelect
-                        name="sys_position_id"
+                        name="positionId"
                         joinInfo={contractJoinTablesInfo.positionId}
                         formDataSetter={setFormDataById}
                     />
@@ -150,7 +150,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label required>Икономическа активност</Label>
                     <LargeTableSelect
-                        name="sys_iconomic_activity_id"
+                        name="iconomicActivityId"
                         joinInfo={contractJoinTablesInfo.iconomicActivityId}
                         formDataSetter={setFormDataById}
                     />
@@ -158,7 +158,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label required>Тип документ</Label>
                     <SmallTableSelect
-                        name="document_type_id"
+                        name="documentTypeId"
                         joinInfo={contractJoinTablesInfo.documentTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -166,7 +166,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label required>Код Административна територия</Label>
                     <LargeTableSelect
-                        name="sys_administrative_territory_id"
+                        name="administrativeTerritoryId"
                         joinInfo={contractJoinTablesInfo.administrativeTerritoryId}
                         formDataSetter={setFormDataById}
                     />

@@ -49,6 +49,7 @@ namespace webapi.Models.HR
 
 
         public required Int16 CodeCorection { get; set; }
+        public required Boolean IsTerminate {  get; set; }
         [Column("article62_flag")]
         public required Boolean Article62Flag {  get; set; }
     }
@@ -76,6 +77,7 @@ namespace webapi.Models.HR
         public int TerminationTypeId { get; set; }
         public int AdministrativeTerritoryId { get; set; }
         public required Int16 CodeCorection { get; set; }
+        public required Boolean IsTerminate {  get; set; }
         public required Boolean Article62Flag { get; set; }
     }
 

@@ -51,9 +51,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Работна заплата</Label>
                     <StandardInputField
                         editMode={getEditMode()}
-                        value={getFormData().working_wage.toString()}
+                        value={getFormData().workingWage}
                         onChange={handleInputChange}
-                        name={"working_wage"}
+                        name={"workingWage"}
                     />
                 </FlexBox>
 
@@ -61,9 +61,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Седмични часове</Label>
                     <StandardInputField
                         editMode={getEditMode()}
-                        value={getFormData().work_time.toString()}
+                        value={getFormData().workTime.toString()}
                         onChange={handleInputChange}
-                        name={"work_time"}
+                        name={"workTime"}
                         dataType={DataType.Int}
                     />
                 </FlexBox>
@@ -72,9 +72,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Седмични часове</Label>
                     <StandardInputField
                         editMode={getEditMode()}
-                        value={getFormData().annual_leave.toString()}
+                        value={getFormData().annualLeave.toString()}
                         onChange={handleInputChange}
-                        name={"annual_leave"}
+                        name={"annualLeave"}
                         dataType={DataType.Int}
                     />
                 </FlexBox>
@@ -83,9 +83,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Дата на сключване</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().conclusion_date.toString()}
+                        value={getFormData().conclusionDate.toString()}
                         onChange={handleDateChange}
-                        name={"conclusion_date"}
+                        name={"conclusionDate"}
                     />
                 </FlexBox>
 
@@ -93,9 +93,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Дата на започване</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().execution_date.toString()}
+                        value={getFormData().executionDate.toString()}
                         onChange={handleDateChange}
-                        name={"execution_date"}
+                        name={"executionDate"}
                     />
                 </FlexBox>
 
@@ -103,9 +103,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Дата на започване</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().contract_term.toString()}
+                        value={getFormData().contractTerm.toString()}
                         onChange={handleDateChange}
-                        name={"contract_term"}
+                        name={"contractTerm"}
                     />
                 </FlexBox>
 
@@ -113,9 +113,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Дата на Допълнително споразумение</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().additional_agreement_date.toString()}
+                        value={getFormData().additionalAgreementDate.toString()}
                         onChange={handleDateChange}
-                        name={"additional_agreement_date"}
+                        name={"additionalAgreementDate"}
                     />
                 </FlexBox>
             </FlexBox>
@@ -125,18 +125,18 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Дата на терминиране</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().termination_date.toString()}
+                        value={getFormData().terminationDate.toString()}
                         onChange={handleDateChange}
-                        name={"termination_date"}
+                        name={"terminationDate"}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label>Тип Договор</Label>
                     <StandardTableSelectField
-                        name="contract_type_id"
+                        name="contractTypeId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().contract_type_id)}
+                        value={Number(getFormData().contractTypeId)}
                         joinInfo={contractJoinTablesInfo.contractTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -144,9 +144,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label>Позиция</Label>
                     <StandardTableSelectField
-                        name="sys_position_id"
+                        name="positionId"
                         editMode={getEditMode()}
-                        value={Number(getFormData().sys_position_id)}
+                        value={Number(getFormData().positionId)}
                         joinInfo={contractJoinTablesInfo.positionId}
                         formDataSetter={setFormDataById}
                     />
@@ -154,9 +154,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label>Икономическа активност</Label>
                     <StandardTableSelectField
-                        name="sys_iconomic_activity_id"
+                        name="iconomicActivityId"
                         editMode={getEditMode()}
-                        value={Number(getFormData().sys_iconomic_activity_id)}
+                        value={Number(getFormData().iconomicActivityId)}
                         joinInfo={contractJoinTablesInfo.iconomicActivityId}
                         formDataSetter={setFormDataById}
                     />
@@ -164,10 +164,10 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label>Тип документ</Label>
                     <StandardTableSelectField
-                        name="document_type_id"
+                        name="documentTypeId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().document_type_id)}
+                        value={Number(getFormData().documentTypeId)}
                         joinInfo={contractJoinTablesInfo.documentTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -175,10 +175,10 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label>Тип на терминиране</Label>
                     <StandardTableSelectField
-                        name="termination_type_id"
+                        name="terminationTypeId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().termination_type_id)}
+                        value={Number(getFormData().terminationTypeId)}
                         joinInfo={contractJoinTablesInfo.terminationTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -186,9 +186,9 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
                     <Label>Код Административна територия</Label>
                     <StandardTableSelectField
-                        name="sys_administrative_territory_id"
+                        name="administrativeTerritoryId"
                         editMode={getEditMode()}
-                        value={Number(getFormData().sys_administrative_territory_id)}
+                        value={Number(getFormData().administrativeTerritoryId)}
                         joinInfo={contractJoinTablesInfo.administrativeTerritoryId}
                         formDataSetter={setFormDataById}
                     />

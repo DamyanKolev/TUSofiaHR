@@ -66,9 +66,9 @@ namespace webapi.Services.HR
         {
             var employees = _context.EmployeeV
                 .Select(v => _mapper.Map<EmployeeView>(v))
-                .OrderBy(p => p.EmployeeId)
-                .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
-                .Take(pageInfo.PageSize)
+                //.OrderBy(p => p.EmployeeId)
+                //.Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
+                //.Take(pageInfo.PageSize)
                 .ToList();
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, employees);

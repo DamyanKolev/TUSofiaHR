@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using webapi.Models.Auth;
 using webapi.Models.HR;
+using webapi.Models.Views;
 
 namespace webapi
 {
@@ -27,6 +28,8 @@ namespace webapi
 
             CreateMap<RoleDTO, Role>();
             CreateMap<UserDTO, User>();
+
+            CreateMap<EmployeeV, EmployeeView>();
         }
     }
 }

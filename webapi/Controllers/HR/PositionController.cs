@@ -66,5 +66,13 @@ namespace webapi.Controllers.HR
 
             return Ok(result.Response);
         }
+
+
+        [HttpGet("/api/positions/all", Name = "GetAllPositions")]
+        public IActionResult GetAllPositions(){
+            var result = _positionService.GetAllPositions();
+
+            return Ok(result.Response);
+        }
     }
 }

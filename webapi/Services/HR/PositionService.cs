@@ -12,6 +12,8 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO);
         public ResponseWithStatus<Response> DeletePosition(int positionId);
         public ResponseWithStatus<DataResponse<List<Position>>> GetPositionsPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<List<Position>>> GetAllPositions();
+
     }
     public class PositionService : IPositionService
     {
@@ -89,6 +91,13 @@ namespace webapi.Services.HR
                 .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
                 .Take(pageInfo.PageSize)
                 .ToList();
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, positions);
+        }
+
+
+        public ResponseWithStatus<DataResponse<List<Position>>> GetAllPositions() {
+            var positions = _context.Positions.ToList();
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, positions);
         }

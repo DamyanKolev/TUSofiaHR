@@ -68,5 +68,13 @@ namespace webapi.Controllers.HR
 
             return Ok(result.Response);
         }
+
+
+        [HttpGet("/api/department/all", Name = "GetAllDepartments")]
+        public IActionResult GetAllDepartments(){
+            var result = _departmentService.GetAllDepartments();
+
+            return Ok(result.Response);
+        }
     }
 }

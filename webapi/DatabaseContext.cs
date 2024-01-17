@@ -1,5 +1,4 @@
-﻿using System.Reflection.Emit;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using webapi.Extensions;
 using webapi.Models.Auth;
@@ -34,6 +33,7 @@ namespace webapi
 
         //Table Views
         public DbSet<EmployeeV> EmployeeV { get; set; }
+        public DbSet<ContractV> ContractV { get; set; }
 
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) 
@@ -51,6 +51,12 @@ namespace webapi
             {
                 v.HasNoKey();
                 v.ToView("employee_v");
+            });
+
+            builder.Entity<ContractV>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("contract_v");
             });
         }
     }

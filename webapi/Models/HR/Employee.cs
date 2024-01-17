@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Models.HR
@@ -15,6 +14,8 @@ namespace webapi.Models.HR
         public required string MiddleName {  get; set; }
         [StringLength(100)]
         public required string Surname { get; set; }
+        [EmailAddress]
+        public required string Email { get; set; }
         [StringLength(15)]
         public required string PhoneNumber { get; set; }
         public required Int32 CompanyEmployeeId { get; set; }

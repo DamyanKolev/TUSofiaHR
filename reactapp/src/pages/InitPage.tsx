@@ -50,7 +50,7 @@ const InitPage: FC = () => {
         const isFilled = isFilledDepartmentForm && isFilledPositionForm
         
         if (isFilled) {
-            const response = await fetch(`/backend/api/hr/init-hr`, {
+            const response = await fetch(`/api/hr/init-hr`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

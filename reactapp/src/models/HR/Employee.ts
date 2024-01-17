@@ -2,17 +2,17 @@ import { Contract } from "./Contract";
 import { PersonalData } from "./PersonalData";
 
 export interface Employee {
-    employee_id: int,
-    first_name: string;
-    middle_name: string;
+    employeeId: int,
+    firstName: string;
+    middleName: string;
     surname: string;
     email: string;
-    phone_number: string,
-    company_employee_id: int;
-    personal_data_id: int;
-    manager_id: int;
-    department_id: int;
-    position_id: int;
+    phoneNumber: string,
+    companyEmployeeId: int;
+    personalDataId: int;
+    managerId: int;
+    departmentId: int;
+    positionId: int;
 }
 
 
@@ -24,27 +24,27 @@ export interface EmployeeData {
 
 
 export interface EmployeeInsertDTO {
-    first_name: string;
-    middle_name: string;
+    firstName: string;
+    middleName: string;
     surname: string;
     email: string;
-    phone_number: string
-    company_employee_id: int;
-    personal_data_id: int,
-    manager_id: int;
-    department_id: int;
-    position_id: int;
+    phoneNumber: string
+    companyEmployeeId: int;
+    personalDataId: int,
+    managerId: int;
+    departmentId: int;
+    positionId: int;
 }
 export const defaultEmployeeInsert: EmployeeInsertDTO = {} as EmployeeInsertDTO
 
 export interface EmployeeUpdateDTO {
-    first_name: string;
-    middle_name: string;
+    firstName: string;
+    middleName: string;
     surname: string;
     email: string;
-    phone_number: string
-    manager_id: int;
-    department_id: int;
-    position_id: int;
+    phoneNumber: string
+    managerId: int;
+    departmentId: int;
+    positionId: int;
 }
 export const defaultEmployeeUpdate: EmployeeUpdateDTO = {} as EmployeeUpdateDTO

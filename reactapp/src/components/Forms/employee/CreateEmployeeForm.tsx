@@ -35,20 +35,20 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>Име</Label>
                 <Input
-                    name="first_name"
-                    value={getFormData().first_name}
+                    name="firstName"
+                    value={getFormData().firstName}
                     onChange={handleInputChange}
-                    valueState={getFormState().first_name.valueState}
+                    valueState={getFormState().firstName.valueState}
                     data-type={DataType.String}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>Презиме</Label>
                 <Input
-                    name="middle_name"
-                    value={getFormData().middle_name}
+                    name="middleName"
+                    value={getFormData().middleName}
                     onChange={handleInputChange}
-                    valueState={getFormState().middle_name.valueState}
+                    valueState={getFormState().middleName.valueState}
                     data-type={DataType.String}
                 />
             </FlexBox>
@@ -75,17 +75,17 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>GSM</Label>
                 <Input
-                    name="phone_number"
-                    value={getFormData().phone_number}
+                    name="phoneNumber"
+                    value={getFormData().phoneNumber}
                     onChange={handleInputChange}
-                    valueState={getFormState().phone_number.valueState}
+                    valueState={getFormState().phoneNumber.valueState}
                     data-type={DataType.String}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>Отдел</Label>
                 <SmallTableSelect
-                    name="department_id"
+                    name="departmentId"
                     joinInfo={employeeJoinTableInfo.departmentId}
                     formDataSetter={setFormDataById}
                 />
@@ -93,7 +93,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>Позиция</Label>
                 <SmallTableSelect
-                    name="position_id"
+                    name="positionId"
                     joinInfo={employeeJoinTableInfo.positionId}
                     formDataSetter={setFormDataById}
                 />
@@ -101,8 +101,8 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>Мениджър</Label>
                 <LargeTableSelect
-                    name="manager_id"
-                    tableId="employee_id"
+                    name="managerId"
+                    tableId="employeeId"
                     joinInfo={employeeJoinTableInfo.managerId}
                     formDataSetter={setFormDataById}
                 />

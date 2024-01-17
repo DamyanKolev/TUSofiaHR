@@ -12,7 +12,7 @@ export const EmployeePageContext = createContext<any>(null);
 
 const EmployeePage: FC = () => {
     const tableTitle = "Employees";
-    const tableURL = "/backend/api/hr/employee";
+    const tableURL = "/api/hr/employee";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<any>(null);
 

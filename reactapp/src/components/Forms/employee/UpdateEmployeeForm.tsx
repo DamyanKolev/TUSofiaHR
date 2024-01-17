@@ -40,18 +40,18 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                 <Label>Име</Label>
                 <StandardInputField
                     editMode={getEditMode()}
-                    value={getFormData().first_name}
+                    value={getFormData().firstName}
                     onChange={handleInputChange}
-                    name={"first_name"}
+                    name={"firstName"}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label>Презиме</Label>
                 <StandardInputField
                     editMode={getEditMode()}
-                    value={getFormData().middle_name}
+                    value={getFormData().middleName}
                     onChange={handleInputChange}
-                    name={"middle_name"}
+                    name={"middleName"}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -76,18 +76,18 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                 <Label required>GSM</Label>
                 <StandardInputField
                     editMode={getEditMode()}
-                    value={getFormData().phone_number}
+                    value={getFormData().phoneNumber}
                     onChange={handleInputChange}
-                    name={"phone_number"}
+                    name={"phoneNumber"}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>Отдел</Label>
                 <StandardTableSelectField
-                        name="department_id"
+                        name="departmentId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().department_id)}
+                        value={Number(getFormData().departmentId)}
                         joinInfo={employeeJoinTableInfo.departmentId}
                         formDataSetter={setFormDataById}
                     />
@@ -95,10 +95,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>Позиция</Label>
                 <StandardTableSelectField
-                        name="position_id"
+                        name="positionId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().position_id)}
+                        value={Number(getFormData().positionId)}
                         joinInfo={employeeJoinTableInfo.departmentId}
                         formDataSetter={setFormDataById}
                     />

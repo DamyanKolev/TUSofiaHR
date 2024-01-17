@@ -11,7 +11,7 @@ export const ContractPageContext = createContext<any>(null);
 
 const ContractPage: FC = () => {
     const tableTitle = "Contracts";
-    const tableURL = "/backend/api/hr/contract";
+    const tableURL = "/api/hr/contract";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<any>(null);
 

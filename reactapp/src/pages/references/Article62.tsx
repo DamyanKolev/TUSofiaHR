@@ -7,7 +7,7 @@ import { FC, Fragment } from "react"
 
 const Article62: FC = () => {
     const tableTitle = "Справка по Чл. 62"
-    const tableURL = "/backend/api/hr/references/article62"
+    const tableURL = "/api/hr/references/article62"
 
     return (
         <Fragment>

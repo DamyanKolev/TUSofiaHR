@@ -19,7 +19,7 @@ const tableStyle: CSSProperties = {
 
 const DepartmentPage: FC = () => {
     const tableTitle = "Отдели"
-    const tableURL = "/backend/api/hr/department"
+    const tableURL = "/api/hr/department"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
     const [isSelctedRow, setIsSelectedRow] = useState<boolean>(true)
     const [selectedRow, setSelectedRow] = useState<Department>(defaultRow);

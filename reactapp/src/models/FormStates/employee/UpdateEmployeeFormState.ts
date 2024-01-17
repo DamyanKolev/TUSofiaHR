@@ -1,23 +1,23 @@
 import { FormFieldState, FormState, defaultFormFieldState } from "../FormState";
 
 export interface UpdateEmployeeFormState extends FormState{
-    first_name: FormFieldState;
-    middle_name: FormFieldState;
+    firstName: FormFieldState;
+    middleName: FormFieldState;
     surname: FormFieldState;
     email: FormFieldState;
-    phone_number: FormFieldState
-    manager_id: FormFieldState;
-    department_id: FormFieldState;
-    position_id: FormFieldState;
+    phoneNumber: FormFieldState;
+    managerId: FormFieldState;
+    departmentId: FormFieldState;
+    positionId: FormFieldState;
 }
 
 export const defaultUpdateEmployeeFormState: UpdateEmployeeFormState = {
-    first_name: defaultFormFieldState,
-    middle_name: defaultFormFieldState,
+    firstName: defaultFormFieldState,
+    middleName: defaultFormFieldState,
     surname: defaultFormFieldState,
     email: defaultFormFieldState,
-    phone_number: defaultFormFieldState,
-    manager_id: defaultFormFieldState,
-    department_id: defaultFormFieldState,
-    position_id: defaultFormFieldState,
+    phoneNumber: defaultFormFieldState,
+    managerId: defaultFormFieldState,
+    departmentId: defaultFormFieldState,
+    positionId: defaultFormFieldState
 }

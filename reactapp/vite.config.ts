@@ -34,7 +34,9 @@ export default defineConfig({
             '@components': path.resolve(__dirname, './src/components'),
             '@models': path.resolve(__dirname, './src/models'),
             '@app-types': path.resolve(__dirname, './src/types'),
-            '@store': path.resolve(__dirname, './src/store')
+            '@store': path.resolve(__dirname, './src/store'),
+            '@pages': path.resolve(__dirname, './src/pages'),
+            '@utils': path.resolve(__dirname, './src/utils')
         },
 
     },

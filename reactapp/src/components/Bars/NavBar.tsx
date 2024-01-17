@@ -27,7 +27,7 @@ const NavBar: FC<NavBarProps> = ({ collapsed }) => {
             <SideNavigationItem
                 icon="home"
                 text="Home"
-                onClick={() => navigate("/api/hr")}
+                onClick={() => navigate("/hr")}
             />
 
         </SideNavigation>

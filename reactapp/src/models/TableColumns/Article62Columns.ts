@@ -2,59 +2,51 @@ import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
 
 const article62Columns: AnalyticalTableColumnDefinition[] = [
     {
-        accessor: "first_name",
+        accessor: "employeeName",
         Header: "Име",
-    },
-    {
-        accessor: "middle_name",
-        Header: "Презиме",
-    },
-    {
-        accessor: "surname",
-        Header: "Фамилия",
     },
     {
         accessor: "egn",
         Header: "ЕГН",
     },
     {
-        accessor: "working_wage",
+        accessor: "workingWage",
         Header: "Заплата",
     },
     {
-        accessor: "company_eic",
+        accessor: "companyEic",
         Header: "Фирмено ID",
     },
     {
-        accessor: "conclusion_date",
+        accessor: "conclusionDate",
         Header: "Дата на сключване",
     },
     {
-        accessor: "contract_term",
+        accessor: "contractTerm",
         Header: "Срок на договора",
     },
     {
-        accessor: "additional_agreement_date",
+        accessor: "additionalAgreementDate",
         Header: "Дата на допълнително споразумение",
     },
     {
-        accessor: "termination_date",
+        accessor: "terminationDate",
         Header: "Дата на терминиране",
     },
     {
-        accessor: "npkd_id",
+        accessor: "npkdId",
         Header: "Код позиция",
     },
     {
-        accessor: "nkid_id",
+        accessor: "nkidId",
         Header: "Код ",
     },
     {
-        accessor: "contract_type_code",
+        accessor: "contractTypeCode",
         Header: "Код договор",
     },
     {
-        accessor: "termination_code",
+        accessor: "terminationCode",
         Header: "Код терминиране",
     },
     {
@@ -62,11 +54,11 @@ const article62Columns: AnalyticalTableColumnDefinition[] = [
         Header: "ЕКАТТЕ код",
     },
     {
-        accessor: "code_corection",
+        accessor: "codeCorection",
         Header: "Код корекции",
     },
     {
-        accessor: "article62_flag",
+        accessor: "article62Flag",
         Header: "Изпратен",
     },
 ];

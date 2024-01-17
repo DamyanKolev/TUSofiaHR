@@ -10,33 +10,33 @@ export interface EmployeeJoinTablesInfo {
 
 export const employeeJoinTableInfo:EmployeeJoinTablesInfo = {
     managerId: {
-        filterField: "first_name",
-        description: "company_employee_id",
-        contentFields: ["first_name","middle_name","surname"],
+        filterField: "firstName",
+        description: "companyEmployeeId",
+        contentFields: ["firstName","middleName","surname"],
         headerText: "Служители",
         tableURL: "/api/hr/employee/page"
     },
     departmentId: {
-        filterField: "department_name",
-        description: "department_name",
-        contentFields: ["department_name"],
+        filterField: "departmentName",
+        description: "departmentName",
+        contentFields: ["departmentName"],
         headerText: "Служители",
-        tableURL: "/api/hr/department/select-all"
+        tableURL: "/api/hr/department/all"
     },
     positionId: {
-        filterField: "position_name",
-        description: "position_name",
-        contentFields: ["position_name"],
+        filterField: "positionName",
+        description: "positionName",
+        contentFields: ["positionName"],
         headerText: "Служители",
-        tableURL: "/api/hr/position/select-all"
+        tableURL: "/api/hr/position/all"
     },
 }
 
 
 export const employeeContractJoinTablesInfo:JoinTableInfo = {
-    filterField: "first_name",
-    description: "company_employee_id",
-    contentFields: ["first_name","middle_name","surname"],
+    filterField: "firstName",
+    description: "companyEmployeeId",
+    contentFields: ["firstName","middleName","surname"],
     headerText: "Служители",
     tableURL: "/api/hr/employee/page"
 }

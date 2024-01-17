@@ -2,39 +2,27 @@ import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
 
 export const employeeColumns: AnalyticalTableColumnDefinition[] = [
     {
-        accessor: "first_name",
-        Header: "Име",
+        accessor: "employeeName",
+        Header: "Име на Служителя",
     },
     {
-        accessor: "middle_name",
-        Header: "Фамилия",
+        accessor: "email",
+        Header: "E-mail",
     },
     {
-        accessor: "surname",
-        Header: "Презиме",
+        accessor: "ТphoneNumber",
+        Header: "Телефонен номер",
     },
     {
-        accessor: "working_wage",
-        Header: "Работна заплата",
+        accessor: "managerName",
+        Header: "Име на Мениджър",
     },
     {
-        accessor: "company_employee_id",
-        Header: "Фирмено ID",
-    },
-    {
-        accessor: "manager_first_name",
-        Header: "Мениджър",
-    },
-    {
-        accessor: "department_name",
+        accessor: "departmentName",
         Header: "Отдел",
     },
     {
-        accessor: "position_name",
+        accessor: "positionName",
         Header: "Фирмена позиция",
-    },
-    {
-        accessor: "state_position_name",
-        Header: "Законова позиция",
     },
 ]

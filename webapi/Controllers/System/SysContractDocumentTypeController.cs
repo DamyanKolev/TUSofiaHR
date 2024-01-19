@@ -5,8 +5,8 @@ using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
-    [Authorize(Roles = IdentityRoles.Admin)]
-    [Authorize(Roles = IdentityRoles.Accountant)]
+    //[Authorize(Roles = IdentityRoles.Admin)]
+    //[Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class SysContractDocumentTypeController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace webapi.Controllers.System
         }
 
 
-        [HttpPost("/api/sys/document-type/all", Name = "GetDocumentTypes")]
+        [HttpGet("/api/sys/document-type/all", Name = "GetDocumentTypes")]
         public IActionResult GetContractTypes()
         {
             var result = _documentTypeService.GetDocumnetTypes();

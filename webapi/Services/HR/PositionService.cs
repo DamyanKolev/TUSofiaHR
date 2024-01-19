@@ -11,7 +11,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreatePosition(PositionDTO positionDTO);
         public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO);
         public ResponseWithStatus<Response> DeletePosition(int positionId);
-        public ResponseWithStatus<DataResponse<List<Position>>> GetPositionsPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<PageResponse<Position>>> GetPositionsPage(PageInfo pageInfo);
         public ResponseWithStatus<DataResponse<List<Position>>> GetAllPositions();
 
     }
@@ -48,10 +48,7 @@ namespace webapi.Services.HR
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-            var positionToPatch = _mapper.Map<PositionDTO>(position);
-            updateDTO.Position.ApplyTo(positionToPatch);
-
-            _mapper.Map(positionToPatch, position);
+            _mapper.Map(updateDTO.Position, position);
             _context.Update(position);
             var result = _context.SaveChanges();
 
@@ -84,7 +81,7 @@ namespace webapi.Services.HR
         }
 
 
-        public ResponseWithStatus<DataResponse<List<Position>>> GetPositionsPage(PageInfo pageInfo)
+        public ResponseWithStatus<DataResponse<PageResponse<Position>>> GetPositionsPage(PageInfo pageInfo)
         {
             var positions = _context.Positions
                 .OrderBy(p => p.Id)
@@ -92,7 +89,11 @@ namespace webapi.Services.HR
                 .Take(pageInfo.PageSize)
                 .ToList();
 
-            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, positions);
+            var countRecords = _context.EmployeeV.ToList().Count;
+            var pages = (int) Math.Ceiling(Decimal.Divide(countRecords, pageInfo.PageSize));
+            PageResponse<Position> pageResponse = new (pages, countRecords, positions);
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
         }
 
 

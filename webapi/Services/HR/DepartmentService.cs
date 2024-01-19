@@ -10,7 +10,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreateDepartment(string departmentName);
         public ResponseWithStatus<Response> UpdateDepartment(Department updateRequest);
         public ResponseWithStatus<Response> DeleteDepartment(int departmentId);
-        public ResponseWithStatus<DataResponse<List<Department>>> GetDepartmentsPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<PageResponse<Department>>> GetDepartmentsPage(PageInfo pageInfo);
         public ResponseWithStatus<DataResponse<List<Department>>> GetAllDepartments();
 
     }
@@ -80,7 +80,7 @@ namespace webapi.Services.HR
         }
 
 
-        public ResponseWithStatus<DataResponse<List<Department>>> GetDepartmentsPage(PageInfo pageInfo)
+        public ResponseWithStatus<DataResponse<PageResponse<Department>>> GetDepartmentsPage(PageInfo pageInfo)
         {
             var departments = _context.Departments
                 .OrderBy(p => p.Id)
@@ -88,7 +88,11 @@ namespace webapi.Services.HR
                 .Take(pageInfo.PageSize)
                 .ToList();
 
-            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, departments);
+            var countRecords = _context.EmployeeV.ToList().Count;
+            var pages = (int) Math.Ceiling(Decimal.Divide(countRecords, pageInfo.PageSize));
+            PageResponse<Department> pageResponse = new (pages, countRecords, departments);
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
         }
 
 

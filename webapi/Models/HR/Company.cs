@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Models.HR
 {
@@ -23,6 +22,6 @@ namespace webapi.Models.HR
     public record CompanyUpdateDTO
     {
         public required Int64 UpdateId { get; set; }
-        public required JsonPatchDocument<CompanyDTO> Company { get; set; }
+        public required CompanyDTO Company { get; set; }
     }
 }

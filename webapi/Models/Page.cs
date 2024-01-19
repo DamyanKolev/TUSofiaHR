@@ -10,7 +10,12 @@
     {
         public required int PageNumber { get; set; }
         public required int PageSize { get; set; }
-        public required string FilterValue { get; set; }
+        public required Filter Filter { get; set; }
 
     }
+
+    public record struct PageResponse<T> (
+        int Pages, int CountRecords, List<T> Records
+    );
+
 }

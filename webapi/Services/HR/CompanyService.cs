@@ -3,6 +3,7 @@ using webapi.Models;
 using AutoMapper;
 using System.Net;
 using webapi.Constants;
+using System.Diagnostics.Contracts;
 
 namespace webapi.Services.HR
 {
@@ -37,17 +38,14 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateDTO updateDTO)
         {
-            var company = _context.Employees.Find(updateDTO.UpdateId);
+            var company = _context.Companies.Find(updateDTO.UpdateId);
 
             if (company == null)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-            var companyToPatch = _mapper.Map<CompanyDTO>(company);
-            updateDTO.Company.ApplyTo(companyToPatch);
-
-            _mapper.Map(companyToPatch, company);
+            _mapper.Map(updateDTO.Company, company);
             _context.Update(company);
             var result = _context.SaveChanges();
 

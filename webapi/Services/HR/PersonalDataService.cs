@@ -37,18 +37,14 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateDTO updateDTO)
         {
-            var personalData = _context.Employees.Find(updateDTO.UpdateId);
+            var personalData = _context.PersonalDatas.Find(updateDTO.UpdateId);
 
             if (personalData == null)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-
-            var personalDataToPatch = _mapper.Map<PersonalDataDTO>(personalData);
-            updateDTO.PersonalData.ApplyTo(personalDataToPatch);
-
-            _mapper.Map(personalDataToPatch, personalData);
+            _mapper.Map(updateDTO.PersonalData, personalData);
             _context.Update(personalData);
             var result = _context.SaveChanges();
 

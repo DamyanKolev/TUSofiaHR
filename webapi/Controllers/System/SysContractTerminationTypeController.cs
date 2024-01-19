@@ -5,8 +5,8 @@ using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
-    [Authorize(Roles = IdentityRoles.Admin)]
-    [Authorize(Roles = IdentityRoles.Accountant)]
+    //[Authorize(Roles = IdentityRoles.Admin)]
+    //[Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class SysContractTerminationTypeController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace webapi.Controllers.System
         }
 
 
-        [HttpPost("/api/sys/termination-types/all", Name = "GetContractTerminationTypesPage")]
+        [HttpGet("/api/sys/termination-types/all", Name = "GetContractTerminationTypesPage")]
         public IActionResult GetContractTerminationTypesPage()
         {
             var result = _terminationTypeService.GetContractTerminationTypesPage();

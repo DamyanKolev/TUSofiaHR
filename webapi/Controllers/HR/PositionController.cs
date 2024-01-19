@@ -8,8 +8,8 @@ using webapi.Models;
 
 namespace webapi.Controllers.HR
 {
-    [Authorize(Roles = IdentityRoles.Admin)]
-    [Authorize(Roles = IdentityRoles.Accountant)]
+    // [Authorize(Roles = IdentityRoles.Admin)]
+    // [Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class PositionController : ControllerBase
     {

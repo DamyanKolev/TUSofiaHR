@@ -5,8 +5,8 @@ using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
-    [Authorize(Roles = IdentityRoles.Admin)]
-    [Authorize(Roles = IdentityRoles.Accountant)]
+    //[Authorize(Roles = IdentityRoles.Admin)]
+    //[Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class SysContractTypeController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace webapi.Controllers.System
         }
 
         
-        [HttpPost("/api/sys/contract-type/all", Name = "GetContractTypes")]
+        [HttpGet("/api/sys/contract-type/all", Name = "GetContractTypes")]
         public IActionResult GetContractTypes()
         {
             var result = _contractTypeService.GetContractTypes();

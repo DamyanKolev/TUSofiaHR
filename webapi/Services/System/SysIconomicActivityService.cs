@@ -7,7 +7,7 @@ namespace webapi.Services.System
 {
     public interface ISysIconomicActivityService
     {
-        public ResponseWithStatus<DataResponse<List<SysIconomicActivity>>> GetIconomicActivitiesPage(PageFilterInfo pageFilterInfo);
+        public ResponseWithStatus<DataResponse<PageResponse<SysIconomicActivity>>> GetIconomicActivitiesPage(PageFilterInfo pageFilterInfo);
     }
     public class SysIconomicActivityService : ISysIconomicActivityService
     {
@@ -18,16 +18,20 @@ namespace webapi.Services.System
             _context = context;
         }
 
-        public ResponseWithStatus<DataResponse<List<SysIconomicActivity>>> GetIconomicActivitiesPage(PageFilterInfo pageFilterInfo)
+        public ResponseWithStatus<DataResponse<PageResponse<SysIconomicActivity>>> GetIconomicActivitiesPage(PageFilterInfo pageFilterInfo)
         {
-            var administrativeTeritories = _context.SysIconomicActivities
+            var activities = _context.SysIconomicActivities
                 .OrderBy(p => p.Id)
                 .Skip((pageFilterInfo.PageNumber - 1) * pageFilterInfo.PageSize)
                 .Take(pageFilterInfo.PageSize)
-                .Where(rec => rec.NkidId.Contains(pageFilterInfo.FilterValue))
+                .Where(rec => rec.NkidId.Contains(pageFilterInfo.Filter.Value))
                 .ToList();
 
-            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, administrativeTeritories);
+            var countRecords = _context.EmployeeV.ToList().Count;
+            var pages = (int) Math.Ceiling(Decimal.Divide(countRecords, pageFilterInfo.PageSize));
+            PageResponse<SysIconomicActivity> pageResponse = new (pages, countRecords, activities);
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
         }
     }
 }

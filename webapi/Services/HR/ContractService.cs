@@ -11,7 +11,7 @@ namespace webapi.Services.HR
     {
         public ResponseWithStatus<Response> CreateContract(ContractDTO contractDTO);
         public ResponseWithStatus<Response> UpdateContract(ContractUpdateDTO updateDTO);
-        public ResponseWithStatus<DataResponse<List<ContractView>>> GetContractsPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<PageResponse<ContractView>>> GetContractsPage(PageInfo pageInfo);
     }
 
     public class ContractService : IContractService
@@ -41,17 +41,14 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<Response> UpdateContract(ContractUpdateDTO updateDTO)
         {
-            var contract = _context.Employees.Find(updateDTO.UpdateId);
+            var contract = _context.Contracts.Find(updateDTO.UpdateId);
 
             if (contract == null)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
             }
 
-            var contractToPatch = _mapper.Map<ContractDTO>(contract);
-            updateDTO.Contract.ApplyTo(contractToPatch);
-
-            _mapper.Map(contractToPatch, contract);
+            _mapper.Map(updateDTO.Contract, contract);
             _context.Update(contract);
             var result = _context.SaveChanges();
 
@@ -63,16 +60,20 @@ namespace webapi.Services.HR
         }
 
 
-        public ResponseWithStatus<DataResponse<List<ContractView>>> GetContractsPage(PageInfo pageInfo)
+        public ResponseWithStatus<DataResponse<PageResponse<ContractView>>> GetContractsPage(PageInfo pageInfo)
         {
-            var contracts = _context.EmployeeV
+            var contracts = _context.ContractV
                 .Select(v => _mapper.Map<ContractView>(v))
                 .OrderBy(p => p.ContractId)
                 .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
                 .Take(pageInfo.PageSize)
                 .ToList();
+            
+            var countRecords = _context.EmployeeV.ToList().Count;
+            var pages = (int) Math.Ceiling(Decimal.Divide(countRecords, pageInfo.PageSize));
+            PageResponse<ContractView> pageResponse = new (pages, countRecords, contracts);
 
-            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, contracts);
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
         }
     }
 }

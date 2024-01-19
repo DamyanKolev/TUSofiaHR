@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.JsonPatch;
 
 namespace webapi.Models.HR
 {
@@ -26,6 +25,6 @@ namespace webapi.Models.HR
     public record PositionUpdateDTO
     {
         public required int PositionId { get; set; }
-        public required JsonPatchDocument<PositionDTO> Position { get; set; }
+        public required PositionDTO Position { get; set; }
     }
 }

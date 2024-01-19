@@ -3,15 +3,14 @@ using System.Reflection;
 
 namespace webapi.Models
 {
-    public struct FilterData
+    public record FilterData
     {
-        public string FieldName { get; set; }
-        public string FilterType { get; set; }
-        public string Value { get; set; }
-        public bool IsOr {  get; set; }
+        public required string FieldName { get; set; }
+        public required string Value { get; set; }
     }
-    public class Filter
+    public record Filter
     {
-
+        public required string FieldName { get; set; }
+        public required string Value { get; set; }
     }
 }

@@ -3,6 +3,11 @@ using webapi.Models.HR;
 
 namespace webapi.Models
 {
+    public record struct ResponseWithStatus<T> (HttpStatusCode StatusCode, T Response);
+    public record struct Response (string Message);
+    public record struct DataResponse<T> (string Message, T Data);
+
+
     public static class ResponseBuilder
     {
         public static ResponseWithStatus<Response> CreateResponseWithStatus(HttpStatusCode statusCode, string message)
@@ -21,40 +26,6 @@ namespace webapi.Models
                     data
                 )
            );
-        }
-
-
-    }
-
-    public struct ResponseWithStatus<T>
-    {
-        public HttpStatusCode StatusCode { get; set; }
-        public T Response { get; set; }
-
-        public ResponseWithStatus(HttpStatusCode statusCode, T response) { 
-            StatusCode = statusCode;
-            Response = response;
-        }
-    }
-
-    public struct Response
-    {
-        public string Message { get; set; }
-
-        public Response(string message) { 
-            Message = message;
-        }
-    }
-
-    public struct DataResponse<T>
-    {
-        public string Message { get; set; }
-        public T Data { get; set; }
-
-
-        public DataResponse(string message, T data) { 
-            Message = message;
-            Data = data;
         }
     }
 }

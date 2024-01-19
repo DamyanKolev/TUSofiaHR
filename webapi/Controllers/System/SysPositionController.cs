@@ -6,8 +6,8 @@ using webapi.Services.System;
 
 namespace webapi.Controllers.System
 {
-    [Authorize(Roles = IdentityRoles.Admin)]
-    [Authorize(Roles = IdentityRoles.Accountant)]
+    //[Authorize(Roles = IdentityRoles.Admin)]
+    //[Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class SysPositionController : ControllerBase
     {

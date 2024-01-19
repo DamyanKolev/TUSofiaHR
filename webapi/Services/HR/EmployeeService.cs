@@ -12,6 +12,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO employeeDTO);
         public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateDTO updateDTO);
         public ResponseWithStatus<DataResponse<PageResponse<EmployeeView>>> GetEmployeesPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<EmployeeDataSelect>> GetUpdateData(EmployeeDataSelectDTO selectDTO);
     }
 
     public class EmployeeService : IEmployeeService
@@ -73,6 +74,19 @@ namespace webapi.Services.HR
             PageResponse<EmployeeView> pageResponse = new (pages, countRecords, employees);
                 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
+        }
+
+        public ResponseWithStatus<DataResponse<EmployeeDataSelect>> GetUpdateData(EmployeeDataSelectDTO selectDTO) {
+            var employee = _context.Employees.Find(selectDTO.EmployeeId);
+            var contract = _context.Contracts.Find(selectDTO.ContractId);
+            var personalData = _context.PersonalDatas.Find(selectDTO.PersonalDataId);
+
+            if (employee == null || contract == null || personalData == null) {
+                return ResponseBuilder.CreateDataResponseWithStatus<EmployeeDataSelect>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
+            }
+
+            EmployeeDataSelect employeeDataSelect = new (employee, contract ,personalData); 
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, employeeDataSelect);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreateContract(ContractDTO contractDTO);
         public ResponseWithStatus<Response> UpdateContract(ContractUpdateDTO updateDTO);
         public ResponseWithStatus<DataResponse<PageResponse<ContractView>>> GetContractsPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<Contract>> GetContractById(long contractId);
     }
 
     public class ContractService : IContractService
@@ -59,12 +60,10 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
         }
 
-
         public ResponseWithStatus<DataResponse<PageResponse<ContractView>>> GetContractsPage(PageInfo pageInfo)
         {
             var contracts = _context.ContractV
                 .Select(v => _mapper.Map<ContractView>(v))
-                .OrderBy(p => p.ContractId)
                 .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
                 .Take(pageInfo.PageSize)
                 .ToList();
@@ -74,6 +73,16 @@ namespace webapi.Services.HR
             PageResponse<ContractView> pageResponse = new (pages, countRecords, contracts);
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
+        }
+
+        public ResponseWithStatus<DataResponse<Contract>> GetContractById(long contractId) {
+            var contract = _context.Contracts.Find(contractId);
+
+            if (contract == null) {
+                return ResponseBuilder.CreateDataResponseWithStatus<Contract>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
+            }
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, contract);
         }
     }
 }

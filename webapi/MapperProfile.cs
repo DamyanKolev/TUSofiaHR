@@ -30,6 +30,7 @@ namespace webapi
             CreateMap<UserDTO, User>();
 
             CreateMap<EmployeeV, EmployeeView>();
+            CreateMap<ContractV, ContractView>();
         }
     }
 }

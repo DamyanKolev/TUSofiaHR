@@ -1,3 +1,4 @@
+import { EmployeeView } from "@/models/TableViews/EmployeeView";
 import { FormFieldState, FormState, defaultFormFieldState } from "../FormState";
 
 export interface UpdateEmployeeFormState extends FormState{
@@ -21,3 +22,20 @@ export const defaultUpdateEmployeeFormState: UpdateEmployeeFormState = {
     departmentId: defaultFormFieldState,
     positionId: defaultFormFieldState
 }
+
+
+export interface EmployeeFormUpdateData {
+    managerId: string,
+    departmentId: string,
+    positionId: string
+}
+
+export function createEmployeeFormUpdateData(employee: EmployeeView): EmployeeFormUpdateData {
+
+    return {
+        managerId: employee.managerName,
+        departmentId: employee.departmentName,
+        positionId: employee.positionName
+    }
+}
+

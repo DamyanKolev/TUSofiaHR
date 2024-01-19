@@ -12,7 +12,7 @@ interface SmallTableSelectProps {
     joinInfo: JoinTableInfo,
     value?: string,
     name: string,
-    formDataSetter: (rowId: string, fieldName: string) => void
+    formDataSetter: (selectedItem: StandardListItemDomRef, name: string) => void
 }
 
 
@@ -39,10 +39,9 @@ const SmallTableSelect: FC<SmallTableSelectProps> = ({ joinInfo, value = "", nam
 
     const onConfirmHandler = (event: Ui5CustomEvent<ListDomRef, { selectedItems: StandardListItemDomRef[]; }>) => {
         const selectedItem = event.detail.selectedItems[0]
-        const rowId = selectedItem.id
         const currentValue = selectedItem.description
         if (currentValue) {
-            formDataSetter(rowId, name)
+            formDataSetter(selectedItem, name)
             setInputValue(currentValue)
         }
     }

@@ -33,8 +33,8 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPatch("/api/contracts/update", Name = "UpdateContract")]
-        public IActionResult Patch([FromBody] ContractUpdateDTO updateDTO)
+        [HttpPut("/api/contracts/update", Name = "UpdateContract")]
+        public IActionResult UpdateContract([FromBody] ContractUpdateDTO updateDTO)
         {
             var result = _contractService.UpdateContract(updateDTO);
 
@@ -51,6 +51,15 @@ namespace webapi.Controllers.HR
         public IActionResult GetContractsPage([FromBody] PageInfo pageInfo)
         {
             var result = _contractService.GetContractsPage(pageInfo);
+
+            return Ok(result.Response);
+        }
+
+
+        [HttpPost("/api/contracts/find-by-id", Name = "GetContractById")]
+        public IActionResult GetContractById([FromBody] long contractId)
+        {
+            var result = _contractService.GetContractById(contractId);
 
             return Ok(result.Response);
         }

@@ -1,4 +1,6 @@
+import { ContractView } from "@/models/TableViews/ContractView";
 import { FormFieldState, FormState, defaultFormFieldState } from "../FormState"
+import { setNullValuesToEmtyString } from "@/utils/forms/setNullValuesToEmtyString";
 
 export interface UpdateContractFormState extends FormState{
     workingWage: FormFieldState;
@@ -40,4 +42,27 @@ export const defaultUpdateContractFormState: UpdateContractFormState = {
     terminationTypeId: defaultFormFieldState,
     codeCorection: defaultFormFieldState,
     article62Flag: defaultFormFieldState,
+}
+
+
+
+export interface ContractUpdateFormData {
+    contractTypeId: string,
+    positionId: string,
+    iconomicActivityId: string,
+    documentTypeId: string,
+    terminationTypeId: string,
+    administrativeTerritoryId: string,
+}
+
+export function createContractUpdateFormData(contract: ContractView): ContractUpdateFormData {
+    const data = setNullValuesToEmtyString<ContractView>(contract)
+    return {
+        contractTypeId: data.contractType,
+        positionId: data.positionName,
+        iconomicActivityId: data.activityName,
+        documentTypeId: data.documentType,
+        terminationTypeId: data.documentType,
+        administrativeTerritoryId: data.ekatte,
+    }
 }

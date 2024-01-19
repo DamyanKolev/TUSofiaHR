@@ -33,7 +33,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPatch("/api/departments/update", Name = "UpdateDepartemnt")]
+        [HttpPut("/api/departments/update", Name = "UpdateDepartemnt")]
         public IActionResult UpdateDepartment([FromBody] Department department)
         {
             var result = _departmentService.UpdateDepartment(department);

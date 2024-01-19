@@ -50,7 +50,7 @@ const TerminateContract: FC<TerminateContractProps> = ({getIsOpen, tableURL, set
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(
                 {
-                    id: selectedRow.contract_id,
+                    id: selectedRow.contractId,
                     update_data: {
                         ...formData,
                         article62_flag: false,
@@ -66,7 +66,7 @@ const TerminateContract: FC<TerminateContractProps> = ({getIsOpen, tableURL, set
 
     useEffect(() => {
         if (selectedRow) {
-            getRecordById<ContractUpdateDTO>(selectedRow.contract_id, tableURL, setFormData)
+            getRecordById<ContractUpdateDTO>(selectedRow.contractId, tableURL, setFormData)
             setDisabledSetter(false)
         }
     }, [selectedRow]);
@@ -92,7 +92,7 @@ const TerminateContract: FC<TerminateContractProps> = ({getIsOpen, tableURL, set
                     <FlexBox alignItems={FlexBoxAlignItems.Center}>
                         <Label required>Тип Терминиране</Label>
                         <SmallTableSelect
-                            name="termination_type_id"
+                            name="terminationTypeId"
                             joinInfo={contractJoinTablesInfo.terminationTypeId}
                             formDataSetter={formDataSetterById}
                         />
@@ -100,8 +100,8 @@ const TerminateContract: FC<TerminateContractProps> = ({getIsOpen, tableURL, set
                     <FlexBox alignItems={FlexBoxAlignItems.Center}>
                         <Label>Дата на терминиране</Label>
                         <DatePicker
-                            name="termination_date"
-                            value={formData.termination_date.toString()}
+                            name="terminationDate"
+                            value={formData.terminationDate.toString()}
                             onChange={handleDateChange}
                             data-type={DataType.Date}
                         />

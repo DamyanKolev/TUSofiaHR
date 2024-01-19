@@ -1,4 +1,4 @@
-import { Text } from "@ui5/webcomponents-react";
+import { StandardListItemDomRef, Text } from "@ui5/webcomponents-react";
 import { FC } from "react";
 import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
 import LargeTableSelect from "@components/TableSelect/LargeTableSelect";
@@ -6,11 +6,11 @@ import SmallTableSelect from "@components/TableSelect/SmallTableSelect";
 
 interface StandardTableSelectFieldProps {
     editMode: boolean;
-    value: int;
+    value: string;
     name: string,
     joinInfo: JoinTableInfo,
     isLargeTable?: boolean,
-    formDataSetter: (rowId: string, fieldName: string) => void
+    formDataSetter: (selectedItem: StandardListItemDomRef, name: string) => void
 }
 
 export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = ({ editMode, value, name, joinInfo, isLargeTable = true, formDataSetter }) => {
@@ -20,7 +20,7 @@ export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = ({ ed
                 <LargeTableSelect
                     name={name}
                     joinInfo={joinInfo}
-                    value = {value.toString()}
+                    value = {value}
                     formDataSetter={formDataSetter}
                 />
             )
@@ -30,7 +30,7 @@ export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = ({ ed
                 <SmallTableSelect
                     name={name}
                     formDataSetter={formDataSetter}
-                    value = {value.toString()}
+                    value = {value}
                     joinInfo={joinInfo}
                 />
             )

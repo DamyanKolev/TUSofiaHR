@@ -30,7 +30,7 @@ namespace webapi.Controllers.Auth
             return Ok(result.Response);
         }
 
-        [HttpPatch("/api/auth/user/update", Name = "UpdateUser")]
+        [HttpPut("/api/auth/user/update", Name = "UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO updateDTO)
         {
             var result = await _userService.UpdateUser(updateDTO);

@@ -32,7 +32,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPatch("/api/employees/update", Name = "UpdateEmployee")]
+        [HttpPut("/api/employees/update", Name = "UpdateEmployee")]
         public IActionResult Put([FromBody] EmployeeUpdateDTO updateDTO)
         {
             var result = _employeeService.UpdateEmployee(updateDTO);
@@ -49,6 +49,14 @@ namespace webapi.Controllers.HR
         public IActionResult GetEmployeesPage([FromBody] PageInfo pageInfo)
         {
             var result = _employeeService.GetEmployeesPage(pageInfo);
+
+            return Ok(result.Response);
+        }
+
+        [HttpPost("/api/employees/update-data", Name = "GetUpdateData")]
+        public IActionResult GetUpdateData([FromBody] EmployeeDataSelectDTO selectDTO)
+        {
+            var result = _employeeService.GetUpdateData(selectDTO);
 
             return Ok(result.Response);
         }

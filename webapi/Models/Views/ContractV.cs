@@ -4,7 +4,7 @@ namespace webapi.Models.Views
 {
     public class ContractV
     {
-        public int contractId { get; set; }
+        public long ContractId { get; set; }
         public required string EmployeeName {get; set;}
         public required string FirstName {get; set;}
         public required string MiddleName {get; set;}

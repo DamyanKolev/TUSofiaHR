@@ -4,6 +4,7 @@ import SmartTable from '../../Table/SmartTable';
 import PageBar from '../../Bars/PageBar';
 import "@ui5/webcomponents-icons/excel-attachment"
 import TerminateContract from '@components/Forms/contract/TerminateContractForm';
+import { createPortal } from 'react-dom';
 
 
 const tableStyle: CSSProperties = {
@@ -63,12 +64,17 @@ const ContractStartColumn: FC<StartColumnProps> = ({ tableURL, columns, tableTit
                 }
             />
 
-            <TerminateContract
-                getIsOpen={() => {return open}}
-                tableURL={tableURL}
-                setDisabledSetter={setDisabledSetter}
-                setOpenSetter={setOpenSetter}
-            />
+            {
+                createPortal(
+                    (<TerminateContract
+                        getIsOpen={() => {return open}}
+                        tableURL={tableURL}
+                        setDisabledSetter={setDisabledSetter}
+                        setOpenSetter={setOpenSetter}
+                    />),
+                    document.body
+                )
+            }
         </Fragment>
     )
 }

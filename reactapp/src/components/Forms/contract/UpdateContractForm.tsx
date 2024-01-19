@@ -1,24 +1,26 @@
-import { DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { StandardInputField } from "../StandartFields/StandartInputField"
 import DataType from "@app-types/DataType"
 import { StandardDateField } from "../StandartFields/StandartDateField"
 import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField"
 import { ContractUpdateDTO } from "@models/HR/Contract"
-import { FC } from "react"
+import { Dispatch, FC, SetStateAction } from "react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
 import { parseValueByType } from "@utils/parsers"
+import { ContractUpdateFormData } from "@/models/FormStates/contract/UpdateContractFormState"
 
 
 interface UpdateContract {
     getEditMode: () => boolean,
     getFormData: () => ContractUpdateDTO,
-    setFormData: (formData: ContractUpdateDTO) => void,
-    setFormDataById: (rowId: string, fieldName: string) => void,
+    setFormData: Dispatch<SetStateAction<ContractUpdateDTO>>,
+    getUpdateData: () => ContractUpdateFormData,
+    setUpdateData: Dispatch<SetStateAction<ContractUpdateFormData>>,
 }
 
 
-const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormData, setFormDataById}) => {
+const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormData, getUpdateData, setUpdateData}) => {
     const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
         const target = e.target
         const value = target.value? target.value : "";
@@ -40,6 +42,18 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
         if (name && valueType) {
             const newFormData = parseValueByType<ContractUpdateDTO>(getFormData(), name, value, valueType);
             setFormData(newFormData)
+        }
+    }
+
+
+    const setFormDataById= (selectedItem: StandardListItemDomRef, name: string) => {
+        const value = selectedItem.textContent
+        if(value) {
+            const rowId = selectedItem.id
+            const newFormData = parseValueByType<ContractUpdateDTO>(getFormData(), name, rowId, DataType.Int);
+            setFormData(newFormData);
+            const newUpdateData = parseValueByType<ContractUpdateFormData>(getUpdateData(), name, value, DataType.String);
+            setUpdateData(newUpdateData)
         }
     }
 
@@ -136,7 +150,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         name="contractTypeId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().contractTypeId)}
+                        value={getUpdateData().contractTypeId}
                         joinInfo={contractJoinTablesInfo.contractTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -146,7 +160,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <StandardTableSelectField
                         name="positionId"
                         editMode={getEditMode()}
-                        value={Number(getFormData().positionId)}
+                        value={getUpdateData().positionId}
                         joinInfo={contractJoinTablesInfo.positionId}
                         formDataSetter={setFormDataById}
                     />
@@ -156,7 +170,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <StandardTableSelectField
                         name="iconomicActivityId"
                         editMode={getEditMode()}
-                        value={Number(getFormData().iconomicActivityId)}
+                        value={getUpdateData().iconomicActivityId}
                         joinInfo={contractJoinTablesInfo.iconomicActivityId}
                         formDataSetter={setFormDataById}
                     />
@@ -167,7 +181,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         name="documentTypeId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().documentTypeId)}
+                        value={getUpdateData().iconomicActivityId}
                         joinInfo={contractJoinTablesInfo.documentTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -178,7 +192,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         name="terminationTypeId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().terminationTypeId)}
+                        value={getUpdateData().iconomicActivityId}
                         joinInfo={contractJoinTablesInfo.terminationTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -188,7 +202,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <StandardTableSelectField
                         name="administrativeTerritoryId"
                         editMode={getEditMode()}
-                        value={Number(getFormData().administrativeTerritoryId)}
+                        value={getUpdateData().iconomicActivityId}
                         joinInfo={contractJoinTablesInfo.administrativeTerritoryId}
                         formDataSetter={setFormDataById}
                     />

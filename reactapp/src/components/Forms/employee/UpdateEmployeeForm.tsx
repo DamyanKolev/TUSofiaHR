@@ -1,21 +1,24 @@
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, Ui5CustomEvent } from "@ui5/webcomponents-react";
-import { FC } from "react";
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { StandardInputField } from "../StandartFields/StandartInputField";
 import { EmployeeUpdateDTO } from "@models/HR/Employee";
 import { parseValueByType } from "@utils/parsers";
 import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField";
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
 import DataType from "@app-types/DataType";
+import { EmployeeFormUpdateData } from "@/models/FormStates/employee/UpdateEmployeeFormState";
 
 
 interface UpdateEmployeeFormProps {
     getEditMode: () => boolean,
     getFormData: () => EmployeeUpdateDTO,
-    setFormData: (formData: EmployeeUpdateDTO) => void,
+    setFormData: Dispatch<SetStateAction<EmployeeUpdateDTO>>,
+    getUpdateData: () => EmployeeFormUpdateData,
+    setUpdateData: Dispatch<SetStateAction<EmployeeFormUpdateData>>,
 }
 
 
-const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, setFormData}) => {
+const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, setFormData, getUpdateData, setUpdateData}) => {
 
     const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
         const target = e.target
@@ -29,9 +32,15 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
         }
     };
 
-    const setFormDataById = (rowId: string, name: string) => {
-        const newFormData = parseValueByType<EmployeeUpdateDTO>(getFormData(), name, rowId, DataType.Int);
-        setFormData(newFormData);
+    const setFormDataById= (selectedItem: StandardListItemDomRef, name: string) => {
+        const value = selectedItem.textContent
+        if(value) {
+            const rowId = selectedItem.id
+            const newFormData = parseValueByType<EmployeeUpdateDTO>(getFormData(), name, rowId, DataType.Int);
+            setFormData(newFormData);
+            const newUpdateData = parseValueByType<EmployeeFormUpdateData>(getUpdateData(), name, value, DataType.String);
+            setUpdateData(newUpdateData)
+        }
     }
 
     return (
@@ -84,10 +93,21 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
                 <Label required>Отдел</Label>
                 <StandardTableSelectField
+                        name="managerId"
+                        isLargeTable={false}
+                        editMode={getEditMode()}
+                        value={getUpdateData().managerId}
+                        joinInfo={employeeJoinTableInfo.managerId}
+                        formDataSetter={setFormDataById}
+                    />
+            </FlexBox>
+            <FlexBox alignItems={FlexBoxAlignItems.Center}>
+                <Label required>Отдел</Label>
+                <StandardTableSelectField
                         name="departmentId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().departmentId)}
+                        value={getUpdateData().departmentId}
                         joinInfo={employeeJoinTableInfo.departmentId}
                         formDataSetter={setFormDataById}
                     />
@@ -98,7 +118,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                         name="positionId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={Number(getFormData().positionId)}
+                        value={getUpdateData().positionId}
                         joinInfo={employeeJoinTableInfo.departmentId}
                         formDataSetter={setFormDataById}
                     />

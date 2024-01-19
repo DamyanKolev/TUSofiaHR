@@ -32,7 +32,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPatch("/api/company/update", Name = "UpdateCompany")]
+        [HttpPut("/api/company/update", Name = "UpdateCompany")]
         public IActionResult Put([FromBody] CompanyUpdateDTO updateDTO)
         {
             var result = _companyService.UpdateCompany(updateDTO);

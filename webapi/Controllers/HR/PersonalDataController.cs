@@ -32,7 +32,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPatch("/api/personal-data/update", Name = "UpdatePersonalData")]
+        [HttpPut("/api/personal-data/update", Name = "UpdatePersonalData")]
         public IActionResult Put([FromBody] PersonalDataUpdateDTO updateDTO)
         {
             var response = _personalDataService.UpdatePersonalData(updateDTO);

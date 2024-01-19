@@ -3,20 +3,20 @@ import { Bar, Button, FCLLayout, FlexBox, FlexBoxDirection, Tab, TabContainer } 
 import { EmployeeData, EmployeeUpdateDTO, defaultEmployeeUpdate } from '@models/HR/Employee';
 import { toggle } from '@store/slices/toggleSlice';
 import { useAppDispatch } from '@store/storeHooks';
-import { parseValueByType } from '@utils/parsers';
 import { EmployeeView } from '@models/TableViews/EmployeeView';
 import { PersonalDataDTO, defaultPersonalDataDTO } from '@models/HR/PersonalData';
 import { ContractUpdateDTO, defaultContractUpdate } from '@models/HR/Contract';
 // import { UpdateContractFormState, defaultUpdateContractFormState } from '@models/FormStates/contract/UpdateContractFormState';
 // import { PersonalDataFormState, defaultPersonalDataFormState } from '@models/FormStates/personalData/PersonalDataFormState';
 // import { UpdateEmployeeFormState, defaultUpdateEmployeeFormState } from '@models/FormStates/employee/UpdateEmployeeFormState';
-import DataType from '@app-types/DataType';
 import { setNullValuesToEmtyString } from '@utils/forms/setNullValuesToEmtyString';
 import { EmployeePageContext } from '@pages/hr/EmployeePage';
 import UpdateEmployeeForm from '@components/Forms/employee/UpdateEmployeeForm';
 import UpdatePersonalDataForm from '@components/Forms/personalData/UpdatePersonalDataForm';
 import UpdateContract from '@components/Forms/contract/UpdateContractForm';
 import { createUpdateDTO } from '@models/UpdateDTO';
+import { ContractUpdateFormData } from '@/models/FormStates/contract/UpdateContractFormState';
+import { EmployeeFormUpdateData } from '@/models/FormStates/employee/UpdateEmployeeFormState';
 
 
 interface EmployeeMidColumnProps {
@@ -36,7 +36,8 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
     // const [contractFormState, setContractFormState] = useState<UpdateContractFormState>(defaultUpdateContractFormState)
     // const [personalDataFormState, setPersonalDataFormState] = useState<PersonalDataFormState>(defaultPersonalDataFormState)
 
-
+    const [conUpdateData, setConUpdateData] = useState<ContractUpdateFormData>({} as ContractUpdateFormData)
+    const [empUpdateData, setEmpUpdateData] = useState<EmployeeFormUpdateData>({} as EmployeeFormUpdateData)
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
     const [isSelected, setIsSelected] = useState<boolean>(false)
     const dispatchIsSuccess = useAppDispatch()
@@ -48,11 +49,6 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
     const navBackClick = () => {
         handleLayoutState(FCLLayout.OneColumn)
         setIsSelected(false)
-    }
-
-    const contractFormSetter = (rowId: string, name: string) => {
-        const newFormData = parseValueByType<ContractUpdateDTO>(contractForm, name, rowId, DataType.Int);
-        setContractForm(newFormData);
     }
 
     const setData = (data: EmployeeData) => {
@@ -79,7 +75,7 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
         const response = await fetch(`${tableURL}/update`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(createUpdateDTO(selectedRow.employee_id, employeeData)),
+            body: JSON.stringify(createUpdateDTO(selectedRow.employeeId, employeeData)),
         });
 
         if (!response.ok) {
@@ -92,8 +88,9 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                employee_id: selectedRow.employee_id,
-                personal_data_id: selectedRow.personal_data_id
+                employeeId: selectedRow.employeeId,
+                personalDataId: selectedRow.personalDataId,
+                contractId: selectedRow.contractId
             }),
         })
         const json = await response.json()
@@ -131,6 +128,8 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                             getEditMode={getEditMode}
                             getFormData={() => {return employeeData}}
                             setFormData={setEmployeeData}
+                            getUpdateData={() => {return empUpdateData}}
+                            setUpdateData={setEmpUpdateData}
                         />
 
                         <TabContainer>
@@ -147,7 +146,8 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                                     getEditMode={getEditMode}
                                     getFormData={() => {return contractForm}}
                                     setFormData={setContractForm}
-                                    setFormDataById={contractFormSetter}
+                                    getUpdateData={() => {return conUpdateData}}
+                                    setUpdateData={setConUpdateData}
                                 />
                             </Tab>
                         </TabContainer>

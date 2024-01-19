@@ -12,23 +12,23 @@ export const employeeJoinTableInfo:EmployeeJoinTablesInfo = {
     managerId: {
         filterField: "firstName",
         description: "companyEmployeeId",
-        contentFields: ["firstName","middleName","surname"],
+        contentFields: ["employeeName"],
         headerText: "Служители",
-        tableURL: "/api/hr/employee/page"
+        tableURL: "/api/employees/page"
     },
     departmentId: {
         filterField: "departmentName",
         description: "departmentName",
         contentFields: ["departmentName"],
         headerText: "Служители",
-        tableURL: "/api/hr/department/all"
+        tableURL: "/api/department/all"
     },
     positionId: {
         filterField: "positionName",
         description: "positionName",
         contentFields: ["positionName"],
         headerText: "Служители",
-        tableURL: "/api/hr/position/all"
+        tableURL: "/api/positions/all"
     },
 }
 
@@ -36,7 +36,7 @@ export const employeeJoinTableInfo:EmployeeJoinTablesInfo = {
 export const employeeContractJoinTablesInfo:JoinTableInfo = {
     filterField: "firstName",
     description: "companyEmployeeId",
-    contentFields: ["firstName","middleName","surname"],
+    contentFields: ["employeeName"],
     headerText: "Служители",
-    tableURL: "/api/hr/employee/page"
+    tableURL: "/api/employee/page"
 }

@@ -1,60 +1,48 @@
-interface Sort {
-    field_name: string,
-    order_asc: boolean,
-}
-
-export interface Filter {
-    field_name: string,
-    filter_type: string,
-    r_value: string,
-    or: boolean,
-}
-
-interface FilterSort {
-    filters: Array<Filter>;
-    sorts: Array<Sort>
-}
-
 export interface PageInfo {
-    filter_sort: FilterSort,
-    page_number: int,
-    limit: int,
+    pageNumber: int,
+    pageSize: int,
 }
 
 
 export const initialPageState: PageInfo = {
-    filter_sort: {
-        filters: [],
-        sorts: []
-    },
-    page_number: 1,
-    limit: 100
+    pageNumber: 1,
+    pageSize: 100
 }
 
+
+export interface PageFilterInfo {
+    pageNumber: int,
+    pageSize: int,
+    filter: Filter
+}
+
+export interface Filter {
+    fieldName: string,
+    value: string
+}
 
 export const initialFilterState: Filter = {
-    field_name: "",
-    filter_type: "",
-    r_value: "",
-    or: false,
+    fieldName: "",
+    value: ""
 }
 
-export function createPageInfo(filters: Array<Filter>, sorts: Array<Sort>, page_number: int, limit: int): PageInfo {
+export function createFilter(name: string, value: string):Filter {
     return {
-        filter_sort: {
-            filters,
-            sorts
-        },
-        page_number,
-        limit
+        fieldName: name,
+        value: value
     }
 }
 
-export function createFilterObject(field_name:string, filter_type: string, r_value: string, or: boolean): Filter {
+export const initialPageFilterInfo:PageFilterInfo = {
+    pageNumber: 1,
+    pageSize: 100,
+    filter: initialFilterState
+}
+
+export function createPageFilterInfo(page:int, pageSize: int, filter: Filter):PageFilterInfo {
     return {
-        field_name,
-        filter_type,
-        r_value,
-        or
+        pageNumber: page,
+        pageSize: pageSize,
+        filter: filter
     }
 }

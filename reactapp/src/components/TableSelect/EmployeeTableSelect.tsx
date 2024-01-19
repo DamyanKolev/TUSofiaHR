@@ -1,5 +1,5 @@
 import { employeeContractJoinTablesInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
-import { Filter, createFilterObject, createPageInfo, initialFilterState } from "@models/Page/Page";
+import { Filter, createFilter, createPageFilterInfo, initialFilterState } from "@models/Page/Page";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
 import { formTogle } from "@store/slices/formTogleSlice";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
@@ -51,14 +51,14 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
     //fired when typed any character in input
     const onSearchInputHandler = (event: Ui5CustomEvent<InputDomRef, { value: string; }>) => {
         const value = event.detail.value
-        const newObject = createFilterObject(filterField, "like", `${value}%`, false)
+        const newObject = createFilter(filterField, `${value}%`)
         setFilterObject(newObject)
     }
 
     //fired when click icon of the input
     const onSearchHandler = (event: Ui5CustomEvent<IconDomRef, { value: string; }>) => {
         const value = event.detail.value
-        const newObject = createFilterObject(filterField, "like", `${value}%`, false)
+        const newObject = createFilter(filterField, `${value}%`)
         setFilterObject(newObject)
     }
 
@@ -68,7 +68,7 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
 
     const initData = (page: int) => {
         const token = localStorage.getItem("token")
-        const pageDTO = createPageInfo([filterObject], [], page, 100);
+        const pageDTO = createPageFilterInfo(page, 100, filterObject);
 
         return fetch(`${tableURL}`, {
             method: "POST",

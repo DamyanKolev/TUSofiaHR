@@ -22,7 +22,7 @@ const tableStyle: CSSProperties = {
 
 const PositionPage: FC = () => {
     const tableTile = "Позиции"
-    const tableURL = "/api/hr/position"
+    const tableURL = "/api/positions"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
     const [isSelctedRow, setIsSelectedRow] = useState<boolean>(true)
     const [selectedRow, setSelectedRow] = useState<Position>(defaultRow);

@@ -3,7 +3,8 @@ import { CSSProperties, FC, ReactNode, useEffect, useRef, useState } from "react
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
 import { toggle } from "@store/slices/toggleSlice";
 import { PageInfo, initialPageState } from "@models/Page/Page";
-import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
+import PageResponse, { defaultPageResponse } from "@/models/Page/PageResponse";
+// import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
 //import TableFilterBar from "@components/Bars/FilterBar/TableFilterBar";
 
 
@@ -22,7 +23,7 @@ const SmartTable: FC<TableProps> = ({ tableURL, columns, header, style, onRowCli
     const table = useRef<Record<string, any>>(null);
     const [pageDTO] = useState<PageInfo>(initialPageState)
     // const [data, setData] = useState<PageResponse>(defaultPageResponse);
-    const [data, setData] = useState<any>(defaultPageResponse);
+    const [data, setData] = useState<PageResponse>(defaultPageResponse);
     const isSuccess = useAppSelector((state) => state.isSuccess.value)
     const dispatchIsSuccess = useAppDispatch()
 
@@ -34,7 +35,7 @@ const SmartTable: FC<TableProps> = ({ tableURL, columns, header, style, onRowCli
             body: JSON.stringify(pageDTO),
         })
             .then((response) => response.json())
-            .then((res) => { setData(res.data); console.log(res)})
+            .then((res) => {console.log(res); setData(res.data)})
             .catch(console.error);
     }
 
@@ -58,12 +59,11 @@ const SmartTable: FC<TableProps> = ({ tableURL, columns, header, style, onRowCli
             style={style}
             className="table"
             columns={columns}
-            data={data}
+            data={data.records}
             scaleWidthMode={AnalyticalTableScaleWidthMode.Grow}
             filterable
             header={
                 <div style={{width: "100%"}}>
-                    {/*<TableFilterBar fields={data.fields}/>*/}
                     {header}
                 </div>
             }

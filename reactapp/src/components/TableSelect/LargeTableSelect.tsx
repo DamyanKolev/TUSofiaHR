@@ -2,7 +2,7 @@
     Button, FlexBox, FlexBoxAlignItems, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItem, StandardListItemDomRef, Ui5CustomEvent
 } from "@ui5/webcomponents-react"
 import { FC, Fragment, useEffect, useState } from "react"
-import { Filter, createFilterObject, createPageInfo, initialFilterState } from "@models/Page/Page";
+import { Filter, createFilter, createPageFilterInfo, initialFilterState } from "@models/Page/Page";
 import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
@@ -34,7 +34,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
     
     const onClickHandler = () => {
         initData(1)
-            .then((res) => {setData(res.data)})
+            .then((res) => {setData(res.data); console.log(res.data)})
             .catch(console.error);
         setIsOpen(true)
     }
@@ -50,7 +50,6 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
         const selectedItem = event.detail.selectedItems[0]
         const rowId = selectedItem.id
         const currentValue = selectedItem.textContent
-        console.log(rowId)
         if (currentValue) {
             formDataSetter(rowId, name)
             setInputValue(currentValue)
@@ -60,14 +59,14 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
     //fired when typed any character in input
     const onSearchInputHandler = (event: Ui5CustomEvent<InputDomRef, { value: string; }>) => {
         const value = event.detail.value
-        const newObject = createFilterObject(filterField, "like", `${value}%`, false)
+        const newObject = createFilter(filterField, `${value}%`)
         setFilterObject(newObject)
     }
 
     //fired when click icon of the input
     const onSearchHandler = (event: Ui5CustomEvent<IconDomRef, { value: string; }>) => {
         const value = event.detail.value
-        const newObject = createFilterObject(filterField, "like", `${value}%`, false)
+        const newObject = createFilter(filterField, `${value}%`)
         setFilterObject(newObject)
     }
 
@@ -77,7 +76,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
 
     const initData = (page: int) => {
         const token = localStorage.getItem("token")
-        const pageDTO = createPageInfo([filterObject], [], page, 100);
+        const pageDTO = createPageFilterInfo(page, 100, filterObject);
 
         return fetch(`${tableURL}`, {
             method: "POST",

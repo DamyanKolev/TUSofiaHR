@@ -94,7 +94,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                         <FormItem label="Минимална заплата">
                             <StandardInputField
                                 editMode={editMode}
-                                value={formData.minSalary.toString()}
+                                value={formData.minSalary? formData.minSalary.toString() : ""}
                                 onChange={handleInputChange}
                                 name={"minSalary"}
                             />
@@ -103,7 +103,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                         <FormItem label="Максимална заплата">
                             <StandardInputField
                                 editMode={editMode}
-                                value={formData.maxSalary.toString()}
+                                value={formData.maxSalary? formData.maxSalary.toString() : ""}
                                 onChange={handleInputChange}
                                 name={"maxSalary"}
                             />

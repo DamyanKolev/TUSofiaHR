@@ -21,7 +21,7 @@ export const employeeJoinTableInfo:EmployeeJoinTablesInfo = {
         description: "departmentName",
         contentFields: ["departmentName"],
         headerText: "Служители",
-        tableURL: "/api/department/all"
+        tableURL: "/api/departments/all"
     },
     positionId: {
         filterField: "positionName",
@@ -38,5 +38,5 @@ export const employeeContractJoinTablesInfo:JoinTableInfo = {
     description: "companyEmployeeId",
     contentFields: ["employeeName"],
     headerText: "Служители",
-    tableURL: "/api/employee/page"
+    tableURL: "/api/employees/page"
 }

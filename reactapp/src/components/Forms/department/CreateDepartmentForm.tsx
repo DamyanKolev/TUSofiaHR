@@ -1,12 +1,14 @@
-﻿import { Bar, Button, ButtonDesign, Dialog} from "@ui5/webcomponents-react"
+﻿import { Bar, Button, ButtonDesign, Dialog, ValueState} from "@ui5/webcomponents-react"
 import { FC, useState } from "react"
-import { DepartmentDTO } from "@models/HR/Departmnet"
+import { DepartmentDTO, defualtDepartmentDTO } from "@models/HR/Departmnet"
 import { DepartmentFormState, defaultDepartmentFormState } from "@models/FormStates/department/DepartmentFormState"
 import { useAppDispatch } from "@store/storeHooks"
 import { toggle } from "@store/slices/toggleSlice"
 import DailogSwitch from "@app-types/DialogSwitch"
-import { isFilledForm } from "@utils/validation"
+import { isFilledForm1 } from "@utils/validation"
 import CreateDepartment from "./CreateDepartment"
+import { submitPostForm } from "@/utils/forms/submitForm"
+import { setFormValueState } from "@/utils/forms/formInputState"
 
 
 interface CreateDepartmentFormProps {
@@ -17,32 +19,37 @@ interface CreateDepartmentFormProps {
 
 
 const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
-    const defaultFormData = {} as DepartmentDTO
-    const [formData, setFormData] = useState<DepartmentDTO>(defaultFormData);
+    const [formData, setFormData] = useState<DepartmentDTO>(defualtDepartmentDTO);
     const [formState, setFormState] = useState<DepartmentFormState>(defaultDepartmentFormState);
     const dispatchIsSuccess = useAppDispatch()
 
     
-    const cancelOnClick = () => {
-        setFormData(defaultFormData)
+    const setDefaultState = () => {
         dialogSwitchSetter(DailogSwitch.Close)
+        setFormData(defualtDepartmentDTO)
+        setFormState(defaultDepartmentFormState)
+    }
+
+    const successCalback = () => {
+        dispatchIsSuccess(toggle())
+        setDefaultState()
+    }
+    
+    const cancelOnClick = () => {
+        setDefaultState()
     }
 
     const submitForm = async () => {
-        const isFilled = isFilledForm<DepartmentFormState>(formState, setFormState);
-        if (isFilled) {
-            const response = await fetch(`${tableURL}/create`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
+        const isFilled = isFilledForm1<DepartmentFormState>(formState);
 
-            if (response.ok) {
-                dispatchIsSuccess(toggle())
-                dialogSwitchSetter(DailogSwitch.Close)
-                setFormData(defaultFormData)
-                setFormState(defaultDepartmentFormState)
-            }
+        if (isFilled) {
+            submitPostForm(tableURL, JSON.stringify(formData), successCalback)
+        }
+        else {
+            setFormValueState<DepartmentFormState>(formState, setFormState, ValueState.Error);
+            setTimeout(() => {
+                setFormValueState<DepartmentFormState>(formState, setFormState, ValueState.None);
+            }, 1000);
         }
     };
 

@@ -1,12 +1,13 @@
-﻿import { FC, useReducer, useContext, useState, useEffect } from 'react';
+﻿import { FC, useContext, useState, useEffect } from 'react';
 import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, InputDomRef, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
 import { StandardInputField } from '../StandartFields/StandartInputField';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
-import { Department, DepartmentDTO, defualtDepartmentDTO } from '@models/HR/Departmnet';
+import { Department, defualtDepartment } from '@models/HR/Departmnet';
 import DailogSwitch from '@app-types/DialogSwitch';
 import { DepartmentPageContext } from '@pages/hr/DepartmentPage';
 import { parseValueByType } from '@utils/parsers';
+import { submitPutForm } from '@/utils/forms/submitForm';
 
 
 interface UpdateDepartmentFormProps {
@@ -18,31 +19,29 @@ interface UpdateDepartmentFormProps {
 
 const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
     const selectedRow = useContext<Department>(DepartmentPageContext)
-    const [formData, setFormData] = useState<DepartmentDTO>(defualtDepartmentDTO)
-    const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
+    const [formData, setFormData] = useState<Department>(defualtDepartment)
+    const [editMode, setEditMode] = useState<boolean>(false)
     const [isSelected, setIsSelected] = useState<boolean>(false)
     const dispatchIsSuccess = useAppDispatch()
 
-    const cancelOnClick = () => {
+    const setDefaultValues = () => {
         dialogSwitchSetter(DailogSwitch.Close)
+        setFormData(defualtDepartment)
+        setIsSelected(false)
+        setEditMode(false)
     }
 
-    const submitForm = async () => {
-        const response = await fetch(`${tableURL}/update`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                id: selectedRow.id,
-                update_data: formData
-            }),
-        });
+    const successCalback = ():void => {
+        dispatchIsSuccess(toggle())
+        setDefaultValues()
+    }
 
-        if (!response.ok) {
-            dispatchIsSuccess(toggle())
-            dialogSwitchSetter(DailogSwitch.Close)
-            setIsSelected(false)
-            setFormData(defualtDepartmentDTO);
-        }
+    const cancelOnClick = () => {
+        setDefaultValues()
+    }
+
+    const submitForm = () => {
+        submitPutForm(tableURL, JSON.stringify(formData), successCalback)
     };
 
     useEffect(() => {
@@ -59,7 +58,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
         const name = target.name
 
         if (name && valueType) {
-            const newFormData = parseValueByType<DepartmentDTO>(formData, name, value, valueType);
+            const newFormData = parseValueByType<Department>(formData, name, value, valueType);
             setFormData(newFormData)
         }
     };
@@ -69,7 +68,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
             header={
                 <Bar
                     startContent={<Title level={TitleLevel.H6}>Промяна на Отдел</Title>}
-                    endContent={<Button onClick={toggleEditMode}>{editMode ? 'Display Mode' : 'Edit'}</Button>}
+                    endContent={<Button onClick={() => setEditMode(!editMode)}>{editMode ? 'Display Mode' : 'Edit'}</Button>}
                 />
             }
             footer={

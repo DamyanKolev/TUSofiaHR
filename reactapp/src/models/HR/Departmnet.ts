@@ -7,4 +7,5 @@ export interface DepartmentDTO {
     departmentName: string,
 }
 
-export const defualtDepartmentDTO: DepartmentDTO = {} as Department
+export const defualtDepartment: Department = {} as Department
+export const defualtDepartmentDTO: DepartmentDTO = {} as DepartmentDTO

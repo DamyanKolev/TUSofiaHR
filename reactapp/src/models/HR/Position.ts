@@ -13,4 +13,6 @@ export interface PositionDTO {
     maxSalary: number
 }
 
+export const defaultPosition: Position= {} as Position
+
 export const defaultPositionDTO: PositionDTO= {} as PositionDTO

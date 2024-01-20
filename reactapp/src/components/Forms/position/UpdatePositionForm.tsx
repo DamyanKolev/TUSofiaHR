@@ -1,12 +1,13 @@
-﻿import { FC, useReducer, useContext, useState, useEffect } from 'react';
+﻿import { FC, useContext, useState, useEffect } from 'react';
 import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, InputDomRef, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
 import { StandardInputField } from '../StandartFields/StandartInputField';
-import { PositionDTO, defaultPositionDTO } from '@models/HR/Position';
+import { Position, defaultPosition } from '@models/HR/Position';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
 import DailogSwitch from '@app-types/DialogSwitch';
 import { parseValueByType } from '@utils/parsers';
 import { PositionPageContext } from '@pages/hr/PositionPage';
+import { submitPutForm } from '@/utils/forms/submitForm';
 
 
 interface UpdatePositionFormProps {
@@ -18,10 +19,22 @@ interface UpdatePositionFormProps {
 
 const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
     const selectedRow = useContext(PositionPageContext)
-    const [formData, setFormData] = useState<PositionDTO>(defaultPositionDTO)
-    const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
+    const [formData, setFormData] = useState<Position>(defaultPosition)
+    const [editMode, setEditMode] = useState<boolean>(false)
     const [isSelected, setIsSelected] = useState<boolean>(false)
     const dispatchIsSuccess = useAppDispatch()
+
+    const setDefaultValues = () => {
+        dialogSwitchSetter(DailogSwitch.Close)
+        setFormData(defaultPosition)
+        setIsSelected(false)
+        setEditMode(false)
+    }
+
+    const successCalback = ():void => {
+        dispatchIsSuccess(toggle())
+        setDefaultValues()
+    }
 
     const cancelOnClick = () => {
         dialogSwitchSetter(DailogSwitch.Close)
@@ -29,20 +42,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
 
 
     const submitForm = async () => {
-        const response = await fetch(`${tableURL}/update`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                id: selectedRow.id,
-                update_data: formData
-            }),
-        });
-
-        if (!response.ok) {
-            dispatchIsSuccess(toggle())
-            dialogSwitchSetter(DailogSwitch.Close)
-            setFormData(defaultPositionDTO)
-        }
+        submitPutForm(tableURL, JSON.stringify(formData), successCalback)
     };
 
     useEffect(() => {
@@ -59,7 +59,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
         const name = target.name
 
         if (name && valueType) {
-            const newFormData = parseValueByType<PositionDTO>(formData, name, value, valueType);
+            const newFormData = parseValueByType<Position>(formData, name, value, valueType);
             setFormData(newFormData)
         }
     };
@@ -69,7 +69,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
             header={
                 <Bar
                     startContent={<Title level={TitleLevel.H6}>Промяна на Позиция</Title>}
-                    endContent={<Button onClick={toggleEditMode}>{editMode ? 'Display Mode' : 'Edit'}</Button>}
+                    endContent={<Button onClick={() => setEditMode(!editMode)}>{editMode ? 'Display Mode' : 'Edit'}</Button>}
                 />
             }
             footer={

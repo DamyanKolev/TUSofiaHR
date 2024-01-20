@@ -7,7 +7,7 @@ namespace webapi.Services.HR
 {
     public interface IDepartmentService
     {
-        public ResponseWithStatus<Response> CreateDepartment(string departmentName);
+        public ResponseWithStatus<Response> CreateDepartment(DepartmentInsert departmentInsert);
         public ResponseWithStatus<Response> UpdateDepartment(Department updateRequest);
         public ResponseWithStatus<Response> DeleteDepartment(int departmentId);
         public ResponseWithStatus<DataResponse<PageResponse<Department>>> GetDepartmentsPage(PageInfo pageInfo);
@@ -22,13 +22,12 @@ namespace webapi.Services.HR
             _context = context;
         }
 
-        public ResponseWithStatus<Response> CreateDepartment(string departmentName)
+        public ResponseWithStatus<Response> CreateDepartment(DepartmentInsert departmentInsert)
         {
-            Department department = new Department() { DepartmentName = departmentName };
+            Department department = new Department() { DepartmentName = departmentInsert.DepartmentName };
             _context.Departments.Add(department);
-            var changes = _context.SaveChanges();
-
-            if (changes > 0)
+            var test = _context.SaveChanges();
+            if(test == 0)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }
@@ -40,18 +39,10 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<Response> UpdateDepartment(Department updateRequest)
         {
-            var department = _context.Departments.Find(updateRequest.Id);
-
-            if (department == null)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
-            }
-
-            department.DepartmentName = updateRequest.DepartmentName;
-            _context.Update(department);
+            _context.Update(updateRequest);
             var result = _context.SaveChanges();
 
-            if (result > 0)
+            if (result == 0)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
             }
@@ -71,7 +62,7 @@ namespace webapi.Services.HR
             _context.Departments.Remove(department);
             var result = _context.SaveChanges();
 
-            if (result > 0)
+            if (result == 0)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_DELETE_FAILED);
             }

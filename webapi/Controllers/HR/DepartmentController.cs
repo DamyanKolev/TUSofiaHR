@@ -22,9 +22,9 @@ namespace webapi.Controllers.HR
 
 
         [HttpPost("/api/departments/create", Name = "CreateDepartment")]
-        public IActionResult CreateDepartment([FromBody] string departmentName)
+        public IActionResult CreateDepartment([FromBody] DepartmentInsert departmentInsert)
         {
-            var result = _departmentService.CreateDepartment(departmentName);
+            var result = _departmentService.CreateDepartment(departmentInsert);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result.Response);
@@ -47,7 +47,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpDelete("/api/department/delete", Name = "DeleteDepartment")]
+        [HttpDelete("/api/departments/delete", Name = "DeleteDepartment")]
         public IActionResult DeleteDepartment([FromBody] int departmentId)
         {
             var result = _departmentService.DeleteDepartment(departmentId);
@@ -61,7 +61,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/department/page", Name = "GetDepartmentsPage")]
+        [HttpPost("/api/departments/page", Name = "GetDepartmentsPage")]
         public IActionResult GetDepartmentsPage([FromBody] PageInfo pageInfo)
         {
             var result = _departmentService.GetDepartmentsPage(pageInfo);
@@ -70,7 +70,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpGet("/api/department/all", Name = "GetAllDepartments")]
+        [HttpGet("/api/departments/all", Name = "GetAllDepartments")]
         public IActionResult GetAllDepartments(){
             var result = _departmentService.GetAllDepartments();
 

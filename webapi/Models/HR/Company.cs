@@ -18,10 +18,4 @@ namespace webapi.Models.HR
         public required string CompanyName { get; set; }
         public required string CompanyEIC { get; set; }
     }
-
-    public record CompanyUpdateDTO
-    {
-        public required Int64 UpdateId { get; set; }
-        public required CompanyDTO Company { get; set; }
-    }
 }

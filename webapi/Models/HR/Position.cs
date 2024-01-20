@@ -21,10 +21,4 @@ namespace webapi.Models.HR
         public required decimal MinSalary { get; set; }
         public required decimal MaxSalary { get; set; }
     }
-
-    public record PositionUpdateDTO
-    {
-        public required int PositionId { get; set; }
-        public required PositionDTO Position { get; set; }
-    }
 }

@@ -11,7 +11,6 @@ namespace webapi.Models.HR
         public required string DepartmentName { get; set; }
     }
 
-
     public record DepartmentInsert
     {
         public required string DepartmentName { get; set; }

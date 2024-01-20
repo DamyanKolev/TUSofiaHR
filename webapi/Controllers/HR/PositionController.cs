@@ -33,9 +33,9 @@ namespace webapi.Controllers.HR
 
 
         [HttpPut("/api/positions/update", Name = "UpdatePosition")]
-        public IActionResult UpdateDepartment([FromBody] PositionUpdateDTO updateDTO)
+        public IActionResult UpdateDepartment([FromBody] Position position)
         {
-            var result = _positionService.UpdatePosition(updateDTO);
+            var result = _positionService.UpdatePosition(position);
 
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))
                 return NotFound(result.Response);

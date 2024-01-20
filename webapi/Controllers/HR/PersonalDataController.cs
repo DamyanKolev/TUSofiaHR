@@ -33,9 +33,9 @@ namespace webapi.Controllers.HR
 
 
         [HttpPut("/api/personal-data/update", Name = "UpdatePersonalData")]
-        public IActionResult Put([FromBody] PersonalDataUpdateDTO updateDTO)
+        public IActionResult Put([FromBody] PersonalData personalData)
         {
-            var response = _personalDataService.UpdatePersonalData(updateDTO);
+            var response = _personalDataService.UpdatePersonalData(personalData);
 
             if (response.StatusCode.Equals(HttpStatusCode.NotFound))
                 return NotFound(response);

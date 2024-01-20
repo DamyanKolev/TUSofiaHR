@@ -9,7 +9,7 @@ namespace webapi.Services.HR
     public interface IPersonalDataService
     {
         public ResponseWithStatus<Response> CreatePersonalData(PersonalDataDTO personalDataDTO);
-        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateDTO updateDTO);
+        public ResponseWithStatus<Response> UpdatePersonalData(PersonalData personalData);
     }
     public class PersonalDataService : IPersonalDataService
     {
@@ -35,16 +35,8 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdatePersonalData(PersonalDataUpdateDTO updateDTO)
+        public ResponseWithStatus<Response> UpdatePersonalData(PersonalData personalData)
         {
-            var personalData = _context.PersonalDatas.Find(updateDTO.UpdateId);
-
-            if (personalData == null)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
-            }
-
-            _mapper.Map(updateDTO.PersonalData, personalData);
             _context.Update(personalData);
             var result = _context.SaveChanges();
 

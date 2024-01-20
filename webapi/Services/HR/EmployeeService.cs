@@ -9,8 +9,8 @@ namespace webapi.Services.HR
 {
     public interface IEmployeeService
     {
-        public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO employeeDTO);
-        public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateDTO updateDTO);
+        public ResponseWithStatus<Response> CreateEmployee(EmployeeDataInsert employeeDataInsert);
+        public ResponseWithStatus<Response> UpdateEmployee(EmployeeDataUpdate employeeDataUpdate);
         public ResponseWithStatus<DataResponse<PageResponse<EmployeeView>>> GetEmployeesPage(PageInfo pageInfo);
         public ResponseWithStatus<DataResponse<EmployeeDataSelect>> GetUpdateData(EmployeeDataSelectDTO selectDTO);
     }
@@ -26,13 +26,20 @@ namespace webapi.Services.HR
             _mapper = mapper;
         }
 
-        public ResponseWithStatus<Response> CreateEmployee(EmployeeDTO employeeDTO)
+        public ResponseWithStatus<Response> CreateEmployee(EmployeeDataInsert employeeDataInsert)
         {
-            var data = _mapper.Map<Employee>(employeeDTO);
-            _context.Employees.Add(data);
+            var personalData = _mapper.Map<PersonalData>(employeeDataInsert.PersonalData);
+            var contract = _mapper.Map<Contract>(employeeDataInsert.Contract);
+            var employee = _mapper.Map<Employee>(employeeDataInsert.Employee);
+
+            employee.PersonalData = personalData;
+            _context.Employees.Add(employee);
+
+            var employeeContract = new EmployeeContracts { Employee = employee, Contract = contract, IsActive = true };
+            _context.EmployeeContracts.Add(employeeContract);
             var changes = _context.SaveChanges();
 
-            if (changes > 0)
+            if (changes == 0)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }
@@ -40,17 +47,22 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdateEmployee(EmployeeUpdateDTO updateDTO)
+        public ResponseWithStatus<Response> UpdateEmployee(EmployeeDataUpdate employeeDataUpdate)
         {
-            var employee = _context.Employees.Find(updateDTO.UpdateId);
-
-            if (employee == null)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
+            if (employeeDataUpdate.Employee != null) {
+                var employee = _mapper.Map<Employee>(employeeDataUpdate.Employee);
+                _context.Update(employeeDataUpdate.Employee);
             }
-
-            _mapper.Map(updateDTO.Employee, employee);
-            _context.Update(employee);
+            if (employeeDataUpdate.Contract != null)
+            {
+                var employee = _mapper.Map<Contract>(employeeDataUpdate.Contract);
+                _context.Update(employeeDataUpdate.Contract);
+            }
+            if (employeeDataUpdate.PersonalData != null)
+            {
+                var employee = _mapper.Map<PersonalData>(employeeDataUpdate.PersonalData);
+                _context.Update(employeeDataUpdate.PersonalData);
+            }
             var result = _context.SaveChanges();
 
             if (result == 0)

@@ -10,7 +10,7 @@ namespace webapi.Services.HR
     public interface IContractService
     {
         public ResponseWithStatus<Response> CreateContract(ContractDTO contractDTO);
-        public ResponseWithStatus<Response> UpdateContract(ContractUpdateDTO updateDTO);
+        public ResponseWithStatus<Response> UpdateContract(Contract contract);
         public ResponseWithStatus<DataResponse<PageResponse<ContractView>>> GetContractsPage(PageInfo pageInfo);
         public ResponseWithStatus<DataResponse<Contract>> GetContractById(long contractId);
     }
@@ -40,16 +40,8 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdateContract(ContractUpdateDTO updateDTO)
+        public ResponseWithStatus<Response> UpdateContract(Contract contract)
         {
-            var contract = _context.Contracts.Find(updateDTO.UpdateId);
-
-            if (contract == null)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
-            }
-
-            _mapper.Map(updateDTO.Contract, contract);
             _context.Update(contract);
             var result = _context.SaveChanges();
 

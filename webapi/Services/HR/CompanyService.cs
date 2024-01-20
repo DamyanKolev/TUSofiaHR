@@ -10,7 +10,7 @@ namespace webapi.Services.HR
     public interface ICompanyService
     {
         public ResponseWithStatus<Response> CreateCompany(CompanyDTO companyDTO);
-        public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateDTO updateDTO);
+        public ResponseWithStatus<Response> UpdateCompany(Company company);
     }
     public class CompanyService : ICompanyService
     {
@@ -36,16 +36,8 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdateCompany(CompanyUpdateDTO updateDTO)
+        public ResponseWithStatus<Response> UpdateCompany(Company company)
         {
-            var company = _context.Companies.Find(updateDTO.UpdateId);
-
-            if (company == null)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
-            }
-
-            _mapper.Map(updateDTO.Company, company);
             _context.Update(company);
             var result = _context.SaveChanges();
 

@@ -33,9 +33,9 @@ namespace webapi.Controllers.HR
 
 
         [HttpPut("/api/company/update", Name = "UpdateCompany")]
-        public IActionResult Put([FromBody] CompanyUpdateDTO updateDTO)
+        public IActionResult Put([FromBody] Company company)
         {
-            var result = _companyService.UpdateCompany(updateDTO);
+            var result = _companyService.UpdateCompany(company);
 
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))
                 return NotFound(result.Response);

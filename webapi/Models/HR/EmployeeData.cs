@@ -7,9 +7,9 @@
     }
 
     public record EmployeeDataUpdate {
-        public EmployeeUpdateDTO? Employee {get; set;}
-        public PersonalDataUpdateDTO? PersonalData {get; set;}
-        public ContractUpdateDTO? Contract {get; set;}
+        public Employee? Employee {get; set;}
+        public Contract? Contract {get; set;}
+        public PersonalData? PersonalData {get; set;}
     }
 
     public record EmployeeDataSelectDTO {

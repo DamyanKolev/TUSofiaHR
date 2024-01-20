@@ -26,8 +26,8 @@ namespace webapi.Services.HR
         {
             Department department = new Department() { DepartmentName = departmentInsert.DepartmentName };
             _context.Departments.Add(department);
-            var test = _context.SaveChanges();
-            if(test == 0)
+            var result = _context.SaveChanges();
+            if(result == 0)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }

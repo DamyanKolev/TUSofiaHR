@@ -18,19 +18,19 @@ namespace webapi.Models.HR
 
 
         public int CompanyId { get; set; }
-        public required Company Company { get; set; }
+        public Company? Company { get; set; }
 
 
         public int ContractTypeId { get; set; }
-        public required SysContractType ContractType { get; set; }
+        public SysContractType? ContractType { get; set; }
 
 
         public int PositionId { get; set; }
-        public required SysPosition Position { get; set; }
+        public SysPosition? Position { get; set; }
 
 
         public int IconomicActivityId { get; set; }
-        public required SysIconomicActivity IconomicActivity { get; set; }
+        public SysIconomicActivity? IconomicActivity { get; set; }
 
 
         public int DocumentTypeId { get; set; }
@@ -70,21 +70,11 @@ namespace webapi.Models.HR
         public required int ContractTypeId { get; set; }
         public required int PositionId { get; set; }
         public required int IconomicActivityId { get; set; }
-        public SysContractDocumentType? DocumentType { get; set; }
+        public int? DocumentTypeId { get; set; }
         public int TerminationTypeId { get; set; }
         public int AdministrativeTerritoryId { get; set; }
         public required Int16 CodeCorection { get; set; }
         public required Boolean IsTerminate {  get; set; }
         public required Boolean Article62Flag { get; set; }
-    }
-
-
-
-
-
-    public record ContractUpdateDTO
-    {
-        public required Int64 UpdateId { get; set; }
-        public required ContractDTO Contract { get; set; }
     }
 }

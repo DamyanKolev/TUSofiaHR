@@ -21,9 +21,9 @@ namespace webapi.Controllers.HR
         }
 
         [HttpPost("/api/employees/create", Name = "CreateEmployee")]
-        public IActionResult Post([FromBody] EmployeeDTO data)
+        public IActionResult Post([FromBody] EmployeeDataInsert employeeDataInsert)
         {
-            var result = _employeeService.CreateEmployee(data);
+            var result = _employeeService.CreateEmployee(employeeDataInsert);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result.Response);
@@ -33,9 +33,9 @@ namespace webapi.Controllers.HR
 
 
         [HttpPut("/api/employees/update", Name = "UpdateEmployee")]
-        public IActionResult Put([FromBody] EmployeeUpdateDTO updateDTO)
+        public IActionResult Put([FromBody] EmployeeDataUpdate employeeDataUpdate)
         {
-            var result = _employeeService.UpdateEmployee(updateDTO);
+            var result = _employeeService.UpdateEmployee(employeeDataUpdate);
 
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))
                 return NotFound(result.Response);

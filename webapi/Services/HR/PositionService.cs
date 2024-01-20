@@ -9,7 +9,7 @@ namespace webapi.Services.HR
     public interface IPositionService
     {
         public ResponseWithStatus<Response> CreatePosition(PositionDTO positionDTO);
-        public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO);
+        public ResponseWithStatus<Response> UpdatePosition(Position position);
         public ResponseWithStatus<Response> DeletePosition(int positionId);
         public ResponseWithStatus<DataResponse<PageResponse<Position>>> GetPositionsPage(PageInfo pageInfo);
         public ResponseWithStatus<DataResponse<List<Position>>> GetAllPositions();
@@ -39,16 +39,8 @@ namespace webapi.Services.HR
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
-        public ResponseWithStatus<Response> UpdatePosition(PositionUpdateDTO updateDTO)
+        public ResponseWithStatus<Response> UpdatePosition(Position position)
         {
-            var position = _context.Positions.Find(updateDTO.PositionId);
-
-            if (position == null)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.NotFound, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
-            }
-
-            _mapper.Map(updateDTO.Position, position);
             _context.Update(position);
             var result = _context.SaveChanges();
 

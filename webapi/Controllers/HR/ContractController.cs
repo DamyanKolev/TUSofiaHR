@@ -34,9 +34,9 @@ namespace webapi.Controllers.HR
 
 
         [HttpPut("/api/contracts/update", Name = "UpdateContract")]
-        public IActionResult UpdateContract([FromBody] ContractUpdateDTO updateDTO)
+        public IActionResult UpdateContract([FromBody] Contract contract)
         {
-            var result = _contractService.UpdateContract(updateDTO);
+            var result = _contractService.UpdateContract(contract);
 
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))
                 return NotFound(result.Response);

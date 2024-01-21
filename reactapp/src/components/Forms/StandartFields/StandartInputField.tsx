@@ -1,4 +1,4 @@
-import { Input, InputDomRef, InputType, Link, Text, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { Input, InputDomRef, InputType, Link, Text, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
 import { FC } from "react";
 import DataType from "@app-types/DataType";
 import { largeFormItem } from "@utils/css";
@@ -8,11 +8,12 @@ interface StandardInputFieldProps {
     value: string;
     dataType?: DataType;
     inputType?: InputType;
+    valueState?: ValueState,
     name: string;
     onChange: (e: Ui5CustomEvent<InputDomRef, never>) => void;
 }
 
-export const StandardInputField: FC<StandardInputFieldProps> = ({ editMode, value, dataType = DataType.String, name, onChange, inputType = InputType.Text }) => {
+export const StandardInputField: FC<StandardInputFieldProps> = ({ editMode, value, dataType = DataType.String, name, onChange, inputType = InputType.Text, valueState = ValueState.None}) => {
     if (editMode) {
         return <Input
             style={largeFormItem}
@@ -20,6 +21,7 @@ export const StandardInputField: FC<StandardInputFieldProps> = ({ editMode, valu
             data-type={dataType}
             name={name}
             onChange={onChange}
+            valueState={valueState}
         />;
     }
     if (inputType === InputType.URL || inputType === InputType.Email) {

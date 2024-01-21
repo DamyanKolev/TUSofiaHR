@@ -27,6 +27,7 @@ builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPositionService, PositionService>();
+builder.Services.AddScoped<IEmployeeContractService, EmployeeContractService>();
 
 
 // Auth services

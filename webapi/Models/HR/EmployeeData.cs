@@ -14,7 +14,7 @@
 
     public record EmployeeDataSelectDTO {
         public long EmployeeId {get; set;}
-        public long PersonalDataId {get; set;}
+        public int PersonalDataId {get; set;}
         public long ContractId {get; set; }
     }
 

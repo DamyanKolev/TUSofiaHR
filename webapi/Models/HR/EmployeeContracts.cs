@@ -17,4 +17,10 @@ namespace webapi.Models.HR
 
         public bool? IsActive { get; set; }
     }
+
+    public record EmployeeContractInsert
+    {
+        public required long EmployeeId { get; set; }
+        public required ContractDTO Contract { get; set; }
+    }
 }

@@ -9,7 +9,7 @@ namespace webapi.Services.HR
 {
     public interface IContractService
     {
-        public ResponseWithStatus<Response> CreateContract(ContractDTO contractDTO);
+        public ResponseWithStatus<Response> CreateContract(EmployeeContractInsert employeeContractInsert);
         public ResponseWithStatus<Response> UpdateContract(Contract contract);
         public ResponseWithStatus<DataResponse<PageResponse<ContractView>>> GetContractsPage(PageInfo pageInfo);
         public ResponseWithStatus<DataResponse<Contract>> GetContractById(long contractId);
@@ -19,24 +19,38 @@ namespace webapi.Services.HR
     {
         public readonly DatabaseContext _context;
         public readonly IMapper _mapper;
+        public readonly IEmployeeContractService _employeeContractService;
 
-        public ContractService(DatabaseContext context, IMapper mapper)
+        public ContractService(DatabaseContext context, IMapper mapper, IEmployeeContractService employeeContractService)
         {
             _context = context;
             _mapper = mapper;
+            _employeeContractService = employeeContractService; 
         }
 
-        public ResponseWithStatus<Response> CreateContract(ContractDTO contractDTO)
+        public ResponseWithStatus<Response> CreateContract(EmployeeContractInsert employeeContractInsert)
         {
-            var data = _mapper.Map<Contract>(contractDTO);
-            _context.Contracts.Add(data);
-            var changes = _context.SaveChanges();
+            var employee = _context.Employees.Find(employeeContractInsert.EmployeeId);
+            if (employee == null)
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
+            }
 
-            if (changes > 0)
+            var isSuccess = _employeeContractService.SetContractToUnactive(employeeContractInsert.EmployeeId);
+            if (!isSuccess)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }
 
+            var contract = _mapper.Map<Contract>(employeeContractInsert.Contract);
+            var employeeContract = new EmployeeContracts { Employee = employee, Contract = contract, IsActive = true };
+            _context.EmployeeContracts.Add(employeeContract);
+            var changes = _context.SaveChanges();
+
+            if (changes == 0)
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
+            }
             return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 

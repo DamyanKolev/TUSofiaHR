@@ -22,9 +22,9 @@ namespace webapi.Controllers.HR
 
 
         [HttpPost("/api/contracts/create", Name = "CreateContract")]
-        public IActionResult Post([FromBody] ContractDTO contractDTO)
+        public IActionResult Post([FromBody] EmployeeContractInsert employeeContractInsert)
         {
-            var result = _contractService.CreateContract(contractDTO);
+            var result = _contractService.CreateContract(employeeContractInsert);
 
             if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
                 return BadRequest(result.Response);

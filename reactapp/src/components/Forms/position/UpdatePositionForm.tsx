@@ -8,6 +8,9 @@ import DailogSwitch from '@app-types/DialogSwitch';
 import { parseValueByType } from '@utils/parsers';
 import { PositionPageContext } from '@pages/hr/PositionPage';
 import { submitPutForm } from '@/utils/forms/submitForm';
+import { PositionFormState, defualtPositionFormState } from '@/models/FormStates/position/PositionFormState';
+import { setErrorInputStates } from '@/utils/forms/formInputState';
+import { isFilledForm } from '@/utils/validation';
 
 
 interface UpdatePositionFormProps {
@@ -19,12 +22,14 @@ interface UpdatePositionFormProps {
 
 const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
     const selectedRow = useContext(PositionPageContext)
+    const [formState, setFormState] = useState<PositionFormState>(defualtPositionFormState)
     const [formData, setFormData] = useState<Position>(defaultPosition)
     const [editMode, setEditMode] = useState<boolean>(false)
     const [isSelected, setIsSelected] = useState<boolean>(false)
     const dispatchIsSuccess = useAppDispatch()
 
     const setDefaultValues = () => {
+        setFormState(defualtPositionFormState)
         dialogSwitchSetter(DailogSwitch.Close)
         setFormData(defaultPosition)
         setIsSelected(false)
@@ -40,9 +45,14 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
         dialogSwitchSetter(DailogSwitch.Close)
     }
 
-
     const submitForm = async () => {
-        submitPutForm(tableURL, JSON.stringify(formData), successCalback)
+        const isFilled = isFilledForm<PositionFormState>(formState);
+        if(isFilled) {
+            submitPutForm(tableURL, JSON.stringify(formData), successCalback)
+        }
+        else {
+            setErrorInputStates(formState, setFormState)
+        }
     };
 
     useEffect(() => {
@@ -88,6 +98,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                                 value={formData.positionName}
                                 onChange={handleInputChange}
                                 name={"positionName"}
+                                valueState={formState.positionName.valueState}
                             />
                         </FormItem>
 
@@ -97,6 +108,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                                 value={formData.minSalary? formData.minSalary.toString() : ""}
                                 onChange={handleInputChange}
                                 name={"minSalary"}
+                                valueState={formState.minSalary.valueState}
                             />
                         </FormItem>
 
@@ -106,6 +118,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                                 value={formData.maxSalary? formData.maxSalary.toString() : ""}
                                 onChange={handleInputChange}
                                 name={"maxSalary"}
+                                valueState={formState.maxSalary.valueState}
                             />
                         </FormItem>
                     </Form>

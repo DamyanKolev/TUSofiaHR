@@ -24,7 +24,6 @@ const PositionPage: FC = () => {
     const tableTile = "Позиции"
     const tableURL = "/api/positions"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
-    const [isSelctedRow, setIsSelectedRow] = useState<boolean>(true)
     const [selectedRow, setSelectedRow] = useState<Position>(defaultRow);
 
     const dialogSwitchGetter = () => { return dialogSwitch}
@@ -34,14 +33,10 @@ const PositionPage: FC = () => {
         setDialogSwitch(DailogSwitch.OpenInsertDialog)
     }
 
-    const updateOnClick = () => {
-        setDialogSwitch(DailogSwitch.OpenUpdateDialog)
-    }
-
     const onRowClick = (event: any) => {
         const row = event.detail.row.original
-        setIsSelectedRow(false)
-        setSelectedRow(row);
+        setSelectedRow(row)
+        setDialogSwitch(DailogSwitch.OpenUpdateDialog)
     }
 
     return (
@@ -58,7 +53,6 @@ const PositionPage: FC = () => {
                             <Bar endContent={
                             <Fragment>
                             <Button design={ButtonDesign.Transparent} onClick={addOnClick}>Add</Button>
-                            <Button design={ButtonDesign.Transparent} disabled={isSelctedRow} onClick={updateOnClick}>Edit</Button>
                             <Button design={ButtonDesign.Transparent}>Delete</Button>
                         </Fragment>
                             }/>

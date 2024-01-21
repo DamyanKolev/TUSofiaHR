@@ -21,7 +21,6 @@ const DepartmentPage: FC = () => {
     const tableTitle = "Отдели"
     const tableURL = "/api/departments"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
-    const [isSelctedRow, setIsSelectedRow] = useState<boolean>(true)
     const [selectedRow, setSelectedRow] = useState<Department>(defaultRow);
 
     const dialogSwitchGetter = () => { return dialogSwitch}
@@ -31,14 +30,10 @@ const DepartmentPage: FC = () => {
         setDialogSwitch(DailogSwitch.OpenInsertDialog)
     }
 
-    const updateOnClick = () => {
-        setDialogSwitch(DailogSwitch.OpenUpdateDialog)
-    }
-
     const onRowClick = (event: any) => {
         const row = event.detail.row.original
-        setIsSelectedRow(false)
         setSelectedRow(row);
+        setDialogSwitch(DailogSwitch.OpenUpdateDialog)
     }
 
     return (
@@ -55,7 +50,6 @@ const DepartmentPage: FC = () => {
                             <Bar endContent={
                                 <Fragment>
                                     <Button design={ButtonDesign.Transparent} onClick={addOnClick}>Add</Button>
-                                    <Button design={ButtonDesign.Transparent} disabled={isSelctedRow} onClick={updateOnClick}>Edit</Button>
                                     <Button design={ButtonDesign.Transparent}>Delete</Button>
                                 </Fragment>
                             } />

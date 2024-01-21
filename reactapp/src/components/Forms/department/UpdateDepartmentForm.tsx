@@ -6,8 +6,11 @@ import { toggle } from '@store/slices/toggleSlice';
 import { Department, defualtDepartment } from '@models/HR/Departmnet';
 import DailogSwitch from '@app-types/DialogSwitch';
 import { DepartmentPageContext } from '@pages/hr/DepartmentPage';
-import { parseValueByType } from '@utils/parsers';
 import { submitPutForm } from '@/utils/forms/submitForm';
+import { DepartmentFormState, defaultDepartmentFormState } from '@/models/FormStates/department/DepartmentFormState';
+import { handleInputChangeFunc } from '@/utils/handlers/onChangeHandlers';
+import { isFilledForm } from '@/utils/validation';
+import { setErrorInputStates } from '@/utils/forms/formInputState';
 
 
 interface UpdateDepartmentFormProps {
@@ -19,6 +22,7 @@ interface UpdateDepartmentFormProps {
 
 const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
     const selectedRow = useContext<Department>(DepartmentPageContext)
+    const [formState, setFormState] = useState<DepartmentFormState>(defaultDepartmentFormState)
     const [formData, setFormData] = useState<Department>(defualtDepartment)
     const [editMode, setEditMode] = useState<boolean>(false)
     const [isSelected, setIsSelected] = useState<boolean>(false)
@@ -41,7 +45,13 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
     }
 
     const submitForm = () => {
-        submitPutForm(tableURL, JSON.stringify(formData), successCalback)
+        const isFilled = isFilledForm<DepartmentFormState>(formState);
+        if(isFilled) {
+            submitPutForm(tableURL, JSON.stringify(formData), successCalback)
+        }
+        else {
+            setErrorInputStates(formState, setFormState)
+        }
     };
 
     useEffect(() => {
@@ -51,17 +61,22 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
         }
     }, [selectedRow]);
 
-    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = e.target
-        const value = target.value? target.value : "";
-        const valueType = target.type
-        const name = target.name
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const target = event.target
+        handleInputChangeFunc<Department, DepartmentFormState>(target, formData, setFormData, formState, setFormState);
+    }
 
-        if (name && valueType) {
-            const newFormData = parseValueByType<Department>(formData, name, value, valueType);
-            setFormData(newFormData)
-        }
-    };
+    // const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
+    //     const target = e.target
+    //     const value = target.value? target.value : "";
+    //     const valueType = target.type
+    //     const name = target.name
+
+    //     if (name && valueType) {
+    //         const newFormData = parseValueByType<Department>(formData, name, value, valueType);
+    //         setFormData(newFormData)
+    //     }
+    // };
 
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
@@ -88,6 +103,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
                                 value={formData.departmentName}
                                 onChange={handleInputChange}
                                 name={"departmentName"}
+                                valueState={formState.departmentName.valueState}
                             />
                         </FormItem>
                     </Form>

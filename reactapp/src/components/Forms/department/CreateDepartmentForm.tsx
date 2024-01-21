@@ -1,4 +1,4 @@
-﻿import { Bar, Button, ButtonDesign, Dialog, ValueState} from "@ui5/webcomponents-react"
+﻿import { Bar, Button, ButtonDesign, Dialog} from "@ui5/webcomponents-react"
 import { FC, useState } from "react"
 import { DepartmentDTO, defualtDepartmentDTO } from "@models/HR/Departmnet"
 import { DepartmentFormState, defaultDepartmentFormState } from "@models/FormStates/department/DepartmentFormState"
@@ -8,7 +8,7 @@ import DailogSwitch from "@app-types/DialogSwitch"
 import { isFilledForm } from "@utils/validation"
 import CreateDepartment from "./CreateDepartment"
 import { submitPostForm } from "@/utils/forms/submitForm"
-import { setFormValueState } from "@/utils/forms/formInputState"
+import { setErrorInputStates } from "@/utils/forms/formInputState"
 
 
 interface CreateDepartmentFormProps {
@@ -46,10 +46,7 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
             submitPostForm(`${tableURL}/create`, JSON.stringify(formData), successCalback)
         }
         else {
-            setFormValueState<DepartmentFormState>(formState, setFormState, ValueState.Error);
-            setTimeout(() => {
-                setFormValueState<DepartmentFormState>(formState, setFormState, ValueState.None);
-            }, 1000);
+            setErrorInputStates(formState, setFormState)
         }
     };
 

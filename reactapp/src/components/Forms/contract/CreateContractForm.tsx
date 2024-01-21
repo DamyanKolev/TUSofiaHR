@@ -4,7 +4,7 @@ import SmallTableSelect from "@components/TableSelect/SmallTableSelect"
 import { InsertContractFormState } from "@models/FormStates/contract/InsertContractFormState"
 import { ContractInsertDTO } from "@models/HR/Contract"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
-import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { largeFormItem } from "@utils/css"
 import { setDateToInputDefaultValue, setInputDefaultValue } from "@utils/forms/setInputDefaultValue"
@@ -42,6 +42,10 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
         const rowId = selectedItem.id
         const newFormData = parseValueByType<ContractInsertDTO>(getFormData(), name, rowId, DataType.Int);
         setFormData(newFormData);
+
+        if (getFormState().hasOwnProperty(name)) {
+            setFormState({ ...getFormState(), [name]: { isFilled: true, valueState: ValueState.None } })
+        }
     }
 
     return (

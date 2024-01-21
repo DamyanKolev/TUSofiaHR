@@ -4,7 +4,7 @@ import SmallTableSelect from "@components/TableSelect/SmallTableSelect"
 import { InsertEmployeeFormState } from "@models/FormStates/employee/InsertEmployeeFormState"
 import { EmployeeInsertDTO } from "@models/HR/Employee"
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo"
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react"
 import { handleInputChangeFunc } from "@utils/handlers/onChangeHandlers"
 import { parseValueByType } from "@utils/parsers"
 import { Dispatch, FC, SetStateAction } from "react"
@@ -29,6 +29,10 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
         const rowId = selectedItem.id
         const newFormData = parseValueByType<EmployeeInsertDTO>(getFormData(), name, rowId, DataType.Int);
         setFormData(newFormData);
+
+        if (getFormState().hasOwnProperty(name)) {
+            setFormState({ ...getFormState(), [name]: { isFilled: true, valueState: ValueState.None } })
+        }
     }
 
     return (

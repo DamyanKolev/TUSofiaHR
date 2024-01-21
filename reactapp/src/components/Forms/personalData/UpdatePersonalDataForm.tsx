@@ -1,7 +1,7 @@
 import { DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, RadioButtonDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { Dispatch, FC, SetStateAction } from "react"
 import { StandardInputField } from "../StandartFields/StandartInputField"
-import { PersonalDataDTO } from "@models/HR/PersonalData"
+import { PersonalData } from "@models/HR/PersonalData"
 import DataType from "@app-types/DataType"
 import { StandardDateField } from "../StandartFields/StandartDateField"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
@@ -14,13 +14,12 @@ import { setDateToInputDefaultValue, setInputDefaultValue } from "@utils/forms/s
 
 interface UpdatePersonalDataFormProps {
     getEditMode: () => boolean,
-    getFormData: () => PersonalDataDTO,
-    formDataSetter: (formData: PersonalDataDTO) => void,
-    getFormDataSetter?: Dispatch<SetStateAction<PersonalDataDTO>>
+    getFormData: () => PersonalData,
+    setFormData: Dispatch<SetStateAction<PersonalData>>,
 }
 
 
-const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, getFormData, formDataSetter}) => {
+const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, getFormData, setFormData}) => {
     const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
         const target = e.target
         const value = target.value? target.value : "";
@@ -28,8 +27,8 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
         const name = target.name
 
         if (name && valueType) {
-            const newFormData = parseValueByType<PersonalDataDTO>(getFormData(), name, value, valueType);
-            formDataSetter(newFormData)
+            const newFormData = parseValueByType<PersonalData>(getFormData(), name, value, valueType);
+            setFormData(newFormData)
         }
     };
 
@@ -40,8 +39,8 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
         const valueType = target.dataset.type
 
         if (name && valueType) {
-            const newFormData = parseValueByType<PersonalDataDTO>(getFormData(), name, value, valueType);
-            formDataSetter(newFormData)
+            const newFormData = parseValueByType<PersonalData>(getFormData(), name, value, valueType);
+            setFormData(newFormData)
         }
     }
 
@@ -53,8 +52,8 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
         const valueType = target.dataset.type
 
         if (name && valueType) {
-            const newFormData = parseValueByType<PersonalDataDTO>(getFormData(), name, value, valueType);
-            formDataSetter(newFormData)
+            const newFormData = parseValueByType<PersonalData>(getFormData(), name, value, valueType);
+            setFormData(newFormData)
         }
     }
 

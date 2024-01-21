@@ -1,8 +1,5 @@
-import { Contract } from "./Contract";
-import { PersonalData } from "./PersonalData";
-
 export interface Employee {
-    employeeId: int,
+    id: int,
     firstName: string;
     middleName: string;
     surname: string;
@@ -13,15 +10,10 @@ export interface Employee {
     managerId: int;
     departmentId: int;
     positionId: int;
+    companyId: int,
 }
 
-
-export interface EmployeeData {
-    employee: Employee,
-    personal_data: PersonalData,
-    contract: Contract,
-}
-
+export const defaultEmployee = {} as Employee
 
 export interface EmployeeInsertDTO {
     firstName: string;

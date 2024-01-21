@@ -64,7 +64,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
     };
 
     return (
-        <Dialog open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
+        <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
             header={
                 <Bar
                     startContent={<Title level={TitleLevel.H6}>Промяна на Отдел</Title>}

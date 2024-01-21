@@ -43,26 +43,28 @@ const DepartmentPage: FC = () => {
 
     return (
         <DepartmentPageContext.Provider value={selectedRow}>
-            <PageBar title={tableTitle} />
-            <SmartTable
-                style={tableStyle}
-                onRowClick={onRowClick}
-                columns={departmentColumns}
-                tableURL={tableURL}
-                header={
-                    <Fragment>
-                        <Bar endContent={
-                            <Fragment>
-                                <Button design={ButtonDesign.Transparent} onClick={addOnClick}>Add</Button>
-                                <Button design={ButtonDesign.Transparent} disabled={isSelctedRow} onClick={updateOnClick}>Edit</Button>
-                                <Button design={ButtonDesign.Transparent}>Delete</Button>
-                            </Fragment>
-                        } />
-                    </Fragment>
-                }
-            />
-            <CreateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>
-            <UpdateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>
+            <div className="flexible-columns ui5-content-density-compact">
+                <PageBar title={tableTitle} />
+                <SmartTable
+                    style={tableStyle}
+                    onRowClick={onRowClick}
+                    columns={departmentColumns}
+                    tableURL={tableURL}
+                    header={
+                        <Fragment>
+                            <Bar endContent={
+                                <Fragment>
+                                    <Button design={ButtonDesign.Transparent} onClick={addOnClick}>Add</Button>
+                                    <Button design={ButtonDesign.Transparent} disabled={isSelctedRow} onClick={updateOnClick}>Edit</Button>
+                                    <Button design={ButtonDesign.Transparent}>Delete</Button>
+                                </Fragment>
+                            } />
+                        </Fragment>
+                    }
+                />
+                <CreateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>
+                <UpdateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>
+            </div>
         </DepartmentPageContext.Provider>
     )
 }

@@ -1,7 +1,7 @@
 import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { Dispatch, FC, SetStateAction } from "react";
 import { StandardInputField } from "../StandartFields/StandartInputField";
-import { EmployeeUpdateDTO } from "@models/HR/Employee";
+import { Employee } from "@models/HR/Employee";
 import { parseValueByType } from "@utils/parsers";
 import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField";
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
@@ -11,8 +11,8 @@ import { EmployeeFormUpdateData } from "@/models/FormStates/employee/UpdateEmplo
 
 interface UpdateEmployeeFormProps {
     getEditMode: () => boolean,
-    getFormData: () => EmployeeUpdateDTO,
-    setFormData: Dispatch<SetStateAction<EmployeeUpdateDTO>>,
+    getFormData: () => Employee,
+    setFormData: Dispatch<SetStateAction<Employee>>,
     getUpdateData: () => EmployeeFormUpdateData,
     setUpdateData: Dispatch<SetStateAction<EmployeeFormUpdateData>>,
 }
@@ -27,7 +27,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
         const name = target.name
 
         if (name && valueType) {
-            const newFormData = parseValueByType<EmployeeUpdateDTO>(getFormData(), name, value, valueType);
+            const newFormData = parseValueByType<Employee>(getFormData(), name, value, valueType);
             setFormData(newFormData)
         }
     };
@@ -36,7 +36,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
         const value = selectedItem.textContent
         if(value) {
             const rowId = selectedItem.id
-            const newFormData = parseValueByType<EmployeeUpdateDTO>(getFormData(), name, rowId, DataType.Int);
+            const newFormData = parseValueByType<Employee>(getFormData(), name, rowId, DataType.Int);
             setFormData(newFormData);
             const newUpdateData = parseValueByType<EmployeeFormUpdateData>(getUpdateData(), name, value, DataType.String);
             setUpdateData(newUpdateData)

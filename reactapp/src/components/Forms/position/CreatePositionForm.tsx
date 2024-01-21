@@ -5,7 +5,7 @@ import { PositionFormState, defualtPositionFormState } from "@models/FormStates/
 import { useAppDispatch } from "@store/storeHooks"
 import { toggle } from "@store/slices/toggleSlice"
 import DailogSwitch from "@app-types/DialogSwitch"
-import { isFilledForm1 } from "@utils/validation"
+import { isFilledForm } from "@utils/validation"
 import CreatePosition from "./CreatePosition"
 import { submitPostForm } from "@/utils/forms/submitForm"
 import { setFormValueState } from "@/utils/forms/formInputState"
@@ -41,9 +41,9 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
 
 
     const submitForm = async () => {
-        const isFilled = isFilledForm1<PositionFormState>(formState);
+        const isFilled = isFilledForm<PositionFormState>(formState);
         if (isFilled) {
-            submitPostForm(tableURL, JSON.stringify(formData), successCalback)
+            submitPostForm(`${tableURL}/create`, JSON.stringify(formData), successCalback)
         }
         else {
             setFormValueState<PositionFormState>(formState, setFormState, ValueState.Error);
@@ -54,7 +54,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
     };
 
     return (
-        <Dialog open={dialogSwitchGetter() == DailogSwitch.OpenInsertDialog}
+        <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenInsertDialog}
             headerText="Нова Позиция"
             footer={
                 <Bar endContent={

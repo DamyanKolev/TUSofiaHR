@@ -65,7 +65,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
     };
 
     return (
-        <Dialog open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
+        <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
             header={
                 <Bar
                     startContent={<Title level={TitleLevel.H6}>Промяна на Позиция</Title>}

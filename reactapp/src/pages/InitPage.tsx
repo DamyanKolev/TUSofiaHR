@@ -11,6 +11,8 @@ import CreatePosition from '@components/Forms/position/CreatePosition';
 import { WizardStepChangeEventDetail } from '@ui5/webcomponents-fiori/dist/Wizard.js';
 import { isFilledForm } from '@utils/validation';
 import { useNavigate } from 'react-router-dom';
+import { submitPostForm } from '@/utils/forms/submitForm';
+import { setErrorInputStates } from '@/utils/forms/formInputState';
 
 
 
@@ -39,29 +41,31 @@ const InitPage: FC = () => {
         setSelected(newSelected)
     }
 
+    const successCalback = ():void => {
+        navigate("/")
+    }
+
     const handleStepChange = (e: Ui5CustomEvent<WizardDomRef, WizardStepChangeEventDetail>) => {
         const newSelected = Number(e.detail.step.dataset.step)
         setSelected(Number(newSelected));
     };
 
     const submitForms = async (): Promise<void> => {
-        const isFilledDepartmentForm = isFilledForm<DepartmentFormState>(departmentFormState, setDepartmentFormState);
-        const isFilledPositionForm = isFilledForm<DepartmentFormState>(departmentFormState, setDepartmentFormState);
+        const isFilledDepartmentForm = isFilledForm<DepartmentFormState>(departmentFormState);
+        const isFilledPositionForm = isFilledForm<DepartmentFormState>(departmentFormState);
         const isFilled = isFilledDepartmentForm && isFilledPositionForm
         
         if (isFilled) {
-            const response = await fetch(`/api/hr/init-hr`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    department_insert:departmentForm,
-                    position_insert:positionForm
-                }),
-            });
-
-            if (response.ok) {
-                navigate("/")
-            }
+            const postURL = `/backend/api/hr/init-hr`
+            const formObject = JSON.stringify({
+                department_insert:departmentForm,
+                position_insert:positionForm
+            })
+            submitPostForm(postURL, formObject, successCalback)
+        }
+        else {
+            setErrorInputStates<DepartmentFormState>(departmentFormState, setDepartmentFormState)
+            setErrorInputStates<PositionFormState>(positionFormState, setPositionFormState)
         }
     }
 

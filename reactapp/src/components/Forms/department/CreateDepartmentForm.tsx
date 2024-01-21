@@ -5,7 +5,7 @@ import { DepartmentFormState, defaultDepartmentFormState } from "@models/FormSta
 import { useAppDispatch } from "@store/storeHooks"
 import { toggle } from "@store/slices/toggleSlice"
 import DailogSwitch from "@app-types/DialogSwitch"
-import { isFilledForm1 } from "@utils/validation"
+import { isFilledForm } from "@utils/validation"
 import CreateDepartment from "./CreateDepartment"
 import { submitPostForm } from "@/utils/forms/submitForm"
 import { setFormValueState } from "@/utils/forms/formInputState"
@@ -40,10 +40,10 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
     }
 
     const submitForm = async () => {
-        const isFilled = isFilledForm1<DepartmentFormState>(formState);
+        const isFilled = isFilledForm<DepartmentFormState>(formState);
 
         if (isFilled) {
-            submitPostForm(tableURL, JSON.stringify(formData), successCalback)
+            submitPostForm(`${tableURL}/create`, JSON.stringify(formData), successCalback)
         }
         else {
             setFormValueState<DepartmentFormState>(formState, setFormState, ValueState.Error);
@@ -54,7 +54,7 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
     };
 
     return (
-        <Dialog open={dialogSwitchGetter() == DailogSwitch.OpenInsertDialog}
+        <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenInsertDialog}
             headerText="Нов Отдел"
             footer={
                 <Bar endContent={

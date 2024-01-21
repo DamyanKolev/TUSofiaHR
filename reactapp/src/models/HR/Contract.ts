@@ -8,20 +8,43 @@ export interface Contract {
     annualLeave: int;
     conclusionDate: Date;
     executionDate: Date;
-    contractTerm: Date;
-    additionalAgreementDate: Date;
-    terminationDate: Date;
-    changeDate: Date;
+    contractTerm: Date | null;
+    additionalAgreementDate: Date | null;
+    terminationDate: Date | null;
+    changeDate: Date | null;
     companyId: int,
     contractTypeId: int,
     positionId:int,
     iconomicActivityId: int,
     documentTypeId: int,
-    terminationTypeId: int,
-    administrativeTerritoryId: int,
+    terminationTypeId: int | null,
+    administrativeTerritoryId: int | null,
     codeCorection: int,
     isTerminate: boolean,
     article62Flag: boolean,
+}
+
+export const defaultContract: Contract = {
+    id: 0,
+    workingWage: "",
+    workTime: 0,
+    annualLeave: 0,
+    conclusionDate: new Date(),
+    executionDate: new Date(),
+    contractTerm: null,
+    additionalAgreementDate: null,
+    terminationDate: null,
+    changeDate: null,
+    companyId: 0,
+    contractTypeId: 0,
+    positionId: 0,
+    iconomicActivityId: 0,
+    documentTypeId: 0,
+    administrativeTerritoryId: null,
+    terminationTypeId: null,
+    codeCorection: 0,
+    isTerminate: false,
+    article62Flag: false
 }
 
 export interface ContractInsertDTO {

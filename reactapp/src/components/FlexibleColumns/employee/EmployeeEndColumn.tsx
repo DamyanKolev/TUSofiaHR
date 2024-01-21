@@ -12,6 +12,10 @@ import { PersonalDataFormState, defaultPersonalDataFormState } from '@models/For
 import CreateEmployeeForm from '@components/Forms/employee/CreateEmployeeForm';
 import CreatePersonalDataForm from '@components/Forms/personalData/CreatePersonalDataForm';
 import CreateContract from '@components/Forms/contract/CreateContractForm';
+import { formTogle } from '@/store/slices/formTogleSlice';
+import { setErrorInputStates } from '@/utils/forms/formInputState';
+import { submitPostForm } from '@/utils/forms/submitForm';
+import { EmployeeDataInsert, createEmployeeDataInsert } from '@/models/HR/EmployeeData';
 
 
 interface EmployeeEndColumnProps {
@@ -30,35 +34,51 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
 
     const dispatchIsSuccess = useAppDispatch()
 
-    const navBackClick = () => {
+    const setDefaultValues = () => {
         setEmployeeForm(defaultEmployeeInsert);
         setContractForm(defaultContractInsert)
         setPersonalDataForm(defaultPersonalDataDTO)
         handleLayoutState(FCLLayout.OneColumn)
+        dispatchIsSuccess(formTogle())
     }
 
-    const onSubmitForm = async () => {
-        const isFilledEmployee = isFilledForm<InsertEmployeeFormState>(employeeFormState, setEmployeeFormState)
-        const isFilledContract = isFilledForm<InsertContractFormState>(contractFormState, setContractFormState)
-        const isFilledPersonalData = isFilledForm<PersonalDataFormState>(personalDataFormState, setPersonalDataFormState)
-        const isFilled = isFilledEmployee && isFilledContract && isFilledPersonalData
+    const navBackClick = ():void => {
+        setDefaultValues()
+    }
 
-        if (isFilled) {
-            const response = await fetch(`${tableURL}/create`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                   employee_insert: {
-                    ...employeeForm, 
-                    company_employee_id: 123,
-                    personal_data_id: 0
-                },
-                   personal_data: personalDataForm,
-                   contract_insert: contractForm,
-                }),
-            });
-            if (!response.ok) {
-                dispatchIsSuccess(toggle())
+    const successCalback = ():void => {
+        dispatchIsSuccess(toggle())
+        setDefaultValues()
+    }
+
+
+    const onSubmitForm = async () => {
+        const isFilledEmployee = isFilledForm<InsertEmployeeFormState>(employeeFormState)
+        const isFilledContract = isFilledForm<InsertContractFormState>(contractFormState)
+        const isFilledPersonalData = isFilledForm<PersonalDataFormState>(personalDataFormState)
+
+        let formObject: EmployeeDataInsert = createEmployeeDataInsert(employeeForm, personalDataForm, contractForm)
+
+        if(!isFilledContract){
+            const isFilled = isFilledEmployee && isFilledPersonalData
+            if(isFilled) {
+                await submitPostForm(`${tableURL}/create`, JSON.stringify(formObject), successCalback)
+            }
+            else {
+                setErrorInputStates<InsertEmployeeFormState>(employeeFormState, setEmployeeFormState)
+                setErrorInputStates<PersonalDataFormState>(personalDataFormState, setPersonalDataFormState)
+            }
+        }
+        else {
+            const isFilled = isFilledEmployee && isFilledContract && isFilledPersonalData
+            if(isFilled) {
+                formObject.contract = contractForm
+                await submitPostForm(`${tableURL}/create`, JSON.stringify(formObject), successCalback)
+            }
+            else {
+                setErrorInputStates<InsertEmployeeFormState>(employeeFormState, setEmployeeFormState)
+                setErrorInputStates<InsertContractFormState>(contractFormState, setContractFormState)
+                setErrorInputStates<PersonalDataFormState>(personalDataFormState, setPersonalDataFormState)
             }
         }
     };

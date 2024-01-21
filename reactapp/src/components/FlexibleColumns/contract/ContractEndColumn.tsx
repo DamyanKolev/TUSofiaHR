@@ -8,6 +8,9 @@ import { Bar, BarDesign, Button, FCLLayout, FlexBox, FlexBoxAlignItems, FlexBoxD
 import EmployeeTableSelect from "@components/TableSelect/EmployeeTableSelect";
 import { formTogle } from "@store/slices/formTogleSlice";
 import CreateContractForm from "@components/Forms/contract/CreateContractForm";
+import { submitPostForm } from "@/utils/forms/submitForm";
+import { setErrorInputStates } from "@/utils/forms/formInputState";
+import { createEmployeeContract } from "@/models/HR/EmployeeContract";
 
 
 const formContainerCSS: CSSProperties = {
@@ -35,7 +38,7 @@ const CreateEndColumn: FC<CreateEndColumnProps> = ({tableURL, handleLayoutState}
         setIsSelected(true)
     }
 
-    const navBackClick = () => {
+    const setDefaultState = () => {
         handleLayoutState(FCLLayout.OneColumn)
         setFormData(defaultContractInsert)
         setFormState(defaultInsertContractFormState)
@@ -43,31 +46,24 @@ const CreateEndColumn: FC<CreateEndColumnProps> = ({tableURL, handleLayoutState}
         dispatchIsSuccess(formTogle())
     }
 
+    const successCalback = () => {
+        dispatchIsSuccess(toggle())
+        setDefaultState()
+    }
+
+    const navBackClick = () => {
+        setDefaultState()
+    }
+
     const onSubmitForm = async () => {
-        const isFilled = isFilledForm<InsertContractFormState>(formState, setFormState)
+        const isFilled = isFilledForm<InsertContractFormState>(formState)
 
         if (isFilled) {
-            const response = await fetch(`${tableURL}/create`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    employee_id: employeeId,
-                    insert_data: {
-                        ...formData,
-                        company_id: 1,
-                        article62_flag: false
-                    },
-                }),
-            });
-
-            if (response.ok) {
-                setFormData(defaultContractInsert)
-                setFormState(defaultInsertContractFormState)
-                setIsSelected(false)
-                dispatchIsSuccess(toggle())
-                dispatchIsSuccess(formTogle())
-                handleLayoutState(FCLLayout.OneColumn)
-            }
+            const formObject = createEmployeeContract(employeeId, formData) 
+            submitPostForm(`${tableURL}/create`, JSON.stringify(formObject), successCalback)
+        }
+        else {
+            setErrorInputStates(formState, setFormState)
         }
     };
 

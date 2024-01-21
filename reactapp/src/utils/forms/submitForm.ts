@@ -1,5 +1,5 @@
-export async function submitPostForm(tableURL: string, jsonObject: string, successCalback: () => void) {
-    const response = await fetch(`${tableURL}/create`, {
+export async function submitPostForm(postURL: string, jsonObject: string, successCalback: () => void) {
+    const response = await fetch(postURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: jsonObject,

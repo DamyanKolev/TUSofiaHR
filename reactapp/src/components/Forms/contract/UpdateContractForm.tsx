@@ -3,18 +3,19 @@ import { StandardInputField } from "../StandartFields/StandartInputField"
 import DataType from "@app-types/DataType"
 import { StandardDateField } from "../StandartFields/StandartDateField"
 import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField"
-import { ContractUpdateDTO } from "@models/HR/Contract"
+import { Contract } from "@models/HR/Contract"
 import { Dispatch, FC, SetStateAction } from "react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
 import { parseValueByType } from "@utils/parsers"
 import { ContractUpdateFormData } from "@/models/FormStates/contract/UpdateContractFormState"
+import { setDateToInputDefaultValue } from "@/utils/forms/setInputDefaultValue"
 
 
 interface UpdateContract {
     getEditMode: () => boolean,
-    getFormData: () => ContractUpdateDTO,
-    setFormData: Dispatch<SetStateAction<ContractUpdateDTO>>,
+    getFormData: () => Contract,
+    setFormData: Dispatch<SetStateAction<Contract>>,
     getUpdateData: () => ContractUpdateFormData,
     setUpdateData: Dispatch<SetStateAction<ContractUpdateFormData>>,
 }
@@ -28,7 +29,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
         const name = target.name
 
         if (name && valueType) {
-            const newFormData = parseValueByType<ContractUpdateDTO>(getFormData(), name, value, valueType);
+            const newFormData = parseValueByType<Contract>(getFormData(), name, value, valueType);
             setFormData(newFormData)
         }
     };
@@ -40,7 +41,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
         const valueType = target.dataset.type
 
         if (name && valueType) {
-            const newFormData = parseValueByType<ContractUpdateDTO>(getFormData(), name, value, valueType);
+            const newFormData = parseValueByType<Contract>(getFormData(), name, value, valueType);
             setFormData(newFormData)
         }
     }
@@ -50,7 +51,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
         const value = selectedItem.textContent
         if(value) {
             const rowId = selectedItem.id
-            const newFormData = parseValueByType<ContractUpdateDTO>(getFormData(), name, rowId, DataType.Int);
+            const newFormData = parseValueByType<Contract>(getFormData(), name, rowId, DataType.Int);
             setFormData(newFormData);
             const newUpdateData = parseValueByType<ContractUpdateFormData>(getUpdateData(), name, value, DataType.String);
             setUpdateData(newUpdateData)
@@ -117,7 +118,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Дата на започване</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().contractTerm.toString()}
+                        value={setDateToInputDefaultValue(getFormData().contractTerm)}
                         onChange={handleDateChange}
                         name={"contractTerm"}
                     />
@@ -127,7 +128,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Дата на Допълнително споразумение</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().additionalAgreementDate.toString()}
+                        value={setDateToInputDefaultValue(getFormData().additionalAgreementDate)}
                         onChange={handleDateChange}
                         name={"additionalAgreementDate"}
                     />
@@ -139,7 +140,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <Label>Дата на терминиране</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().terminationDate.toString()}
+                        value={setDateToInputDefaultValue(getFormData().terminationDate)}
                         onChange={handleDateChange}
                         name={"terminationDate"}
                     />
@@ -181,7 +182,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         name="documentTypeId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={getUpdateData().iconomicActivityId}
+                        value={getUpdateData().documentTypeId}
                         joinInfo={contractJoinTablesInfo.documentTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -192,7 +193,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         name="terminationTypeId"
                         isLargeTable={false}
                         editMode={getEditMode()}
-                        value={getUpdateData().iconomicActivityId}
+                        value={getUpdateData().terminationTypeId}
                         joinInfo={contractJoinTablesInfo.terminationTypeId}
                         formDataSetter={setFormDataById}
                     />
@@ -202,7 +203,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                     <StandardTableSelectField
                         name="administrativeTerritoryId"
                         editMode={getEditMode()}
-                        value={getUpdateData().iconomicActivityId}
+                        value={getUpdateData().administrativeTerritoryId}
                         joinInfo={contractJoinTablesInfo.administrativeTerritoryId}
                         formDataSetter={setFormDataById}
                     />

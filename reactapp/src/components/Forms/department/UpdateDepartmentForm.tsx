@@ -66,18 +66,6 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
         handleInputChangeFunc<Department, DepartmentFormState>(target, formData, setFormData, formState, setFormState);
     }
 
-    // const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
-    //     const target = e.target
-    //     const value = target.value? target.value : "";
-    //     const valueType = target.type
-    //     const name = target.name
-
-    //     if (name && valueType) {
-    //         const newFormData = parseValueByType<Department>(formData, name, value, valueType);
-    //         setFormData(newFormData)
-    //     }
-    // };
-
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
             header={

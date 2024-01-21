@@ -28,15 +28,3 @@ export interface EmployeeInsertDTO {
     positionId: int;
 }
 export const defaultEmployeeInsert: EmployeeInsertDTO = {} as EmployeeInsertDTO
-
-export interface EmployeeUpdateDTO {
-    firstName: string;
-    middleName: string;
-    surname: string;
-    email: string;
-    phoneNumber: string
-    managerId: int;
-    departmentId: int;
-    positionId: int;
-}
-export const defaultEmployeeUpdate: EmployeeUpdateDTO = {} as EmployeeUpdateDTO

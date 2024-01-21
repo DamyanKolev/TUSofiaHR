@@ -1,4 +1,4 @@
-import { DatePicker, DatePickerDomRef, Text, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { DatePicker, DatePickerDomRef, Text, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
 import { FC } from "react";
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js";
 import DataType from "@app-types/DataType";
@@ -8,10 +8,11 @@ interface StandardDateFieldProps {
     editMode: boolean;
     value: string;
     name: string;
+    valueState?: ValueState,
     onChange: (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => void;
 }
 
-export const StandardDateField: FC<StandardDateFieldProps> = ({ editMode, value, name, onChange }) => {
+export const StandardDateField: FC<StandardDateFieldProps> = ({ editMode, value, name, valueState, onChange }) => {
     if (editMode) {
         return (
             <DatePicker
@@ -20,6 +21,7 @@ export const StandardDateField: FC<StandardDateFieldProps> = ({ editMode, value,
                 onChange={onChange}
                 value={value}
                 data-type={DataType.Date}
+                valueState={valueState}
             />
         )
     }

@@ -12,24 +12,24 @@ import { Dispatch, FC, SetStateAction } from "react"
 interface PersonalDataFormProps {
     getFormState: () => PersonalDataFormState,
     getFormData: () => PersonalDataDTO,
-    getFormStateSetter: Dispatch<SetStateAction<PersonalDataFormState>>,
-    getFormDataSetter: Dispatch<SetStateAction<PersonalDataDTO>>,
+    setFormState: Dispatch<SetStateAction<PersonalDataFormState>>,
+    setFormData: Dispatch<SetStateAction<PersonalDataDTO>>,
 }
 
-const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFormData, getFormStateSetter, getFormDataSetter}) => {
+const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFormData, setFormState, setFormData}) => {
     const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const target = event.target
-        handleInputChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), getFormDataSetter, getFormState(), getFormStateSetter);
+        handleInputChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
     };
 
     const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
         const target = event.target
-        handleDateChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), getFormDataSetter, getFormState(), getFormStateSetter);
+        handleDateChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
     }
 
     const handleRadioButtonChange = (event: Ui5CustomEvent<RadioButtonDomRef, never>) => {
         const target = event.target
-        handleRadioButtonChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), getFormDataSetter, getFormState(), getFormStateSetter);
+        handleRadioButtonChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
     }
 
     return (

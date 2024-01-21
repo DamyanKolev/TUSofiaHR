@@ -8,42 +8,31 @@ import { Dispatch, FC, SetStateAction } from "react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
 import { parseValueByType } from "@utils/parsers"
-import { ContractUpdateFormData } from "@/models/FormStates/contract/UpdateContractFormState"
+import { ContractUpdateFormData, UpdateContractFormState } from "@/models/FormStates/contract/UpdateContractFormState"
 import { setDateToInputDefaultValue } from "@/utils/forms/setInputDefaultValue"
+import { handleDateChangeFunc, handleInputChangeFunc } from "@/utils/handlers/onChangeHandlers"
 
 
 interface UpdateContract {
     getEditMode: () => boolean,
     getFormData: () => Contract,
     setFormData: Dispatch<SetStateAction<Contract>>,
+    getFormState: () => UpdateContractFormState,
+    setFormState: Dispatch<SetStateAction<UpdateContractFormState>>
     getUpdateData: () => ContractUpdateFormData,
     setUpdateData: Dispatch<SetStateAction<ContractUpdateFormData>>,
 }
 
 
-const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormData, getUpdateData, setUpdateData}) => {
-    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = e.target
-        const value = target.value? target.value : "";
-        const valueType = target.dataset.type
-        const name = target.name
-
-        if (name && valueType) {
-            const newFormData = parseValueByType<Contract>(getFormData(), name, value, valueType);
-            setFormData(newFormData)
-        }
-    };
+const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormData, getUpdateData, setUpdateData, getFormState, setFormState }) => {
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const target = event.target
+        handleInputChangeFunc<Contract, UpdateContractFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
+    }
 
     const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
         const target = event.target
-        const value = target.value? target.value : "";
-        const name = target.name
-        const valueType = target.dataset.type
-
-        if (name && valueType) {
-            const newFormData = parseValueByType<Contract>(getFormData(), name, value, valueType);
-            setFormData(newFormData)
-        }
+        handleDateChangeFunc<Contract, UpdateContractFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
     }
 
 
@@ -69,6 +58,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         value={getFormData().workingWage}
                         onChange={handleInputChange}
                         name={"workingWage"}
+                        valueState={getFormState().workingWage.valueState}
                     />
                 </FlexBox>
 
@@ -80,6 +70,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         onChange={handleInputChange}
                         name={"workTime"}
                         dataType={DataType.Int}
+                        valueState={getFormState().workTime.valueState}
                     />
                 </FlexBox>
 
@@ -91,6 +82,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         onChange={handleInputChange}
                         name={"annualLeave"}
                         dataType={DataType.Int}
+                        valueState={getFormState().annualLeave.valueState}
                     />
                 </FlexBox>
 
@@ -101,6 +93,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         value={getFormData().conclusionDate.toString()}
                         onChange={handleDateChange}
                         name={"conclusionDate"}
+                        valueState={getFormState().conclusionDate.valueState}
                     />
                 </FlexBox>
 
@@ -111,6 +104,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         value={getFormData().executionDate.toString()}
                         onChange={handleDateChange}
                         name={"executionDate"}
+                        valueState={getFormState().executionDate.valueState}
                     />
                 </FlexBox>
 
@@ -121,6 +115,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         value={setDateToInputDefaultValue(getFormData().contractTerm)}
                         onChange={handleDateChange}
                         name={"contractTerm"}
+                        valueState={getFormState().contractTerm.valueState}
                     />
                 </FlexBox>
 
@@ -131,6 +126,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         value={setDateToInputDefaultValue(getFormData().additionalAgreementDate)}
                         onChange={handleDateChange}
                         name={"additionalAgreementDate"}
+                        valueState={getFormState().additionalAgreementDate.valueState}
                     />
                 </FlexBox>
             </FlexBox>
@@ -143,6 +139,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         value={setDateToInputDefaultValue(getFormData().terminationDate)}
                         onChange={handleDateChange}
                         name={"terminationDate"}
+                        valueState={getFormState().terminationDate.valueState}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>

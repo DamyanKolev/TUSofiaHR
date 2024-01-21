@@ -7,7 +7,7 @@ import { ContractView } from '@models/TableViews/ContractView';
 import { getRecordById } from '@utils/forms/getRecordById';
 import { ContractPageContext } from '@pages/hr/ContractPage';
 import UpdateContractForm from '@components/Forms/contract/UpdateContractForm';
-import { ContractUpdateFormData, createContractUpdateFormData } from '@/models/FormStates/contract/UpdateContractFormState';
+import { ContractUpdateFormData, UpdateContractFormState, createContractUpdateFormData, defaultUpdateContractFormState } from '@/models/FormStates/contract/UpdateContractFormState';
 import { submitPutForm } from '@/utils/forms/submitForm';
 
 
@@ -21,6 +21,7 @@ interface ContractMidColumnProps {
 
 const ContractMidColumn: FC<ContractMidColumnProps> = ({tableURL, handleLayoutState}) => {
     const selectedRow = useContext<ContractView>(ContractPageContext)
+    const [formState, setFormState] = useState<UpdateContractFormState>(defaultUpdateContractFormState)
     const [formData, setFormData] = useState<Contract>(defaultContract)
     const [updateData, setUpdateData] = useState<ContractUpdateFormData>({} as ContractUpdateFormData)
     const [editMode, setEditMode] = useState<boolean>(false)
@@ -29,6 +30,7 @@ const ContractMidColumn: FC<ContractMidColumnProps> = ({tableURL, handleLayoutSt
 
 
     const setDefaultValues = () => {
+        setFormState(defaultUpdateContractFormState)
         setFormData(defaultContract)
         handleLayoutState(FCLLayout.OneColumn)
         setIsSelected(false)
@@ -72,6 +74,8 @@ const ContractMidColumn: FC<ContractMidColumnProps> = ({tableURL, handleLayoutSt
                         getEditMode={() => {return editMode}}
                         getFormData={() => {return formData}}
                         setFormData={setFormData}
+                        getFormState={() => {return formState}}
+                        setFormState={setFormState}
                         getUpdateData={() => {return updateData}}
                         setUpdateData={setUpdateData}
                     />

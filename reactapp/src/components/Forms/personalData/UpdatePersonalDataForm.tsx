@@ -7,8 +7,9 @@ import { StandardDateField } from "../StandartFields/StandartDateField"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import StandardRadioButtonField from "../StandartFields/StandartRadioButtonField"
 import Gender from "@app-types/Gender"
-import { parseValueByType } from "@utils/parsers"
 import { setDateToInputDefaultValue, setInputDefaultValue } from "@utils/forms/setInputDefaultValue"
+import { PersonalDataFormState } from "@/models/FormStates/personalData/PersonalDataFormState"
+import { handleDateChangeFunc, handleInputChangeFunc, handleRadioButtonChangeFunc } from "@/utils/handlers/onChangeHandlers"
 
 
 
@@ -16,45 +17,25 @@ interface UpdatePersonalDataFormProps {
     getEditMode: () => boolean,
     getFormData: () => PersonalData,
     setFormData: Dispatch<SetStateAction<PersonalData>>,
+    getFormState: () => PersonalDataFormState,
+    setFormState: Dispatch<SetStateAction<PersonalDataFormState>>
 }
 
 
-const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, getFormData, setFormData}) => {
-    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = e.target
-        const value = target.value? target.value : "";
-        const valueType = target.type
-        const name = target.name
-
-        if (name && valueType) {
-            const newFormData = parseValueByType<PersonalData>(getFormData(), name, value, valueType);
-            setFormData(newFormData)
-        }
+const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, getFormData, setFormData, getFormState, setFormState}) => {
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const target = event.target
+        handleInputChangeFunc<PersonalData, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
     };
 
     const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
         const target = event.target
-        const value = target.value? target.value : "";
-        const name = target.name
-        const valueType = target.dataset.type
-
-        if (name && valueType) {
-            const newFormData = parseValueByType<PersonalData>(getFormData(), name, value, valueType);
-            setFormData(newFormData)
-        }
+        handleDateChangeFunc<PersonalData, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
     }
-
 
     const handleRadioButtonChange = (event: Ui5CustomEvent<RadioButtonDomRef, never>) => {
         const target = event.target
-        const value = target.value? target.value : "";
-        const name = target.name
-        const valueType = target.dataset.type
-
-        if (name && valueType) {
-            const newFormData = parseValueByType<PersonalData>(getFormData(), name, value, valueType);
-            setFormData(newFormData)
-        }
+        handleRadioButtonChangeFunc<PersonalData, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
     }
 
 
@@ -68,6 +49,7 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                     value={getFormData().egn}
                     onChange={handleInputChange}
                     dataType={DataType.String}
+                    valueState={getFormState().egn.valueState}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>

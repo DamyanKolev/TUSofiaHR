@@ -1,6 +1,7 @@
 import { ContractView } from "@/models/TableViews/ContractView";
 import { FormFieldState, FormState, defaultFormFieldState } from "../FormState"
 import { setNullValuesToEmtyString } from "@/utils/forms/setNullValuesToEmtyString";
+import { ValueState } from "@ui5/webcomponents-react";
 
 export interface UpdateContractFormState extends FormState{
     workingWage: FormFieldState;
@@ -21,6 +22,11 @@ export interface UpdateContractFormState extends FormState{
     terminationTypeId: FormFieldState
     codeCorection: FormFieldState;
     article62Flag: FormFieldState,
+}
+
+const defaultUpdateFormState: FormFieldState = {
+    isFilled: true,
+    valueState: ValueState.None
 }
 
 export const defaultUpdateContractFormState: UpdateContractFormState = {

@@ -1,5 +1,5 @@
 import DataType from "@app-types/DataType";
-import { RadioButtonDomRef, Ui5CustomEvent, Text, RadioButton } from "@ui5/webcomponents-react";
+import { RadioButtonDomRef, Ui5CustomEvent, Text, RadioButton, ValueState } from "@ui5/webcomponents-react";
 import { largeFormItem } from "@utils/css";
 import { FC, Fragment } from "react";
 
@@ -9,13 +9,14 @@ interface StandardRadioButtonFieldProps {
     editMode: boolean;
     value: string;
     dataType?: DataType;
+    valueState?: ValueState,
     name: string;
     onChange: (event: Ui5CustomEvent<RadioButtonDomRef, never>) => void;
 }
 
 
 
-const StandardRadioButtonField: FC<StandardRadioButtonFieldProps> = ({buttonsValues, editMode, value, dataType = DataType.String, name, onChange}) =>{
+const StandardRadioButtonField: FC<StandardRadioButtonFieldProps> = ({buttonsValues, editMode, value, dataType = DataType.String, name, valueState, onChange}) =>{
     if (editMode) {
         return <Fragment>
             {
@@ -29,6 +30,7 @@ const StandardRadioButtonField: FC<StandardRadioButtonFieldProps> = ({buttonsVal
                             text={btnValue}
                             onChange={onChange}
                             date-type={dataType}
+                            valueState={valueState}
                         />
                     }
                     return <RadioButton

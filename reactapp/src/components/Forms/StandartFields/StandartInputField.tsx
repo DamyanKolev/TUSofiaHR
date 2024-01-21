@@ -13,7 +13,7 @@ interface StandardInputFieldProps {
     onChange: (e: Ui5CustomEvent<InputDomRef, never>) => void;
 }
 
-export const StandardInputField: FC<StandardInputFieldProps> = ({ editMode, value, dataType = DataType.String, name, onChange, inputType = InputType.Text, valueState = ValueState.None}) => {
+export const StandardInputField: FC<StandardInputFieldProps> = ({ editMode, value, dataType = DataType.String, name, onChange, inputType = InputType.Text, valueState}) => {
     if (editMode) {
         return <Input
             style={largeFormItem}

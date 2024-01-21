@@ -6,31 +6,27 @@ import { parseValueByType } from "@utils/parsers";
 import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField";
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
 import DataType from "@app-types/DataType";
-import { EmployeeFormUpdateData } from "@/models/FormStates/employee/UpdateEmployeeFormState";
+import { EmployeeFormUpdateData, UpdateEmployeeFormState } from "@/models/FormStates/employee/UpdateEmployeeFormState";
+import { handleInputChangeFunc } from "@/utils/handlers/onChangeHandlers";
 
 
 interface UpdateEmployeeFormProps {
     getEditMode: () => boolean,
     getFormData: () => Employee,
     setFormData: Dispatch<SetStateAction<Employee>>,
+    getFormState: () => UpdateEmployeeFormState,
+    setFormState: Dispatch<SetStateAction<UpdateEmployeeFormState>>
     getUpdateData: () => EmployeeFormUpdateData,
     setUpdateData: Dispatch<SetStateAction<EmployeeFormUpdateData>>,
 }
 
 
-const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, setFormData, getUpdateData, setUpdateData}) => {
+const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, setFormData, getFormState, setFormState, getUpdateData, setUpdateData}) => {
 
-    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = e.target
-        const value = target.value? target.value : "";
-        const valueType = target.type
-        const name = target.name
-
-        if (name && valueType) {
-            const newFormData = parseValueByType<Employee>(getFormData(), name, value, valueType);
-            setFormData(newFormData)
-        }
-    };
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const target = event.target
+        handleInputChangeFunc<Employee, UpdateEmployeeFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
+    }
 
     const setFormDataById= (selectedItem: StandardListItemDomRef, name: string) => {
         const value = selectedItem.textContent
@@ -52,6 +48,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     value={getFormData().firstName}
                     onChange={handleInputChange}
                     name={"firstName"}
+                    valueState={getFormState().firstName.valueState}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -61,6 +58,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     value={getFormData().middleName}
                     onChange={handleInputChange}
                     name={"middleName"}
+                    valueState={getFormState().middleName.valueState}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -70,6 +68,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     value={getFormData().surname}
                     onChange={handleInputChange}
                     name={"surname"}
+                    valueState={getFormState().surname.valueState}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -79,6 +78,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     value={getFormData().email}
                     onChange={handleInputChange}
                     name={"email"}
+                    valueState={getFormState().email.valueState}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -88,6 +88,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     value={getFormData().phoneNumber}
                     onChange={handleInputChange}
                     name={"phoneNumber"}
+                    valueState={getFormState().phoneNumber.valueState}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>

@@ -14,10 +14,11 @@ import { EmployeePageContext } from '@pages/hr/EmployeePage';
 import UpdateEmployeeForm from '@components/Forms/employee/UpdateEmployeeForm';
 import UpdatePersonalDataForm from '@components/Forms/personalData/UpdatePersonalDataForm';
 import UpdateContract from '@components/Forms/contract/UpdateContractForm';
-import { ContractUpdateFormData } from '@/models/FormStates/contract/UpdateContractFormState';
-import { EmployeeFormUpdateData } from '@/models/FormStates/employee/UpdateEmployeeFormState';
+import { ContractUpdateFormData, UpdateContractFormState, defaultUpdateContractFormState } from '@/models/FormStates/contract/UpdateContractFormState';
+import { EmployeeFormUpdateData, UpdateEmployeeFormState, defaultUpdateEmployeeFormState } from '@/models/FormStates/employee/UpdateEmployeeFormState';
 import { EmployeeData, EmployeeDataEditBtnState, EmployeeDataUpdate, createEmployeeDataUpdate, defaultEditBtnsState } from '@/models/HR/EmployeeData';
 import { submitPutForm } from '@/utils/forms/submitForm';
+import { PersonalDataFormState, defaultPersonalDataFormState } from '@/models/FormStates/personalData/PersonalDataFormState';
 
 
 interface EmployeeMidColumnProps {
@@ -32,11 +33,11 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
     const selectedRow = useContext<EmployeeView>(EmployeePageContext)
     const [employeeForm, setEmployeeForm] = useState<Employee>(defaultEmployee)
     const [contractForm, setContractForm] = useState<Contract>(defaultContract);
-    const [personalDataForm, setPersonalDataForm] = useState<PersonalData>(defaultPersonalData);
+    const [pDataForm, setPDataForm] = useState<PersonalData>(defaultPersonalData);
 
-    // const [employeeFormState, setEmployeeFormState] = useState<UpdateEmployeeFormState>(defaultUpdateEmployeeFormState)
-    // const [contractFormState, setContractFormState] = useState<UpdateContractFormState>(defaultUpdateContractFormState)
-    // const [personalDataFormState, setPersonalDataFormState] = useState<PersonalDataFormState>(defaultPersonalDataFormState)
+    const [employeeFormState, setEmployeeFormState] = useState<UpdateEmployeeFormState>(defaultUpdateEmployeeFormState)
+    const [contractFormState, setContractFormState] = useState<UpdateContractFormState>(defaultUpdateContractFormState)
+    const [pDataFormState, setPDataFormState] = useState<PersonalDataFormState>(defaultPersonalDataFormState)
 
     const [conUpdateData, setConUpdateData] = useState<ContractUpdateFormData>({} as ContractUpdateFormData)
     const [empUpdateData, setEmpUpdateData] = useState<EmployeeFormUpdateData>({} as EmployeeFormUpdateData)
@@ -44,9 +45,14 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
     const dispatchIsSuccess = useAppDispatch()
 
     const setDefaultValues = () => {
-        setEmployeeForm(defaultEmployee);
+        setEmployeeForm(defaultEmployee)
         setContractForm(defaultContract)
-        setPersonalDataForm(defaultPersonalData)
+        setPDataForm(defaultPersonalData)
+
+        setEmployeeFormState(defaultUpdateEmployeeFormState)
+        setContractFormState(defaultUpdateContractFormState)
+        setPDataFormState(defaultPersonalDataFormState)
+
         handleLayoutState(FCLLayout.OneColumn)
     }
 
@@ -65,7 +71,7 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
         let contract = data.contract
 
         setEmployeeForm(employee)
-        setPersonalDataForm(personalData)
+        setPDataForm(personalData)
 
         if(contract == null){
             setContractForm(defaultContract)
@@ -101,7 +107,7 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
 
     const submitForm = async () => {
         let object: EmployeeDataUpdate = createEmployeeDataUpdate(
-            employeeForm, personalDataForm, {...contractForm, changeDate: new Date()}
+            employeeForm, pDataForm, {...contractForm, changeDate: new Date()}
         )
 
         submitPutForm(tableURL, JSON.stringify(object), successCalback)
@@ -151,6 +157,8 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                         getEditMode={() => {return editMode.empEdit}}
                         getFormData={() => {return employeeForm}}
                         setFormData={setEmployeeForm}
+                        getFormState={() => {return employeeFormState}}
+                        setFormState={setEmployeeFormState}
                         getUpdateData={() => {return empUpdateData}}
                         setUpdateData={setEmpUpdateData}
                     />
@@ -174,8 +182,10 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                     </FlexBox>
                     <UpdatePersonalDataForm
                         getEditMode={() => {return editMode.pDataEdit}}
-                        getFormData={() => {return personalDataForm}}
-                        setFormData={setPersonalDataForm}
+                        getFormData={() => {return pDataForm}}
+                        setFormData={setPDataForm}
+                        getFormState={() => {return pDataFormState}}
+                        setFormState={setPDataFormState}
                     />
                 </ObjectPageSubSection>
 
@@ -198,6 +208,8 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                         getEditMode={() => {return editMode.conEdit}}
                         getFormData={() => {return contractForm}}
                         setFormData={setContractForm}
+                        getFormState={() => {return contractFormState}}
+                        setFormState={setContractFormState}
                         getUpdateData={() => {return conUpdateData}}
                         setUpdateData={setConUpdateData}
                     />

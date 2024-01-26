@@ -4,37 +4,19 @@ import SmallTableSelect from "@components/TableSelect/SmallTableSelect"
 import { InsertEmployeeFormState } from "@models/FormStates/employee/InsertEmployeeFormState"
 import { EmployeeInsertDTO } from "@models/HR/Employee"
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo"
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react"
-import { handleInputChangeFunc } from "@utils/handlers/onChangeHandlers"
-import { parseValueByType } from "@utils/parsers"
-import { Dispatch, FC, SetStateAction } from "react"
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { FC } from "react"
 
 
 interface CreateEmployeeFormProps {
     getFormState: () => InsertEmployeeFormState,
     getFormData: () => EmployeeInsertDTO,
-    setFormState: Dispatch<SetStateAction<InsertEmployeeFormState>>
-    setFormData: Dispatch<SetStateAction<EmployeeInsertDTO>>
+    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
+    handleConfirm: (selectedItem: StandardListItemDomRef, name: string) => void,
 }
 
 
-const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormData, setFormState, setFormData}) => {
-
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = event.target
-        handleInputChangeFunc<EmployeeInsertDTO, InsertEmployeeFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    };
-
-    const setFormDataById= (selectedItem: StandardListItemDomRef, name: string) => {
-        const rowId = selectedItem.id
-        const newFormData = parseValueByType<EmployeeInsertDTO>(getFormData(), name, rowId, DataType.Int);
-        setFormData(newFormData);
-
-        if (getFormState().hasOwnProperty(name)) {
-            setFormState({ ...getFormState(), [name]: { isFilled: true, valueState: ValueState.None } })
-        }
-    }
-
+const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormData, handleInputChange, handleConfirm}) => {
     return (
         <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End} style={{width: "fit-content"}}>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -92,7 +74,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
                 <SmallTableSelect
                     name="departmentId"
                     joinInfo={employeeJoinTableInfo.departmentId}
-                    formDataSetter={setFormDataById}
+                    formDataSetter={handleConfirm}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -100,7 +82,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
                 <SmallTableSelect
                     name="positionId"
                     joinInfo={employeeJoinTableInfo.positionId}
-                    formDataSetter={setFormDataById}
+                    formDataSetter={handleConfirm}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -109,7 +91,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
                     name="managerId"
                     tableId="employeeId"
                     joinInfo={employeeJoinTableInfo.managerId}
-                    formDataSetter={setFormDataById}
+                    formDataSetter={handleConfirm}
                 />
             </FlexBox>
         </FlexBox>

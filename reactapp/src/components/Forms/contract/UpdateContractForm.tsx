@@ -4,50 +4,25 @@ import DataType from "@app-types/DataType"
 import { StandardDateField } from "../StandartFields/StandartDateField"
 import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField"
 import { Contract } from "@models/HR/Contract"
-import { Dispatch, FC, SetStateAction } from "react"
+import { FC} from "react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
-import { parseValueByType } from "@utils/parsers"
 import { ContractUpdateData, UpdateContractFormState } from "@/models/FormStates/contract/UpdateContractFormState"
 import { setDateToInputDefaultValue } from "@/utils/forms/setInputDefaultValue"
-import { handleDateChangeFunc, handleInputChangeFunc } from "@/utils/handlers/onChangeHandlers"
 
 
 interface UpdateContract {
     getEditMode: () => boolean,
     getFormData: () => Contract,
-    setFormData: Dispatch<SetStateAction<Contract>>,
     getFormState: () => UpdateContractFormState,
-    setFormState: Dispatch<SetStateAction<UpdateContractFormState>>
     getUpdateData: () => ContractUpdateData,
-    setUpdateData: Dispatch<SetStateAction<ContractUpdateData>>,
+    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
+    handleDateChange: (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => void,
+    handleConfirm: (selectedItem: StandardListItemDomRef, name: string) => void,
 }
 
 
-const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormData, getUpdateData, setUpdateData, getFormState, setFormState }) => {
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = event.target
-        handleInputChangeFunc<Contract, UpdateContractFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    }
-
-    const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
-        const target = event.target
-        handleDateChangeFunc<Contract, UpdateContractFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    }
-
-
-    const setFormDataById= (selectedItem: StandardListItemDomRef, name: string) => {
-        const value = selectedItem.textContent
-        if(value) {
-            const rowId = selectedItem.id
-            const newFormData = parseValueByType<Contract>(getFormData(), name, rowId, DataType.Int);
-            setFormData(newFormData);
-            const newUpdateData = parseValueByType<ContractUpdateData>(getUpdateData(), name, value, DataType.String);
-            setUpdateData(newUpdateData)
-        }
-    }
-
-
+const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormState, getUpdateData, handleInputChange, handleDateChange, handleConfirm}) => {
     return (
         <FlexBox style={{gap:"5rem", padding: "2rem 2rem 1rem 2rem"}}>
             <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
@@ -150,7 +125,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().contractTypeId}
                         joinInfo={contractJoinTablesInfo.contractTypeId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -160,7 +135,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().positionId}
                         joinInfo={contractJoinTablesInfo.positionId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -170,7 +145,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().iconomicActivityId}
                         joinInfo={contractJoinTablesInfo.iconomicActivityId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -181,7 +156,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().documentTypeId}
                         joinInfo={contractJoinTablesInfo.documentTypeId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -192,7 +167,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().terminationTypeId}
                         joinInfo={contractJoinTablesInfo.terminationTypeId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -202,7 +177,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().administrativeTerritoryId}
                         joinInfo={contractJoinTablesInfo.administrativeTerritoryId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
             </FlexBox>

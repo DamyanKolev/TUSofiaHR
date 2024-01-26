@@ -20,7 +20,7 @@ export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = ({ ed
                 <LargeTableSelect
                     name={name}
                     joinInfo={joinInfo}
-                    value = {value}
+                    value={value}
                     formDataSetter={formDataSetter}
                 />
             )
@@ -30,7 +30,7 @@ export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = ({ ed
                 <SmallTableSelect
                     name={name}
                     formDataSetter={formDataSetter}
-                    value = {value}
+                    value={value}
                     joinInfo={joinInfo}
                 />
             )

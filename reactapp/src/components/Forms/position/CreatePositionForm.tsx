@@ -1,14 +1,15 @@
-﻿import { Bar, Button, ButtonDesign, Dialog, ValueState } from "@ui5/webcomponents-react"
+﻿import { Bar, Button, ButtonDesign, Dialog, InputDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { FC, useState } from "react"
 import { PositionDTO, defaultPositionDTO } from "@models/HR/Position"
-import { PositionFormState, defualtPositionFormState } from "@models/FormStates/position/PositionFormState"
+import { PositionFormState, defualtInsertPositionFormState } from "@models/FormStates/position/PositionFormState"
 import { useAppDispatch } from "@store/storeHooks"
 import { toggle } from "@store/slices/toggleSlice"
 import DailogSwitch from "@app-types/DialogSwitch"
 import { isFilledForm } from "@utils/validation"
 import CreatePosition from "./CreatePosition"
 import { submitPostForm } from "@/utils/forms/submitForm"
-import { setFormValueState } from "@/utils/forms/formInputState"
+import { setErrorInputStates } from "@/utils/forms/formState"
+import { handleInputChangeFunc } from "@/utils/handlers/onChangeHandlers"
 
 
 interface CreatePositionFormProps {
@@ -20,14 +21,14 @@ interface CreatePositionFormProps {
 
 const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
     const [formData, setFormData] = useState<PositionDTO>(defaultPositionDTO);
-    const [formState, setFormState] = useState<PositionFormState>(defualtPositionFormState);
+    const [formState, setFormState] = useState<PositionFormState>(defualtInsertPositionFormState);
     const dispatchIsSuccess = useAppDispatch()
 
 
     const setDefaultState = () => {
         dialogSwitchSetter(DailogSwitch.Close)
         setFormData(defaultPositionDTO)
-        setFormState(defualtPositionFormState)
+        setFormState(defualtInsertPositionFormState)
     }
 
     const successCalback = () => {
@@ -46,12 +47,14 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
             submitPostForm(`${tableURL}/create`, JSON.stringify(formData), successCalback)
         }
         else {
-            setFormValueState<PositionFormState>(formState, setFormState, ValueState.Error);
-            setTimeout(() => {
-                setFormValueState<PositionFormState>(formState, setFormState, ValueState.None);
-            }, 1000);
+            setErrorInputStates(formState, setFormState)
         }
     };
+
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const target = event.target
+        handleInputChangeFunc<PositionDTO, PositionFormState>(target, formData, setFormData, formState, setFormState);
+    }
 
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenInsertDialog}
@@ -68,8 +71,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
             <CreatePosition
                 getFormState={() => {return formState}}
                 getFormData={() => {return formData}}
-                setFormState={setFormState}
-                setFormData={setFormData}
+                handleInputChange={handleInputChange}
             />
 
         </Dialog>

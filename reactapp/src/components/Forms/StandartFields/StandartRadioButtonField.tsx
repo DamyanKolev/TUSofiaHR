@@ -8,8 +8,8 @@ interface StandardRadioButtonFieldProps {
     buttonsValues: Array<string>,
     editMode: boolean;
     value: string;
-    dataType?: DataType;
     valueState?: ValueState,
+    dataType?: DataType;
     name: string;
     onChange: (event: Ui5CustomEvent<RadioButtonDomRef, never>) => void;
 }
@@ -40,6 +40,7 @@ const StandardRadioButtonField: FC<StandardRadioButtonFieldProps> = ({buttonsVal
                         text={btnValue}
                         onChange={onChange}
                         date-type={dataType}
+                        valueState={valueState}
                     />
                 })
             }

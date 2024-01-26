@@ -1,18 +1,14 @@
-import DataType from "@app-types/DataType"
-import LargeTableSelect from "@components/TableSelect/LargeTableSelect"
-import SmallTableSelect from "@components/TableSelect/SmallTableSelect"
+import LargeTableSelect from "@/components/TableSelect/LargeTableSelect"
+import SmallTableSelect from "@/components/TableSelect/SmallTableSelect"
 import { InsertContractFormState } from "@/models/FormStates/contract/InsertContractFormState"
+import DataType from "@app-types/DataType"
 import { ContractInsertDTO } from "@models/HR/Contract"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
-import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react"
+import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, InputType, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { largeFormItem } from "@utils/css"
 import { setDateToInputDefaultValue, setInputDefaultValue } from "@utils/forms/setInputDefaultValue"
-import { handleDateChangeFunc, handleInputChangeFunc } from "@utils/handlers/onChangeHandlers"
-import { parseValueByType } from "@utils/parsers"
-import { CSSProperties, Dispatch, FC, SetStateAction } from "react"
-
-
+import { CSSProperties, FC } from "react"
 
 
 
@@ -21,33 +17,14 @@ interface CreateContractFormProps {
     style?: CSSProperties,
     getFormState: () => InsertContractFormState,
     getFormData: () => ContractInsertDTO,
-    setFormState: Dispatch<SetStateAction<InsertContractFormState>>
-    setFormData: Dispatch<SetStateAction<ContractInsertDTO>>
+    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
+    handleDateChange: (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => void,
+    handleConfirm: (selectedItem: StandardListItemDomRef, name: string) => void,
 }
 
 
 
-const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormState, setFormState, setFormData, style}) => {
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = event.target
-        handleInputChangeFunc<ContractInsertDTO, InsertContractFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    }
-
-    const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
-        const target = event.target
-        handleDateChangeFunc<ContractInsertDTO, InsertContractFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    }
-
-    const setFormDataById= (selectedItem: StandardListItemDomRef, name: string) => {
-        const rowId = selectedItem.id
-        const newFormData = parseValueByType<ContractInsertDTO>(getFormData(), name, rowId, DataType.Int);
-        setFormData(newFormData);
-
-        if (getFormState().hasOwnProperty(name)) {
-            setFormState({ ...getFormState(), [name]: { isFilled: true, valueState: ValueState.None } })
-        }
-    }
-
+const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormState, handleInputChange, handleDateChange, handleConfirm, style}) => {
     return (
         <FlexBox style={style}>
             <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
@@ -55,7 +32,8 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Работна заплата</Label>
                     <Input
                         style={largeFormItem}
-                        name="workingWage"
+                        name="working_wage"
+                        type={InputType.Number}
                         value={setInputDefaultValue(getFormData().workingWage)}
                         onChange={handleInputChange}
                         valueState={getFormState().workingWage.valueState}
@@ -67,7 +45,8 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Седмични часове</Label>
                     <Input
                         style={largeFormItem}
-                        name="workTime"
+                        name="work_time"
+                        type={InputType.Number}
                         value={setInputDefaultValue(getFormData().workTime)}
                         onChange={handleInputChange}
                         valueState={getFormState().workTime.valueState}
@@ -79,7 +58,8 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Отпуска</Label>
                     <Input
                         style={largeFormItem}
-                        name="annualLeave"
+                        name="annual_leave"
+                        type={InputType.Number}
                         value={setInputDefaultValue(getFormData().annualLeave)}
                         onChange={handleInputChange}
                         valueState={getFormState().annualLeave.valueState}
@@ -91,7 +71,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Дата на сключване</Label>
                     <DatePicker
                         style={largeFormItem}
-                        name="conclusionDate"
+                        name="conclusion_date"
                         value={setDateToInputDefaultValue(getFormData().conclusionDate)}
                         onChange={handleDateChange}
                         valueState={getFormState().conclusionDate.valueState}
@@ -103,7 +83,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <Label required>Дата на започване</Label>
                     <DatePicker
                         style={largeFormItem}
-                        name="executionDate"
+                        name="execution_date"
                         value={setDateToInputDefaultValue(getFormData().executionDate)}
                         onChange={handleDateChange}
                         valueState={getFormState().executionDate.valueState}
@@ -141,7 +121,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <SmallTableSelect
                         name="contractTypeId"
                         joinInfo={contractJoinTablesInfo.contractTypeId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -149,7 +129,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <LargeTableSelect
                         name="positionId"
                         joinInfo={contractJoinTablesInfo.positionId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -157,7 +137,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <LargeTableSelect
                         name="iconomicActivityId"
                         joinInfo={contractJoinTablesInfo.iconomicActivityId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -165,7 +145,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <SmallTableSelect
                         name="documentTypeId"
                         joinInfo={contractJoinTablesInfo.documentTypeId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
                 <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
@@ -173,7 +153,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     <LargeTableSelect
                         name="administrativeTerritoryId"
                         joinInfo={contractJoinTablesInfo.administrativeTerritoryId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
             </FlexBox>        

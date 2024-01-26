@@ -1,37 +1,22 @@
 import DataType from "@app-types/DataType"
 import Gender from "@app-types/Gender"
-import { PersonalDataFormState } from "@models/FormStates/personalData/PersonalDataFormState"
+import { PDataFormState } from "@models/FormStates/personalData/PersonalDataFormState"
 import { PersonalDataDTO } from "@models/HR/PersonalData"
 import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, RadioButton, RadioButtonDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { setDateToInputDefaultValue, setInputDefaultValue } from "@utils/forms/setInputDefaultValue"
-import { handleDateChangeFunc, handleInputChangeFunc, handleRadioButtonChangeFunc } from "@utils/handlers/onChangeHandlers"
-import { Dispatch, FC, SetStateAction } from "react"
+import { FC } from "react"
 
 
 interface PersonalDataFormProps {
-    getFormState: () => PersonalDataFormState,
+    getFormState: () => PDataFormState,
     getFormData: () => PersonalDataDTO,
-    setFormState: Dispatch<SetStateAction<PersonalDataFormState>>,
-    setFormData: Dispatch<SetStateAction<PersonalDataDTO>>,
+    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
+    handleDateChange: (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => void,
+    handleRadioButtonChange: (event: Ui5CustomEvent<RadioButtonDomRef, never>) => void,
 }
 
-const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFormData, setFormState, setFormData}) => {
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = event.target
-        handleInputChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    };
-
-    const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
-        const target = event.target
-        handleDateChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    }
-
-    const handleRadioButtonChange = (event: Ui5CustomEvent<RadioButtonDomRef, never>) => {
-        const target = event.target
-        handleRadioButtonChangeFunc<PersonalDataDTO, PersonalDataFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    }
-
+const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFormData, handleInputChange, handleDateChange, handleRadioButtonChange }) => {
     return (
         <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{width: "fit-content"}}>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>

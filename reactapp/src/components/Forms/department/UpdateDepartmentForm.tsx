@@ -7,10 +7,11 @@ import { Department, defualtDepartment } from '@models/HR/Departmnet';
 import DailogSwitch from '@app-types/DialogSwitch';
 import { DepartmentPageContext } from '@pages/hr/DepartmentPage';
 import { submitPutForm } from '@/utils/forms/submitForm';
-import { DepartmentFormState, defaultDepartmentFormState } from '@/models/FormStates/department/DepartmentFormState';
+import { DepartmentFormState, defaultDepartmentUpdateFormState } from '@/models/FormStates/department/DepartmentFormState';
 import { handleInputChangeFunc } from '@/utils/handlers/onChangeHandlers';
 import { isFilledForm } from '@/utils/validation';
-import { setErrorInputStates } from '@/utils/forms/formInputState';
+import { setErrorInputStates } from '@/utils/forms/formState';
+import { TableRowState } from '@/types/TableRowState';
 
 
 interface UpdateDepartmentFormProps {
@@ -21,17 +22,18 @@ interface UpdateDepartmentFormProps {
 
 
 const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
-    const selectedRow = useContext<Department>(DepartmentPageContext)
-    const [formState, setFormState] = useState<DepartmentFormState>(defaultDepartmentFormState)
+    const rowState = useContext<TableRowState<Department> | undefined>(DepartmentPageContext)
+    const [formState, setFormState] = useState<DepartmentFormState>(defaultDepartmentUpdateFormState)
     const [formData, setFormData] = useState<Department>(defualtDepartment)
     const [editMode, setEditMode] = useState<boolean>(false)
-    const [isSelected, setIsSelected] = useState<boolean>(false)
+    const [disabled, setDisabled] = useState<boolean>(true)
     const dispatchIsSuccess = useAppDispatch()
 
     const setDefaultValues = () => {
+        setFormState(defaultDepartmentUpdateFormState)
         dialogSwitchSetter(DailogSwitch.Close)
         setFormData(defualtDepartment)
-        setIsSelected(false)
+        rowState?.setSelectedRow({} as Department)
         setEditMode(false)
     }
 
@@ -45,9 +47,8 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
     }
 
     const submitForm = () => {
-        const isFilled = isFilledForm<DepartmentFormState>(formState);
-        if(isFilled) {
-            submitPutForm(tableURL, JSON.stringify(formData), successCalback)
+        if(isFilledForm(formState)) {
+            submitPutForm(tableURL, formData, successCalback)
         }
         else {
             setErrorInputStates(formState, setFormState)
@@ -55,15 +56,18 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
     };
 
     useEffect(() => {
-        if (selectedRow) {
-            setIsSelected(true)
-            setFormData(selectedRow);
+        if(rowState) {
+            if (Object.keys(rowState.selectedRow).length > 0) {
+                setFormData(rowState.selectedRow);
+            }
         }
-    }, [selectedRow]);
+    }, [rowState]);
 
     const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const target = event.target
-        handleInputChangeFunc<Department, DepartmentFormState>(target, formData, setFormData, formState, setFormState);
+        handleInputChangeFunc(target, formData, setFormData, formState, setFormState);
+
+        if(disabled) {setDisabled(false)}
     }
 
     return (
@@ -71,31 +75,31 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
             header={
                 <Bar
                     startContent={<Title level={TitleLevel.H6}>Промяна на Отдел</Title>}
-                    endContent={<Button onClick={() => setEditMode(!editMode)}>{editMode ? 'Display Mode' : 'Edit'}</Button>}
+                    endContent={
+                        <Button onClick={() => setEditMode(!editMode)}>{editMode ? 'Display Mode' : 'Edit'}</Button>
+                    }
                 />
             }
             footer={
                 <Bar design="Footer">
-                        <Button onClick={cancelOnClick} design={ButtonDesign.Transparent}>Cancel</Button>
-                        <Button onClick={submitForm} design={ButtonDesign.Emphasized}>OK</Button>
+                        <Button onClick={cancelOnClick} design={ButtonDesign.Transparent}>Отказ</Button>
+                        <Button onClick={submitForm} design={ButtonDesign.Emphasized} disabled={disabled}>Запази</Button>
                 </Bar>
             }
         >
             
             <div className="form-container">
-                {isSelected &&
-                    <Form id="update-form">
-                        <FormItem label="Отдел">
-                            <StandardInputField
-                                editMode={editMode}
-                                value={formData.departmentName}
-                                onChange={handleInputChange}
-                                name={"departmentName"}
-                                valueState={formState.departmentName.valueState}
-                            />
-                        </FormItem>
-                    </Form>
-                }
+                <Form id="update-form">
+                    <FormItem label="Отдел">
+                        <StandardInputField
+                            editMode={editMode}
+                            value={formData.departmentName}
+                            onChange={handleInputChange}
+                            name={"departmentName"}
+                            valueState={formState.departmentName.valueState}
+                        />
+                    </FormItem>
+                </Form>
             </div>
         </Dialog>
     );

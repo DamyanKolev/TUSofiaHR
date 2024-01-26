@@ -9,7 +9,7 @@ import { parseValueByType } from '@utils/parsers';
 import { PositionPageContext } from '@pages/hr/PositionPage';
 import { submitPutForm } from '@/utils/forms/submitForm';
 import { PositionFormState, defualtPositionFormState } from '@/models/FormStates/position/PositionFormState';
-import { setErrorInputStates } from '@/utils/forms/formInputState';
+import { setErrorInputStates } from '@/utils/forms/formState';
 import { isFilledForm } from '@/utils/validation';
 
 

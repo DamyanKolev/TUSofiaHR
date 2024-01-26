@@ -1,44 +1,23 @@
 import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
-import { Dispatch, FC, SetStateAction } from "react";
+import { FC } from "react";
 import { StandardInputField } from "../StandartFields/StandartInputField";
 import { Employee } from "@models/HR/Employee";
-import { parseValueByType } from "@utils/parsers";
 import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField";
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
-import DataType from "@app-types/DataType";
 import { EmployeeUpdateData, UpdateEmployeeFormState } from "@/models/FormStates/employee/UpdateEmployeeFormState";
-import { handleInputChangeFunc } from "@/utils/handlers/onChangeHandlers";
 
 
 interface UpdateEmployeeFormProps {
     getEditMode: () => boolean,
     getFormData: () => Employee,
-    setFormData: Dispatch<SetStateAction<Employee>>,
     getFormState: () => UpdateEmployeeFormState,
-    setFormState: Dispatch<SetStateAction<UpdateEmployeeFormState>>
     getUpdateData: () => EmployeeUpdateData,
-    setUpdateData: Dispatch<SetStateAction<EmployeeUpdateData>>,
+    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
+    handleConfirm: (selectedItem: StandardListItemDomRef, name: string) => void,
 }
 
 
-const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, setFormData, getFormState, setFormState, getUpdateData, setUpdateData}) => {
-
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = event.target
-        handleInputChangeFunc<Employee, UpdateEmployeeFormState>(target, getFormData(), setFormData, getFormState(), setFormState);
-    }
-
-    const setFormDataById= (selectedItem: StandardListItemDomRef, name: string) => {
-        const value = selectedItem.textContent
-        if(value) {
-            const rowId = selectedItem.id
-            const newFormData = parseValueByType<Employee>(getFormData(), name, rowId, DataType.Int);
-            setFormData(newFormData);
-            const newUpdateData = parseValueByType<EmployeeUpdateData>(getUpdateData(), name, value, DataType.String);
-            setUpdateData(newUpdateData)
-        }
-    }
-
+const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, getUpdateData, getFormState, handleInputChange, handleConfirm}) => {
     return (
         <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End} style={{width: "fit-content"}}>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -99,7 +78,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().managerId}
                         joinInfo={employeeJoinTableInfo.managerId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -110,7 +89,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().departmentId}
                         joinInfo={employeeJoinTableInfo.departmentId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center}>
@@ -121,7 +100,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                         editMode={getEditMode()}
                         value={getUpdateData().positionId}
                         joinInfo={employeeJoinTableInfo.departmentId}
-                        formDataSetter={setFormDataById}
+                        formDataSetter={handleConfirm}
                     />
             </FlexBox>
         </FlexBox>

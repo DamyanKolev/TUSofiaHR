@@ -1,9 +1,4 @@
-body {
-    background: radial-gradient(ellipse at center, #d3e0d1 0%, #ede7cd 5%, #ead9d2 10%, #d2dce6 15%, #dfdddd 20%, #dfe2dd 25%, #e0dcdb 30%, #dae2d9 50%, #dcdcde 70%, #e5dcd9 90%);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    backdrop-filter: blur(4rem);
+.login-container {
     margin: 0;
     height: 100vh;
     width: 100vw;
@@ -21,36 +16,5 @@ body {
     padding: 40px;
     border-radius: 5px;
     width: 400px;
+    gap: 1rem;
 }
-
-/*@media (max-width: 500px) {
-    .main-container {
-        border: none;
-        width: fit-content;
-    }
-}
-
-.titleContainer {
-    margin: 2.5rem 0
-}
-
-.wrongMessage-container {
-    margin-bottom: 1rem
-}
-
-.passwodContainer {
-    margin-bottom: 0.6rem;
-}
-
-.usernameContainer {
-    margin-bottom: 1.875rem;
-}
-
-.buttonBar {
-    margin-top: 3.5rem;
-    box-shadow: none;
-}
-
-#signinBtn {
-    width: 6.25rem;
-}*/

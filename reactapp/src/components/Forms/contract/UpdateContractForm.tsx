@@ -8,7 +8,7 @@ import { Dispatch, FC, SetStateAction } from "react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
 import { parseValueByType } from "@utils/parsers"
-import { ContractUpdateFormData, UpdateContractFormState } from "@/models/FormStates/contract/UpdateContractFormState"
+import { ContractUpdateData, UpdateContractFormState } from "@/models/FormStates/contract/UpdateContractFormState"
 import { setDateToInputDefaultValue } from "@/utils/forms/setInputDefaultValue"
 import { handleDateChangeFunc, handleInputChangeFunc } from "@/utils/handlers/onChangeHandlers"
 
@@ -19,8 +19,8 @@ interface UpdateContract {
     setFormData: Dispatch<SetStateAction<Contract>>,
     getFormState: () => UpdateContractFormState,
     setFormState: Dispatch<SetStateAction<UpdateContractFormState>>
-    getUpdateData: () => ContractUpdateFormData,
-    setUpdateData: Dispatch<SetStateAction<ContractUpdateFormData>>,
+    getUpdateData: () => ContractUpdateData,
+    setUpdateData: Dispatch<SetStateAction<ContractUpdateData>>,
 }
 
 
@@ -42,7 +42,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, setFormDa
             const rowId = selectedItem.id
             const newFormData = parseValueByType<Contract>(getFormData(), name, rowId, DataType.Int);
             setFormData(newFormData);
-            const newUpdateData = parseValueByType<ContractUpdateFormData>(getUpdateData(), name, value, DataType.String);
+            const newUpdateData = parseValueByType<ContractUpdateData>(getUpdateData(), name, value, DataType.String);
             setUpdateData(newUpdateData)
         }
     }

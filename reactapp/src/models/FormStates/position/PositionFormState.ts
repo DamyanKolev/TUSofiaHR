@@ -1,4 +1,4 @@
-import { FormFieldState, FormState, defaultFormFieldState } from "../FormState";
+import { FormFieldState, FormState, defaultInsertFieldState, defaultUpdateFieldState } from "../FormState";
 
 export interface PositionFormState extends FormState{
     positionName: FormFieldState,
@@ -6,8 +6,14 @@ export interface PositionFormState extends FormState{
     maxSalary: FormFieldState
 }
 
-export const defualtPositionFormState: PositionFormState = {
-    positionName: defaultFormFieldState,
-    minSalary: defaultFormFieldState,
-    maxSalary: defaultFormFieldState
+export const defualtInsertPositionFormState: PositionFormState = {
+    positionName: defaultInsertFieldState,
+    minSalary: defaultInsertFieldState,
+    maxSalary: defaultInsertFieldState
+}
+
+export const defualtUpdatePositionFormState: PositionFormState = {
+    positionName: defaultUpdateFieldState,
+    minSalary: defaultUpdateFieldState,
+    maxSalary: defaultUpdateFieldState
 }

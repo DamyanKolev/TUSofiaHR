@@ -6,7 +6,7 @@ import { parseValueByType } from "@utils/parsers";
 import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField";
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
 import DataType from "@app-types/DataType";
-import { EmployeeFormUpdateData, UpdateEmployeeFormState } from "@/models/FormStates/employee/UpdateEmployeeFormState";
+import { EmployeeUpdateData, UpdateEmployeeFormState } from "@/models/FormStates/employee/UpdateEmployeeFormState";
 import { handleInputChangeFunc } from "@/utils/handlers/onChangeHandlers";
 
 
@@ -16,8 +16,8 @@ interface UpdateEmployeeFormProps {
     setFormData: Dispatch<SetStateAction<Employee>>,
     getFormState: () => UpdateEmployeeFormState,
     setFormState: Dispatch<SetStateAction<UpdateEmployeeFormState>>
-    getUpdateData: () => EmployeeFormUpdateData,
-    setUpdateData: Dispatch<SetStateAction<EmployeeFormUpdateData>>,
+    getUpdateData: () => EmployeeUpdateData,
+    setUpdateData: Dispatch<SetStateAction<EmployeeUpdateData>>,
 }
 
 
@@ -34,7 +34,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
             const rowId = selectedItem.id
             const newFormData = parseValueByType<Employee>(getFormData(), name, rowId, DataType.Int);
             setFormData(newFormData);
-            const newUpdateData = parseValueByType<EmployeeFormUpdateData>(getUpdateData(), name, value, DataType.String);
+            const newUpdateData = parseValueByType<EmployeeUpdateData>(getUpdateData(), name, value, DataType.String);
             setUpdateData(newUpdateData)
         }
     }

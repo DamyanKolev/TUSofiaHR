@@ -4,10 +4,19 @@ export interface FormState {};
 
 export interface FormFieldState {
     isFilled: boolean,
-    valueState: ValueState
+    isChanged: boolean,
+    valueState: ValueState,
+
 }
 
-export const defaultFormFieldState: FormFieldState = {
+export const defaultInsertFieldState: FormFieldState = {
     isFilled: false,
-    valueState: ValueState.None
+    isChanged: false,
+    valueState: ValueState.None,
+}
+
+export const defaultUpdateFieldState: FormFieldState = {
+    isFilled: true,
+    isChanged: false,
+    valueState: ValueState.None,
 }

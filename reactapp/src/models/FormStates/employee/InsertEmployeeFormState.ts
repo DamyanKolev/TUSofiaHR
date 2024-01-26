@@ -1,4 +1,4 @@
-import { FormFieldState, FormState, defaultFormFieldState } from "../FormState";
+import { FormFieldState, FormState, defaultInsertFieldState } from "../FormState";
 
 export interface InsertEmployeeFormState extends FormState{
     firstName: FormFieldState;
@@ -13,13 +13,13 @@ export interface InsertEmployeeFormState extends FormState{
 }
 
 export const defaultInsertEmployeeFormState: InsertEmployeeFormState = {
-    firstName: defaultFormFieldState,
-    middleName: defaultFormFieldState,
-    surname: defaultFormFieldState,
-    email: defaultFormFieldState,
-    phoneNumber: defaultFormFieldState,
-    companyEmployeeId: defaultFormFieldState,
-    managerId: defaultFormFieldState,
-    departmentId: defaultFormFieldState,
-    positionId: defaultFormFieldState,
+    firstName: defaultInsertFieldState,
+    middleName: defaultInsertFieldState,
+    surname: defaultInsertFieldState,
+    email: defaultInsertFieldState,
+    phoneNumber: defaultInsertFieldState,
+    companyEmployeeId: defaultInsertFieldState,
+    managerId: defaultInsertFieldState,
+    departmentId: defaultInsertFieldState,
+    positionId: defaultInsertFieldState,
 }

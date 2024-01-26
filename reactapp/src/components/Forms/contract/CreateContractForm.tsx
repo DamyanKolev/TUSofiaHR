@@ -1,7 +1,7 @@
 import DataType from "@app-types/DataType"
 import LargeTableSelect from "@components/TableSelect/LargeTableSelect"
 import SmallTableSelect from "@components/TableSelect/SmallTableSelect"
-import { InsertContractFormState } from "@models/FormStates/contract/InsertContractFormState"
+import { InsertContractFormState } from "@/models/FormStates/contract/InsertContractFormState"
 import { ContractInsertDTO } from "@models/HR/Contract"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
 import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react"

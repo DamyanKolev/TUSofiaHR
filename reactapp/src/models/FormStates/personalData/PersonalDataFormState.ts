@@ -1,10 +1,14 @@
-import { FormFieldState, FormState, defaultFormFieldState } from "../FormState";
+import { FormFieldState, FormState, defaultInsertFieldState, defaultUpdateFieldState } from "../FormState";
 
 
-export interface PersonalDataFormState extends FormState {
+export interface PDataFormState extends FormState {
     egn: FormFieldState
 }
 
-export const defaultPersonalDataFormState: PersonalDataFormState = {
-    egn: defaultFormFieldState,
+export const defaultPDataInsertFormState: PDataFormState = {
+    egn: defaultInsertFieldState,
+}
+
+export const defaultPDataUpdateFormState: PDataFormState = {
+    egn: defaultUpdateFieldState,
 }

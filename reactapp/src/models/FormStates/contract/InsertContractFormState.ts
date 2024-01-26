@@ -1,4 +1,4 @@
-import { FormFieldState, FormState, defaultFormFieldState } from "../FormState"
+import { FormFieldState, FormState, defaultInsertFieldState } from "../FormState"
 
 export interface InsertContractFormState extends FormState{
     workingWage: FormFieldState;
@@ -13,21 +13,21 @@ export interface InsertContractFormState extends FormState{
     iconomicActivityId: FormFieldState;
     documentTypeId: FormFieldState;
     administrativeTerritoryId: FormFieldState;
-    codeCorection: FormFieldState;
+    // codeCorection: FormFieldState;
 }
 
 export const defaultInsertContractFormState: InsertContractFormState = {
-    workingWage: defaultFormFieldState,
-    workTime: defaultFormFieldState,
-    annualLeave: defaultFormFieldState,
-    conclusionDate: defaultFormFieldState,
-    executionDate: defaultFormFieldState,
-    contractTerm: defaultFormFieldState,
-    additionalAgreementDate: defaultFormFieldState,
-    contractTypeId: defaultFormFieldState,
-    positionId: defaultFormFieldState,
-    iconomicActivityId: defaultFormFieldState,
-    documentTypeId: defaultFormFieldState,
-    administrativeTerritoryId: defaultFormFieldState,
-    codeCorection: defaultFormFieldState,
+    workingWage: defaultInsertFieldState,
+    workTime: defaultInsertFieldState,
+    annualLeave: defaultInsertFieldState,
+    conclusionDate: defaultInsertFieldState,
+    executionDate: defaultInsertFieldState,
+    contractTerm: defaultInsertFieldState,
+    additionalAgreementDate: defaultInsertFieldState,
+    contractTypeId: defaultInsertFieldState,
+    positionId: defaultInsertFieldState,
+    iconomicActivityId: defaultInsertFieldState,
+    documentTypeId: defaultInsertFieldState,
+    administrativeTerritoryId: defaultInsertFieldState,
+    // codeCorection: defaultFormFieldState,
 }

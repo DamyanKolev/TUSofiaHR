@@ -1,7 +1,6 @@
 import { ContractView } from "@/models/TableViews/ContractView";
-import { FormFieldState, FormState, defaultFormFieldState } from "../FormState"
-import { setNullValuesToEmtyString } from "@/utils/forms/setNullValuesToEmtyString";
-import { ValueState } from "@ui5/webcomponents-react";
+import { FormFieldState, FormState, defaultUpdateFieldState } from "../FormState"
+
 
 export interface UpdateContractFormState extends FormState{
     workingWage: FormFieldState;
@@ -20,39 +19,30 @@ export interface UpdateContractFormState extends FormState{
     documentTypeId: FormFieldState;
     administrativeTerritoryId: FormFieldState;
     terminationTypeId: FormFieldState
-    codeCorection: FormFieldState;
-    article62Flag: FormFieldState,
-}
-
-const defaultUpdateFormState: FormFieldState = {
-    isFilled: true,
-    valueState: ValueState.None
 }
 
 export const defaultUpdateContractFormState: UpdateContractFormState = {
-    workingWage: defaultFormFieldState,
-    workTime: defaultFormFieldState,
-    annualLeave: defaultFormFieldState,
-    conclusionDate: defaultFormFieldState,
-    executionDate: defaultFormFieldState,
-    contractTerm: defaultFormFieldState,
-    additionalAgreementDate: defaultFormFieldState,
-    terminationDate: defaultFormFieldState,
-    changeDate: defaultFormFieldState,
-    companyId: defaultFormFieldState,
-    contractTypeId: defaultFormFieldState,
-    positionId: defaultFormFieldState,
-    iconomicActivityId: defaultFormFieldState,
-    documentTypeId: defaultFormFieldState,
-    administrativeTerritoryId: defaultFormFieldState,
-    terminationTypeId: defaultFormFieldState,
-    codeCorection: defaultFormFieldState,
-    article62Flag: defaultFormFieldState,
+    workingWage: defaultUpdateFieldState,
+    workTime: defaultUpdateFieldState,
+    annualLeave: defaultUpdateFieldState,
+    conclusionDate: defaultUpdateFieldState,
+    executionDate: defaultUpdateFieldState,
+    contractTerm: defaultUpdateFieldState,
+    additionalAgreementDate: defaultUpdateFieldState,
+    terminationDate: defaultUpdateFieldState,
+    changeDate: defaultUpdateFieldState,
+    companyId: defaultUpdateFieldState,
+    contractTypeId: defaultUpdateFieldState,
+    positionId: defaultUpdateFieldState,
+    iconomicActivityId: defaultUpdateFieldState,
+    documentTypeId: defaultUpdateFieldState,
+    administrativeTerritoryId: defaultUpdateFieldState,
+    terminationTypeId: defaultUpdateFieldState,
 }
 
 
 
-export interface ContractUpdateFormData {
+export interface ContractUpdateData {
     contractTypeId: string,
     positionId: string,
     iconomicActivityId: string,
@@ -61,14 +51,22 @@ export interface ContractUpdateFormData {
     administrativeTerritoryId: string,
 }
 
-export function createContractUpdateFormData(contract: ContractView): ContractUpdateFormData {
-    const data = setNullValuesToEmtyString<ContractView>(contract)
+export const defaultContractUpdateData: ContractUpdateData = {
+    contractTypeId: "",
+    positionId: "",
+    iconomicActivityId: "",
+    documentTypeId: "",
+    terminationTypeId: "",
+    administrativeTerritoryId: "",
+}
+
+export function createContractUpdateData(contract: ContractView): ContractUpdateData {
     return {
-        contractTypeId: data.contractType,
-        positionId: data.positionName,
-        iconomicActivityId: data.activityName,
-        documentTypeId: data.documentType,
-        terminationTypeId: data.documentType,
-        administrativeTerritoryId: data.ekatte,
+        contractTypeId: contract.contractType,
+        positionId: contract.positionName,
+        iconomicActivityId: contract.activityName,
+        documentTypeId: contract.documentType,
+        terminationTypeId: contract.documentType,
+        administrativeTerritoryId: contract.ekatte,
     }
 }

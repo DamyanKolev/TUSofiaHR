@@ -2,7 +2,7 @@ export async function isJWTTokenValid(): Promise<boolean> {
     const token = localStorage.getItem("token")
 
     if(token != null) {
-        const response = await fetch("/backend/api/auth//verify-token",{
+        const response = await fetch("/backend/api/auth/validate-token",{
             method: "POST",
             headers: { 
                 "Content-Type": "application/json" 

@@ -9,19 +9,19 @@ const initialState: ToggleState = {
     value: false,
 }
 
-export const formTogleSlice = createSlice({
+export const formToggleSlice = createSlice({
     name: 'isSuccessForm',
     initialState: initialState,
     reducers: {
-        formTogle: (state) => {
+        formToggle: (state) => {
             state.value = !state.value
         }
     }
 })
 
 
-export const { formTogle } = formTogleSlice.actions
+export const { formToggle } = formToggleSlice.actions
 
 export const insertTogleSelector = (state: RootState) => state.isSuccessForm.value
 
-export default formTogleSlice.reducer
+export default formToggleSlice.reducer

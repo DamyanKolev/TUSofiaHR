@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import toggleSlice from './slices/toggleSlice';
-import formTogleSlice from './slices/formTogleSlice';
+import formToggleSlice from './slices/formToggleSlice';
 
 export const store =  configureStore({
     reducer: {
         isSuccess: toggleSlice,
-        isSuccessForm: formTogleSlice        
+        isSuccessForm: formToggleSlice        
     }
 })
 

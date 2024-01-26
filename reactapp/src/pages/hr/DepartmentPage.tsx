@@ -7,9 +7,10 @@ import CreateDepartmentForm from "@components/Forms/department/CreateDepartmentF
 import DailogSwitch from "@app-types/DialogSwitch";
 import UpdateDepartmentForm from "@components/Forms/department/UpdateDepartmentForm";
 import { Department } from "@models/HR/Departmnet";
+import { TableRowState } from "@/types/TableRowState";
+import { createPortal } from "react-dom";
 
-const defaultRow = {} as Department
-export const DepartmentPageContext = createContext<Department>(defaultRow);
+export const DepartmentPageContext = createContext<TableRowState<Department> | undefined>(undefined);
 
 const tableStyle: CSSProperties = {
     padding: "0 4rem 0 4rem",
@@ -21,7 +22,7 @@ const DepartmentPage: FC = () => {
     const tableTitle = "Отдели"
     const tableURL = "/api/departments"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
-    const [selectedRow, setSelectedRow] = useState<Department>(defaultRow);
+    const [selectedRow, setSelectedRow] = useState<Department>({} as Department);
 
     const dialogSwitchGetter = () => { return dialogSwitch}
     const dialogSwitchSetter = (dialogSwitch: DailogSwitch) => {setDialogSwitch(dialogSwitch)}
@@ -37,7 +38,7 @@ const DepartmentPage: FC = () => {
     }
 
     return (
-        <DepartmentPageContext.Provider value={selectedRow}>
+        <DepartmentPageContext.Provider value={{selectedRow, setSelectedRow}}>
             <div className="flexible-columns ui5-content-density-compact">
                 <PageBar title={tableTitle} />
                 <SmartTable
@@ -56,8 +57,15 @@ const DepartmentPage: FC = () => {
                         </Fragment>
                     }
                 />
-                <CreateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>
-                <UpdateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>
+                
+                {createPortal(
+                    <CreateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>,
+                    document.body
+                )}
+                {createPortal(
+                    <UpdateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>,
+                    document.body
+                )}
             </div>
         </DepartmentPageContext.Provider>
     )

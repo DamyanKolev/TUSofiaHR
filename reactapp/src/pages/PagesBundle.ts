@@ -8,9 +8,9 @@ import Article62 from './references/Article62'
 import Settings from './SettingsPage'
 import EmployeeReports from './hr/EmployeeReports'
 import SchedulePage from './hr/SchedulePage'
-import InitPage from './InitPage'
+import References from './references/References'
 
 
 export {
-    EmployeePage, Home, Login, ContractPage, PositionPage, DepartmentPage, Article62, Settings, EmployeeReports, SchedulePage, InitPage
+    EmployeePage, Home, Login, ContractPage, PositionPage, DepartmentPage, Article62, Settings, EmployeeReports, SchedulePage, References
 }

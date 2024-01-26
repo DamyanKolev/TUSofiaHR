@@ -5,16 +5,18 @@ import { FCLLayout, FlexibleColumnLayout } from '@ui5/webcomponents-react'
 import StartColumn from '@components/FlexibleColumns/StartColumn'
 import EmployeeEndColumn from '@components/FlexibleColumns/employee/EmployeeEndColumn'
 import EmployeeMidColumn from '@components/FlexibleColumns/employee/EmployeeMidColumn'
+import { TableRowState } from '@/types/TableRowState'
+import { EmployeeView } from '@/models/TableViews/EmployeeView'
 
 
-export const EmployeePageContext = createContext<any>(null);
+export const EmployeePageContext = createContext<TableRowState<EmployeeView> | undefined>(undefined);
 
 
 const EmployeePage: FC = () => {
     const tableTitle = "Employees";
     const tableURL = "/api/employees";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
-    const [selectedRow, setSelectedRow] = useState<any>(null);
+    const [selectedRow, setSelectedRow] = useState<EmployeeView>({} as EmployeeView);
 
 
     const handleLayoutState = (layout: FCLLayout) => {
@@ -28,7 +30,7 @@ const EmployeePage: FC = () => {
     };
 
     return (
-        <EmployeePageContext.Provider value={selectedRow}>
+        <EmployeePageContext.Provider value={{selectedRow, setSelectedRow}}>
                 <FlexibleColumnLayout
                     className="flexible-columns ui5-content-density-compact"
                     style={{backgroundColor:"white"}}

@@ -7,10 +7,11 @@ import positionColumns from "@models/TableColumns/PositionColumns";
 import DailogSwitch from "@app-types/DialogSwitch";
 import { Position } from "@models/HR/Position";
 import UpdatePositionForm from "@components/Forms/position/UpdatePositionForm";
+import { TableRowState } from "@/types/TableRowState";
+import { createPortal } from "react-dom";
 
 
-const defaultRow = {} as Position
-export const PositionPageContext = createContext<Position>(defaultRow);
+export const PositionPageContext = createContext<TableRowState<Position> | undefined>(undefined);
 
 
 const tableStyle: CSSProperties = {
@@ -24,7 +25,7 @@ const PositionPage: FC = () => {
     const tableTile = "Позиции"
     const tableURL = "/api/positions"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
-    const [selectedRow, setSelectedRow] = useState<Position>(defaultRow);
+    const [selectedRow, setSelectedRow] = useState<Position>({} as Position);
 
     const dialogSwitchGetter = () => { return dialogSwitch}
     const dialogSwitchSetter = (dialogSwitch: DailogSwitch) => {setDialogSwitch(dialogSwitch)}
@@ -40,7 +41,7 @@ const PositionPage: FC = () => {
     }
 
     return (
-        <PositionPageContext.Provider value={selectedRow}>
+        <PositionPageContext.Provider value={{selectedRow, setSelectedRow}}>
             <div className="flexible-columns ui5-content-density-compact">
                 <PageBar title={tableTile} />
                 <SmartTable
@@ -58,9 +59,17 @@ const PositionPage: FC = () => {
                             }/>
                         </Fragment>
                     }
-                />                    
-                <CreatePositionForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>
-                <UpdatePositionForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>
+                /> 
+                                   
+                {createPortal(
+                    <CreatePositionForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>,
+                    document.body
+                )}                    
+                
+                {createPortal(
+                    <UpdatePositionForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>,
+                    document.body
+                )}  
             </div>
         </PositionPageContext.Provider>
     )

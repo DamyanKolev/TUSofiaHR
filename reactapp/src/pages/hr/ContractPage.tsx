@@ -1,19 +1,21 @@
 ﻿import { FC, createContext, useState } from "react";
 import contractColumns from "@models/TableColumns/ContractColumns";
 import { FCLLayout, FlexibleColumnLayout } from "@ui5/webcomponents-react";
-import ContractStartColumn from "@components/FlexibleColumns/contract/ContractStartColumn";
 import ContractMidColumn from "@components/FlexibleColumns/contract/ContractMidColumn";
 import ContractEndColumn from "@components/FlexibleColumns/contract/ContractEndColumn";
+import { TableRowState } from "@/types/TableRowState";
+import { ContractView } from "@/models/TableViews/ContractView";
+import StartColumn from "@/components/FlexibleColumns/StartColumn";
 
 
-export const ContractPageContext = createContext<any>(null);
+export const ContractPageContext = createContext<TableRowState<ContractView> | undefined>(undefined);
 
 
 const ContractPage: FC = () => {
     const tableTitle = "Contracts";
     const tableURL = "/api/contracts";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
-    const [selectedRow, setSelectedRow] = useState<any>(null);
+    const [selectedRow, setSelectedRow] = useState<ContractView>({} as ContractView);
 
 
     const handleLayoutState = (layout: FCLLayout) => {
@@ -27,14 +29,14 @@ const ContractPage: FC = () => {
     };
 
     return (
-        <ContractPageContext.Provider value={selectedRow}>
+        <ContractPageContext.Provider value={{selectedRow, setSelectedRow}}>
             <FlexibleColumnLayout
                 className="flexible-columns ui5-content-density-compact"
                 style={{backgroundColor:"white"}}
                 layout={layout}
                 startColumn={
                     <div>
-                        <ContractStartColumn
+                        <StartColumn
                             tableURL={tableURL}
                             columns={contractColumns}
                             tableTitle={tableTitle}

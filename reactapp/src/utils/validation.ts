@@ -13,3 +13,18 @@ export function isFilledForm<T extends FormState>(formState: T): boolean {
 
     return isFilled;
 }
+
+
+
+export function isFormChanged<T extends FormState>(formState: T): boolean {
+    let isChanged: boolean = false;
+    let key: keyof typeof formState
+    for (key in formState) {
+        const fieldState = formState[key] as FormFieldState
+
+        if (fieldState.isChanged) {
+            isChanged = true;
+        }
+    }
+    return isChanged;
+}

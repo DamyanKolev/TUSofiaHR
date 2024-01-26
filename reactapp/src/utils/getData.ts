@@ -1,4 +1,4 @@
-import { setNullValuesToEmtyString } from "./forms/setNullValuesToEmtyString";
+import { setNullValuesToEmtyString } from "./forms/formData";
 
 
 export async function getUpdateData<T extends object, D>(data: D, postURL: string): Promise<T | null> {

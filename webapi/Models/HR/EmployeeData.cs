@@ -1,4 +1,6 @@
-﻿namespace webapi.Models.HR
+﻿using webapi.Models.Views;
+
+namespace webapi.Models.HR
 {
     public record EmployeeDataInsert {
         public required EmployeeDTO Employee {get; set;}
@@ -19,6 +21,6 @@
     }
 
     public record EmployeeDataSelect (
-        Employee employee, Contract contract, PersonalData personalData
+        Employee employee, Contract contract, PersonalData personalData, ContractView contractView
     );
 }

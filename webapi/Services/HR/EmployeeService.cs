@@ -92,12 +92,14 @@ namespace webapi.Services.HR
             var employee = _context.Employees.Find(selectDTO.EmployeeId);
             var contract = _context.Contracts.Find(selectDTO.ContractId);
             var personalData = _context.PersonalDatas.Find(selectDTO.PersonalDataId);
+            var contractV = _context.ContractV.Find(selectDTO.ContractId);
 
-            if (employee == null || contract == null || personalData == null) {
+            if (employee == null || contract == null || personalData == null || contractV == null) {
                 return ResponseBuilder.CreateDataResponseWithStatus<EmployeeDataSelect>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
             }
+            var contractView = _mapper.Map<ContractView>(contractV);
 
-            EmployeeDataSelect employeeDataSelect = new (employee, contract ,personalData); 
+            EmployeeDataSelect employeeDataSelect = new (employee, contract ,personalData, contractView); 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, employeeDataSelect);
         }
     }

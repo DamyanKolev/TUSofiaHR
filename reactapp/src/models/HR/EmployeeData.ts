@@ -44,7 +44,7 @@ export interface EmployeeDataInsertDTO {
     contract: ContractInsertDTO| null,
 }
 
-export function createEmployeeDataInsert(employee: EmployeeInsertDTO, pData: PersonalDataDTO, contract: ContractInsertDTO): EmployeeDataInsertDTO {
+export function createEmployeeDataInsertDTO(employee: EmployeeInsertDTO, pData: PersonalDataDTO, contract: ContractInsertDTO): EmployeeDataInsertDTO {
     return {
         employee: {
             ...employee, 

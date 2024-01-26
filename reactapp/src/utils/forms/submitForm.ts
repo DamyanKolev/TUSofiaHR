@@ -1,9 +1,13 @@
 import { parseUpdateDTO } from "../parsers";
 
-export async function submitPostForm(postURL: string, jsonObject: string, successCalback: () => void) {
-    const response = await fetch(postURL, {
+export async function submitPostForm(postUrl: string, jsonObject: string, successCalback: () => void) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(postUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+        },
         body: jsonObject,
     });
     if (response.ok) {

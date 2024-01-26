@@ -10,11 +10,16 @@ export async function submitPostForm(postURL: string, jsonObject: string, succes
 }
 
 
-export async function submitPutForm(tableURL: string, jsonObject: string, successCalback: () => void) {
+export async function submitPutForm<T extends object>(tableURL: string, data: T, successCalback: () => void) {
+    const bodyData = parseUpdateDTO(data)
+    const token = localStorage.getItem("token")
     const response = await fetch(`${tableURL}/update`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: jsonObject,
+        headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(bodyData),
     });
 
     if (response.ok) {

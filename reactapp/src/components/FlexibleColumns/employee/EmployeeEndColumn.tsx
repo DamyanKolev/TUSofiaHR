@@ -1,21 +1,23 @@
 import { FC, Fragment, useState } from 'react';
-import { Bar, BarDesign, Button, FCLLayout, ObjectPage, ObjectPageSection, ObjectPageSubSection, ButtonDesign } from "@ui5/webcomponents-react";
-import { EmployeeInsertDTO, defaultEmployeeInsert } from '@models/HR/Employee';
-import { InsertEmployeeFormState, defaultInsertEmployeeFormState } from '@models/FormStates/employee/InsertEmployeeFormState';
+import { Bar, BarDesign, Button, FCLLayout, ObjectPage, ObjectPageSection, ObjectPageSubSection, ButtonDesign, Ui5CustomEvent, InputDomRef, DatePickerDomRef, RadioButtonDomRef, StandardListItemDomRef, ValueState } from "@ui5/webcomponents-react";
+import { InsertEmployeeFormState} from '@models/FormStates/employee/InsertEmployeeFormState';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
-import { ContractInsertDTO, defaultContractInsert } from '@models/HR/Contract';
-import { PersonalDataDTO, defaultPersonalDataDTO } from '@models/HR/PersonalData';
-import { isFilledForm } from '@utils/validation';
-import { InsertContractFormState, defaultInsertContractFormState } from '@models/FormStates/contract/InsertContractFormState';
-import { PersonalDataFormState, defaultPersonalDataFormState } from '@models/FormStates/personalData/PersonalDataFormState';
+import { isFilledForm, isFormChanged } from '@utils/validation';
+import { InsertContractFormState} from '@/models/FormStates/contract/InsertContractFormState';
+import { PDataFormState} from '@models/FormStates/personalData/PersonalDataFormState';
 import CreateEmployeeForm from '@components/Forms/employee/CreateEmployeeForm';
 import CreatePersonalDataForm from '@components/Forms/personalData/CreatePersonalDataForm';
 import CreateContract from '@components/Forms/contract/CreateContractForm';
-import { formTogle } from '@/store/slices/formTogleSlice';
-import { setErrorInputStates } from '@/utils/forms/formInputState';
+import { formToggle } from '@/store/slices/formToggleSlice';
+import { getNewFormStateFromNestedForms, setErrorInputStates } from '@/utils/forms/formState';
 import { submitPostForm } from '@/utils/forms/submitForm';
-import { EmployeeDataInsert, createEmployeeDataInsert } from '@/models/HR/EmployeeData';
+import { EmployeeDataInsert, createEmployeeDataInsertDTO, defaultEmployeeDataInsert } from '@/models/HR/EmployeeData';
+import { EmpDataInsertFormState, defaultEmpDataInsertState } from '@/models/FormStates/employeeData/EmpDataInsertFormState';
+import { handleDateChangeFunc, handleInputChangeFunc, handleRadioButtonChangeFunc } from '@/utils/handlers/onChangeHandlers';
+import { DatePickerChangeEventDetail } from '@ui5/webcomponents/dist/DatePicker.js';
+import DataType from '@/types/DataType';
+import { getNewFormDataFromNestedForms } from '@/utils/forms/formData';
 
 
 interface EmployeeEndColumnProps {
@@ -25,21 +27,21 @@ interface EmployeeEndColumnProps {
 
 
 const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, tableURL}) => {
-    const [employeeForm, setEmployeeForm] = useState<EmployeeInsertDTO>(defaultEmployeeInsert);
-    const [contractForm, setContractForm] = useState<ContractInsertDTO>(defaultContractInsert);
-    const [personalDataForm, setPersonalDataForm] = useState<PersonalDataDTO>(defaultPersonalDataDTO);
-    const [employeeFormState, setEmployeeFormState] = useState<InsertEmployeeFormState>(defaultInsertEmployeeFormState)
-    const [contractFormState, setContractFormState] = useState<InsertContractFormState>(defaultInsertContractFormState)
-    const [personalDataFormState, setPersonalDataFormState] = useState<PersonalDataFormState>(defaultPersonalDataFormState)
-
+    const [formData, setFormData] = useState<EmployeeDataInsert>(defaultEmployeeDataInsert)
+    const [formState, setFormState] = useState<EmpDataInsertFormState>(defaultEmpDataInsertState)
+    const [disabled, setDisabled] = useState<boolean>(true)
+    const setPDataFormState = (newState: PDataFormState) => {setFormState({...formState, personalData: newState})}
+    const setContractFormState = (newState: InsertContractFormState) => {setFormState({...formState, contract: newState})}
+    const setEmployeeFormState = (newState: InsertEmployeeFormState) => {setFormState({...formState, employee: newState})}
     const dispatchIsSuccess = useAppDispatch()
 
+
     const setDefaultValues = () => {
-        setEmployeeForm(defaultEmployeeInsert);
-        setContractForm(defaultContractInsert)
-        setPersonalDataForm(defaultPersonalDataDTO)
+        setFormData(defaultEmployeeDataInsert)
+        setFormState(defaultEmpDataInsertState)
         handleLayoutState(FCLLayout.OneColumn)
-        dispatchIsSuccess(formTogle())
+        dispatchIsSuccess(formToggle())
+        setDisabled(true)
     }
 
     const navBackClick = ():void => {
@@ -53,35 +55,69 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
 
 
     const onSubmitForm = async () => {
-        const isFilledEmployee = isFilledForm<InsertEmployeeFormState>(employeeFormState)
-        const isFilledContract = isFilledForm<InsertContractFormState>(contractFormState)
-        const isFilledPersonalData = isFilledForm<PersonalDataFormState>(personalDataFormState)
+        const isFilledEmployee = isFilledForm(formState.employee)
+        const isFilledContract = isFilledForm(formState.contract)
+        const isFilledPersonalData = isFilledForm(formState.personalData)
+        const isChangedContract = isFormChanged(formState.contract)
 
-        let formObject: EmployeeDataInsert = createEmployeeDataInsert(employeeForm, personalDataForm, contractForm)
+        let formObject = createEmployeeDataInsertDTO(formData.employee, formData.personalData, null)
 
-        if(!isFilledContract){
+        if(isChangedContract){
+            const isFilled = isFilledEmployee && isFilledContract && isFilledPersonalData
+            if(isFilled) {
+                formObject.contract= formData.contract
+                await submitPostForm(`${tableURL}/create`, JSON.stringify(formObject), successCalback)
+            }
+            else {
+                setErrorInputStates(formState.employee, setEmployeeFormState)
+                setErrorInputStates(formState.contract, setContractFormState)
+                setErrorInputStates(formState.personalData, setPDataFormState)
+            }
+        }
+        else {
             const isFilled = isFilledEmployee && isFilledPersonalData
             if(isFilled) {
                 await submitPostForm(`${tableURL}/create`, JSON.stringify(formObject), successCalback)
             }
             else {
-                setErrorInputStates<InsertEmployeeFormState>(employeeFormState, setEmployeeFormState)
-                setErrorInputStates<PersonalDataFormState>(personalDataFormState, setPersonalDataFormState)
-            }
-        }
-        else {
-            const isFilled = isFilledEmployee && isFilledContract && isFilledPersonalData
-            if(isFilled) {
-                formObject.contract = contractForm
-                await submitPostForm(`${tableURL}/create`, JSON.stringify(formObject), successCalback)
-            }
-            else {
-                setErrorInputStates<InsertEmployeeFormState>(employeeFormState, setEmployeeFormState)
-                setErrorInputStates<InsertContractFormState>(contractFormState, setContractFormState)
-                setErrorInputStates<PersonalDataFormState>(personalDataFormState, setPersonalDataFormState)
+                setErrorInputStates(formState.employee, setEmployeeFormState)
+                setErrorInputStates(formState.personalData, setPDataFormState)
             }
         }
     };
+
+    //input change event listener 
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const target = event.target
+        handleInputChangeFunc(target, formData, setFormData, formState, setFormState);
+        if (disabled) {setDisabled(false)}
+    };
+
+    //date input change event listener 
+    const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
+        const target = event.target
+        handleDateChangeFunc(target, formData, setFormData, formState, setFormState);
+        if (disabled) {setDisabled(false)}
+    }
+
+    //radio button change event listener 
+    const handleRadioButtonChange = (event: Ui5CustomEvent<RadioButtonDomRef, never>) => {
+        const target = event.target
+        handleRadioButtonChangeFunc(target, formData, setFormData, formState, setFormState);
+        if (disabled) {setDisabled(false)}
+    }
+
+
+    const handleConfirm = (selectedItem: StandardListItemDomRef, name: string) => {
+        const rowId = selectedItem.id
+        const newFormData = getNewFormDataFromNestedForms(formData, name, rowId, DataType.Int)
+        const formFieldState = { isFilled: true, valueState: ValueState.None, message: "", isChanged: true}
+        const newFormStates = getNewFormStateFromNestedForms(formState, name, formFieldState)
+
+        setFormData(newFormData);
+        setFormState(newFormStates)
+        if (disabled) {setDisabled(false)}
+    }
 
 
     return (
@@ -89,15 +125,10 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
 
             <ObjectPage
                 footer={
-                    <Bar
-                        design={BarDesign.FloatingFooter}
-                        endContent={
-                            <Fragment>
-                                <Button design={ButtonDesign.Transparent} onClick={onSubmitForm}>Отказ</Button>
-                                <Button design={ButtonDesign.Emphasized} onClick={onSubmitForm}>Създай</Button>
-                            </Fragment>
-                        }
-                    />
+                    <Bar design={BarDesign.FloatingFooter}>
+                        <Button slot="endContent" design={ButtonDesign.Transparent} onClick={navBackClick}>Отказ</Button>
+                        <Button slot="endContent" design={ButtonDesign.Emphasized} onClick={onSubmitForm} disabled={disabled}>Запази</Button>
+                    </Bar>
                 }
                 headerContent={
                     <Bar design={BarDesign.Subheader} 
@@ -118,10 +149,10 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
                         id="employee-info"
                     >
                         <CreateEmployeeForm
-                            getFormState={()=> {return employeeFormState}}
-                            getFormData={() => {return employeeForm}}
-                            setFormData={setEmployeeForm}
-                            setFormState={setEmployeeFormState}
+                            getFormState={() => {return formState.employee}}
+                            getFormData={() => {return formData.employee}}
+                            handleInputChange={handleInputChange}
+                            handleConfirm={handleConfirm}
                         />
                     </ObjectPageSubSection>
 
@@ -139,10 +170,11 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
                         id="personal-data-info"
                     >
                         <CreatePersonalDataForm
-                            getFormData={() => {return personalDataForm}}
-                            getFormState={() => {return personalDataFormState}}
-                            getFormDataSetter={setPersonalDataForm}
-                            getFormStateSetter={setPersonalDataFormState}
+                            getFormState={() => {return formState.personalData}}
+                            getFormData={() => {return formData.personalData}}
+                            handleInputChange={handleInputChange}
+                            handleDateChange={handleDateChange}
+                            handleRadioButtonChange={handleRadioButtonChange}
                         />
                     </ObjectPageSubSection>
 
@@ -159,10 +191,11 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
                         id="contract-info"
                     >
                         <CreateContract
-                            getFormData={() => {return contractForm}}
-                            getFormState={() => { return contractFormState}}
-                            setFormData={setContractForm}
-                            setFormState={setContractFormState}
+                            getFormState={() => {return formState.contract}}
+                            getFormData={() => {return formData.contract}}
+                            handleInputChange={handleInputChange}
+                            handleDateChange={handleDateChange}
+                            handleConfirm={handleConfirm}
                         />
                     </ObjectPageSubSection>
                 </ObjectPageSection>

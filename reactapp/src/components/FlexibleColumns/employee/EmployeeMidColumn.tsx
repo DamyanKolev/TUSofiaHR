@@ -1,24 +1,25 @@
 import { FC, useContext, useState, useEffect, Fragment } from 'react';
-import { Bar, BarDesign, Button, ButtonDesign, FCLLayout, FlexBox, FlexBoxAlignItems, FlexBoxDirection, ObjectPage, ObjectPageSection, ObjectPageSubSection } from '@ui5/webcomponents-react';
-import { Employee, defaultEmployee } from '@models/HR/Employee';
+import { Bar, BarDesign, Button, ButtonDesign, DatePickerDomRef, FCLLayout, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, ObjectPage, ObjectPageSection, ObjectPageSubSection, RadioButtonDomRef, StandardListItemDomRef, Ui5CustomEvent, ValueState } from '@ui5/webcomponents-react';
 import { toggle } from '@store/slices/toggleSlice';
 import { useAppDispatch } from '@store/storeHooks';
 import { EmployeeView } from '@models/TableViews/EmployeeView';
-import { PersonalData, defaultPersonalData } from '@models/HR/PersonalData';
-import { Contract, defaultContract } from '@models/HR/Contract';
-// import { UpdateContractFormState, defaultUpdateContractFormState } from '@models/FormStates/contract/UpdateContractFormState';
-// import { PersonalDataFormState, defaultPersonalDataFormState } from '@models/FormStates/personalData/PersonalDataFormState';
-// import { UpdateEmployeeFormState, defaultUpdateEmployeeFormState } from '@models/FormStates/employee/UpdateEmployeeFormState';
-import { setNullValuesToEmtyString } from '@utils/forms/setNullValuesToEmtyString';
+import { getNewFormDataFromNestedForms } from '@/utils/forms/formData';
 import { EmployeePageContext } from '@pages/hr/EmployeePage';
 import UpdateEmployeeForm from '@components/Forms/employee/UpdateEmployeeForm';
 import UpdatePersonalDataForm from '@components/Forms/personalData/UpdatePersonalDataForm';
 import UpdateContract from '@components/Forms/contract/UpdateContractForm';
-import { ContractUpdateFormData, UpdateContractFormState, defaultUpdateContractFormState } from '@/models/FormStates/contract/UpdateContractFormState';
-import { EmployeeFormUpdateData, UpdateEmployeeFormState, defaultUpdateEmployeeFormState } from '@/models/FormStates/employee/UpdateEmployeeFormState';
-import { EmployeeData, EmployeeDataEditBtnState, EmployeeDataUpdate, createEmployeeDataUpdate, defaultEditBtnsState } from '@/models/HR/EmployeeData';
+import { EmployeeData, EmployeeDataEditBtnState, EmployeeDataUpdate, EmployeeDataUpdateDTO, defaultEditBtnsState, defaultEmployeeDataUpdate } from '@/models/HR/EmployeeData';
 import { submitPutForm } from '@/utils/forms/submitForm';
-import { PersonalDataFormState, defaultPersonalDataFormState } from '@/models/FormStates/personalData/PersonalDataFormState';
+import { EmpDataUpdateFormState, EmployeeDataUpdateData, defaultEmpDataUpdateState, defaultEmployeeDataUpdateData } from '@/models/FormStates/employeeData/EmpDataUpdateFormState';
+import { TableRowState } from '@/types/TableRowState';
+import { getUpdateData } from '@/utils/getData';
+import { createContractUpdateData } from '@/models/FormStates/contract/UpdateContractFormState';
+import { createEmployeeUpdateData } from '@/models/FormStates/employee/UpdateEmployeeFormState';
+import { isFilledForm, isFormChanged } from '@/utils/validation';
+import { getNewFormStateFromNestedForms, setErrorInputStates } from '@/utils/forms/formState';
+import { handleDateChangeFunc, handleInputChangeFunc, handleRadioButtonChangeFunc } from '@/utils/handlers/onChangeHandlers';
+import { DatePickerChangeEventDetail } from '@ui5/webcomponents/dist/DatePicker.js';
+import DataType from '@/types/DataType';
 
 
 interface EmployeeMidColumnProps {
@@ -30,30 +31,46 @@ interface EmployeeMidColumnProps {
 
 
 const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tableURL}) => {
-    const selectedRow = useContext<EmployeeView>(EmployeePageContext)
-    const [employeeForm, setEmployeeForm] = useState<Employee>(defaultEmployee)
-    const [contractForm, setContractForm] = useState<Contract>(defaultContract);
-    const [pDataForm, setPDataForm] = useState<PersonalData>(defaultPersonalData);
-
-    const [employeeFormState, setEmployeeFormState] = useState<UpdateEmployeeFormState>(defaultUpdateEmployeeFormState)
-    const [contractFormState, setContractFormState] = useState<UpdateContractFormState>(defaultUpdateContractFormState)
-    const [pDataFormState, setPDataFormState] = useState<PersonalDataFormState>(defaultPersonalDataFormState)
-
-    const [conUpdateData, setConUpdateData] = useState<ContractUpdateFormData>({} as ContractUpdateFormData)
-    const [empUpdateData, setEmpUpdateData] = useState<EmployeeFormUpdateData>({} as EmployeeFormUpdateData)
+    const rowState = useContext<TableRowState<EmployeeView> | undefined>(EmployeePageContext)
+    const [formData, setFormData] = useState<EmployeeDataUpdate>(defaultEmployeeDataUpdate)
+    const [formState, setFormState] = useState<EmpDataUpdateFormState>(defaultEmpDataUpdateState)
+    const [updateData, setUpdateData] = useState<EmployeeDataUpdateData>(defaultEmployeeDataUpdateData)
     const [editMode, setEditMode] = useState<EmployeeDataEditBtnState>(defaultEditBtnsState);
+    const [disabled, setDisabled] = useState<boolean>(true)
     const dispatchIsSuccess = useAppDispatch()
 
+
+    const init = async () => {
+        if(rowState) {
+            const bodyData = {
+                employeeId: rowState.selectedRow.employeeId,
+                personalDataId: rowState.selectedRow.personalDataId,
+                contractId: rowState.selectedRow.contractId
+            }
+            const data = await getUpdateData<EmployeeData, object>(bodyData, `${tableURL}/update-data`)
+    
+            if (data != null) {
+                const newFormData:EmployeeDataUpdate = {
+                    employee: data.employee,
+                    contract: data.contract,
+                    personalData: data.personalData
+                }
+                setFormData(newFormData)
+                setUpdateData({
+                    contract: createContractUpdateData((data.contractView)),
+                    employee: createEmployeeUpdateData(rowState.selectedRow)
+                })
+            }
+        }
+    }
+
+
     const setDefaultValues = () => {
-        setEmployeeForm(defaultEmployee)
-        setContractForm(defaultContract)
-        setPDataForm(defaultPersonalData)
-
-        setEmployeeFormState(defaultUpdateEmployeeFormState)
-        setContractFormState(defaultUpdateContractFormState)
-        setPDataFormState(defaultPersonalDataFormState)
-
+        setFormData(defaultEmployeeDataUpdate)
+        setFormState(defaultEmpDataUpdateState)
+        setEditMode(defaultEditBtnsState)
         handleLayoutState(FCLLayout.OneColumn)
+        rowState?.setSelectedRow({} as EmployeeView)
     }
 
     const successCalback = ():void => {
@@ -65,60 +82,81 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
         setDefaultValues()
     }
 
-    const setData = (data: EmployeeData) => {
-        const employee = data.employee
-        const personalData = setNullValuesToEmtyString<PersonalData>(data.personalData)
-        let contract = data.contract
-
-        setEmployeeForm(employee)
-        setPDataForm(personalData)
-
-        if(contract == null){
-            setContractForm(defaultContract)
-        }
-        else {
-            let contractDTO = setNullValuesToEmtyString<Contract>(contract) 
-            setContractForm(contractDTO)
-        }
- 
-    }
-
-    const getEmployeeData = async() => {
-        const response = await fetch(`${tableURL}/update-data`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                employeeId: selectedRow.employeeId,
-                personalDataId: selectedRow.personalDataId,
-                contractId: selectedRow.contractId
-            }),
-        })
-        const json = await response.json()
-    
-        if (response.ok) {
-            const data: EmployeeData = json.data
-            setData(data)
-        }
-        else {
-            console.error(json.message)
-        }
-    }
 
 
     const submitForm = async () => {
-        let object: EmployeeDataUpdate = createEmployeeDataUpdate(
-            employeeForm, pDataForm, {...contractForm, changeDate: new Date()}
-        )
+        let object: EmployeeDataUpdateDTO = formData
+        let isSubmittable = false
 
-        submitPutForm(tableURL, JSON.stringify(object), successCalback)
+        Object.entries(formState).forEach(([key, value]) => {
+            const fieldType = typeof value
+            if(fieldType == "object"){
+                if (isFormChanged(value)){
+                    if (isFilledForm(value)) {
+                        isSubmittable = true
+                    }
+                    else {
+                        isSubmittable = false
+                        setErrorInputStates(value, (newState): void => {setFormState({...formState, [key]: newState})})
+                    }
+                }
+                else {
+                    object = {...object, [key]: null}
+                }
+            }
+        })
+
+        if (isSubmittable) {
+            submitPutForm(tableURL, object, successCalback)
+        }
     };
 
 
     useEffect(() => {
-        if (selectedRow) {
-            getEmployeeData()
+        if(rowState) {
+            if (Object.keys(rowState.selectedRow).length > 0) {
+                init()
+            }
         }
-    }, [selectedRow]);
+    }, [rowState]);
+
+
+
+        //input change event listener 
+        const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+            const target = event.target
+            handleInputChangeFunc(target, formData, setFormData, formState, setFormState);
+            if (disabled) {setDisabled(false)}
+        };
+    
+        //date input change event listener 
+        const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
+            const target = event.target
+            handleDateChangeFunc(target, formData, setFormData, formState, setFormState);
+            if (disabled) {setDisabled(false)}
+        }
+    
+        //radio button change event listener 
+        const handleRadioButtonChange = (event: Ui5CustomEvent<RadioButtonDomRef, never>) => {
+            const target = event.target
+            handleRadioButtonChangeFunc(target, formData, setFormData, formState, setFormState);
+            if (disabled) {setDisabled(false)}
+        }
+    
+    
+        const handleConfirm = (selectedItem: StandardListItemDomRef, name: string) => {
+            const rowId = selectedItem.id
+            const value = selectedItem.textContent? selectedItem.textContent : ""
+            const newFormData = getNewFormDataFromNestedForms(formData, name, rowId, DataType.Int)
+            const newUpdateData = getNewFormDataFromNestedForms(updateData, name, value, DataType.String);
+            const formFieldState = { isFilled: true, valueState: ValueState.None, message: "", isChanged: true}
+            const newFormStates = getNewFormStateFromNestedForms(formState, name, formFieldState)
+
+            setFormData(newFormData);
+            setFormState(newFormStates)
+            setUpdateData(newUpdateData)
+            if (disabled) {setDisabled(false)}
+        }
 
 
     return (
@@ -155,12 +193,11 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                     </FlexBox>
                     <UpdateEmployeeForm
                         getEditMode={() => {return editMode.empEdit}}
-                        getFormData={() => {return employeeForm}}
-                        setFormData={setEmployeeForm}
-                        getFormState={() => {return employeeFormState}}
-                        setFormState={setEmployeeFormState}
-                        getUpdateData={() => {return empUpdateData}}
-                        setUpdateData={setEmpUpdateData}
+                        getFormData={() => {return formData.employee}}
+                        getFormState={() => {return formState.employee}}
+                        getUpdateData={() => {return updateData.employee}}
+                        handleInputChange={handleInputChange}
+                        handleConfirm={handleConfirm}
                     />
                 </ObjectPageSubSection>
 
@@ -182,10 +219,11 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                     </FlexBox>
                     <UpdatePersonalDataForm
                         getEditMode={() => {return editMode.pDataEdit}}
-                        getFormData={() => {return pDataForm}}
-                        setFormData={setPDataForm}
-                        getFormState={() => {return pDataFormState}}
-                        setFormState={setPDataFormState}
+                        getFormData={() => {return formData.personalData}}
+                        getFormState={() => {return formState.personalData}}
+                        handleInputChange={handleInputChange}
+                        handleDateChange={handleDateChange}
+                        handleRadioButtonChange={handleRadioButtonChange}
                     />
                 </ObjectPageSubSection>
 
@@ -206,12 +244,12 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                     </FlexBox>
                     <UpdateContract
                         getEditMode={() => {return editMode.conEdit}}
-                        getFormData={() => {return contractForm}}
-                        setFormData={setContractForm}
-                        getFormState={() => {return contractFormState}}
-                        setFormState={setContractFormState}
-                        getUpdateData={() => {return conUpdateData}}
-                        setUpdateData={setConUpdateData}
+                        getFormData={() => {return formData.contract}}
+                        getFormState={() => {return formState.contract}}
+                        getUpdateData={() => {return updateData.contract}}
+                        handleInputChange={handleInputChange}
+                        handleDateChange={handleDateChange}
+                        handleConfirm={handleConfirm}
                     />
                 </ObjectPageSubSection>
             </ObjectPageSection>

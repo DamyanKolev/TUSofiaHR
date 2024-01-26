@@ -6,7 +6,7 @@ import { Filter, createFilter, createPageFilterInfo, initialFilterState } from "
 import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
-import { formTogle } from "@store/slices/formTogleSlice";
+import { formToggle } from "@store/slices/formToggleSlice";
 import { createPortal } from "react-dom";
 
 
@@ -106,7 +106,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
     
     useEffect(() => {
         if (isSuccess) {
-            dispatchIsSuccess(formTogle())
+            dispatchIsSuccess(formToggle())
             setInputValue("")
         }
     }, [isSuccess])

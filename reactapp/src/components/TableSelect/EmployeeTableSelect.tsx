@@ -1,7 +1,7 @@
 import { employeeContractJoinTablesInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
 import { Filter, createFilter, createPageFilterInfo, initialFilterState } from "@models/Page/Page";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
-import { formTogle } from "@store/slices/formTogleSlice";
+import { formToggle } from "@store/slices/formToggleSlice";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
 import { Button, FlexBox, FlexBoxAlignItems, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItem, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { FC, Fragment, useEffect, useState } from "react";
@@ -100,7 +100,7 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
 
     useEffect(() => {
         if (isSuccess) {
-            dispatchIsSuccess(formTogle())
+            dispatchIsSuccess(formToggle())
             setInputValue("")
         }
     }, [isSuccess])

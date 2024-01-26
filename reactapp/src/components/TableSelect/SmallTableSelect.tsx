@@ -4,7 +4,7 @@ import {
 import { FC, Fragment, useEffect, useState } from "react"
 import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
-import { formTogle } from "@store/slices/formTogleSlice";
+import { formToggle } from "@store/slices/formToggleSlice";
 import { createPortal } from "react-dom";
 
 
@@ -78,7 +78,7 @@ const SmallTableSelect: FC<SmallTableSelectProps> = ({ joinInfo, value = "", nam
 
     useEffect(() => {
         if (isSuccess) {
-            dispatchIsSuccess(formTogle())
+            dispatchIsSuccess(formToggle())
             setInputValue("")
         }
     }, [isSuccess])

@@ -1,3 +1,5 @@
+import { parseUpdateDTO } from "../parsers";
+
 export async function submitPostForm(postURL: string, jsonObject: string, successCalback: () => void) {
     const response = await fetch(postURL, {
         method: "POST",

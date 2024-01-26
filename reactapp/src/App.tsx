@@ -1,14 +1,19 @@
 // import './App.css'
 import { FC, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import { Article62, ContractPage, DepartmentPage, EmployeePage, EmployeeReports, Home, Login, PositionPage, References, SchedulePage, Settings } from './pages/PagesBundle';
 import setSelectedTheme from '@utils/themesUtils';
 
 const App: FC = () => {
+    const isLoginIn = localStorage.getItem("isLoginIn")
+    const navigate = useNavigate();
     
     useEffect(() => {
         setSelectedTheme();
+        if(isLoginIn == null || !isLoginIn) {
+            navigate("/api/auth/login")
+        }
     }, []);
 
     return (

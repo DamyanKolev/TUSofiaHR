@@ -13,6 +13,15 @@ export interface PositionDTO {
     maxSalary: number
 }
 
-export const defaultPosition: Position= {} as Position
+export const defaultPosition: Position= {
+    id: 0,
+    positionName: "",
+    minSalary: 0,
+    maxSalary: 0,
+}
 
-export const defaultPositionDTO: PositionDTO= {} as PositionDTO
+export const defaultPositionDTO: PositionDTO= {
+    positionName: "",
+    minSalary: 0,
+    maxSalary: 0,
+}

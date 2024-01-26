@@ -6,13 +6,13 @@ import { PDataFormState, defaultPDataUpdateFormState } from "../personalData/Per
 export interface EmpDataUpdateFormState {
     employee: UpdateEmployeeFormState,
     contract: UpdateContractFormState,
-    personal_data: PDataFormState
+    personalData: PDataFormState
 }
 
 export const defaultEmpDataUpdateState: EmpDataUpdateFormState = {
     employee: defaultUpdateEmployeeFormState,
     contract: defaultUpdateContractFormState,
-    personal_data: defaultPDataUpdateFormState,
+    personalData: defaultPDataUpdateFormState,
 }
 
 

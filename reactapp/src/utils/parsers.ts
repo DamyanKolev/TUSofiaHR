@@ -34,23 +34,43 @@ export function parseValueByType<T>(
 
 
 
-export function parseObjectToUpdateDate<T extends object>(formData: T): T {
+function parseObjectFields<T extends object>(formData: T): T {
     let newData: T = {} as T
     Object.entries(formData).forEach(([key, value])=> {
-        if (key !== "id") {
-            if (typeof value == "string"){
-                if(value == ""){
-                    newData = {...newData, [key]: null}
-                }
-                else {
-                    newData = {...newData, [key]: value}
-                }
+        if (key !== "change_date"){
+            if (typeof value == "string" && value == ""){
+                newData = {...newData, [key]: null}
             }
             else {
                 newData = {...newData, [key]: value}
             }
         }
+        else {
+            newData = {...newData, [key]: formatDate(new Date())}
+        }
     }) 
 
     return newData
+}
+
+
+
+export function parseUpdateDTO<T extends object>(formData: T): T {
+    let newFormData: T = formData
+    Object.entries(formData).forEach(([key, value])=> {
+        if(value != null) {
+            if(formData.hasOwnProperty("id")) {
+                if (key !== "id") {
+                    const newUpdateData = parseObjectFields(value)
+                    newFormData = {...newFormData, [key]: newUpdateData}
+                }
+            }
+            else {
+                const newData = parseUpdateDTO(value)
+                newFormData = {...newFormData, [key]: newData}
+            }
+        }
+    })
+
+    return newFormData
 }

@@ -1,8 +1,7 @@
 import { FormFieldState } from "@models/FormStates/FormState";
 import { ValueState } from "@ui5/webcomponents-react";
-import { Dispatch, SetStateAction } from "react";
 
-export function setFormValueState<T>(formState: T, setFormState: Dispatch<SetStateAction<T>>, valueState: ValueState): void {
+export function setFormValueState<T>(formState: T, setFormState: (formState: T) => void, valueState: ValueState): void {
     let currentState = formState
     let key: keyof typeof formState
     for (key in formState) {
@@ -16,7 +15,7 @@ export function setFormValueState<T>(formState: T, setFormState: Dispatch<SetSta
 };
 
 
-export function setErrorInputStates<T>(formState: T, setFormState: Dispatch<SetStateAction<T>>): void {
+export function setErrorInputStates<T>(formState: T, setFormState: (formState: T) => void): void {
     setFormValueState<T>(formState, setFormState, ValueState.Error);
     setTimeout(() => {
         setFormValueState<T>(formState, setFormState, ValueState.None);

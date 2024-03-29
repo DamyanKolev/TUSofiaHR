@@ -7,11 +7,8 @@ namespace webapi.Models.HR
     {
         [Key]
         public int Id { get; set; }
-        [NotNull]
         public required string PositionName { get; set; }
-        [NotNull]
         public required decimal MinSalary { get; set; }
-        [NotNull]
         public required decimal MaxSalary { get; set ; }
     }
 

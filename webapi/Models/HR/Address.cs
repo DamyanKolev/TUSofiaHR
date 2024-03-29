@@ -13,8 +13,13 @@ namespace webapi.Models.HR
         [NotNull]
         public required string PostalCode { get; set; }
         [NotNull]
-        public int TerritoryId { get; set; }
-        public required SysAdministrativeTerritory Territory { get; set; }
+        public required string District { get; set; }
+        [NotNull]
+        public required string Municipilaty { get; set; }
+        [NotNull]
+        public required string Region { get; set; }
+        [NotNull]
+        public required string PopulatedPlace { get; set; }
     }
 
 
@@ -22,7 +27,10 @@ namespace webapi.Models.HR
     {
         public required string StreetAddress { get; set; }
         public required string PostalCode { get; set; }
-        public required int TerritoryId { get; set; }
+        public required string District { get; set; }
+        public required string Municipilaty { get; set; }
+        public required string Region { get; set; }
+        public required string PopulatedPlace { get; set; }
 
     }
 

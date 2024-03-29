@@ -7,24 +7,26 @@ namespace webapi.Models.HR
     {
         [Key]
         public int Id { get; set; }
-        [NotNull]
-        public required string EGN { get; set; }
-        public DateOnly? BirthDate { get; set; }
-        public Gender? Gender { get; set; }
+        public required string IdentityText { get; set; }
+        public int IdentityCode { get; set; }
+        public Nullable<DateOnly> BirthDate { get; set; }
+        public Nullable<Gender> Gender { get; set; }
         public string? PersonalIdNumber { get; set; }
-        public DateOnly? PersonalIdIssueDate { get; set; }
+        public Nullable<DateOnly> PersonalIdIssueDate { get; set; }
         public string? PersonalIdIssueBy { get; set; }
+        public Nullable<int> AddressId { get; set; }
         public Address? Address { get; set; }
     }
 
     public record PersonalDataDTO
     {
-        public required string EGN { get; set; }
-        public DateOnly? BirthDate { get; set; }
-        public Gender? Gender { get; set; }
+        public required string IdentityText { get; set; }
+        public int IdentityCode { get; set; }
+        public Nullable<DateOnly> BirthDate { get; set; }
+        public Nullable<Gender> Gender { get; set; }
         public string? PersonalIdNumber { get; set; }
-        public DateOnly? PersonalIdIssueDate { get; set; }
+        public Nullable<DateOnly> PersonalIdIssueDate { get; set; }
         public string? PersonalIdIssueBy { get; set; }
-        public Address? Address { get; set; }
+        public Nullable<int> AddressId { get; set; }
     }
 }

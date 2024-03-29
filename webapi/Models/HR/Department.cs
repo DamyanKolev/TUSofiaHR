@@ -7,7 +7,6 @@ namespace webapi.Models.HR
     {
         [Key]
         public int Id { get; set; }
-        [NotNull]
         public required string DepartmentName { get; set; }
     }
 

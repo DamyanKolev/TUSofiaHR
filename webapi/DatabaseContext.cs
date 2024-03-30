@@ -14,11 +14,13 @@ namespace webapi
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<PersonalData> PersonalDatas { get; set; }
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Company> Companies { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<EmployeeContracts> EmployeeContracts { get; set; }
+        public DbSet<Insurance> Insurances { get; set; }
+        public DbSet<Income> Incomes { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
 
 
 
@@ -29,11 +31,16 @@ namespace webapi
         public DbSet<SysIconomicActivity> SysIconomicActivities { get; set; }
         public DbSet<SysPosition> SysPositions { get; set; }
         public DbSet<SysContractDocumentType> SysContractDocumentTypes { get; set; }
+        public DbSet<SysInsuranceType> SysInsuranceTypes { get; set; }
+        public DbSet<SysPaymentType> SysPaymentTypes { get; set; }
 
 
         //Table Views
-        public DbSet<EmployeeV> EmployeeV { get; set; }
-        public DbSet<ContractV> ContractV { get; set; }
+        public DbSet<EmployeeView> EmployeeV { get; set; }
+        public DbSet<ContractView> ContractV { get; set; }
+        public DbSet<AnnexView> AnnexV { get; set; }
+        public DbSet<InsuranceView> InsuranceV { get; set; }
+
 
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) 
@@ -47,16 +54,28 @@ namespace webapi
             builder.Seed();
             builder.UpdateIdentityTablesNames();
 
-            builder.Entity<EmployeeV>(v =>
+            builder.Entity<EmployeeView>(v =>
             {
                 v.HasNoKey();
                 v.ToView("employee_v");
             });
 
-            builder.Entity<ContractV>(v =>
+            builder.Entity<ContractView>(v =>
             {
                 v.HasNoKey();
                 v.ToView("contract_v");
+            });
+
+            builder.Entity<AnnexView>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("annex_v");
+            });
+
+            builder.Entity<InsuranceView>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("insurance_v");
             });
         }
     }

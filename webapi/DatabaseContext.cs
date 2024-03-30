@@ -36,10 +36,10 @@ namespace webapi
 
 
         //Table Views
-        public DbSet<EmployeeView> EmployeeV { get; set; }
-        public DbSet<ContractView> ContractV { get; set; }
-        public DbSet<AnnexView> AnnexV { get; set; }
-        public DbSet<InsuranceView> InsuranceV { get; set; }
+        public DbSet<EmployeeV> EmployeeV { get; set; }
+        public DbSet<ContractV> ContractV { get; set; }
+        public DbSet<AnnexV> AnnexV { get; set; }
+        public DbSet<InsuranceV> InsuranceV { get; set; }
 
 
 
@@ -54,25 +54,25 @@ namespace webapi
             builder.Seed();
             builder.UpdateIdentityTablesNames();
 
-            builder.Entity<EmployeeView>(v =>
+            builder.Entity<EmployeeV>(v =>
             {
                 v.HasNoKey();
                 v.ToView("employee_v");
             });
 
-            builder.Entity<ContractView>(v =>
+            builder.Entity<ContractV>(v =>
             {
                 v.HasNoKey();
                 v.ToView("contract_v");
             });
 
-            builder.Entity<AnnexView>(v =>
+            builder.Entity<AnnexV>(v =>
             {
                 v.HasNoKey();
                 v.ToView("annex_v");
             });
 
-            builder.Entity<InsuranceView>(v =>
+            builder.Entity<InsuranceV>(v =>
             {
                 v.HasNoKey();
                 v.ToView("insurance_v");

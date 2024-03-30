@@ -29,8 +29,8 @@ namespace webapi
             CreateMap<RoleDTO, Role>();
             CreateMap<UserDTO, User>();
 
-            CreateMap<EmployeeV, EmployeeView>();
-            CreateMap<ContractV, ContractView>();
+            CreateMap<EmployeeV, EmployeeV>();
+            CreateMap<ContractV, ContractV>();
         }
     }
 }

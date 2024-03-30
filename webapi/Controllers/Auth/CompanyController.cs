@@ -5,7 +5,7 @@ using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Services.HR;
 
-namespace webapi.Controllers.HR
+namespace webapi.Controllers.Auth
 {
     [Authorize(Roles = IdentityRoles.Admin)]
     [Authorize(Roles = IdentityRoles.Accountant)]
@@ -19,7 +19,7 @@ namespace webapi.Controllers.HR
             _companyService = companyService;
         }
 
-        
+
         [HttpPost("/api/company/create", Name = "CreateCompany")]
         public IActionResult Post([FromBody] CompanyDTO companyDTO)
         {

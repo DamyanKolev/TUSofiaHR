@@ -1,6 +1,6 @@
 ﻿namespace webapi.Models.Views
 {
-    public class AnnexView
+    public class AnnexV
     {
         public int ContractId { get; set; }
         public DateOnly ConclusionDate { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace webapi.Models.Views
 {
-    public class InsuranceView
+    public class InsuranceV
     {
         public int EmployeeId { get; set; }
         public required string Surname { get; set; }

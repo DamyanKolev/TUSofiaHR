@@ -1,6 +1,6 @@
 ﻿namespace webapi.Models.Views
 {
-    public class Article62View
+    public class Article62V
     {
         public int ContractId { get; set; }
         public required string EmployeeName { get; set;}

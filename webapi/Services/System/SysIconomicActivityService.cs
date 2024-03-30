@@ -8,6 +8,7 @@ namespace webapi.Services.System
     public interface ISysIconomicActivityService
     {
         public ResponseWithStatus<DataResponse<PageResponse<SysIconomicActivity>>> GetIconomicActivitiesPage(PageFilterInfo pageFilterInfo);
+        public ResponseWithStatus<DataResponse<List<SysIconomicActivity>>> SelectAll();
     }
     public class SysIconomicActivityService : ISysIconomicActivityService
     {
@@ -32,6 +33,15 @@ namespace webapi.Services.System
             PageResponse<SysIconomicActivity> pageResponse = new (pages, countRecords, activities);
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
+        }
+
+        public ResponseWithStatus<DataResponse<List<SysIconomicActivity>>> SelectAll()
+        {
+            var iconomicActivities = _context.SysIconomicActivities
+                .OrderBy(x => x.Id)
+                .ToList();
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, iconomicActivities);
         }
     }
 }

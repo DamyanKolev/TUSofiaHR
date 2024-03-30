@@ -7,7 +7,7 @@ namespace webapi.Services.System
 {
     public interface ISysContractDocumentTypeService
     {
-        public ResponseWithStatus<DataResponse<List<SysContractDocumentType>>> GetDocumnetTypes();
+        public ResponseWithStatus<DataResponse<List<SysContractDocumentType>>> SelectAll();
     }
     public class SysContractDocumentTypeService: ISysContractDocumentTypeService
     {
@@ -18,7 +18,7 @@ namespace webapi.Services.System
             _context = context;
         }
 
-        public ResponseWithStatus<DataResponse<List<SysContractDocumentType>>> GetDocumnetTypes()
+        public ResponseWithStatus<DataResponse<List<SysContractDocumentType>>> SelectAll()
         {
             var documentTypes = _context.SysContractDocumentTypes
                 .OrderBy(p => p.Id)

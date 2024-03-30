@@ -8,6 +8,7 @@ namespace webapi.Services.System
     public interface ISysAdministrativeTerritoryService
     {
         public ResponseWithStatus<DataResponse<PageResponse<SysAdministrativeTerritory>>> GetAdministrativeTerritoriesPage(PageFilterInfo pageFilterInfo);
+        public ResponseWithStatus<DataResponse<List<SysAdministrativeTerritory>>> SelectAll();
     }
     public class SysAdministrativeTerritoryService : ISysAdministrativeTerritoryService
     {
@@ -32,6 +33,15 @@ namespace webapi.Services.System
             PageResponse<SysAdministrativeTerritory> pageResponse = new (pages, countRecords, administrativeTeritories);
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
+        }
+
+        public ResponseWithStatus<DataResponse<List<SysAdministrativeTerritory>>> SelectAll()
+        {
+            var administrativeTeritories = _context.SysAdministrativeTerritories
+                .OrderBy(x => x.Id)
+                .ToList();
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, administrativeTeritories);
         }
     }
 }

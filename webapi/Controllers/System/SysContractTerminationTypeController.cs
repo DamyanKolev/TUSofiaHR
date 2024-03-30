@@ -21,7 +21,7 @@ namespace webapi.Controllers.System
         [HttpGet("/api/sys/termination-types/all", Name = "GetContractTerminationTypesPage")]
         public IActionResult GetContractTerminationTypesPage()
         {
-            var result = _terminationTypeService.GetContractTerminationTypesPage();
+            var result = _terminationTypeService.SelectAll();
 
             return Ok(result.Response);
         }

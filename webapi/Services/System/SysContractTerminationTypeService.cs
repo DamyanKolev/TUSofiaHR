@@ -7,7 +7,7 @@ namespace webapi.Services.System
 {
     public interface ISysContractTerminationTypeService
     {
-        public ResponseWithStatus<DataResponse<List<SysContractTerminationType>>> GetContractTerminationTypesPage();
+        public ResponseWithStatus<DataResponse<List<SysContractTerminationType>>> SelectAll();
     }
     public class SysContractTerminationTypeService : ISysContractTerminationTypeService
     {
@@ -18,7 +18,7 @@ namespace webapi.Services.System
             _context = context;
         }
 
-        public ResponseWithStatus<DataResponse<List<SysContractTerminationType>>> GetContractTerminationTypesPage()
+        public ResponseWithStatus<DataResponse<List<SysContractTerminationType>>> SelectAll()
         {
             var administrativeTeritories = _context.SysContractTerminationTypes
                 .OrderBy(p => p.Id)

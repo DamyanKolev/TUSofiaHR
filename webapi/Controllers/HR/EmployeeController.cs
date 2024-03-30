@@ -53,6 +53,22 @@ namespace webapi.Controllers.HR
             return Ok(result.Response);
         }
 
+        [HttpGet("/api/employees/all", Name = "SelectAll")]
+        public IActionResult SelectAll()
+        {
+            var result = _employeeService.SelectAll();
+
+            return Ok(result.Response);
+        }
+
+        [HttpGet("/api/employees/find-by-id", Name = "FindEmployeeById")]
+        public IActionResult FindById([FromBody] int employeeId)
+        {
+            var result = _employeeService.GetById(employeeId);
+
+            return Ok(result.Response);
+        }
+
         [HttpPost("/api/employees/update-data", Name = "GetUpdateData")]
         public IActionResult GetUpdateData([FromBody] EmployeeDataSelectDTO selectDTO)
         {

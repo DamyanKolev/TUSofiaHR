@@ -22,7 +22,7 @@ namespace webapi.Controllers.HR
 
 
         [HttpPost("/api/contracts/create", Name = "CreateContract")]
-        public IActionResult Post([FromBody] EmployeeContractInsert employeeContractInsert)
+        public IActionResult CreateContract([FromBody] EmployeeContractInsert employeeContractInsert)
         {
             var result = _contractService.CreateContract(employeeContractInsert);
 
@@ -33,10 +33,22 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPut("/api/contracts/update", Name = "UpdateContract")]
-        public IActionResult UpdateContract([FromBody] Contract contract)
+        [HttpPost("/api/contracts/create", Name = "CreateAnnex")]
+        public IActionResult CreateAnnex([FromBody] ContractDTO contractDTO)
         {
-            var result = _contractService.UpdateContract(contract);
+            var result = _contractService.CreateAnnex(contractDTO);
+
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
+
+            return Ok(result.Response);
+        }
+
+
+        [HttpPut("/api/contracts/update", Name = "UpdateContract")]
+        public IActionResult Update([FromBody] Contract contract)
+        {
+            var result = _contractService.Update(contract);
 
             if (result.StatusCode.Equals(HttpStatusCode.NotFound))
                 return NotFound(result.Response);
@@ -57,9 +69,28 @@ namespace webapi.Controllers.HR
 
 
         [HttpPost("/api/contracts/find-by-id", Name = "GetContractById")]
-        public IActionResult GetContractById([FromBody] long contractId)
+        public IActionResult GetContractById([FromBody] int contractId)
         {
-            var result = _contractService.GetContractById(contractId);
+            var result = _contractService.GetById(contractId);
+
+            return Ok(result.Response);
+        }
+
+
+        [HttpPost("/api/contracts/find-by-employee-id", Name = "GetContractByEmployeeId")]
+        public IActionResult GetByEmployeeId([FromBody] int employeeId)
+        {
+            var result = _contractService.GetByEmployeeId(employeeId);
+
+            return Ok(result.Response);
+        }
+
+
+
+        [HttpPost("/api/contracts/employee-annex", Name = "GetEmployeeAnnex")]
+        public IActionResult GetEmployeeAnnex([FromBody] int employeeId)
+        {
+            var result = _contractService.GetEmployeeAnnex(employeeId);
 
             return Ok(result.Response);
         }

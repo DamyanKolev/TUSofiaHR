@@ -3,6 +3,7 @@
     public class AnnexV
     {
         public int ContractId { get; set; }
+        public int EmployeeId { get; set; }
         public DateOnly ConclusionDate { get; set; }
         public DateOnly ExecutionDate { get; set; }
         public Nullable<DateOnly> ContractTerm { get; set; }

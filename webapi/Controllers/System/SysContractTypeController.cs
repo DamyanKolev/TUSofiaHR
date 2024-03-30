@@ -21,7 +21,7 @@ namespace webapi.Controllers.System
         [HttpGet("/api/sys/contract-type/all", Name = "GetContractTypes")]
         public IActionResult GetContractTypes()
         {
-            var result = _contractTypeService.GetContractTypes();
+            var result = _contractTypeService.SelectAll();
 
             return Ok(result.Response);
         }

@@ -23,14 +23,13 @@ namespace webapi
 
             CreateMap<AddressDTO, Address>();
 
-            CreateMap<Company, CompanyDTO>();
-            CreateMap<CompanyDTO, Company>();
+            //CreateMap<Company, CompanyDTO>();
+            //CreateMap<CompanyDTO, Company>();
 
             CreateMap<RoleDTO, Role>();
             CreateMap<UserDTO, User>();
 
-            CreateMap<EmployeeV, EmployeeV>();
-            CreateMap<ContractV, ContractV>();
+            CreateMap<AnnexV, Contract>();
         }
     }
 }

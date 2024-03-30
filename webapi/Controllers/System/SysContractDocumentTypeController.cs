@@ -21,7 +21,7 @@ namespace webapi.Controllers.System
         [HttpGet("/api/sys/document-type/all", Name = "GetDocumentTypes")]
         public IActionResult GetContractTypes()
         {
-            var result = _documentTypeService.GetDocumnetTypes();
+            var result = _documentTypeService.SelectAll();
 
             return Ok(result.Response);
         }

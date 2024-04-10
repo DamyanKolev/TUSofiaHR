@@ -1,32 +1,82 @@
-import { DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, SelectDomRef, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { StandardInputField } from "../StandartFields/StandartInputField"
-import DataType from "@app-types/DataType"
+import DataType from "@app-types/enums/DataType"
 import { StandardDateField } from "../StandartFields/StandartDateField"
-import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField"
-import { Contract } from "@models/HR/Contract"
-import { FC} from "react"
+import StandardTableSelectField from "../StandartFields/StandartTableSelectField"
+import { FC } from "react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
-import { ContractUpdateData, UpdateContractFormState } from "@/models/FormStates/contract/UpdateContractFormState"
-import { setDateToInputDefaultValue } from "@/utils/forms/setInputDefaultValue"
+import { ContractUpdateData, ContractUpdateFormState } from "@models/States/contract/ContractUpdateFormState"
+import StandartListSelectField from "../StandartFields/StandartListSelectField"
+import { SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js"
+import { ChangeData } from "@models/EventData/ChangeData"
+import { Contract } from "@/models/HR/Contract"
 
 
-interface UpdateContract {
+interface UpdateContractProps {
     getEditMode: () => boolean,
     getFormData: () => Contract,
-    getFormState: () => UpdateContractFormState,
+    getFormState: () => ContractUpdateFormState,
     getUpdateData: () => ContractUpdateData,
-    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
-    handleDateChange: (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => void,
+    setFormStates: (changeData: ChangeData) => void,
     handleConfirm: (selectedItem: StandardListItemDomRef, name: string) => void,
 }
 
 
-const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormState, getUpdateData, handleInputChange, handleDateChange, handleConfirm}) => {
+const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getFormState, getUpdateData, setFormStates, handleConfirm}) => {
+    //input change event listener 
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    };
+
+    //date input change event listener 
+    const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+
+    const handleSelectChange = (event: Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
+        const changeData: ChangeData = {
+            value: event.detail.selectedOption.additionalText,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+    
+    
+    
     return (
         <FlexBox style={{gap:"5rem", padding: "2rem 2rem 1rem 2rem"}}>
             <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>Код корекция</Label>
+                    <StandartListSelectField
+                        values={[
+                            {textContent: "Редовни данни", additionalText: "0"}, 
+                            {textContent: "Коригиране", additionalText: "1"},
+                            {textContent: "Заличаване", additionalText: "2"}
+                        ]}
+                        isLabel={false}
+                        editMode={getEditMode()}
+                        name="code_corection"
+                        displayValue={""}
+                        onChange={handleSelectChange}
+                        dataType={DataType.Int}
+                    />
+                </FlexBox>
+
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Работна заплата</Label>
                     <StandardInputField
                         editMode={getEditMode()}
@@ -37,7 +87,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Седмични часове</Label>
                     <StandardInputField
                         editMode={getEditMode()}
@@ -49,7 +99,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Седмични часове</Label>
                     <StandardInputField
                         editMode={getEditMode()}
@@ -61,7 +111,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Дата на сключване</Label>
                     <StandardDateField
                         editMode={getEditMode()}
@@ -72,7 +122,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Дата на започване</Label>
                     <StandardDateField
                         editMode={getEditMode()}
@@ -83,22 +133,22 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Дата на започване</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={setDateToInputDefaultValue(getFormData().contractTerm)}
+                        value={getFormData().contractTerm.toString()}
                         onChange={handleDateChange}
                         name={"contractTerm"}
                         valueState={getFormState().contractTerm.valueState}
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Дата на Допълнително споразумение</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={setDateToInputDefaultValue(getFormData().additionalAgreementDate)}
+                        value={getFormData().additionalAgreementDate.toString()}
                         onChange={handleDateChange}
                         name={"additionalAgreementDate"}
                         valueState={getFormState().additionalAgreementDate.valueState}
@@ -107,17 +157,17 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
             </FlexBox>
 
             <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Дата на терминиране</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={setDateToInputDefaultValue(getFormData().terminationDate)}
+                        value={getFormData().terminationDate.toString()}
                         onChange={handleDateChange}
                         name={"terminationDate"}
                         valueState={getFormState().terminationDate.valueState}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Тип Договор</Label>
                     <StandardTableSelectField
                         name="contractTypeId"
@@ -128,27 +178,27 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Позиция</Label>
                     <StandardTableSelectField
-                        name="positionId"
+                        name="sysPositionId"
                         editMode={getEditMode()}
-                        value={getUpdateData().positionId}
+                        value={getUpdateData().sysPositionId}
                         joinInfo={contractJoinTablesInfo.positionId}
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Икономическа активност</Label>
                     <StandardTableSelectField
-                        name="iconomicActivityId"
+                        name="sysIconomicActivityId"
                         editMode={getEditMode()}
-                        value={getUpdateData().iconomicActivityId}
+                        value={getUpdateData().sysIconomicActivityId}
                         joinInfo={contractJoinTablesInfo.iconomicActivityId}
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Тип документ</Label>
                     <StandardTableSelectField
                         name="documentTypeId"
@@ -159,7 +209,7 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Тип на терминиране</Label>
                     <StandardTableSelectField
                         name="terminationTypeId"
@@ -170,12 +220,12 @@ const UpdateContract: FC<UpdateContract> = ({getEditMode, getFormData, getFormSt
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Код Административна територия</Label>
                     <StandardTableSelectField
-                        name="administrativeTerritoryId"
+                        name="sysAdministrativeTerritoryId"
                         editMode={getEditMode()}
-                        value={getUpdateData().administrativeTerritoryId}
+                        value={getUpdateData().sysAdministrativeTerritoryId}
                         joinInfo={contractJoinTablesInfo.administrativeTerritoryId}
                         formDataSetter={handleConfirm}
                     />

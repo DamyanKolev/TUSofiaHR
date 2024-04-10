@@ -1,56 +1,50 @@
-﻿import {
-    Button, FlexBox, FlexBoxAlignItems, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItem, StandardListItemDomRef, Ui5CustomEvent
-} from "@ui5/webcomponents-react"
-import { FC, Fragment, useEffect, useState } from "react"
-import { Filter, createFilter, createPageFilterInfo, initialFilterState } from "@models/Page/Page";
-import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
+import { createFilter, defaultFilter, Filter } from "@/models/Filter";
+import { createPageFilterInfo } from "@/models/Page/Page";
+import { employeeContractJoinTablesInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
-import { useAppDispatch, useAppSelector } from "@store/storeHooks";
 import { formToggle } from "@store/slices/formToggleSlice";
+import { useAppDispatch, useAppSelector } from "@store/storeHooks";
+import { Button, FlexBox, FlexBoxAlignItems, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItem, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 
-
-
-interface LargeTableSelectProps {
-    joinInfo: JoinTableInfo,
-    value?: string,
-    tableId?: string
-    name: string,
-    formDataSetter: (selectedItem: StandardListItemDomRef, name: string) => void
+interface EmployeeTableSelectProps {
+    formDataSetter: (employeeId: int) => void
 }
 
 
-const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tableId="id", name, formDataSetter }) => {
-    const { filterField, description, contentFields, headerText, tableURL } = joinInfo
+const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => {
+    const { filterField, description, contentFields, headerText, tableURL } = employeeContractJoinTablesInfo
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [data, setData] = useState<PageResponse>(defaultPageResponse)
-    const [filterObject, setFilterObject] = useState<Filter>(initialFilterState)
+    const [filterObject, setFilterObject] = useState<Filter>(defaultFilter)
     const [currentPage, setCurrentPage] = useState<int>(1)
-    const [inputValue, setInputValue] = useState<string>(value)
+    const [inputValue, setInputValue] = useState<string>("")
     const isSuccess = useAppSelector((state) => state.isSuccessForm.value)
     const dispatchIsSuccess = useAppDispatch()
 
-    
+
     const onClickHandler = () => {
         initData(1)
-            .then((res) => {setData(res.data); console.log(res.data)})
+            .then((res) => {setData(res.data)})
             .catch(console.error);
         setIsOpen(true)
     }
 
     const onAfterCloseHandler = () => {
         setIsOpen(false)
-        setFilterObject(initialFilterState)
+        setFilterObject(defaultFilter)
         setData(defaultPageResponse)
         setCurrentPage(1)
     }
 
     const onConfirmHandler = (event: Ui5CustomEvent<ListDomRef, { selectedItems: StandardListItemDomRef[]; }>) => {
         const selectedItem = event.detail.selectedItems[0]
+        const rowId = Number(selectedItem.id)
         const currentValue = selectedItem.textContent
         if (currentValue) {
-            formDataSetter(selectedItem, name)
+            formDataSetter(rowId)
             setInputValue(currentValue)
         }
     }
@@ -74,8 +68,9 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
     }
 
     const initData = (page: int) => {
-        const token = localStorage.getItem("token")
-        const pageDTO = createPageFilterInfo(page, 100, filterObject);
+        const token = sessionStorage.getItem("accessToken")
+        // const pageDTO = createPageInfo([filterObject], [], page, 100);
+        const pageDTO = createPageFilterInfo(page, 100, filterObject)
 
         return fetch(`${tableURL}`, {
             method: "POST",
@@ -95,6 +90,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
         }
     }, [currentPage])
 
+
     useEffect(() => {
         if (isOpen) {
             initData(1)
@@ -103,7 +99,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
         }
     }, [filterObject])
 
-    
+
     useEffect(() => {
         if (isSuccess) {
             dispatchIsSuccess(formToggle())
@@ -120,14 +116,13 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
             </FlexBox>
             {createPortal(
                 <SelectDialog
-                    resizable
                     open={isOpen}
                     onAfterClose={onAfterCloseHandler}
                     headerText={headerText}
                     onSearchInput={onSearchInputHandler}
                     onSearch={onSearchHandler}
                     onLoadMore={onLoadMoreHandler}
-                    onConfirm={onConfirmHandler }
+                    onConfirm={onConfirmHandler}
                     growing={currentPage >= data.pages? ListGrowingMode.None: ListGrowingMode.Button}
                 >
                     {
@@ -135,7 +130,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
                             <StandardListItem
                                 description={item[description]}
                                 key={key}
-                                id={item[tableId]}
+                                id={item["employeeId"]}
                             >
                                 {contentFields.map((field) => {
                                     return `${item[field]} `
@@ -143,11 +138,11 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
                             </StandardListItem>
                         ))
                     }
-                </SelectDialog>, document.body
+                </SelectDialog>,
+                document.body
             )}
         </Fragment>
     )
 }
 
-
-export default LargeTableSelect
+export default EmployeeTableSelect

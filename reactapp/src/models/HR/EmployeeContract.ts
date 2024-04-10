@@ -1,17 +1,15 @@
 import { ContractInsertDTO } from "./Contract"
 
 export interface EmployeeContract {
-    employeeId: int,
-    contract: ContractInsertDTO
+    employee_id: int,
+    insertData: ContractInsertDTO
 }
 
 export function createEmployeeContract(id: int, insertData: ContractInsertDTO): EmployeeContract {
     return {
-        employeeId: id,
-        contract: {
+        employee_id: id,
+        insertData: {
             ...insertData,
-            companyId: 1,
-            article62Flag: false
         }
     }
 }

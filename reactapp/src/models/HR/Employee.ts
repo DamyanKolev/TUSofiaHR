@@ -1,5 +1,5 @@
 export interface Employee {
-    id: int,
+    employeeId: int,
     firstName: string;
     middleName: string;
     surname: string;
@@ -7,14 +7,15 @@ export interface Employee {
     phoneNumber: string,
     companyEmployeeId: int;
     personalDataId: int;
-    managerId: int | string;
+    managerId: int;
     departmentId: int;
+    insuranceId: int;
     positionId: int;
-    companyId: int,
 }
 
-export const defaultEmployee = {
-    id: 0,
+
+export const defaultEmployeeUpdateDTO: Employee = {
+    employeeId: 0,
     firstName: "",
     middleName: "",
     surname: "",
@@ -22,11 +23,12 @@ export const defaultEmployee = {
     phoneNumber: "",
     companyEmployeeId: 0,
     personalDataId: 0,
-    managerId: "",
+    managerId: 0,
     departmentId: 0,
+    insuranceId: 0,
     positionId: 0,
-    companyId: 0,
 }
+
 
 export interface EmployeeInsertDTO {
     firstName: string;
@@ -36,8 +38,9 @@ export interface EmployeeInsertDTO {
     phoneNumber: string
     companyEmployeeId: int;
     personalDataId: int,
-    managerId: int;
+    managerId: int | string;
     departmentId: int;
+    insuranceId: int;
     positionId: int;
 }
 export const defaultEmployeeInsert: EmployeeInsertDTO = {
@@ -48,7 +51,8 @@ export const defaultEmployeeInsert: EmployeeInsertDTO = {
     phoneNumber: "",
     companyEmployeeId: 0,
     personalDataId: 0,
-    managerId: 0,
+    managerId: "",
     departmentId: 0,
+    insuranceId: 0,
     positionId: 0,
 }

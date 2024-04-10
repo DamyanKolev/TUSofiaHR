@@ -3,17 +3,17 @@ import contractColumns from "@models/TableColumns/ContractColumns";
 import { FCLLayout, FlexibleColumnLayout } from "@ui5/webcomponents-react";
 import ContractMidColumn from "@components/FlexibleColumns/contract/ContractMidColumn";
 import ContractEndColumn from "@components/FlexibleColumns/contract/ContractEndColumn";
-import { TableRowState } from "@/types/TableRowState";
-import { ContractView } from "@/models/TableViews/ContractView";
-import StartColumn from "@/components/FlexibleColumns/StartColumn";
+import { ContractView } from "@models/TableViews/ContractView";
+import StartColumn from "@components/FlexibleColumns/StartColumn";
+import { TableRowState } from "@app-types/TableRowState";
 
 
 export const ContractPageContext = createContext<TableRowState<ContractView> | undefined>(undefined);
 
 
 const ContractPage: FC = () => {
-    const tableTitle = "Contracts";
-    const tableURL = "/api/contracts";
+    const tableTitle = "Договори";
+    const tableURL = "/api/hr/contract";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<ContractView>({} as ContractView);
 

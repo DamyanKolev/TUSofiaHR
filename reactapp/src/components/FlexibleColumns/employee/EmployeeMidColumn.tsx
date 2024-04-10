@@ -1,33 +1,35 @@
-import { FC, useContext, useState, useEffect, Fragment } from 'react';
-import { Bar, BarDesign, Button, ButtonDesign, DatePickerDomRef, FCLLayout, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, ObjectPage, ObjectPageSection, ObjectPageSubSection, RadioButtonDomRef, StandardListItemDomRef, Ui5CustomEvent, ValueState } from '@ui5/webcomponents-react';
+import { FC, useContext, useState, useEffect } from 'react';
+import { Bar, BarDesign, Button, ButtonDesign, FCLLayout, FlexBox, FlexBoxAlignItems, FlexBoxDirection, ObjectPage, ObjectPageSection, ObjectPageSubSection, StandardListItemDomRef} from '@ui5/webcomponents-react';
 import { toggle } from '@store/slices/toggleSlice';
 import { useAppDispatch } from '@store/storeHooks';
 import { EmployeeView } from '@models/TableViews/EmployeeView';
-import { getNewFormDataFromNestedForms } from '@/utils/forms/formData';
 import { EmployeePageContext } from '@pages/hr/EmployeePage';
 import UpdateEmployeeForm from '@components/Forms/employee/UpdateEmployeeForm';
 import UpdatePersonalDataForm from '@components/Forms/personalData/UpdatePersonalDataForm';
 import UpdateContract from '@components/Forms/contract/UpdateContractForm';
-import { EmployeeData, EmployeeDataEditBtnState, EmployeeDataUpdate, EmployeeDataUpdateDTO, defaultEditBtnsState, defaultEmployeeDataUpdate } from '@/models/HR/EmployeeData';
-import { submitPutForm } from '@/utils/forms/submitForm';
-import { EmpDataUpdateFormState, EmployeeDataUpdateData, defaultEmpDataUpdateState, defaultEmployeeDataUpdateData } from '@/models/FormStates/employeeData/EmpDataUpdateFormState';
-import { TableRowState } from '@/types/TableRowState';
-import { getUpdateData } from '@/utils/getData';
-import { createContractUpdateData } from '@/models/FormStates/contract/UpdateContractFormState';
-import { createEmployeeUpdateData } from '@/models/FormStates/employee/UpdateEmployeeFormState';
-import { isFilledForm, isFormChanged } from '@/utils/validation';
-import { getNewFormStateFromNestedForms, setErrorInputStates } from '@/utils/forms/formState';
-import { handleDateChangeFunc, handleInputChangeFunc, handleRadioButtonChangeFunc } from '@/utils/handlers/onChangeHandlers';
-import { DatePickerChangeEventDetail } from '@ui5/webcomponents/dist/DatePicker.js';
-import DataType from '@/types/DataType';
+import { submitPutForm } from '@utils/forms/submitForm';
+import { EmployeeData, EmployeeDataEditBtnState, EmployeeDataUpdateDTO, EmployeeDataUpdate, defaultEditBtnsState, defaultEmployeeDataUpdate } from '@models/HR/EmployeeData';
+import { createEmployeeUpdateData  } from '@models/States/employee/EmployeeUpdateFormState';
+import { createContractUpdateData } from '@models/States/contract/ContractUpdateFormState';
+import { EmployeeDataUpdateData, EmpDataUpdateFormState, defaultEmployeeDataUpdateData, defaultEmpDataUpdateState } from '@models/States/employeeData/EmpDataUpdateFormState';
+import { updateFormInfo } from '@utils/forms/updateFormInfo';
+import DataType from '@app-types/enums/DataType';
+import { isFilledForm, isFormChanged } from '@utils/validation';
+import { getUpdateData } from '@utils/getData';
+import { getNewFormDataFromNestedForms } from '@utils/forms/formData';
+import { setErrorInputStates } from '@utils/forms/formState';
+import { TableRowState } from '@app-types/TableRowState';
+import { ChangeData } from '@models/EventData/ChangeData';
+import UpdateInsuranceForm from '@components/Forms/insurance/UpdateInsuranceForm';
+import { createInsuranceUpdateData } from '@models/States/insurance/InsuranceFormState';
+import { Insurance } from '@models/HR/Insurance';
+import UpdateAddressForm from '@components/Forms/address/UpdateAddressForm';
 
 
 interface EmployeeMidColumnProps {
     handleLayoutState: (layout: FCLLayout) => void,
     tableURL: string
 }
-
-
 
 
 const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tableURL}) => {
@@ -39,13 +41,11 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
     const [disabled, setDisabled] = useState<boolean>(true)
     const dispatchIsSuccess = useAppDispatch()
 
-
     const init = async () => {
         if(rowState) {
             const bodyData = {
-                employeeId: rowState.selectedRow.employeeId,
-                personalDataId: rowState.selectedRow.personalDataId,
-                contractId: rowState.selectedRow.contractId
+                employee_id: rowState.selectedRow.employeeId,
+                personal_data_id: rowState.selectedRow.personalDataId
             }
             const data = await getUpdateData<EmployeeData, object>(bodyData, `${tableURL}/update-data`)
     
@@ -53,17 +53,19 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                 const newFormData:EmployeeDataUpdate = {
                     employee: data.employee,
                     contract: data.contract,
-                    personalData: data.personalData
+                    personalData: data.personalData,
+                    insurance: data.insurance,
+                    address: data.address
                 }
                 setFormData(newFormData)
                 setUpdateData({
                     contract: createContractUpdateData((data.contractView)),
-                    employee: createEmployeeUpdateData(rowState.selectedRow)
+                    employee: createEmployeeUpdateData(rowState.selectedRow),
+                    insurance: createInsuranceUpdateData(rowState.selectedRow.insuranceTypeCode)
                 })
             }
         }
     }
-
 
     const setDefaultValues = () => {
         setFormData(defaultEmployeeDataUpdate)
@@ -78,11 +80,14 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
         setDefaultValues()
     }
 
+    const setFormStates = (changeData: ChangeData) => {
+        updateFormInfo(changeData, formData, setFormData, formState, setFormState)
+        if(disabled) {setDisabled(false)}
+    }
+
     const navBackClick = () => {
         setDefaultValues()
     }
-
-
 
     const submitForm = async () => {
         let object: EmployeeDataUpdateDTO = formData
@@ -107,9 +112,10 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
         })
 
         if (isSubmittable) {
-            submitPutForm(tableURL, object, successCalback)
+            submitPutForm(tableURL, object, successCalback)  
         }
     };
+
 
 
     useEffect(() => {
@@ -120,57 +126,27 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
         }
     }, [rowState]);
 
-
-
-        //input change event listener 
-        const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-            const target = event.target
-            handleInputChangeFunc(target, formData, setFormData, formState, setFormState);
-            if (disabled) {setDisabled(false)}
-        };
-    
-        //date input change event listener 
-        const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
-            const target = event.target
-            handleDateChangeFunc(target, formData, setFormData, formState, setFormState);
-            if (disabled) {setDisabled(false)}
+    const handleConfirm = (selectedItem: StandardListItemDomRef, name: string) => {
+        const changeData: ChangeData = {
+            value: selectedItem.id,
+            name: name,
+            valueType: DataType.Int,
         }
-    
-        //radio button change event listener 
-        const handleRadioButtonChange = (event: Ui5CustomEvent<RadioButtonDomRef, never>) => {
-            const target = event.target
-            handleRadioButtonChangeFunc(target, formData, setFormData, formState, setFormState);
-            if (disabled) {setDisabled(false)}
-        }
-    
-    
-        const handleConfirm = (selectedItem: StandardListItemDomRef, name: string) => {
-            const rowId = selectedItem.id
-            const value = selectedItem.textContent? selectedItem.textContent : ""
-            const newFormData = getNewFormDataFromNestedForms(formData, name, rowId, DataType.Int)
-            const newUpdateData = getNewFormDataFromNestedForms(updateData, name, value, DataType.String);
-            const formFieldState = { isFilled: true, valueState: ValueState.None, message: "", isChanged: true}
-            const newFormStates = getNewFormStateFromNestedForms(formState, name, formFieldState)
+        const value = selectedItem.textContent? selectedItem.textContent : ""
+        const newUpdateData = getNewFormDataFromNestedForms(updateData, name, value, DataType.String);
 
-            setFormData(newFormData);
-            setFormState(newFormStates)
-            setUpdateData(newUpdateData)
-            if (disabled) {setDisabled(false)}
-        }
+        setFormStates(changeData)
+        setUpdateData(newUpdateData)
+    }
 
 
     return (
         <ObjectPage 
             footer={
-                <Bar
-                    design={BarDesign.FloatingFooter}
-                    endContent={
-                        <Fragment>
-                            <Button design={ButtonDesign.Transparent}>Отказ</Button>
-                            <Button design={ButtonDesign.Emphasized} onClick={submitForm}>Промени</Button>
-                        </Fragment>
-                    }
-                />
+                <Bar design={BarDesign.FloatingFooter}>
+                    <Button slot="endContent" design={ButtonDesign.Transparent} onClick={navBackClick}>Отказ</Button>
+                    <Button slot="endContent" design={ButtonDesign.Emphasized} onClick={submitForm} disabled={disabled}>Запази</Button>
+                </Bar>
             }
             headerTitle={
                 <Button design="Transparent" icon="nav-back" onClick={navBackClick}/>
@@ -196,7 +172,7 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                         getFormData={() => {return formData.employee}}
                         getFormState={() => {return formState.employee}}
                         getUpdateData={() => {return updateData.employee}}
-                        handleInputChange={handleInputChange}
+                        setFormStates={setFormStates}
                         handleConfirm={handleConfirm}
                     />
                 </ObjectPageSubSection>
@@ -217,14 +193,20 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                      <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
                         <Button onClick={()=>setEditMode({...editMode, pDataEdit: !editMode.pDataEdit})}>{editMode.pDataEdit ? 'Display-Only' : 'Edit Mode'}</Button>
                     </FlexBox>
-                    <UpdatePersonalDataForm
-                        getEditMode={() => {return editMode.pDataEdit}}
-                        getFormData={() => {return formData.personalData}}
-                        getFormState={() => {return formState.personalData}}
-                        handleInputChange={handleInputChange}
-                        handleDateChange={handleDateChange}
-                        handleRadioButtonChange={handleRadioButtonChange}
-                    />
+                    <FlexBox style={{gap:"4rem", padding:".3rem 2rem"}}>
+                        <UpdatePersonalDataForm
+                            getEditMode={() => {return editMode.pDataEdit}}
+                            getFormData={() => {return formData.personalData}}
+                            getFormState={() => {return formState.personalData}}
+                            setFormStates={setFormStates}
+                        />
+                        <UpdateAddressForm
+                            getEditMode={() => {return editMode.pDataEdit}}
+                            getFormData={() => {return formData.address}}
+                            getFormState={() => {return formState.address}}
+                            setFormStates={setFormStates}
+                        />
+                    </FlexBox>
                 </ObjectPageSubSection>
 
             </ObjectPageSection>
@@ -247,9 +229,33 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
                         getFormData={() => {return formData.contract}}
                         getFormState={() => {return formState.contract}}
                         getUpdateData={() => {return updateData.contract}}
-                        handleInputChange={handleInputChange}
-                        handleDateChange={handleDateChange}
+                        setFormStates={setFormStates}
                         handleConfirm={handleConfirm}
+                    />
+                </ObjectPageSubSection>
+            </ObjectPageSection>
+
+
+            <ObjectPageSection
+                id="insurance"
+                titleText="Осигуровки"
+            >
+                <ObjectPageSubSection
+                    hideTitleText
+                    titleText="Осигуровки"
+                    id="insurance-info"
+                >
+                    <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                        <Button onClick={()=>setEditMode({...editMode, insuranceEdit: !editMode.insuranceEdit})}>{editMode.insuranceEdit ? 'Display-Only' : 'Edit Mode'}</Button>
+                    </FlexBox>
+                    <UpdateInsuranceForm
+                        getEditMode={() => {return editMode.insuranceEdit}}
+                        getFormState={() => { return formState.insurance; } }
+                        getFormData={() => { return formData.insurance } }
+                        getUpdateData={() => {return updateData.insurance}}
+                        setFormStates={setFormStates}
+                        setFormData={(newData: Insurance) => {setFormData({...formData, insurance: newData})}}
+                        handleConfirm={handleConfirm} 
                     />
                 </ObjectPageSubSection>
             </ObjectPageSection>

@@ -1,14 +1,13 @@
 ﻿import { Bar, Button, ButtonDesign } from "@ui5/webcomponents-react";
 import { CSSProperties, FC, Fragment, createContext, useState } from "react"
 import SmartTable from "@components/Table/SmartTable";
-import PageBar from "@components/Bars/PageBar";
 import departmentColumns from "@models/TableColumns/DepartmentColumns";
 import CreateDepartmentForm from "@components/Forms/department/CreateDepartmentForm";
-import DailogSwitch from "@app-types/DialogSwitch";
+import DailogSwitch from "@app-types/enums/DialogSwitch";
 import UpdateDepartmentForm from "@components/Forms/department/UpdateDepartmentForm";
 import { Department } from "@models/HR/Departmnet";
-import { TableRowState } from "@/types/TableRowState";
 import { createPortal } from "react-dom";
+import { TableRowState } from "@app-types/TableRowState";
 
 export const DepartmentPageContext = createContext<TableRowState<Department> | undefined>(undefined);
 
@@ -20,7 +19,7 @@ const tableStyle: CSSProperties = {
 
 const DepartmentPage: FC = () => {
     const tableTitle = "Отдели"
-    const tableURL = "/api/departments"
+    const tableURL = "/api/hr/department"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
     const [selectedRow, setSelectedRow] = useState<Department>({} as Department);
 
@@ -33,30 +32,31 @@ const DepartmentPage: FC = () => {
 
     const onRowClick = (event: any) => {
         const row = event.detail.row.original
-        setSelectedRow(row);
         setDialogSwitch(DailogSwitch.OpenUpdateDialog)
+        setSelectedRow(row)
     }
 
     return (
         <DepartmentPageContext.Provider value={{selectedRow, setSelectedRow}}>
             <div className="flexible-columns ui5-content-density-compact">
-                <PageBar title={tableTitle} />
                 <SmartTable
                     style={tableStyle}
                     onRowClick={onRowClick}
                     columns={departmentColumns}
                     tableURL={tableURL}
+                    title={tableTitle}
                     header={
                         <Fragment>
                             <Bar endContent={
                                 <Fragment>
-                                    <Button design={ButtonDesign.Transparent} onClick={addOnClick}>Add</Button>
-                                    <Button design={ButtonDesign.Transparent}>Delete</Button>
+                                    <Button design={ButtonDesign.Transparent} onClick={addOnClick}>Добави</Button>
+                                    {/* <Button design={ButtonDesign.Transparent}>Delete</Button> */}
                                 </Fragment>
                             } />
                         </Fragment>
                     }
                 />
+
                 
                 {createPortal(
                     <CreateDepartmentForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>,

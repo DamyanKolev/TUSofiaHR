@@ -1,16 +1,18 @@
 ﻿import { FC, useContext, useState, useEffect } from 'react';
 import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, InputDomRef, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
 import { StandardInputField } from '../StandartFields/StandartInputField';
-import { Position, defaultPosition } from '@models/HR/Position';
+import { Position, defaultPositionUpdateDTO } from '@models/HR/Position';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
-import DailogSwitch from '@app-types/DialogSwitch';
-import { parseValueByType } from '@utils/parsers';
+import DailogSwitch from '@app-types/enums/DialogSwitch';
 import { PositionPageContext } from '@pages/hr/PositionPage';
-import { submitPutForm } from '@/utils/forms/submitForm';
-import { PositionFormState, defualtPositionFormState } from '@/models/FormStates/position/PositionFormState';
-import { setErrorInputStates } from '@/utils/forms/formState';
-import { isFilledForm } from '@/utils/validation';
+import { submitPutForm } from '@utils/forms/submitForm';
+import { setErrorInputStates } from '@utils/forms/formState';
+import { isFilledForm } from '@utils/validation';
+import { PositionFormState, defualtPositionUpdateFormState } from '@models/States/position/PositionFormState';
+import { updateFormInfo } from '@utils/forms/updateFormInfo';
+import { TableRowState } from '@app-types/TableRowState';
+import { ChangeData } from '@models/EventData/ChangeData';
 
 
 interface UpdatePositionFormProps {
@@ -21,18 +23,18 @@ interface UpdatePositionFormProps {
 
 
 const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
-    const selectedRow = useContext(PositionPageContext)
-    const [formState, setFormState] = useState<PositionFormState>(defualtPositionFormState)
-    const [formData, setFormData] = useState<Position>(defaultPosition)
+    const rowState = useContext<TableRowState<Position> | undefined>(PositionPageContext)
+    const [formState, setFormState] = useState<PositionFormState>(defualtPositionUpdateFormState)
+    const [formData, setFormData] = useState<Position>(defaultPositionUpdateDTO)
     const [editMode, setEditMode] = useState<boolean>(false)
-    const [isSelected, setIsSelected] = useState<boolean>(false)
+    const [disabled, setDisabled] = useState<boolean>(true)
     const dispatchIsSuccess = useAppDispatch()
 
     const setDefaultValues = () => {
-        setFormState(defualtPositionFormState)
+        setFormState(defualtPositionUpdateFormState)
         dialogSwitchSetter(DailogSwitch.Close)
-        setFormData(defaultPosition)
-        setIsSelected(false)
+        setFormData(defaultPositionUpdateDTO)
+        rowState?.setSelectedRow({} as Position)
         setEditMode(false)
     }
 
@@ -45,10 +47,9 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
         dialogSwitchSetter(DailogSwitch.Close)
     }
 
-    const submitForm = async () => {
-        const isFilled = isFilledForm<PositionFormState>(formState);
-        if(isFilled) {
-            submitPutForm(tableURL, JSON.stringify(formData), successCalback)
+    const submitForm = () => {
+        if(isFilledForm(formState)) {
+            submitPutForm(tableURL, formData, successCalback) 
         }
         else {
             setErrorInputStates(formState, setFormState)
@@ -56,73 +57,73 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
     };
 
     useEffect(() => {
-        if (selectedRow) {
-            setIsSelected(true)
-            setFormData(selectedRow);
+        if(rowState) {
+            if (Object.keys(rowState.selectedRow).length > 0) {
+                setFormData(rowState.selectedRow);
+            }
         }
-    }, [selectedRow]);
+    }, [rowState]);
 
-    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = e.target
-        const value = target.value? target.value : "";
-        const valueType = target.type
-        const name = target.name
 
-        if (name && valueType) {
-            const newFormData = parseValueByType<Position>(formData, name, value, valueType);
-            setFormData(newFormData)
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
         }
-    };
+        updateFormInfo(changeData, formData, setFormData, formState, setFormState)
+        if(disabled) {setDisabled(false)}
+    }
 
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
             header={
                 <Bar
                     startContent={<Title level={TitleLevel.H6}>Промяна на Позиция</Title>}
-                    endContent={<Button onClick={() => setEditMode(!editMode)}>{editMode ? 'Display Mode' : 'Edit'}</Button>}
+                    endContent={
+                        <Button onClick={() => setEditMode(!editMode)}>{editMode ? 'Display Mode' : 'Edit'}</Button>
+                    }
                 />
             }
             footer={
                 <Bar design="Footer">
-                        <Button onClick={cancelOnClick} design={ButtonDesign.Transparent}>Cancel</Button>
-                        <Button onClick={submitForm} design={ButtonDesign.Emphasized}>OK</Button>
+                        <Button onClick={cancelOnClick} design={ButtonDesign.Transparent}>Отказ</Button>
+                        <Button onClick={submitForm} design={ButtonDesign.Emphasized} disabled={disabled}>Запази</Button>
                 </Bar>
             }
         >
             <div className="form-container">
-                {isSelected &&
-                    <Form id="update-form">
-                        <FormItem label="Позиция">
-                            <StandardInputField
-                                editMode={editMode}
-                                value={formData.positionName}
-                                onChange={handleInputChange}
-                                name={"positionName"}
-                                valueState={formState.positionName.valueState}
-                            />
-                        </FormItem>
+                <Form id="update-form">
+                    <FormItem label="Позиция">
+                        <StandardInputField
+                            editMode={editMode}
+                            value={formData.positionName}
+                            onChange={handleInputChange}
+                            name={"positionName"}
+                            valueState={formState.positionName.valueState}
+                        />
+                    </FormItem>
 
-                        <FormItem label="Минимална заплата">
-                            <StandardInputField
-                                editMode={editMode}
-                                value={formData.minSalary? formData.minSalary.toString() : ""}
-                                onChange={handleInputChange}
-                                name={"minSalary"}
-                                valueState={formState.minSalary.valueState}
-                            />
-                        </FormItem>
+                    <FormItem label="Минимална заплата">
+                        <StandardInputField
+                            editMode={editMode}
+                            value={formData.minSalary}
+                            onChange={handleInputChange}
+                            name={"minSalary"}
+                            valueState={formState.minSalary.valueState}
+                        />
+                    </FormItem>
 
-                        <FormItem label="Максимална заплата">
-                            <StandardInputField
-                                editMode={editMode}
-                                value={formData.maxSalary? formData.maxSalary.toString() : ""}
-                                onChange={handleInputChange}
-                                name={"maxSalary"}
-                                valueState={formState.maxSalary.valueState}
-                            />
-                        </FormItem>
-                    </Form>
-                }
+                    <FormItem label="Максимална заплата">
+                        <StandardInputField
+                            editMode={editMode}
+                            value={formData.maxSalary}
+                            onChange={handleInputChange}
+                            name={"maxSalary"}
+                            valueState={formState.maxSalary.valueState}
+                        />
+                    </FormItem>
+                </Form>
             </div>
 
         </Dialog>

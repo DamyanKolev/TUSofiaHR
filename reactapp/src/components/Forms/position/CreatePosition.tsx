@@ -1,12 +1,13 @@
-import { PositionFormState } from "@models/FormStates/position/PositionFormState";
+import { PositionFormState } from "@models/States/position/PositionFormState";
 import { PositionDTO } from "@models/HR/Position";
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, InputType, Label, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { CSSProperties, FC } from "react";
+import { ChangeData } from "@models/EventData/ChangeData";
 
 interface CreatePositionProps {
     getFormState: () => PositionFormState,
     getFormData: () => PositionDTO,
-    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void
+    setFormStates: (changeData: ChangeData) => void,
 }
 
 
@@ -20,7 +21,16 @@ const formItemsStyles: CSSProperties = {
     gap: ".5rem"
 }
 
-const CreatePosition: FC<CreatePositionProps> = ({getFormState, getFormData, handleInputChange}) => {
+const CreatePosition: FC<CreatePositionProps> = ({getFormState, getFormData, setFormStates}) => {
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
     return (
         <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End} style={mainContainerStyles}>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={formItemsStyles}>
@@ -36,7 +46,8 @@ const CreatePosition: FC<CreatePositionProps> = ({getFormState, getFormData, han
                 <Label>Минимална заплата</Label>
                 <Input
                     name="minSalary"
-                    value={getFormData().minSalary ? getFormData().minSalary.toString() : ""}
+                    type={InputType.Number}
+                    value={getFormData().minSalary}
                     onChange={handleInputChange}
                     valueState={getFormState().minSalary.valueState}
                 />
@@ -45,7 +56,8 @@ const CreatePosition: FC<CreatePositionProps> = ({getFormState, getFormData, han
                 <Label>Максимална заплата</Label>
                 <Input
                     name="maxSalary"
-                    value={getFormData().maxSalary ? getFormData().maxSalary.toString() : ""}
+                    type={InputType.Number}
+                    value={getFormData().maxSalary}
                     onChange={handleInputChange}
                     valueState={getFormState().maxSalary.valueState}
                 />

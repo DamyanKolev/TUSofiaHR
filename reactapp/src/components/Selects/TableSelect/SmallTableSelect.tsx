@@ -1,7 +1,7 @@
 import {
-    Button, FlexBox, FlexBoxAlignItems, IconDomRef, Input, InputDomRef, ListDomRef, SelectDialog, StandardListItem, StandardListItemDomRef, Ui5CustomEvent
+    Button, CustomListItem, FlexBox, FlexBoxAlignItems, FlexBoxDirection, IconDomRef, Input, InputDomRef, ListDomRef, SelectDialog, StandardListItemDomRef, Ui5CustomEvent
 } from "@ui5/webcomponents-react"
-import { FC, Fragment, useEffect, useState } from "react"
+import { Dispatch, FC, Fragment, SetStateAction, useEffect, useState } from "react"
 import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
 import { formToggle } from "@store/slices/formToggleSlice";
@@ -13,10 +13,11 @@ interface SmallTableSelectProps {
     value?: string,
     name: string,
     formDataSetter: (selectedItem: StandardListItemDomRef, name: string) => void
+    setSelectedRow?: Dispatch<SetStateAction<any>>
 }
 
 
-const SmallTableSelect: FC<SmallTableSelectProps> = ({ joinInfo, value = "", name, formDataSetter }) => {
+const SmallTableSelect: FC<SmallTableSelectProps> = ({ joinInfo, value = "", name, formDataSetter, setSelectedRow}) => {
     const { filterField, description, contentFields, headerText, tableURL } = joinInfo
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [data, setData] = useState<Array<any>>([])
@@ -39,10 +40,15 @@ const SmallTableSelect: FC<SmallTableSelectProps> = ({ joinInfo, value = "", nam
 
     const onConfirmHandler = (event: Ui5CustomEvent<ListDomRef, { selectedItems: StandardListItemDomRef[]; }>) => {
         const selectedItem = event.detail.selectedItems[0]
-        const currentValue = selectedItem.description
+        const currentValue = selectedItem.children[0].children[1].textContent
         if (currentValue) {
             formDataSetter(selectedItem, name)
             setInputValue(currentValue)
+
+            if (setSelectedRow != undefined) {
+                const row: any = data.find((element) => element.id === Number(selectedItem.id));
+                setSelectedRow(row)
+            }
         }
     }
 
@@ -59,7 +65,7 @@ const SmallTableSelect: FC<SmallTableSelectProps> = ({ joinInfo, value = "", nam
     }
 
     const initData = () => {
-        const token = localStorage.getItem("token")
+        const token = sessionStorage.getItem("accessToken")
 
         return fetch(`${tableURL}`, {
             method: "GET",
@@ -103,16 +109,18 @@ const SmallTableSelect: FC<SmallTableSelectProps> = ({ joinInfo, value = "", nam
                 >
                     {
                         data.map((item) => (
-                            <StandardListItem
-                                description={item[description]}
-                                key={item["id"]}
-                                id={item["id"]}
-                            >
-                                {contentFields.map((field) => {
-                                    return `${item[field]} `
-                                })}
-                            </StandardListItem>
+                            <CustomListItem key={item["id"]} id={item["id"]}>
+                                <FlexBox direction={FlexBoxDirection.Column} style={{margin: ".8rem 0 .8rem 0", gap: "1rem"}}>
+                                    <div>{item[description]}</div>
+                                    <div style={{color: "var(--sapContent_LabelColor)", fontSize: "var(--sapFontSize)"}}>
+                                        {contentFields.map((field) => {
+                                            return `${item[field]} `
+                                        })}
+                                    </div>
+                                </FlexBox>
+                            </CustomListItem>
                         ))
+
                     }
                 </SelectDialog>, document.body
             )}

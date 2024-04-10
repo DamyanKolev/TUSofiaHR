@@ -1,16 +1,18 @@
 import { Bar, Button, ButtonDesign, Title, TitleLevel } from "@ui5/webcomponents-react";
-import { FC, Fragment } from "react";
+import { FC, Fragment, ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "@ui5/webcomponents-icons/nav-back"
 
 interface PageBarProps {
     title?: string
+    url?: string,
+    children?: ReactNode,
 }
 
 
-const PageBar: FC<PageBarProps> = ({ title }) => {
-    const navigate = useNavigate();
+const PageBar: FC<PageBarProps> = ({ title, url, children }) => {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const getNavBackURL = (): string => {
         const url = location.pathname;
@@ -24,21 +26,21 @@ const PageBar: FC<PageBarProps> = ({ title }) => {
     }
 
     return (
-        <div className="table-header-bar">
-            <Bar
-                startContent={
-                    <Fragment>
-                        <Button
-                            design={ButtonDesign.Transparent}
-                            icon="nav-back"
-                            onClick={() => navigate(getNavBackURL())}
-                        />
-                        <Title level={TitleLevel.H2}>{title}</Title>
-                    </Fragment>
-                }
-            >
-            </Bar>
-        </div>
+        <Bar
+            startContent={
+                <Fragment>
+                    <Button
+                        className="table-header-bar"
+                        design={ButtonDesign.Transparent}
+                        icon="nav-back"
+                        onClick={() => navigate(url? url : getNavBackURL())}
+                    />
+                    <Title level={TitleLevel.H3}>{title}</Title>
+                </Fragment>
+            }
+        >
+            {children}
+        </Bar>
     )
 }
 

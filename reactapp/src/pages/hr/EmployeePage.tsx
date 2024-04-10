@@ -5,16 +5,16 @@ import { FCLLayout, FlexibleColumnLayout } from '@ui5/webcomponents-react'
 import StartColumn from '@components/FlexibleColumns/StartColumn'
 import EmployeeEndColumn from '@components/FlexibleColumns/employee/EmployeeEndColumn'
 import EmployeeMidColumn from '@components/FlexibleColumns/employee/EmployeeMidColumn'
-import { TableRowState } from '@/types/TableRowState'
-import { EmployeeView } from '@/models/TableViews/EmployeeView'
+import { EmployeeView } from '@models/TableViews/EmployeeView'
+import { TableRowState } from '@app-types/TableRowState'
 
 
 export const EmployeePageContext = createContext<TableRowState<EmployeeView> | undefined>(undefined);
 
 
 const EmployeePage: FC = () => {
-    const tableTitle = "Employees";
-    const tableURL = "/api/employees";
+    const tableTitle = "Служители";
+    const tableURL = "/api/hr/employee";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<EmployeeView>({} as EmployeeView);
 

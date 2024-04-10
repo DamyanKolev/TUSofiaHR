@@ -1,18 +1,18 @@
-import { EmployeeView } from "@/models/TableViews/EmployeeView";
+import { EmployeeView } from "@models/TableViews/EmployeeView";
 import { FormFieldState, FormState, defaultUpdateFieldState } from "../FormState";
 
-export interface UpdateEmployeeFormState extends FormState{
+export interface EmployeeUpdateFormState extends FormState{
     firstName: FormFieldState;
     middleName: FormFieldState;
     surname: FormFieldState;
     email: FormFieldState;
-    phoneNumber: FormFieldState;
+    phoneNumber: FormFieldState
     managerId: FormFieldState;
     departmentId: FormFieldState;
     positionId: FormFieldState;
 }
 
-export const defaultUpdateEmployeeFormState: UpdateEmployeeFormState = {
+export const defaultEmployeeUpdateFormState: EmployeeUpdateFormState = {
     firstName: defaultUpdateFieldState,
     middleName: defaultUpdateFieldState,
     surname: defaultUpdateFieldState,
@@ -20,7 +20,7 @@ export const defaultUpdateEmployeeFormState: UpdateEmployeeFormState = {
     phoneNumber: defaultUpdateFieldState,
     managerId: defaultUpdateFieldState,
     departmentId: defaultUpdateFieldState,
-    positionId: defaultUpdateFieldState
+    positionId: defaultUpdateFieldState,
 }
 
 
@@ -44,4 +44,3 @@ export function createEmployeeUpdateData(employee: EmployeeView): EmployeeUpdate
         positionId: employee.positionName
     }
 }
-

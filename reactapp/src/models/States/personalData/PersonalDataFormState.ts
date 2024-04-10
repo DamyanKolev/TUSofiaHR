@@ -2,13 +2,13 @@ import { FormFieldState, FormState, defaultInsertFieldState, defaultUpdateFieldS
 
 
 export interface PDataFormState extends FormState {
-    egn: FormFieldState
+    identityText: FormFieldState
 }
 
 export const defaultPDataInsertFormState: PDataFormState = {
-    egn: defaultInsertFieldState,
+    identityText: defaultInsertFieldState,
 }
 
 export const defaultPDataUpdateFormState: PDataFormState = {
-    egn: defaultUpdateFieldState,
+    identityText: defaultUpdateFieldState,
 }

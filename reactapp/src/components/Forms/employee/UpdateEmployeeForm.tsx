@@ -1,107 +1,127 @@
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, InputType, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { FC } from "react";
 import { StandardInputField } from "../StandartFields/StandartInputField";
 import { Employee } from "@models/HR/Employee";
-import { StandardTableSelectField } from "../StandartFields/StandartTableSelectField";
+import StandardTableSelectField from "../StandartFields/StandartTableSelectField";
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
-import { EmployeeUpdateData, UpdateEmployeeFormState } from "@/models/FormStates/employee/UpdateEmployeeFormState";
+import { EmployeeUpdateData, EmployeeUpdateFormState } from "@models/States/employee/EmployeeUpdateFormState";
+import { ChangeData } from "@models/EventData/ChangeData";
 
 
 interface UpdateEmployeeFormProps {
     getEditMode: () => boolean,
     getFormData: () => Employee,
-    getFormState: () => UpdateEmployeeFormState,
+    getFormState: () => EmployeeUpdateFormState,
     getUpdateData: () => EmployeeUpdateData,
-    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
+    setFormStates: (changeData: ChangeData) => void,
     handleConfirm: (selectedItem: StandardListItemDomRef, name: string) => void,
 }
 
 
-const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, getUpdateData, getFormState, handleInputChange, handleConfirm}) => {
+const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, getUpdateData, getFormState, setFormStates, handleConfirm}) => {
+    //input change event listener 
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    };   
+    
+    
     return (
-        <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End} style={{width: "fit-content"}}>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label>Име</Label>
-                <StandardInputField
-                    editMode={getEditMode()}
-                    value={getFormData().firstName}
-                    onChange={handleInputChange}
-                    name={"firstName"}
-                    valueState={getFormState().firstName.valueState}
-                />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label>Презиме</Label>
-                <StandardInputField
-                    editMode={getEditMode()}
-                    value={getFormData().middleName}
-                    onChange={handleInputChange}
-                    name={"middleName"}
-                    valueState={getFormState().middleName.valueState}
-                />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label>Фамилия</Label>
-                <StandardInputField
-                    editMode={getEditMode()}
-                    value={getFormData().surname}
-                    onChange={handleInputChange}
-                    name={"surname"}
-                    valueState={getFormState().surname.valueState}
-                />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label required>E-mail</Label>
-                <StandardInputField
-                    editMode={getEditMode()}
-                    value={getFormData().email}
-                    onChange={handleInputChange}
-                    name={"email"}
-                    valueState={getFormState().email.valueState}
-                />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label required>GSM</Label>
-                <StandardInputField
-                    editMode={getEditMode()}
-                    value={getFormData().phoneNumber}
-                    onChange={handleInputChange}
-                    name={"phoneNumber"}
-                    valueState={getFormState().phoneNumber.valueState}
-                />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label required>Отдел</Label>
-                <StandardTableSelectField
-                        name="managerId"
-                        isLargeTable={false}
+        <FlexBox style={{gap:"4rem", padding:".3rem 2rem"}}>
+            <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>Име</Label>
+                    <StandardInputField
                         editMode={getEditMode()}
-                        value={getUpdateData().managerId}
-                        joinInfo={employeeJoinTableInfo.managerId}
-                        formDataSetter={handleConfirm}
+                        value={getFormData().firstName}
+                        onChange={handleInputChange}
+                        name={"firstName"}
+                        valueState={getFormState().firstName.valueState}
                     />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label required>Отдел</Label>
-                <StandardTableSelectField
-                        name="departmentId"
-                        isLargeTable={false}
+                </FlexBox>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>Презиме</Label>
+                    <StandardInputField
                         editMode={getEditMode()}
-                        value={getUpdateData().departmentId}
-                        joinInfo={employeeJoinTableInfo.departmentId}
-                        formDataSetter={handleConfirm}
+                        value={getFormData().middleName}
+                        onChange={handleInputChange}
+                        name={"middleName"}
+                        valueState={getFormState().middleName.valueState}
                     />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label required>Позиция</Label>
-                <StandardTableSelectField
-                        name="positionId"
-                        isLargeTable={false}
+                </FlexBox>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>Фамилия</Label>
+                    <StandardInputField
                         editMode={getEditMode()}
-                        value={getUpdateData().positionId}
-                        joinInfo={employeeJoinTableInfo.departmentId}
-                        formDataSetter={handleConfirm}
+                        value={getFormData().surname}
+                        onChange={handleInputChange}
+                        name={"surname"}
+                        valueState={getFormState().surname.valueState}
                     />
+                </FlexBox>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>E-mail</Label>
+                    <StandardInputField
+                        editMode={getEditMode()}
+                        value={getFormData().email}
+                        inputType={InputType.Email}
+                        onChange={handleInputChange}
+                        name={"email"}
+                        valueState={getFormState().email.valueState}
+                    />
+                </FlexBox>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>GSM</Label>
+                    <StandardInputField
+                        editMode={getEditMode()}
+                        value={getFormData().phoneNumber}
+                        onChange={handleInputChange}
+                        name={"phoneNumber"}
+                        valueState={getFormState().phoneNumber.valueState}
+                    />
+                </FlexBox>
+            </FlexBox>
+
+
+            <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>Отдел</Label>
+                    <StandardTableSelectField
+                            
+                            name="departmentId"
+                            isLargeTable={false}
+                            editMode={getEditMode()}
+                            value={getUpdateData().departmentId}
+                            joinInfo={employeeJoinTableInfo.departmentId}
+                            formDataSetter={handleConfirm}
+                        />
+                </FlexBox>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>Позиция</Label>
+                    <StandardTableSelectField
+                            name="positionId"
+                            isLargeTable={false}
+                            editMode={getEditMode()}
+                            value={getUpdateData().positionId}
+                            joinInfo={employeeJoinTableInfo.departmentId}
+                            formDataSetter={handleConfirm}
+                        />
+                </FlexBox>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label>Мениджър</Label>
+                    <StandardTableSelectField
+                            name="managerId"
+                            isLargeTable={false}
+                            editMode={getEditMode()}
+                            value={getUpdateData().managerId}
+                            joinInfo={employeeJoinTableInfo.managerId}
+                            formDataSetter={handleConfirm}
+                        />
+                </FlexBox>
             </FlexBox>
         </FlexBox>
     )

@@ -1,15 +1,16 @@
 import { Theme, themes } from "@models/Themes"
 import { 
-    Bar, BarDesign, Button, Option, ButtonDesign, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Page, Select, Title, TitleLevel, Ui5CustomEvent, SelectDomRef 
+    Option, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Page, Select, Title, TitleLevel, Ui5CustomEvent, SelectDomRef 
 } from "@ui5/webcomponents-react"
 import { SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js"
-import { FC} from "react"
+import { CSSProperties, FC} from "react"
 import { setTheme, getTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
+import CompanySelect from "@components/Selects/CompanySelect";
 
 
-const divSeparator = {
+const divSeparator: CSSProperties= {
     borderTop: "0.01rem solid #dcdcdc",
-    width: "100%"
+    width: "100%",
 }
 
 
@@ -29,17 +30,17 @@ const Settings: FC = () => {
 
     return (
         <Page 
-            style={{backgroundColor: "white"}}
-            footer={<Bar
-                design={BarDesign.Footer}
-                endContent={<Button design={ButtonDesign.Emphasized}>Save</Button>}
-            />}
+            style={{backgroundColor: "white", height: "calc(100vh - 3.73rem)"}}
+            // footer={<Bar
+            //     design={BarDesign.Footer}
+            //     endContent={<Button design={ButtonDesign.Emphasized}>Save</Button>}
+            // />}
         >
-            <FlexBox style={{gap:"1rem"}} direction={FlexBoxDirection.Column}>
-                <div style={divSeparator}></div>
-                <FlexBox style={{padding:"0 3rem 0 3rem"}} alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.SpaceBetween}> 
+            <FlexBox direction={FlexBoxDirection.Column}>
+                <div style={{...divSeparator, margin: "0 0 1rem 0"}}></div>
+                <FlexBox style={{padding:"0 3rem"}} alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.SpaceBetween}> 
                     <Title level={TitleLevel.H4}>Избор на тема</Title>
-                    <Select onChange={onChange}>
+                    <Select onChange={onChange} style={{width: "15rem"}}>
                         {
                             themes.map((theme: Theme, key: number) => {
                                 const selected = (currentTheme === theme.themeName)? true : false
@@ -53,6 +54,8 @@ const Settings: FC = () => {
                         }
                     </Select>
                 </FlexBox>
+                <div style={{...divSeparator, margin: "4rem 0 1rem 0"}}></div>
+                <CompanySelect/>
             </FlexBox>
         </Page>
     )

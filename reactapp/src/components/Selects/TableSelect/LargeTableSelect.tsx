@@ -1,29 +1,38 @@
-import { employeeContractJoinTablesInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
-import { Filter, createFilter, createPageFilterInfo, initialFilterState } from "@models/Page/Page";
+﻿import {
+    Button, CustomListItem, FlexBox, FlexBoxAlignItems, FlexBoxDirection, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItemDomRef, Ui5CustomEvent
+} from "@ui5/webcomponents-react"
+import { FC, Fragment, useEffect, useState } from "react"
+import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
-import { formToggle } from "@store/slices/formToggleSlice";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
-import { Button, FlexBox, FlexBoxAlignItems, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItem, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
-import { FC, Fragment, useEffect, useState } from "react";
+import { formToggle } from "@store/slices/formToggleSlice";
 import { createPortal } from "react-dom";
+import { createFilter, defaultFilter, Filter } from "@/models/Filter";
+import { createPageFilterInfo } from "@/models/Page/Page";
 
 
-interface EmployeeTableSelectProps {
-    formDataSetter: (rowId: int) => void
+
+
+interface LargeTableSelectProps {
+    joinInfo: JoinTableInfo,
+    value?: string,
+    tableId?: string
+    name: string,
+    formDataSetter: (selectedItem: StandardListItemDomRef, name: string) => void
 }
 
 
-const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => {
-    const { filterField, description, contentFields, headerText, tableURL } = employeeContractJoinTablesInfo
+const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tableId="id", name, formDataSetter }) => {
+    const { filterField, description, contentFields, headerText, tableURL } = joinInfo
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [data, setData] = useState<PageResponse>(defaultPageResponse)
-    const [filterObject, setFilterObject] = useState<Filter>(initialFilterState)
+    const [filterObject, setFilterObject] = useState<Filter>(defaultFilter)
     const [currentPage, setCurrentPage] = useState<int>(1)
-    const [inputValue, setInputValue] = useState<string>("")
+    const [inputValue, setInputValue] = useState<string>(value)
     const isSuccess = useAppSelector((state) => state.isSuccessForm.value)
     const dispatchIsSuccess = useAppDispatch()
 
-
+    
     const onClickHandler = () => {
         initData(1)
             .then((res) => {setData(res.data)})
@@ -33,17 +42,16 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
 
     const onAfterCloseHandler = () => {
         setIsOpen(false)
-        setFilterObject(initialFilterState)
+        setFilterObject(defaultFilter)
         setData(defaultPageResponse)
         setCurrentPage(1)
     }
 
     const onConfirmHandler = (event: Ui5CustomEvent<ListDomRef, { selectedItems: StandardListItemDomRef[]; }>) => {
         const selectedItem = event.detail.selectedItems[0]
-        const rowId = Number(selectedItem.id)
-        const currentValue = selectedItem.textContent
+        const currentValue = selectedItem.children[0].children[1].textContent
         if (currentValue) {
-            formDataSetter(rowId)
+            formDataSetter(selectedItem, name)
             setInputValue(currentValue)
         }
     }
@@ -67,8 +75,8 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
     }
 
     const initData = (page: int) => {
-        const token = localStorage.getItem("token")
-        const pageDTO = createPageFilterInfo(page, 100, filterObject);
+        const token = sessionStorage.getItem("accessToken")
+        const pageDTO = createPageFilterInfo(page, 100, filterObject)
 
         return fetch(`${tableURL}`, {
             method: "POST",
@@ -88,7 +96,6 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
         }
     }, [currentPage])
 
-
     useEffect(() => {
         if (isOpen) {
             initData(1)
@@ -97,7 +104,7 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
         }
     }, [filterObject])
 
-
+    
     useEffect(() => {
         if (isSuccess) {
             dispatchIsSuccess(formToggle())
@@ -108,39 +115,41 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
 
     return (
         <Fragment>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:".3rem"}}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:".5rem"}}>
                 <Input value={inputValue} readonly/>
                 <Button onClick={onClickHandler}>Избор</Button>
             </FlexBox>
             {createPortal(
                 <SelectDialog
+                    resizable
                     open={isOpen}
                     onAfterClose={onAfterCloseHandler}
                     headerText={headerText}
                     onSearchInput={onSearchInputHandler}
                     onSearch={onSearchHandler}
                     onLoadMore={onLoadMoreHandler}
-                    onConfirm={onConfirmHandler}
+                    onConfirm={onConfirmHandler }
                     growing={currentPage >= data.pages? ListGrowingMode.None: ListGrowingMode.Button}
                 >
                     {
-                        data.records.map((item, key) => (
-                            <StandardListItem
-                                description={item[description]}
-                                key={key}
-                                id={item["employee_id"]}
-                            >
-                                {contentFields.map((field) => {
-                                    return `${item[field]} `
-                                })}
-                            </StandardListItem>
+                        data.records.map((item) => (
+                            <CustomListItem key={item[tableId]} id={item[tableId]}>
+                                <FlexBox direction={FlexBoxDirection.Column} style={{margin: ".8rem 0 .8rem 0", gap: "1rem"}}>
+                                    <div>{item[description]}</div>
+                                    <div style={{color: "var(--sapContent_LabelColor)", fontSize: "var(--sapFontSize)"}}>
+                                        {contentFields.map((field) => {
+                                            return `${item[field]} `
+                                        })}
+                                    </div>
+                                </FlexBox>
+                            </CustomListItem>
                         ))
                     }
-                </SelectDialog>,
-                document.body
+                </SelectDialog>, document.body
             )}
         </Fragment>
     )
 }
 
-export default EmployeeTableSelect
+
+export default LargeTableSelect

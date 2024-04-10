@@ -1,12 +1,12 @@
 export default interface PageResponse {
     pages: int,
-    countRecords: int,
+    count_records: int,
     records: Array<any>,
 }
 
 
 export const defaultPageResponse: PageResponse = {
-    pages: 0,
-    countRecords: 0,
+    pages: 1,
+    count_records: 0,
     records: [],
 }

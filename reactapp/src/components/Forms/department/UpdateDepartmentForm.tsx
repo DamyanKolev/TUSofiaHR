@@ -3,15 +3,16 @@ import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, InputDomRef, Title, 
 import { StandardInputField } from '../StandartFields/StandartInputField';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
-import { Department, defualtDepartment } from '@models/HR/Departmnet';
-import DailogSwitch from '@app-types/DialogSwitch';
+import { Department, defaultDepartmentUpdateDTO } from '@models/HR/Departmnet';
+import DailogSwitch from '@app-types/enums/DialogSwitch';
 import { DepartmentPageContext } from '@pages/hr/DepartmentPage';
-import { submitPutForm } from '@/utils/forms/submitForm';
-import { DepartmentFormState, defaultDepartmentUpdateFormState } from '@/models/FormStates/department/DepartmentFormState';
-import { handleInputChangeFunc } from '@/utils/handlers/onChangeHandlers';
-import { isFilledForm } from '@/utils/validation';
-import { setErrorInputStates } from '@/utils/forms/formState';
-import { TableRowState } from '@/types/TableRowState';
+import { submitPutForm } from '@utils/forms/submitForm';
+import { isFilledForm } from '@utils/validation';
+import { setErrorInputStates } from '@utils/forms/formState';
+import { updateFormInfo } from '@utils/forms/updateFormInfo';
+import { DepartmentFormState, defaultDepartmentUpdateFormState } from '@models/States/department/DepartmentFormState';
+import { TableRowState } from '@app-types/TableRowState';
+import { ChangeData } from '@models/EventData/ChangeData';
 
 
 interface UpdateDepartmentFormProps {
@@ -24,7 +25,7 @@ interface UpdateDepartmentFormProps {
 const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
     const rowState = useContext<TableRowState<Department> | undefined>(DepartmentPageContext)
     const [formState, setFormState] = useState<DepartmentFormState>(defaultDepartmentUpdateFormState)
-    const [formData, setFormData] = useState<Department>(defualtDepartment)
+    const [formData, setFormData] = useState<Department>(defaultDepartmentUpdateDTO)
     const [editMode, setEditMode] = useState<boolean>(false)
     const [disabled, setDisabled] = useState<boolean>(true)
     const dispatchIsSuccess = useAppDispatch()
@@ -32,7 +33,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
     const setDefaultValues = () => {
         setFormState(defaultDepartmentUpdateFormState)
         dialogSwitchSetter(DailogSwitch.Close)
-        setFormData(defualtDepartment)
+        setFormData(defaultDepartmentUpdateDTO)
         rowState?.setSelectedRow({} as Department)
         setEditMode(false)
     }
@@ -58,15 +59,18 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
     useEffect(() => {
         if(rowState) {
             if (Object.keys(rowState.selectedRow).length > 0) {
-                setFormData(rowState.selectedRow);
+                setFormData(rowState.selectedRow); 
             }
         }
     }, [rowState]);
 
     const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = event.target
-        handleInputChangeFunc(target, formData, setFormData, formState, setFormState);
-
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        updateFormInfo(changeData, formData, setFormData, formState, setFormState)
         if(disabled) {setDisabled(false)}
     }
 

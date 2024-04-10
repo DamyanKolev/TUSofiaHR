@@ -1,10 +1,11 @@
-import DataType from "@app-types/DataType";
+import DataType from "@app-types/enums/DataType";
 import { RadioButtonDomRef, Ui5CustomEvent, Text, RadioButton, ValueState } from "@ui5/webcomponents-react";
 import { largeFormItem } from "@utils/css";
 import { FC, Fragment } from "react";
 
 
 interface StandardRadioButtonFieldProps {
+    textFieldWidth?: string,
     buttonsValues: Array<string>,
     editMode: boolean;
     value: string;
@@ -16,7 +17,7 @@ interface StandardRadioButtonFieldProps {
 
 
 
-const StandardRadioButtonField: FC<StandardRadioButtonFieldProps> = ({buttonsValues, editMode, value, dataType = DataType.String, name, valueState, onChange}) =>{
+const StandardRadioButtonField: FC<StandardRadioButtonFieldProps> = ({textFieldWidth = "15.625rem", buttonsValues, editMode, value, dataType = DataType.String, name, valueState, onChange}) =>{
     if (editMode) {
         return <Fragment>
             {
@@ -46,7 +47,13 @@ const StandardRadioButtonField: FC<StandardRadioButtonFieldProps> = ({buttonsVal
             }
         </Fragment>
     }
-    return <Text>{value}</Text>;
+    
+    
+    return (
+        <Text style={{width:textFieldWidth}}>
+            {value}
+        </Text>
+    )
 }
 
 

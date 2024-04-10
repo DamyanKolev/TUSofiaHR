@@ -1,16 +1,25 @@
-import DataType from "@app-types/DataType";
-import { DepartmentFormState } from "@models/FormStates/department/DepartmentFormState";
+import { DepartmentFormState } from "@models/States/department/DepartmentFormState";
 import { DepartmentDTO } from "@models/HR/Departmnet";
 import { FlexBox, FlexBoxAlignItems, Input, InputDomRef, Label, Ui5CustomEvent } from "@ui5/webcomponents-react";
-import { FC} from "react";
+import { FC } from "react";
+import { ChangeData } from "@models/EventData/ChangeData";
 
 interface CreateDepartmentProps {
     getFormState: () => DepartmentFormState,
     getFormData: () => DepartmentDTO,
-    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void
+    setFormStates: (changeData: ChangeData) => void,
 }
 
-const CreateDepartment: FC<CreateDepartmentProps> = ({getFormState, getFormData, handleInputChange}) => {
+const CreateDepartment: FC<CreateDepartmentProps> = ({getFormState, getFormData, setFormStates}) => {
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
     return (
         <FlexBox alignItems={FlexBoxAlignItems.Center} style={{padding: "1rem 2rem", gap: ".5rem"}}>
             <Label>Отдел</Label>
@@ -19,7 +28,6 @@ const CreateDepartment: FC<CreateDepartmentProps> = ({getFormState, getFormData,
                 value={getFormData().departmentName}
                 onChange={handleInputChange}
                 valueState={getFormState().departmentName.valueState}
-                data-type={DataType.String}
             />
         </FlexBox>
     )

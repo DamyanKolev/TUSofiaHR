@@ -1,14 +1,13 @@
 ﻿import { Bar, Button, ButtonDesign } from "@ui5/webcomponents-react";
 import { CSSProperties, FC, Fragment, createContext, useState } from "react"
 import SmartTable from "@components/Table/SmartTable";
-import PageBar from "@components/Bars/PageBar";
 import CreatePositionForm from "@components/Forms/position/CreatePositionForm";
 import positionColumns from "@models/TableColumns/PositionColumns";
-import DailogSwitch from "@app-types/DialogSwitch";
+import DailogSwitch from "@app-types/enums/DialogSwitch";
 import { Position } from "@models/HR/Position";
 import UpdatePositionForm from "@components/Forms/position/UpdatePositionForm";
-import { TableRowState } from "@/types/TableRowState";
 import { createPortal } from "react-dom";
+import { TableRowState } from "@app-types/TableRowState";
 
 
 export const PositionPageContext = createContext<TableRowState<Position> | undefined>(undefined);
@@ -23,7 +22,7 @@ const tableStyle: CSSProperties = {
 
 const PositionPage: FC = () => {
     const tableTile = "Позиции"
-    const tableURL = "/api/positions"
+    const tableURL = "/api/hr/position"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
     const [selectedRow, setSelectedRow] = useState<Position>({} as Position);
 
@@ -43,8 +42,8 @@ const PositionPage: FC = () => {
     return (
         <PositionPageContext.Provider value={{selectedRow, setSelectedRow}}>
             <div className="flexible-columns ui5-content-density-compact">
-                <PageBar title={tableTile} />
                 <SmartTable
+                    title={tableTile}
                     style={tableStyle}
                     onRowClick={onRowClick}
                     columns={positionColumns}
@@ -53,14 +52,14 @@ const PositionPage: FC = () => {
                         <Fragment>
                             <Bar endContent={
                             <Fragment>
-                            <Button design={ButtonDesign.Transparent} onClick={addOnClick}>Add</Button>
-                            <Button design={ButtonDesign.Transparent}>Delete</Button>
+                            <Button design={ButtonDesign.Transparent} onClick={addOnClick}>Добави</Button>
+                            {/* <Button design={ButtonDesign.Transparent}>Delete</Button> */}
                         </Fragment>
                             }/>
                         </Fragment>
                     }
-                /> 
-                                   
+                />
+
                 {createPortal(
                     <CreatePositionForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>,
                     document.body
@@ -69,7 +68,7 @@ const PositionPage: FC = () => {
                 {createPortal(
                     <UpdatePositionForm dialogSwitchGetter={dialogSwitchGetter} dialogSwitchSetter={dialogSwitchSetter} tableURL={tableURL}/>,
                     document.body
-                )}  
+                )}   
             </div>
         </PositionPageContext.Provider>
     )

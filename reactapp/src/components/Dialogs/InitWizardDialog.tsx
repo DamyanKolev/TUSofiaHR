@@ -1,17 +1,16 @@
-import { DepartmentFormState, defaultDepartmentInsertFormState } from "@/models/FormStates/department/DepartmentFormState";
-import { PositionFormState, defualtInsertPositionFormState } from "@/models/FormStates/position/PositionFormState";
 import CreateDepartment from "@components/Forms/department/CreateDepartment";
 import CreatePosition from "@components/Forms/position/CreatePosition";
-import { DepartmentDTO, defualtDepartmentDTO } from "@models/HR/Departmnet";
-import { PositionDTO, defaultPositionDTO } from "@models/HR/Position";
 import { WizardStepChangeEventDetail } from "@ui5/webcomponents-fiori/dist/Wizard.js";
-import { Bar, BarDesign, Button, ButtonDesign, Dialog, InputDomRef, Title, Ui5CustomEvent, Wizard, WizardContentLayout, WizardDomRef, WizardStep } from "@ui5/webcomponents-react";
+import { Bar, BarDesign, Button, ButtonDesign, Dialog, Title, Ui5CustomEvent, Wizard, WizardContentLayout, WizardDomRef, WizardStep } from "@ui5/webcomponents-react";
 import { setErrorInputStates } from "@utils/forms/formState";
 import { submitPostForm } from "@utils/forms/submitForm";
-import { handleInputChangeFunc } from "@utils/handlers/onChangeHandlers";
+import { updateFormInfo } from "@utils/forms/updateFormInfo";
 import { isFilledForm } from "@utils/validation";
 import { FC, Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PositionDepartment, defaultPositionDepartment } from "@models/HR/PositionDepartment";
+import { PositionDepartmentState, defaultPositionDepartmentState } from "@models/States/PositionDepartmentState";
+import { ChangeData } from "@models/EventData/ChangeData";
 
 
 interface InitWizardDialogProps {
@@ -21,13 +20,15 @@ interface InitWizardDialogProps {
 
 
 const InitWizardDialog: FC<InitWizardDialogProps> = ({getSelected, setIsSelected}) => {
-    const navigate = useNavigate(); 
-    const [selected, setSelected] = useState<int>(1);
+    const [formData, setFormData] = useState<PositionDepartment>(defaultPositionDepartment)
+    const [formState, setFormState] = useState<PositionDepartmentState>(defaultPositionDepartmentState)
     const [disabled, setDisabled] = useState<Record<int, boolean>>({1: false, 2: true});
-    const [departmentForm, setDepartmentForm] = useState<DepartmentDTO>(defualtDepartmentDTO)
-    const [positionForm, setPositionForm] = useState<PositionDTO>(defaultPositionDTO)
-    const [departmentFormState, setDepartmentFormState] = useState<DepartmentFormState>(defaultDepartmentInsertFormState);
-    const [positionFormState, setPositionFormState] = useState<PositionFormState>(defualtInsertPositionFormState);
+    const [selected, setSelected] = useState<int>(1);
+    const navigate = useNavigate();
+
+    const setFormStates = (changeData: ChangeData) => {
+        updateFormInfo(changeData, formData, setFormData, formState, setFormState)
+    }
 
     const nextButtonOnClick = () => {
         const newSelected = selected + 1
@@ -54,36 +55,28 @@ const InitWizardDialog: FC<InitWizardDialogProps> = ({getSelected, setIsSelected
     };
 
     const submitForms = async (): Promise<void> => {
-        const isFilledDepartmentForm = isFilledForm(departmentFormState);
-        const isFilledPositionForm = isFilledForm(positionFormState);
-        const isFilled = isFilledDepartmentForm && isFilledPositionForm
-        
-        if (isFilled) {
-            const postURL = `/backend/api/hr/init-hr`
-            const formObject = JSON.stringify({
-                department_insert:departmentForm,
-                position_insert:positionForm
-            })
-            submitPostForm(postURL, formObject, successCalback)
+        let isSubmittable = false
+
+        Object.entries(formState).forEach(([, value]) => {
+            if(isFilledForm(value)){
+                isSubmittable = true
+            }
+            else {
+                isSubmittable = false
+            }
+            
+        })
+        if (isSubmittable) {
+            const postURL = `api/hr/init-hr`
+            submitPostForm(postURL, formData, successCalback)
         }
         else {
-            setErrorInputStates(departmentFormState, setDepartmentFormState)
-            setErrorInputStates(positionFormState, setPositionFormState)
+            Object.entries(formState).forEach(([key, value]) => {
+                setErrorInputStates(value, (newState): void => {setFormState({...formState, [key]: newState})})
+            })
         }
     }
 
-
-    //department input change event listener
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = event.target
-        handleInputChangeFunc(target, departmentForm, setDepartmentForm, departmentFormState, setDepartmentFormState);
-    }
-
-    //department input change event listener
-    const positionHandleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
-        const target = event.target
-        handleInputChangeFunc(target, positionForm, setPositionForm, positionFormState, setPositionFormState);
-    }
 
     return (
         <Dialog open={getSelected()} stretch>
@@ -91,9 +84,9 @@ const InitWizardDialog: FC<InitWizardDialogProps> = ({getSelected, setIsSelected
                 <WizardStep titleText="Отдел" icon="company-view" selected={selected == 1} data-step={1} disabled={disabled[1]} style={{height:"30rem"}}>
                     <Title>Нов Отдел</Title>
                     <CreateDepartment
-                        getFormState={() => {return departmentFormState}}
-                        getFormData={() => {return departmentForm}}
-                        handleInputChange={handleInputChange}
+                        getFormState={() => {return formState.departmentInsert}}
+                        getFormData={() => {return formData.departmentInsert}}
+                        setFormStates={setFormStates}
                     />
 
                     <Bar
@@ -108,9 +101,9 @@ const InitWizardDialog: FC<InitWizardDialogProps> = ({getSelected, setIsSelected
                     <Title>Нова Позиция</Title>
 
                     <CreatePosition
-                        getFormState={() => {return positionFormState}}
-                        getFormData={() => {return positionForm}}
-                        handleInputChange={positionHandleInputChange}
+                        getFormState={() => {return formState.positionInsert}}
+                        getFormData={() => {return formData.positionInsert}}
+                        setFormStates={setFormStates}
                     />
 
                     <Bar

@@ -1,9 +1,11 @@
 import { Input, InputDomRef, InputType, Link, Text, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
-import { FC } from "react";
-import DataType from "@app-types/DataType";
+import { CSSProperties, FC } from "react";
+import DataType from "@app-types/enums/DataType";
 import { largeFormItem } from "@utils/css";
 
 interface StandardInputFieldProps {
+    style?: CSSProperties
+    textFieldWidth?: string,
     editMode: boolean;
     value: string;
     dataType?: DataType;
@@ -13,11 +15,14 @@ interface StandardInputFieldProps {
     onChange: (e: Ui5CustomEvent<InputDomRef, never>) => void;
 }
 
-export const StandardInputField: FC<StandardInputFieldProps> = ({ editMode, value, dataType = DataType.String, name, onChange, inputType = InputType.Text, valueState}) => {
+export const StandardInputField: FC<StandardInputFieldProps> = (
+    { style = largeFormItem, textFieldWidth = "15.625rem", editMode, value, dataType = DataType.String, name, onChange, inputType = InputType.Text, valueState }
+) => {
     if (editMode) {
         return <Input
-            style={largeFormItem}
+            style={style}
             value={value}
+            type={inputType}
             data-type={dataType}
             name={name}
             onChange={onChange}
@@ -26,11 +31,15 @@ export const StandardInputField: FC<StandardInputFieldProps> = ({ editMode, valu
     }
     if (inputType === InputType.URL || inputType === InputType.Email) {
         return (
-            <Link href={inputType === InputType.Email ? `mailto:${value}` : value} target="_blank">
+            <Link href={inputType === InputType.Email ? `mailto:${value}` : value} target="_blank" style={{width:textFieldWidth}}>
                 {value}
             </Link>
         );
     }
 
-    return <Text>{value}</Text>;
+    return (
+        <Text style={{width:textFieldWidth}}>
+            {value}
+        </Text>
+    )
 };

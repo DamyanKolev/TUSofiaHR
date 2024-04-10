@@ -3,10 +3,10 @@ import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
 const article62Columns: AnalyticalTableColumnDefinition[] = [
     {
         accessor: "employeeName",
-        Header: "Име",
+        Header: "Име на служителя",
     },
     {
-        accessor: "egn",
+        accessor: "identityText",
         Header: "ЕГН",
     },
     {
@@ -34,11 +34,11 @@ const article62Columns: AnalyticalTableColumnDefinition[] = [
         Header: "Дата на терминиране",
     },
     {
-        accessor: "npkdId",
+        accessor: "nkpd",
         Header: "Код позиция",
     },
     {
-        accessor: "nkidId",
+        accessor: "nkid",
         Header: "Код ",
     },
     {

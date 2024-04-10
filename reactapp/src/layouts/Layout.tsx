@@ -4,44 +4,33 @@ import { Outlet } from 'react-router-dom';
 import '@ui5/webcomponents-icons/dist/menu';
 import ShellBarMenu from '../components/Bars/ShellBarMenu';
 import NavBar from '../components/Bars/NavBar';
+import { FlexBox } from '@ui5/webcomponents-react';
 
 
 const Layout: FC = () => {
     const [collapsed, setCollapsed] = useState<boolean>(true);
-    // const navigate = useNavigate();
-
-    //useEffect(() => {
-    //    const token = localStorage.getItem("token")
-
-    //    fetch("/backend/api/auth/validate-token", {
-    //        method: "POST",
-    //        headers: { "Content-Type": "application/json" },
-    //        body: JSON.stringify(token)
-    //    }).then(response => {
-    //        if (response.ok) {
-    //            navigate("/")
-    //        }
-    //        else {
-    //            navigate("/login")
-    //        }
-    //    })
-    //}, [])
+    const [width, setWidth] = useState<string>('calc(100vw - 5.21rem)');
 
     const hideShowSideNav = () => {
         setCollapsed(!collapsed);
+        if (collapsed) {
+            setWidth('calc(100vw - 17.71rem)')
+        }
+        else {
+            setWidth('calc(100vw - 5.21rem)')
+        }
     };
 
     return (
         <>
             <ShellBarMenu hideShowSideNav={hideShowSideNav} />
 
-            <div className="container">
+            <FlexBox style={{height:"calc(100vh - 3.25rem)"}}>
                 <NavBar collapsed={collapsed} />
-
-                <div className="content-container">
-                    <Outlet />
-                </div>
-            </div>
+                <div className="content-container" style={{width:`${width}`}}>
+                    <Outlet/> 
+                </div>  
+            </FlexBox>
         </>
     );
 };

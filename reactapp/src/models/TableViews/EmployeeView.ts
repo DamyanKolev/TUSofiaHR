@@ -7,6 +7,6 @@ export interface EmployeeView {
     managerName: string;
     departmentName: string;
     positionName: string;
+    insuranceTypeCode: string,
     personalDataId: int,
-    contractId: int,
 }

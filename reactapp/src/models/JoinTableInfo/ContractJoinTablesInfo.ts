@@ -19,15 +19,15 @@ export const contractJoinTablesInfo: ContractJoinTablesInfo = {
         tableURL: "/api/sys/contract-type/all"
     },
     positionId: {
-        filterField: "npkdId",
-        description: "npkdId",
+        filterField: "nkpd",
+        description: "nkpd",
         contentFields: ["positionName"],
         headerText: "Позиция",
         tableURL: "/api/sys/positions/page"
     },
     iconomicActivityId: {
-        filterField: "nkidId",
-        description: "nkidId",
+        filterField: "nkid",
+        description: "nkid",
         contentFields: ["activityName"],
         headerText: "Икономическа активност",
         tableURL: "/api/sys/iconomic-activity/page"
@@ -51,6 +51,6 @@ export const contractJoinTablesInfo: ContractJoinTablesInfo = {
         description: "code",
         contentFields: ["terminationType"],
         headerText: "Тип терминиране",
-        tableURL: "/api/sys/termination-types/all"
+        tableURL: "/api/sys/termination-type/all"
     },
 }

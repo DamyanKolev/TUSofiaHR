@@ -1,6 +1,7 @@
-import { AnalyticalTableColumnDefinition, Icon, IconDesign } from "@ui5/webcomponents-react";
+import { AnalyticalTableColumnDefinition, Icon, IconDesign} from "@ui5/webcomponents-react";
 import "@ui5/webcomponents-icons/message-success"
 import "@ui5/webcomponents-icons/message-error"
+
 
 const contractColumns: AnalyticalTableColumnDefinition[] = [
     {
@@ -61,9 +62,15 @@ const contractColumns: AnalyticalTableColumnDefinition[] = [
         }
     },
     {
-        accessor: "article62_flag",
+        accessor: "article62Flag",
         Header: "Декларация 62",
         width: 125,
+        // filter: (filterValue, rows) => {
+        //     if (filterValue.length > 0) {
+        //         return true
+        //       }
+        //       return rows;
+        // },
         Cell: ({ value }:any) => {
             if (value) {
                 return <Icon name="message-error" design={IconDesign.Positive}/>

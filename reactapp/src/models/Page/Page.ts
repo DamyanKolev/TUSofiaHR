@@ -1,3 +1,5 @@
+import { defaultFilter, Filter } from "../Filter"
+
 export interface PageInfo {
     pageNumber: int,
     pageSize: int,
@@ -16,33 +18,20 @@ export interface PageFilterInfo {
     filter: Filter
 }
 
-export interface Filter {
-    fieldName: string,
-    value: string
+
+export const defautlPageFilterInfo:PageFilterInfo = {
+    pageNumber: 0,
+    pageSize: 0,
+    filter: defaultFilter
 }
 
-export const initialFilterState: Filter = {
-    fieldName: "",
-    value: ""
-}
 
-export function createFilter(name: string, value: string):Filter {
+export function createPageFilterInfo(
+    pageNumber: int, pageSize: int, filter: Filter
+): PageFilterInfo {
     return {
-        fieldName: name,
-        value: value
+        pageNumber,
+        pageSize,
+        filter
     }
-}
-
-export const initialPageFilterInfo:PageFilterInfo = {
-    pageNumber: 1,
-    pageSize: 100,
-    filter: initialFilterState
-}
-
-export function createPageFilterInfo(page:int, pageSize: int, filter: Filter):PageFilterInfo {
-    return {
-        pageNumber: page,
-        pageSize: pageSize,
-        filter: filter
-    }
-}
+} 

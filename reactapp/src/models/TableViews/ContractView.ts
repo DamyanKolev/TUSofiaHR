@@ -1,5 +1,6 @@
 export interface ContractView {
     contractId: int,
+    employeeId: int,
     employeeName: string,
     conclusionDate: Date;
     executionDate: Date;
@@ -12,6 +13,10 @@ export interface ContractView {
     codeCorection: int;
     documentType: string;
     ekatte: string;
+    nkpd: string;
+    nkid: string;
+    contractTypeCode: string;
+    terminationCode: string;
     isTerminate: boolean,
     article62Flag: boolean;
 }

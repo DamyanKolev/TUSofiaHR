@@ -7,11 +7,11 @@ export interface DepartmentDTO {
     departmentName: string,
 }
 
-export const defualtDepartment: Department = {
-    id: 0,
-    departmentName: "",
+export const defaultDepartmentDTO: DepartmentDTO = {
+    departmentName: ""
 }
 
-export const defualtDepartmentDTO: DepartmentDTO = {
-    departmentName: "",
+export const defaultDepartmentUpdateDTO: Department = {
+    id: 0,
+    departmentName: ""
 }

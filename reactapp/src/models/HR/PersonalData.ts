@@ -1,40 +1,47 @@
-import Gender from "@app-types/Gender";
+import Gender from "@app-types/enums/Gender";
+import { UpdateDTO } from "@models/UpdateDTO";
 
 export interface PersonalData {
     id: int
-    egn: string,
-    birthDate: Date | null,
-    gender: Gender | null,
-    personalIdNumber: string | null
-    personalIdIssueDate: Date | null,
-    personalIdIssueBy: string | null,
-    addressId: int | null
+    identityText: string,
+    identityCode: int,
+    birthDate: Date,
+    gender: Gender,
+    personalIdNumber: string,
+    personalIdIssueDate: Date,
+    personalIdIssueBy: string,
+    addressId: int
 }
 
-export const defaultPersonalData: PersonalData = {
+export const defaultPDataUpdateDTO: PersonalData = {
     id: 0,
-    egn: "",
+    identityText: "",
+    identityCode: 0,
     birthDate: null,
-    gender: null,
-    personalIdNumber: null,
+    gender: "",
+    personalIdNumber: "",
     personalIdIssueDate: null,
-    personalIdIssueBy: null,
-    addressId: null,
+    personalIdIssueBy: "",
+    addressId: 0
 }
 
 export interface PersonalDataDTO {
-    egn: string,
+    identityText: string,
+    identityCode: int,
     birthDate: Date | null,
     gender: Gender | null,
     personalIdNumber: string | null,
     personalIdIssueDate: Date | null,
     personalIdIssueBy: string | null,
 }
+
+
 export const defaultPersonalDataDTO: PersonalDataDTO = {
-    egn: "",
+    identityText: "",
+    identityCode: 0,
     birthDate: null,
     gender: null,
-    personalIdNumber: null,
+    personalIdNumber: "",
     personalIdIssueDate: null,
-    personalIdIssueBy: null,
+    personalIdIssueBy: "",
 }

@@ -1,7 +1,6 @@
 import { CSSProperties, FC, Fragment } from 'react';
 import { AnalyticalTableColumnDefinition, Bar, BarDesign, Button, ButtonDesign,FCLLayout} from '@ui5/webcomponents-react';
 import SmartTable from '../Table/SmartTable';
-import PageBar from '../Bars/PageBar';
 import "@ui5/webcomponents-icons/excel-attachment"
 
 
@@ -25,8 +24,8 @@ const StartColumn: FC<StartColumnProps> = ({ tableURL, columns, tableTitle, hand
 
     return (
         <Fragment>
-            <PageBar title={tableTitle} />
             <SmartTable
+                title={tableTitle}
                 style={tableStyle}
                 tableURL={tableURL}
                 columns={columns}
@@ -36,7 +35,7 @@ const StartColumn: FC<StartColumnProps> = ({ tableURL, columns, tableTitle, hand
                         design={BarDesign.Subheader}
                         endContent={
                             <Fragment>
-                                <Button design={ButtonDesign.Transparent} onClick={createOnClick}>Създай</Button>
+                                <Button design={ButtonDesign.Transparent} onClick={createOnClick}>Добави</Button>
                                 <Button icon="excel-attachment"  design={ButtonDesign.Transparent}/>
                             </Fragment>
                         }

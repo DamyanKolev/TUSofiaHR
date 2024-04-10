@@ -1,4 +1,4 @@
-import DataType from "@app-types/DataType";
+import DataType from "@app-types/enums/DataType";
 import { formatDate } from "./formaters";
 
 export function parseValueByType<T>(
@@ -32,43 +32,34 @@ export function parseValueByType<T>(
     }
 }
 
-
-
-function parseObjectFields<T extends object>(formData: T): T {
-    let newData: T = {} as T
+export function parseObjectFields<T extends object>(formData: T): T {
+    let newData: T = formData
     Object.entries(formData).forEach(([key, value])=> {
-        if (key !== "change_date"){
-            if (typeof value == "string" && value == ""){
-                newData = {...newData, [key]: null}
+        const fieldType = typeof value
+        if (fieldType != "object") {
+            if (key !== "change_date"){
+                if (fieldType == "string" && value == ""){
+                    newData = {...newData, [key]: null}
+                }
             }
             else {
-                newData = {...newData, [key]: value}
+                newData = {...newData, [key]: formatDate(new Date())}
             }
         }
         else {
-            newData = {...newData, [key]: formatDate(new Date())}
+            let result = parseObjectFields(value)
+            newData = {...newData, [key]: result}
         }
     }) 
-
     return newData
 }
 
 
-
-export function parseUpdateDTO<T extends object>(formData: T): T {
-    let newFormData: T = formData
-    Object.entries(formData).forEach(([key, value])=> {
-        if(value != null) {
-            if(formData.hasOwnProperty("id")) {
-                if (key !== "id") {
-                    const newUpdateData = parseObjectFields(value)
-                    newFormData = {...newFormData, [key]: newUpdateData}
-                }
-            }
-            else {
-                const newData = parseUpdateDTO(value)
-                newFormData = {...newFormData, [key]: newData}
-            }
+export function parseObjectTo<T extends object, R>(object: T, fields: Array<string>): R {
+    let newFormData: R = {} as R
+    Object.entries(object).forEach(([key, value])=> {
+        if(!fields.includes(key)) {
+            newFormData = {...newFormData, [key]: value}
         }
     })
 

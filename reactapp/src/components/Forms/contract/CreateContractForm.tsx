@@ -1,38 +1,89 @@
-import LargeTableSelect from "@/components/TableSelect/LargeTableSelect"
-import SmallTableSelect from "@/components/TableSelect/SmallTableSelect"
-import { InsertContractFormState } from "@/models/FormStates/contract/InsertContractFormState"
-import DataType from "@app-types/DataType"
+import DataType from "@app-types/enums/DataType"
+import LargeTableSelect from "@components/Selects/TableSelect/LargeTableSelect"
+import SmallTableSelect from "@components/Selects/TableSelect/SmallTableSelect"
+import { ContractInsertFormState } from "@models/States/contract/ContractInsertFormState"
 import { ContractInsertDTO } from "@models/HR/Contract"
 import { contractJoinTablesInfo } from "@models/JoinTableInfo/ContractJoinTablesInfo"
-import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, InputType, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, InputType, Label, StandardListItemDomRef, TextArea, TextAreaDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { largeFormItem } from "@utils/css"
 import { setDateToInputDefaultValue, setInputDefaultValue } from "@utils/forms/setInputDefaultValue"
 import { CSSProperties, FC } from "react"
+import { ChangeData } from "@models/EventData/ChangeData"
 
 
 
 
 interface CreateContractFormProps {
     style?: CSSProperties,
-    getFormState: () => InsertContractFormState,
+    getFormState: () => ContractInsertFormState,
     getFormData: () => ContractInsertDTO,
-    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
-    handleDateChange: (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => void,
+    setFormStates: (changeData: ChangeData) => void,
     handleConfirm: (selectedItem: StandardListItemDomRef, name: string) => void,
 }
 
 
 
-const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormState, handleInputChange, handleDateChange, handleConfirm, style}) => {
+const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormState, setFormStates, handleConfirm, style}) => {
+    //input change event listener 
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    };
+
+    //date input change event listener 
+    const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+
+    function handleTextChange(event: Ui5CustomEvent<TextAreaDomRef, never>) {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+
+    // const handleSelectChange = (event: Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
+    //     const changeData: ChangeData = {
+    //         value: event.detail.selectedOption.additionalText,
+    //         valueType: event.target.dataset.type,
+    //         name: event.target.name,
+    //     }
+    //     setFormStates(changeData)
+    // }
+    
+    
+    
     return (
         <FlexBox style={style}>
             <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
-                    <Label required>Работна заплата</Label>
+                {/* <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                    <Label required>Код корекция</Label>
+                    <Select style={largeFormItem} name="code_corection" onChange={handleSelectChange} data-type={DataType.Int}>
+                        <StandardListItem additionalText="0">Редовни данни</StandardListItem>
+                        <StandardListItem additionalText="1">Коригиране</StandardListItem>
+                        <StandardListItem additionalText="2">Заличаване</StandardListItem>
+                    </Select>
+                </FlexBox> */}
+                
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label required>Трудово възнаграждение</Label>
                     <Input
                         style={largeFormItem}
-                        name="working_wage"
+                        name="workingWage"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().workingWage)}
                         onChange={handleInputChange}
@@ -41,11 +92,11 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                         />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Седмични часове</Label>
                     <Input
                         style={largeFormItem}
-                        name="work_time"
+                        name="workTime"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().workTime)}
                         onChange={handleInputChange}
@@ -54,11 +105,11 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Отпуска</Label>
                     <Input
                         style={largeFormItem}
-                        name="annual_leave"
+                        name="annualLeave"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().annualLeave)}
                         onChange={handleInputChange}
@@ -67,11 +118,11 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Дата на сключване</Label>
                     <DatePicker
                         style={largeFormItem}
-                        name="conclusion_date"
+                        name="conclusionDate"
                         value={setDateToInputDefaultValue(getFormData().conclusionDate)}
                         onChange={handleDateChange}
                         valueState={getFormState().conclusionDate.valueState}
@@ -79,11 +130,11 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Дата на започване</Label>
                     <DatePicker
                         style={largeFormItem}
-                        name="execution_date"
+                        name="executionDate"
                         value={setDateToInputDefaultValue(getFormData().executionDate)}
                         onChange={handleDateChange}
                         valueState={getFormState().executionDate.valueState}
@@ -91,7 +142,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                     />
                 </FlexBox>
 
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Дата на започване</Label>
                     <DatePicker
                         style={largeFormItem}
@@ -102,21 +153,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                         data-type={DataType.Date}
                     />
                 </FlexBox>
-            </FlexBox>
-
-            <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
-                    <Label>Дата на Допълнително споразумение</Label>
-                    <DatePicker
-                        style={largeFormItem}
-                        name="additionalAgreementDate"
-                        value={setDateToInputDefaultValue(getFormData().additionalAgreementDate)}
-                        onChange={handleDateChange}
-                        valueState={getFormState().additionalAgreementDate.valueState}
-                        data-type={DataType.Date}
-                    />
-                </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Тип Договор</Label>
                     <SmallTableSelect
                         name="contractTypeId"
@@ -124,23 +161,26 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
-                    <Label required>Позиция</Label>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label required>Код на длъжността</Label>
                     <LargeTableSelect
-                        name="positionId"
+                        name="sysPositionId"
                         joinInfo={contractJoinTablesInfo.positionId}
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+            </FlexBox>
+
+            <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Икономическа активност</Label>
                     <LargeTableSelect
-                        name="iconomicActivityId"
+                        name="sysIconomicActivityId"
                         joinInfo={contractJoinTablesInfo.iconomicActivityId}
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Тип документ</Label>
                     <SmallTableSelect
                         name="documentTypeId"
@@ -148,12 +188,22 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
-                <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End}>
-                    <Label required>Код Административна територия</Label>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                    <Label required>ЕКАТТЕ</Label>
                     <LargeTableSelect
-                        name="administrativeTerritoryId"
+                        name="sysAdministrativeTerritoryId"
                         joinInfo={contractJoinTablesInfo.administrativeTerritoryId}
                         formDataSetter={handleConfirm}
+                    />
+                </FlexBox>
+                <FlexBox alignItems={FlexBoxAlignItems.Start} style={{gap:"1rem"}}>
+                    <Label>Допълнителни клаузи</Label>
+                    <TextArea
+                        style={largeFormItem}
+                        rows={10}
+                        name="additionalClause"
+                        value={setInputDefaultValue(getFormData().additionalClause)}
+                        onChange={handleTextChange}
                     />
                 </FlexBox>
             </FlexBox>        

@@ -10,7 +10,7 @@ export const employeeColumns: AnalyticalTableColumnDefinition[] = [
         Header: "E-mail",
     },
     {
-        accessor: "ТphoneNumber",
+        accessor: "phoneNumber",
         Header: "Телефонен номер",
     },
     {

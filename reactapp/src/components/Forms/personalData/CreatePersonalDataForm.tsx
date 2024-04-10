@@ -1,59 +1,106 @@
-import DataType from "@app-types/DataType"
-import Gender from "@app-types/Gender"
-import { PDataFormState } from "@models/FormStates/personalData/PersonalDataFormState"
+import DataType from "@app-types/enums/DataType"
+import Gender from "@app-types/enums/Gender"
+import { PDataFormState } from "@models/States/personalData/PersonalDataFormState"
 import { PersonalDataDTO } from "@models/HR/PersonalData"
-import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, RadioButton, RadioButtonDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Input, InputDomRef, Label, RadioButton, RadioButtonDomRef, Select, SelectDomRef, StandardListItem, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { setDateToInputDefaultValue, setInputDefaultValue } from "@utils/forms/setInputDefaultValue"
 import { FC } from "react"
+import { SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js"
+import { ChangeData } from "@models/EventData/ChangeData"
 
 
 interface PersonalDataFormProps {
     getFormState: () => PDataFormState,
     getFormData: () => PersonalDataDTO,
-    handleInputChange: (event: Ui5CustomEvent<InputDomRef, never>) => void,
-    handleDateChange: (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => void,
-    handleRadioButtonChange: (event: Ui5CustomEvent<RadioButtonDomRef, never>) => void,
+    setFormStates: (changeData: ChangeData) => void,
 }
 
-const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFormData, handleInputChange, handleDateChange, handleRadioButtonChange }) => {
+const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFormData, setFormStates }) => {
+    //input change event listener 
+    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    };
+
+    //date input change event listener 
+    const handleDateChange = (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+    //radio button change event listener 
+    const handleRadioButtonChange = (event: Ui5CustomEvent<RadioButtonDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+
+    const handleSelectChange = (event: Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
+        const changeData: ChangeData = {
+            value: event.detail.selectedOption.additionalText,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+
     return (
-        <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{width: "fit-content"}}>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
-                <Label required>ЕГН</Label>
+        <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <Select name="identity_code" data-type={DataType.Int} onChange={handleSelectChange} style={{width:"8rem"}}>
+                    <StandardListItem additionalText="0">ЕГН</StandardListItem>
+                    <StandardListItem additionalText="2">ЛНЧ</StandardListItem>
+                </Select>
                 <Input
-                    name="egn"
-                    value={getFormData().egn}
+                    name="identityText"
+                    value={getFormData().identityText}
                     onChange={handleInputChange}
-                    valueState={getFormState().egn.valueState}
+                    valueState={getFormState().identityText.valueState}
                     data-type={DataType.String}
                 />
             </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Label>Дата на раждане</Label>
                 <DatePicker
+                    style={{width:"13.125rem"}}
                     name="birthDate"
                     value={setDateToInputDefaultValue(getFormData().birthDate)}
                     onChange={handleDateChange}
                     data-type={DataType.Date}
                 />
             </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Label>Пол</Label>
-                <RadioButton 
-                    name="gender" 
-                    text={Gender.Male}
-                    onChange={handleRadioButtonChange}
-                    date-type={DataType.String}
-                />
-                <RadioButton 
-                    name="gender" 
-                    text={Gender.Female}
-                    onChange={handleRadioButtonChange}
-                    date-type={DataType.String}
-                />
+                <FlexBox style={{width:"13.125rem", gap:"1rem"}} justifyContent={FlexBoxJustifyContent.SpaceBetween}>
+                    <RadioButton 
+                        name="gender" 
+                        text={Gender.Male}
+                        onChange={handleRadioButtonChange}
+                        date-type={DataType.String}
+                    />
+                    <RadioButton 
+                        name="gender" 
+                        text={Gender.Female}
+                        onChange={handleRadioButtonChange}
+                        date-type={DataType.String}
+                    />
+                </FlexBox>
             </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Label>Номер на лична карта</Label>
                 <Input
                     name="personalIdNumber"
@@ -62,16 +109,17 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
                     data-type={DataType.String}
                 />
             </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Label>Дата на издаване на ЛК</Label>
                 <DatePicker
+                    style={{width:"13.125rem"}}
                     name="personalIdIssueDate"
                     value={setDateToInputDefaultValue(getFormData().personalIdIssueDate)}
                     onChange={handleDateChange}
                     data-type={DataType.Date}
                 />
             </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Label>ЛК издадена от</Label>
                 <Input
                     required

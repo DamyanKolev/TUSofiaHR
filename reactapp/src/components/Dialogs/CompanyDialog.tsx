@@ -1,4 +1,4 @@
-import { Company } from "@models/HR/Company";
+import { Database } from "@models/Auth/Database";
 import { InitAccountModel } from "@pages/auth/Login";
 import { Dialog, FlexBox, FlexBoxDirection, List, ListDomRef, StandardListItem, Title, TitleLevel, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { ListItemClickEventDetail } from "@ui5/webcomponents/dist/List.js";
@@ -9,14 +9,13 @@ import { useNavigate } from "react-router-dom";
 interface CompanyDialogProps {
     getSelected: () => boolean,
     setIsSelected: Dispatch<React.SetStateAction<InitAccountModel>>,
-    getCompanies: () => Array<Company>,
+    getCompanies: () => Array<Database>,
     getIsCreated: () => boolean
 }
 
 
 const CompanyDialog: FC<CompanyDialogProps> = ({getSelected, setIsSelected, getCompanies, getIsCreated}) => {
-    const navigate = useNavigate(); 
-
+    const navigate = useNavigate();
     
     const onItemClick = (event: Ui5CustomEvent<ListDomRef, ListItemClickEventDetail>) => {
         const companyId = event.detail.item.id
@@ -46,10 +45,10 @@ const CompanyDialog: FC<CompanyDialogProps> = ({getSelected, setIsSelected, getC
                     headerText="Фирми"
                     >
                     {
-                        getCompanies().map((company: Company, key: number) => {
+                        getCompanies().map((company: Database, key: number) => {
                             return (
-                                <StandardListItem key={key} additionalText={company.companyEIC} id={company.id.toString()}>
-                                    {company.companyName}
+                                <StandardListItem key={key} additionalText={company.company_eic} id={company.id.toString()}>
+                                    {company.company_name}
                                 </StandardListItem>
                             )
                         })

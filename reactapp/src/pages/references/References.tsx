@@ -11,15 +11,22 @@ const References: FC = () => {
                 <ProductSwitchItem
                     icon="BusinessSuiteInAppSymbols/icon-contract"
                     targetSrc="/hr/references/article62"
-                    titleText="Договори"
+                    titleText="Уведомление"
                     subtitleText="Член 62 от закона за ТД"
                 />
 
                 <ProductSwitchItem
                     icon="BusinessSuiteInAppSymbols/icon-contract"
                     targetSrc="/hr/references/article123"
-                    titleText="Договори"
+                    titleText="Уведомление"
                     subtitleText="Член 123 от закона за ТД"
+                />
+
+                <ProductSwitchItem
+                    icon="BusinessSuiteInAppSymbols/icon-contract"
+                    targetSrc="/hr/references/declaration"
+                    titleText="Декларации"
+                    subtitleText="Декларации обр. 1,3 и 6"
                 />
             </ProductSwitch>
         </Fragment>

@@ -1,4 +1,4 @@
-import { parseValueByType } from "../parsers";
+import { parseValueByType } from "@utils/parsers";
 
 export function getNewFormDataFromNestedForms<T extends object>(formData: T, name: string, value: string, valueType: string): T{
     let newFormData: T = formData

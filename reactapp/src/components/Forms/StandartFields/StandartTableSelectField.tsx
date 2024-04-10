@@ -1,19 +1,23 @@
 import { StandardListItemDomRef, Text } from "@ui5/webcomponents-react";
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
-import LargeTableSelect from "@components/TableSelect/LargeTableSelect";
-import SmallTableSelect from "@components/TableSelect/SmallTableSelect";
+import LargeTableSelect from "@components/Selects/TableSelect/LargeTableSelect";
+import SmallTableSelect from "@components/Selects/TableSelect/SmallTableSelect";
 
 interface StandardTableSelectFieldProps {
+    textFieldWidth?: string,
     editMode: boolean;
     value: string;
     name: string,
     joinInfo: JoinTableInfo,
     isLargeTable?: boolean,
     formDataSetter: (selectedItem: StandardListItemDomRef, name: string) => void
+    setSelectedRow?: Dispatch<SetStateAction<any>>
 }
 
-export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = ({ editMode, value, name, joinInfo, isLargeTable = true, formDataSetter }) => {
+export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = (
+    { textFieldWidth = "15.625rem", editMode, value, name, joinInfo, isLargeTable = true, formDataSetter, setSelectedRow }
+) => {
     if (editMode) {
         if (isLargeTable) {
             return (
@@ -32,9 +36,19 @@ export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = ({ ed
                     formDataSetter={formDataSetter}
                     value={value}
                     joinInfo={joinInfo}
+                    setSelectedRow={setSelectedRow}
                 />
             )
         }
     }
-    return <Text>{value}</Text>;
+    
+    
+    return (
+        <Text style={{width:textFieldWidth}}>
+            {value}
+        </Text>
+    )
 };
+
+
+export default StandardTableSelectField

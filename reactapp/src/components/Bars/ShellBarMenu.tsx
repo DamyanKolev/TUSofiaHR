@@ -1,36 +1,101 @@
-import { FC } from 'react';
-import { Avatar, Button, ShellBar } from "@ui5/webcomponents-react";
-import { useNavigate } from "react-router-dom";
+import { FC, useRef, useState } from 'react';
+import { ActionSheet, Avatar, Button, Popover, PopoverDomRef, ShellBar } from "@ui5/webcomponents-react";
+import "@ui5/webcomponents-icons/journey-arrive"
+import { useNavigate, useLocation } from 'react-router-dom';
+import HRProductSwitch from "@components/Menus/HRProductSwitch"
 
 interface ShellBarMenuProps {
     hideShowSideNav: () => void;
 }
 
 const ShellBarMenu: FC<ShellBarMenuProps> = ({ hideShowSideNav }) => {
+    const location = useLocation();
     const navigate = useNavigate();
+    const [isProfileClick, setIsProfileClick] = useState<boolean>(false)
 
-    const onProfileClick = () => { navigate("/") }
+    const onProfileClick = () => { 
+        setIsProfileClick(true)        
+    }
+
+    const onLogoutClick = () => {
+        let rememberMe = localStorage.getItem("rememberMe")
+        
+        if (rememberMe != null) {
+            rememberMe = JSON.parse(rememberMe)
+            if (rememberMe) {
+                localStorage.removeItem("refreshToken")
+            }
+            else {
+                sessionStorage.removeItem("refreshToken")
+            }
+        }
+        else {
+            sessionStorage.removeItem("refreshToken")
+        }
+
+        sessionStorage.removeItem("accessToken")
+        
+        if (location.pathname != "/login") {
+            navigate("/login")
+        }
+    }
+
+    const popoverRef = useRef<PopoverDomRef>(null);
+    const handleShellBarItemClick = (e: any) => {
+      if (popoverRef.current != null) {
+        popoverRef.current.showAt(e.detail.targetRef);
+      }
+    };
 
     return (
-        <ShellBar
-            logo={<img alt="SAP Logo" src="https://sap.github.io/ui5-webcomponents/assets/images/sap-logo-svg.svg" />}
-            onProfileClick={onProfileClick}
-            profile={
-                <Avatar
-                    colorScheme="Accent6"
-                    icon="employee"
-                    shape="Circle"
-                    size="XS"
-                />
-            }
-            showCoPilot
-        >
-            <Button slot="startButton" icon="menu" onClick={hideShowSideNav} />
-            {/*<ShellBarItem*/}
-            {/*    count="3"*/}
-            {/*    icon="add"*/}
-            {/*    text="ShellBarItem" />*/}
-        </ShellBar>
+        <>
+            <ShellBar
+                onProductSwitchClick={handleShellBarItemClick}
+                onProfileClick={onProfileClick}
+                profile={
+                    <Avatar
+                        id="actionSheetOpener"
+                        colorScheme="Accent6"
+                        icon="employee"
+                        shape="Circle"
+                        size="XS"
+                    />
+                }
+                showProductSwitch
+            >
+                <Button slot="startButton" icon="menu" onClick={hideShowSideNav} />
+                {/* <ShellBarItem
+                    count="3"
+                    icon="add"
+                    text="ShellBarItem" /> */}
+            </ShellBar>
+
+            
+
+            <ActionSheet 
+                open={isProfileClick} 
+                opener="actionSheetOpener"
+                placementType="Bottom"
+                verticalAlign="Center"
+                horizontalAlign="Center"
+                hideArrow
+                onAfterClose={() => setIsProfileClick(false)}
+            >
+                <Button icon='journey-arrive' onClick={onLogoutClick}>
+                    Изход
+                </Button>
+            </ActionSheet>
+
+
+            <Popover
+                ref={popoverRef}
+                placementType="Bottom"
+                horizontalAlign="Center"
+                verticalAlign="Center"
+            >
+                <HRProductSwitch/>
+            </Popover>
+        </>
     );
 }
 

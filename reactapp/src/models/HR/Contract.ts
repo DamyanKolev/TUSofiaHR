@@ -1,30 +1,28 @@
-// select type
-
+import { Optional } from "@app-types/Optional";
 
 export interface Contract {
     id: int,
-    workingWage: string;
-    workTime: int;
-    annualLeave: int;
+    workingWage: Optional<string>;
+    workTime: Optional<int>;
+    annualLeave: Optional<int>;
     conclusionDate: Date;
     executionDate: Date;
-    contractTerm: Date | null;
-    additionalAgreementDate: Date | null;
-    terminationDate: Date | null;
-    changeDate: Date | null;
-    companyId: int,
+    contractTerm: Optional<Date>;
+    additionalAgreementDate: Optional<Date>;
+    terminationDate: Optional<Date>;
+    changeDate: Optional<Date>;
     contractTypeId: int,
-    positionId:int,
-    iconomicActivityId: int,
+    sysPositionId:Optional<int>,
+    sysIconomicActivityId: Optional<int>,
     documentTypeId: int,
-    terminationTypeId: int | null,
-    administrativeTerritoryId: int | null,
+    terminationTypeId: Optional<int>,
+    sysAdministrativeTerritoryId: Optional<int>,
     codeCorection: int,
     isTerminate: boolean,
     article62Flag: boolean,
 }
 
-export const defaultContract: Contract = {
+export const defaultContractUpdateDTO: Contract = {
     id: 0,
     workingWage: "",
     workTime: 0,
@@ -35,33 +33,35 @@ export const defaultContract: Contract = {
     additionalAgreementDate: null,
     terminationDate: null,
     changeDate: null,
-    companyId: 0,
     contractTypeId: 0,
-    positionId: 0,
-    iconomicActivityId: 0,
+    sysPositionId:0,
+    sysIconomicActivityId: 0,
     documentTypeId: 0,
-    administrativeTerritoryId: null,
-    terminationTypeId: null,
+    terminationTypeId: 0,
+    sysAdministrativeTerritoryId: 0,
     codeCorection: 0,
     isTerminate: false,
-    article62Flag: false
+    article62Flag: false,
 }
 
 export interface ContractInsertDTO {
-    workingWage: string;
-    workTime: int | null;
-    annualLeave: int | null;
-    conclusionDate: Date | null;
-    executionDate: Date | null;
-    contractTerm: Date | null;
-    additionalAgreementDate: Date | null;
-    companyId: int | null;
-    contractTypeId: int | null;
-    positionId: int | null;
-    iconomicActivityId: int | null;
-    documentTypeId: int | null;
-    administrativeTerritoryId: int | null;
-    codeCorection: int | null;
+    workingWage: Optional<string>;
+    workTime: Optional<int>;
+    annualLeave: Optional<int>;
+    additionalClause: Optional<string>,
+    conclusionDate: Date;
+    executionDate: Date;
+    contractTerm: Optional<Date>;
+    additionalAgreementDate: Optional<Date>;
+    contractTypeId: int;
+    sysPositionId: Optional<int>;
+    sysIconomicActivityId: Optional<int>;
+    documentTypeId: int;
+    companyEic: string,
+    contractId: Optional<int>,
+    sysAdministrativeTerritoryId: Optional<int>;
+    codeCorection: int;
+    isAnnex: boolean,
     article62Flag: boolean,
 }
 
@@ -69,16 +69,19 @@ export const defaultContractInsert: ContractInsertDTO = {
     workingWage: "",
     workTime: null,
     annualLeave: null,
-    conclusionDate: null,
-    executionDate: null,
+    additionalClause: null,
+    conclusionDate: new Date(),
+    executionDate: new Date(),
     contractTerm: null,
     additionalAgreementDate: null,
-    companyId: 1,
-    contractTypeId: null,
-    positionId: null,
-    iconomicActivityId: null,
-    documentTypeId: null,
-    administrativeTerritoryId: null,
+    contractTypeId: 0,
+    sysPositionId: null,
+    sysIconomicActivityId: null,
+    documentTypeId: 0,
+    companyEic: "",
+    contractId: null,
+    sysAdministrativeTerritoryId: null,
     codeCorection: 0,
-    article62Flag: false
+    isAnnex: false,
+    article62Flag: false,
 }

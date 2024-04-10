@@ -31,7 +31,7 @@ namespace webapi.Models.HR
         public SysIconomicActivity? IconomicActivity { get; set; }
 
 
-        public Int16 DocumentTypeId { get; set; }
+        public int DocumentTypeId { get; set; }
         public SysContractDocumentType? DocumentType { get; set; }
 
 

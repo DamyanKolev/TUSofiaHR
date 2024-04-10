@@ -18,7 +18,7 @@ namespace webapi.Models.HR
         public decimal UniversalPensionInsurer { get; set; }
         public decimal UniversalPensionEmployee { get; set; }
         public int InsuranceTypeId { get; set; }
-        public SysInsuranceType? SysInsuranceTypeId { get; set; }
+        public SysInsuranceType? InsuranceType { get; set; }
     }
 
 

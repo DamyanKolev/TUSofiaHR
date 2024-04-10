@@ -33,7 +33,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/contracts/create", Name = "CreateAnnex")]
+        [HttpPost("/api/contracts/create-annex", Name = "CreateAnnex")]
         public IActionResult CreateAnnex([FromBody] ContractDTO contractDTO)
         {
             var result = _contractService.CreateAnnex(contractDTO);

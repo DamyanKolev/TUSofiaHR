@@ -10,22 +10,28 @@ namespace webapi.Extensions
         public static void Seed(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SysAdministrativeTerritory>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysAdministrativeTerritory>("Sys_Administrative_Territories.csv")
+                    CSVFileProcessor.ParseCSVToList<SysAdministrativeTerritory>("SysAdministrativeTerritories.csv")
                 );
             modelBuilder.Entity<SysContractTerminationType>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysContractTerminationType>("Sys_Contract_Termination_Types.csv")
+                    CSVFileProcessor.ParseCSVToList<SysContractTerminationType>("SysContractTerminationTypes.csv")
                 );
             modelBuilder.Entity<SysContractType>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysContractType>("Sys_Contract_Types.csv")
+                    CSVFileProcessor.ParseCSVToList<SysContractType>("SysContractTypes.csv")
                 );
             modelBuilder.Entity<SysIconomicActivity>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysIconomicActivity>("Sys_Iconomic_Activities.csv")
+                    CSVFileProcessor.ParseCSVToList<SysIconomicActivity>("SysIconomicActivities.csv")
                 );
             modelBuilder.Entity<SysPosition>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysPosition>("Sys_Positions.csv")
+                    CSVFileProcessor.ParseCSVToList<SysPosition>("SysPositions.csv")
                 );
             modelBuilder.Entity<SysContractDocumentType>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysContractDocumentType>("Sys_Contract_Document_Types.csv")
+                    CSVFileProcessor.ParseCSVToList<SysContractDocumentType>("SysContractDocumentTypes.csv")
+                );
+            //modelBuilder.Entity<SysInsuranceType>().HasData(
+            //        CSVFileProcessor.ParseCSVToList<SysInsuranceType>("SysInsuranceTypes.csv")
+            //    );
+            modelBuilder.Entity<SysPaymentType>().HasData(
+                    CSVFileProcessor.ParseCSVToList<SysPaymentType>("SysPaymentTypes.csv")
                 );
         }
 

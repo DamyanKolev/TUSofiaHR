@@ -21,6 +21,7 @@ namespace webapi
         public DbSet<Insurance> Insurances { get; set; }
         public DbSet<Income> Incomes { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
 
 

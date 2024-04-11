@@ -1,11 +1,11 @@
 export interface LoginDTO {
-    usernameOrEmail: string;
+    username: string;
     password: string;
     rememberMe: boolean,
 }
 
 export const defaultLoginDTO: LoginDTO = {
-    usernameOrEmail: "",
+    username: "",
     password: "",
     rememberMe: false,
 };

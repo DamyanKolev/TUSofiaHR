@@ -36,7 +36,12 @@ namespace webapi.Services.Auth
 
             User user = new User() { 
                 Email= userDTO.Email, 
-                UserName= userDTO.UserName
+                UserName= userDTO.UserName,
+                EmailConfirmed = false,
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                LockoutEnabled = false,
+                AccessFailedCount = 0,
             };
 
             var result = await _userManager.CreateAsync(user, userDTO.Password);

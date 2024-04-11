@@ -37,20 +37,16 @@ namespace webapi.Services.Auth
             User user = new User() { 
                 Email= userDTO.Email, 
                 UserName= userDTO.UserName,
-                EmailConfirmed = false,
-                PhoneNumberConfirmed = false,
-                TwoFactorEnabled = false,
-                LockoutEnabled = false,
-                AccessFailedCount = 0,
             };
 
             var result = await _userManager.CreateAsync(user, userDTO.Password);
 
-            if (!result.Succeeded)
+
+            if (result.Succeeded)
             {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_FAILED_REGISTRATION);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_REGISTRATION);
             }
-            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_REGISTRATION);
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, result.ToString());
         }
 
 

@@ -3,11 +3,7 @@ import { Button, ButtonDesign, CheckBox, CheckBoxDomRef, FlexBox, FlexBoxDirecti
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";
 import { useNavigate } from "react-router-dom";
 import { LoginDTO, defaultLoginDTO } from "@models/Auth/LoginDTO";
-import { Database } from "@models/Auth/Database";
-import { getData } from "@utils/getData";
 import { createPortal } from "react-dom";
-import CompanyDialog from "@components/Dialogs/CompanyDialog";
-import InitWizardDialog from "@components/Dialogs/InitWizardDialog";
 import "./Login.css"
 import { AuthTokens } from "@models/Auth/AuthTokens";
 
@@ -17,65 +13,41 @@ export interface InitAccountModel {
     isCreated: boolean
 }
 
-const defaultInitAccountModel: InitAccountModel= {
-    isSelectedCompany: false,
-    isCreated: false
-}
-
 export default function Login() {
     const [formData, setFormData] = useState<LoginDTO>(defaultLoginDTO);
-    const [dialogSwitch, setDialogSwitch] = useState<InitAccountModel>(defaultInitAccountModel);
-    const [isCreated, setIsCreated] = useState<boolean>(true)
-    const [companies, setCompanies] = useState<Array<Database>>([])
     const [rememberMe, setRememberMe] = useState<boolean>(false)
     const [errorMsg, setErrorMsg] = useState<string>("")
     const [isError, setIsError] = useState<boolean>(false)
     const navigate = useNavigate();
 
-    const init = async () => {
-        const allCompanies = await getData<Array<Database>>("/auth/company/all")
-        const isDataCreated = await getData<boolean>("/api/hr/is-created")
-        if(allCompanies != null && isDataCreated != null) {
-            if(allCompanies.length > 1){
-                setCompanies(allCompanies)
-                setIsCreated(isDataCreated)
-                setDialogSwitch({...dialogSwitch, isSelectedCompany:true})
-            }
-            else {
-                if(!isDataCreated) {
-                    setDialogSwitch({...dialogSwitch, isCreated:true})
-                }
-                else {
-                    navigate("/")
-                }
-            }
-        }
-    }
 
     const setToken = (tokens: AuthTokens) => {
         if (rememberMe) {
-            localStorage.setItem("refreshToken", tokens.refresh_token);
+            localStorage.setItem("refreshToken", tokens.refreshToken);
             localStorage.setItem("rememberMe", JSON.stringify(true));
         }
         else {
-            sessionStorage.setItem("refreshToken", tokens.refresh_token);
+            sessionStorage.setItem("refreshToken", tokens.refreshToken);
             localStorage.setItem("rememberMe", JSON.stringify(false));
         }
         sessionStorage.setItem("isLoginIn", JSON.stringify(true));
-        sessionStorage.setItem("accessToken", tokens.access_token);
+        sessionStorage.setItem("accessToken", tokens.accessToken);
     }
 
     const submitHandler = async () => {
-        const response = await fetch("/auth/signin", {
+        const response = await fetch("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+                username: formData.username,
+                password: formData.password
+            }),
         });
 
         if (response.ok) {
             const res = await response.json();
-            setToken(res.data)
-            init()
+            navigate("/")
+            // setToken(res.data)
         } else {
             setErrorMsg("Невалидно потребителско име или парола")
             setIsError(true)
@@ -93,7 +65,9 @@ export default function Login() {
 
     const handleOnChange = (event: Ui5CustomEvent<CheckBoxDomRef, never>) => {
         const checked = event.target.checked
-        setRememberMe(checked)
+        if (checked) {
+            setRememberMe(checked)
+        }
     }
 
 
@@ -108,8 +82,8 @@ export default function Login() {
                     <FlexBox direction={FlexBoxDirection.Column}>
                         <Label>Username</Label>
                         <Input 
-                            name="username_or_email" 
-                            value={formData.username_or_email} 
+                            name="username" 
+                            value={formData.username} 
                             onChange={handleInputChange} 
                             style={{width:"18rem"}}
                         />
@@ -138,21 +112,6 @@ export default function Login() {
                     </div>
                 </FlexBox>
             </div>
-
-            {dialogSwitch.isSelectedCompany && 
-                createPortal(<CompanyDialog
-                    getSelected={() => {return dialogSwitch.isSelectedCompany}}
-                    setIsSelected={setDialogSwitch}
-                    getCompanies={() => {return companies}}
-                    getIsCreated={() => {return isCreated}}
-                />, document.body)
-            }
-            {dialogSwitch.isCreated && 
-                createPortal(<InitWizardDialog
-                    getSelected={() => {return dialogSwitch.isCreated}}
-                    setIsSelected={(isSelected: boolean) => {setDialogSwitch({...dialogSwitch, isCreated:isSelected})}}
-                />, document.body)
-            }
 
             {
                 createPortal(

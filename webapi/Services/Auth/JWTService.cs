@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using webapi.Constants;
 using webapi.Models;
@@ -13,16 +14,19 @@ namespace webapi.Services.Auth
     public interface IJWTService
     {
         public string GenerateAccessToken(User user, IList<string> userRoles);
+        public Task<string> GenerateRefreshToken(User user);
         public Boolean IsTokenValid(string token);
     }
 
     public class JWTService : IJWTService
     {
+        private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
 
-        public JWTService(IConfiguration configuration)
+        public JWTService(IConfiguration configuration, UserManager<User> userManager)
         {
             _configuration = configuration;
+            _userManager = userManager;
         }
 
 
@@ -56,7 +60,7 @@ namespace webapi.Services.Auth
         }
 
 
-        //Generate user token by user credentials and user Roles
+        //Generate access token by user credentials and user Roles
         public string GenerateAccessToken(User user, IList<string> userRoles)
         {
             var authClaims = new List<Claim>
@@ -70,10 +74,29 @@ namespace webapi.Services.Auth
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            return GenerateToken(authClaims);
+            return GenerateToken(authClaims, 2);
         }
 
-        private string GenerateToken(IEnumerable<Claim> claims)
+
+        public async Task<string> GenerateRefreshToken(User user)
+        {
+            var randomNumber = new byte[256];
+            var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            var refreshHash = Convert.ToBase64String(randomNumber);
+            var refreshClaim = new Claim(ClaimTypes.Hash, refreshHash);            
+
+            var authClaims = new List<Claim>
+            {
+                refreshClaim,
+                new Claim(ClaimTypes.NameIdentifier, user.UserName!),
+            };
+            await _userManager.AddClaimAsync(user, refreshClaim);
+
+            return GenerateToken(authClaims, 24);
+        }
+
+        private string GenerateToken(IEnumerable<Claim> claims, int exprireTime)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
 
@@ -81,7 +104,7 @@ namespace webapi.Services.Auth
             {
                 Issuer = _configuration["JWT:ValidIssuer"],
                 Audience = _configuration["JWT:ValidAudience"],
-                Expires = DateTime.UtcNow.AddHours(3),
+                Expires = DateTime.UtcNow.AddHours(exprireTime),
                 SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
                 Subject = new ClaimsIdentity(claims)
             };

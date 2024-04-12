@@ -41,7 +41,7 @@ namespace webapi.Controllers.Auth
 
         }
 
-        [HttpPost("/api/auth/validate-token", Name="TokenValidation")]
+        [HttpGet("/api/auth/validate-token", Name="TokenValidation")]
         public IActionResult TokenValidation()
         {
             var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];

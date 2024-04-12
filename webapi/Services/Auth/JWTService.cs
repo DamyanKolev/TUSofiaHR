@@ -12,7 +12,7 @@ namespace webapi.Services.Auth
 {
     public interface IJWTService
     {
-        public string GenerateUserToken(User user, IList<string> userRoles);
+        public string GenerateAccessToken(User user, IList<string> userRoles);
         public Boolean IsTokenValid(string token);
     }
 
@@ -57,7 +57,7 @@ namespace webapi.Services.Auth
 
 
         //Generate user token by user credentials and user Roles
-        public string GenerateUserToken(User user, IList<string> userRoles)
+        public string GenerateAccessToken(User user, IList<string> userRoles)
         {
             var authClaims = new List<Claim>
                 {

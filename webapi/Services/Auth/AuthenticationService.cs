@@ -38,7 +38,7 @@ namespace webapi.Services.Auth
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
-                string token = _jwtService.GenerateUserToken(user, userRoles);
+                string token = _jwtService.GenerateAccessToken(user, userRoles);
 
                 return ResponseBuilder.CreateDataResponseWithStatus<string>(
                     HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, token);
@@ -71,7 +71,7 @@ namespace webapi.Services.Auth
             }
 
             var userRoles = await _userManager.GetRolesAsync(user);
-            string newToken = _jwtService.GenerateUserToken(user, userRoles);
+            string newToken = _jwtService.GenerateAccessToken(user, userRoles);
 
             return ResponseBuilder.CreateDataResponseWithStatus<string>(
                     HttpStatusCode.OK, MessageConstants.MESSAGE_REFRESH_TOKEN_SUCCESS, newToken);

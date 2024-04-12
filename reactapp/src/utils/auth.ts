@@ -2,7 +2,7 @@ export async function isJWTTokenValid(): Promise<boolean> {
     const token = sessionStorage.getItem("accessToken")
 
     if(token != null) {
-        const response = await fetch("/auth/validate-token",{
+        const response = await fetch("/api/auth/validate-token",{
             method: "GET",
             headers: { 
                 "Content-Type": "application/json",
@@ -31,7 +31,7 @@ async function refresAccessToken() : Promise<boolean> {
         }
     }
 
-    const response = await fetch("/auth/refresh-token",{
+    const response = await fetch("/api/auth/refresh-token",{
         method: "GET",
         headers: { 
             "Content-Type": "application/json",

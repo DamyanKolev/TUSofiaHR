@@ -23,13 +23,8 @@ namespace webapi.Models.HR
         public int PersonalDataId { get; set; }
         public PersonalData? PersonalData { get; set; }
 
-
-        public Nullable<int> ManagerId { get; set; }
-        public Employee? Manager { get; set; }
-
-
-        public int DepartmentId { get; set; }
-        public Department? Department { get; set; }
+        public int DepartmentTeamId { get; set; }
+        public DepartmentTeam? DepartmentTeam { get; set; }
 
 
         public Nullable<int> PositionId { get; set; }
@@ -49,8 +44,7 @@ namespace webapi.Models.HR
         public required string PhoneNumber { get; set; }
         public int CompanyEmployeeId { get; set; }
         public int PersonalDataId { get; set; }
-        public Nullable<int> ManagerId { get; set; }
-        public int DepartmentId { get; set; }
+        public int DepartmentTeamId { get; set; }
         public Nullable<int> PositionId { get; set; }
         public Nullable<int> InsuranceId { get; set; }
     }

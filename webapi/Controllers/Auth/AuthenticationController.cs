@@ -28,6 +28,7 @@ namespace webapi.Controllers.Auth
         }
 
 
+        [Authorize]
         [HttpPost("/api/auth/refresh-token", Name = "RefreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
@@ -38,20 +39,13 @@ namespace webapi.Controllers.Auth
                 return BadRequest(result.Response);
 
             return Ok(result.Response);
-
         }
 
+        [Authorize]
         [HttpGet("/api/auth/validate-token", Name="TokenValidation")]
         public IActionResult TokenValidation()
         {
-            var token = HttpContext.Request.Headers.Authorization.ToString().Split(" ")[1];
-            var result = _authenticationService.ValidateToken(token);
-
-            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
-                return BadRequest();
-
             return Ok();
-
         }
     }
 }

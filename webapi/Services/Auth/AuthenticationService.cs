@@ -11,8 +11,6 @@ namespace webapi.Services.Auth
     public interface IAuthenticationService
     {
         public Task<ResponseWithStatus<DataResponse<AuthTokens>>> SingIn(LoginModel model);
-        public ResponseWithStatus<Response> ValidateToken(string token);
-
         public Task<ResponseWithStatus<DataResponse<string>>> RefreshToken(string token);
     }
 
@@ -73,29 +71,13 @@ namespace webapi.Services.Auth
             var userHash = userHashes.Where(c => c.Type == ClaimTypes.Hash).FirstOrDefault();
 
 
-            if (userHash != tokenHash) {
+            if (String.Equals(userHash!.Value, tokenHash.Value)) {
                 return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_REFRESH_TOKEN_FAILED, "");
             }
 
             var userRoles = await _userManager.GetRolesAsync(user);
             string newToken = _jwtService.GenerateAccessToken(user, userRoles);
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_REFRESH_TOKEN_SUCCESS, newToken);
-        }
-
-
-        public ResponseWithStatus<Response> ValidateToken(string token)
-        {
-            if (token == null)
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_NULL_TOKEN);
-
-            var isTokenValid = _jwtService.IsTokenValid(token);
-
-            if (!isTokenValid)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INVALID_TOKEN);
-            }
-
-            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_VALID_TOKEN);
         }
     }
 }

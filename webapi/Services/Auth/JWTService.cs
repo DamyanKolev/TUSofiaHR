@@ -4,8 +4,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using webapi.Constants;
+using webapi.Extensions;
 using webapi.Models;
 using webapi.Models.Auth;
 
@@ -15,7 +17,6 @@ namespace webapi.Services.Auth
     {
         public string GenerateAccessToken(User user, IList<string> userRoles);
         public Task<string> GenerateRefreshToken(User user);
-        public Boolean IsTokenValid(string token);
     }
 
     public class JWTService : IJWTService
@@ -27,36 +28,6 @@ namespace webapi.Services.Auth
         {
             _configuration = configuration;
             _userManager = userManager;
-        }
-
-
-        public Boolean IsTokenValid(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!);
-
-            var validationResult = tokenHandler.ValidateToken(token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ClockSkew = TimeSpan.Zero
-            }, out SecurityToken validatedToken);
-
-            if (validatedToken == null)
-            {
-                return false;
-            }
-
-            var jwtToken = (JwtSecurityToken)validatedToken;
-            var username = jwtToken.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-
-            if (username == null)
-            {
-                return false;
-            }
-            return true;
         }
 
 
@@ -91,10 +62,11 @@ namespace webapi.Services.Auth
                 refreshClaim,
                 new Claim(ClaimTypes.NameIdentifier, user.UserName!),
             };
-            await _userManager.AddClaimAsync(user, refreshClaim);
 
+            await _userManager.AddUpdateClaim(user, refreshClaim);
             return GenerateToken(authClaims, 24);
         }
+
 
         private string GenerateToken(IEnumerable<Claim> claims, int exprireTime)
         {

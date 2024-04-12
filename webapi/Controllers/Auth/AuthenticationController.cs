@@ -28,7 +28,6 @@ namespace webapi.Controllers.Auth
         }
 
 
-        [Authorize(Roles = IdentityRoles.Admin)]
         [HttpPost("/api/auth/refresh-token", Name = "RefreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
@@ -42,7 +41,6 @@ namespace webapi.Controllers.Auth
 
         }
 
-        [Authorize(Roles = IdentityRoles.Admin)]
         [HttpPost("/api/auth/validate-token", Name="TokenValidation")]
         public IActionResult TokenValidation()
         {

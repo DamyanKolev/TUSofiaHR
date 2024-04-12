@@ -6,7 +6,6 @@ using webapi.Services.Auth;
 
 namespace webapi.Controllers.Auth
 {
-    [Authorize(Roles = IdentityRoles.Admin)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -44,7 +43,7 @@ namespace webapi.Controllers.Auth
             return Ok(result.Response);
         }
 
-
+        [Authorize(Roles = IdentityRoles.Admin)]
         [HttpPost("/api/auth/user/add-role", Name = "AddUserRole")]
         public async Task<IActionResult> AddUserRole([FromBody] UserRoleDTO userRoleDTO)
         {

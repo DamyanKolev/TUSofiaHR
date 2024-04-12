@@ -47,7 +47,7 @@ export default function Login() {
         if (response.ok) {
             const res = await response.json();
             navigate("/")
-            // setToken(res.data)
+            setToken(res.data)
         } else {
             setErrorMsg("Невалидно потребителско име или парола")
             setIsError(true)

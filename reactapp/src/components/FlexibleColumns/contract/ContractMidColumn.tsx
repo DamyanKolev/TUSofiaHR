@@ -143,7 +143,7 @@ const ContractMidColumn: FC<ContractMidColumnProps> = ({tableURL, handleLayoutSt
                     <Select style={{width: "15rem"}} onChange={handleSelectChange}>
                         <Option></Option>
                         {
-                            formData.terminationTypeId == "" && 
+                            formData.terminationTypeId == null && 
                             <Option>{ContractOperation.Termination}</Option>
                         }
                         <Option>{ContractOperation.Corection}</Option>

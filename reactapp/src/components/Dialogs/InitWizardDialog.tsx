@@ -1,28 +1,29 @@
-import CreateDepartment from "@components/Forms/department/CreateDepartment";
-import CreatePosition from "@components/Forms/position/CreatePosition";
+import InitDepartmentForm from "@components/Forms/department/InitDepartmentForm";
+import InitPositionForm from "@components/Forms/position/InitPositionForm";
 import { WizardStepChangeEventDetail } from "@ui5/webcomponents-fiori/dist/Wizard.js";
-import { Bar, BarDesign, Button, ButtonDesign, Dialog, Title, Ui5CustomEvent, Wizard, WizardContentLayout, WizardDomRef, WizardStep } from "@ui5/webcomponents-react";
+import { Bar, BarDesign, Button, ButtonDesign, Dialog, FlexBox, FlexBoxDirection, Title, Ui5CustomEvent, Wizard, WizardContentLayout, WizardDomRef, WizardStep } from "@ui5/webcomponents-react";
 import { setErrorInputStates } from "@utils/forms/formState";
 import { submitPostForm } from "@utils/forms/submitForm";
 import { updateFormInfo } from "@utils/forms/updateFormInfo";
 import { isFilledForm } from "@utils/validation";
 import { FC, Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PositionDepartment, defaultPositionDepartment } from "@models/HR/PositionDepartment";
-import { PositionDepartmentState, defaultPositionDepartmentState } from "@models/States/PositionDepartmentState";
+import { InitAppData, defaultInitAppData } from "@models/HR/InitAppData";
+import { InitAppDataFormState, defaultInitAppDataFormState } from "@models/States/InitAppDataFormState";
 import { ChangeData } from "@models/EventData/ChangeData";
+import InitDepTeamForm from "@components/Forms/departmentTeam/InitDepTeamForm";
+
 
 
 interface InitWizardDialogProps {
-    getSelected: () => boolean,
-    setIsSelected: (isSelected: boolean) => void,
+    open: boolean,
 }
 
 
-const InitWizardDialog: FC<InitWizardDialogProps> = ({getSelected, setIsSelected}) => {
-    const [formData, setFormData] = useState<PositionDepartment>(defaultPositionDepartment)
-    const [formState, setFormState] = useState<PositionDepartmentState>(defaultPositionDepartmentState)
-    const [disabled, setDisabled] = useState<Record<int, boolean>>({1: false, 2: true});
+const InitWizardDialog: FC<InitWizardDialogProps> = ({open}) => {
+    const [formData, setFormData] = useState<InitAppData>(defaultInitAppData)
+    const [formState, setFormState] = useState<InitAppDataFormState>(defaultInitAppDataFormState)
+    const [disabled, setDisabled] = useState<Record<int, boolean>>({1: false, 2: true, 3: true});
     const [selected, setSelected] = useState<int>(1);
     const navigate = useNavigate();
 
@@ -45,7 +46,6 @@ const InitWizardDialog: FC<InitWizardDialogProps> = ({getSelected, setIsSelected
     }
 
     const successCalback = ():void => {
-        setIsSelected(false)
         navigate("/")
     }
 
@@ -79,42 +79,66 @@ const InitWizardDialog: FC<InitWizardDialogProps> = ({getSelected, setIsSelected
 
 
     return (
-        <Dialog open={getSelected()} stretch>
+        <Dialog 
+            open={open} 
+            stretch
+            footer={
+                <Bar
+                    design={BarDesign.Footer}
+                    endContent={
+                        <Fragment>
+                            {
+                                selected > 1 &&
+                                <Button design={ButtonDesign.Emphasized} onClick={previousButtonOnClick}>Назад</Button>
+                            }
+                            {
+                                selected < 3 &&
+                                <Button design={ButtonDesign.Transparent} onClick={nextButtonOnClick}>Напред</Button>
+                            }
+                            {
+                                selected == 3 &&
+                                <Button design={ButtonDesign.Transparent} onClick={submitForms}>Запази</Button>
+                            }
+                        </Fragment>
+                    }
+                /> 
+            }
+        >
             <Wizard onStepChange={handleStepChange} contentLayout={WizardContentLayout.SingleStep}>
-                <WizardStep titleText="Отдел" icon="company-view" selected={selected == 1} data-step={1} disabled={disabled[1]} style={{height:"30rem"}}>
-                    <Title>Нов Отдел</Title>
-                    <CreateDepartment
-                        getFormState={() => {return formState.departmentInsert}}
-                        getFormData={() => {return formData.departmentInsert}}
-                        setFormStates={setFormStates}
-                    />
-
-                    <Bar
-                        design={BarDesign.Footer}
-                        endContent={
-                            <Button design={ButtonDesign.Emphasized} onClick={nextButtonOnClick}>Напред</Button>
-                        }
-                    />
+            <WizardStep titleText="Позиция" icon="sap-icon://suitcase"  selected={selected == 1} data-step={1} disabled={disabled[1]}>
+                    <FlexBox direction={FlexBoxDirection.Column} style={{padding:"1rem 2rem"}}>
+                        <Title>Нова Позиция</Title>
+                        <InitPositionForm
+                            getFormState={() => {return formState.positionInsert}}
+                            getFormData={() => {return formData.positionInsert}}
+                            setFormStates={setFormStates}
+                        />
+                    </FlexBox>
                 </WizardStep>
 
-                <WizardStep titleText="Позиция" icon="suitcase"  selected={selected == 2} data-step={2} disabled={disabled[2]}>
-                    <Title>Нова Позиция</Title>
 
-                    <CreatePosition
-                        getFormState={() => {return formState.positionInsert}}
-                        getFormData={() => {return formData.positionInsert}}
-                        setFormStates={setFormStates}
-                    />
+                <WizardStep titleText="Отдел" icon="sap-icon://company-view" selected={selected == 2} data-step={2} disabled={disabled[2]}>
+                    <FlexBox direction={FlexBoxDirection.Column} style={{padding:"1rem 2rem"}}>
+                        <Title>Нов Отдел</Title>
+                        <InitDepartmentForm
+                            getFormState={() => {return formState.departmentInsert}}
+                            getFormData={() => {return formData.departmentInsert}}
+                            setFormStates={setFormStates}
+                        />
+                    </FlexBox>
+                </WizardStep>
 
-                    <Bar
-                        design={BarDesign.Footer}
-                        endContent={
-                            <Fragment>
-                                <Button design={ButtonDesign.Transparent} onClick={previousButtonOnClick}>Назад</Button>
-                                <Button design={ButtonDesign.Emphasized} onClick={submitForms}>Финализиране</Button>
-                            </Fragment>
-                        }
-                    />
+
+
+                <WizardStep titleText="Екип" icon="sap-icon://group"  selected={selected == 3} data-step={3} disabled={disabled[3]}>
+                    <FlexBox direction={FlexBoxDirection.Column} style={{padding:"1rem 2rem"}}>
+                        <Title>Нов Екип</Title>
+                        <InitDepTeamForm
+                            getFormState={() => {return formState.departmentTeamInsert}}
+                            getFormData={() => {return formData.departmentTeamInsert}}
+                            setFormStates={setFormStates}
+                        />
+                    </FlexBox>
                 </WizardStep>
             </Wizard>
         </Dialog>

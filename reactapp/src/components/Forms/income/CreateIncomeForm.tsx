@@ -1,28 +1,29 @@
 import { ChangeData } from "@models/EventData/ChangeData";
-import { Income } from "@models/HR/Income";
+import { IncomeInsert } from "@models/HR/Income";
+import { IncomeFormState } from "@models/States/incomes/IncomeFormState";
 import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, InputType, Label, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { setInputDefaultValue } from "@utils/forms/setInputDefaultValue";
 import { FC } from "react";
 
-interface CreateIncomeProps {
-    // getFormState: () => DepartmentFormState,
-    getFormData: () => Income,
-    setFormStates: (changeData: ChangeData, currentKey: int) => void,
+interface Props {
+    getFormState: () => IncomeFormState,
+    getFormData: () => IncomeInsert,
+    setFormStates: (changeData: ChangeData) => void,
 }
 
 
-const CreateIncomeForm: FC<CreateIncomeProps> = ({getFormData, setFormStates}) => {
+const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
     const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
             name: event.target.name,
         }
-        setFormStates(changeData, getFormData().employeeId)
+        setFormStates(changeData)
     };
 
     return (
-        <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
+        <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{padding:".3rem 2rem", gap:".5rem", width:"fit-content"}}>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Label required>Здравно осигурителен доход за лицата по чл. 40</Label>
                 <Input

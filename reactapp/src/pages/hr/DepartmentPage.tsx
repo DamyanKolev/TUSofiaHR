@@ -5,11 +5,11 @@ import departmentColumns from "@models/TableColumns/DepartmentColumns";
 import CreateDepartmentForm from "@components/Forms/department/CreateDepartmentForm";
 import DailogSwitch from "@app-types/enums/DialogSwitch";
 import UpdateDepartmentForm from "@components/Forms/department/UpdateDepartmentForm";
-import { Department } from "@models/HR/Departmnet";
 import { createPortal } from "react-dom";
 import { TableRowState } from "@app-types/TableRowState";
+import { DepartmentView } from "@/models/TableViews/DepartmentView";
 
-export const DepartmentPageContext = createContext<TableRowState<Department> | undefined>(undefined);
+export const DepartmentPageContext = createContext<TableRowState<DepartmentView> | undefined>(undefined);
 
 const tableStyle: CSSProperties = {
     padding: "0 4rem 0 4rem",
@@ -21,7 +21,7 @@ const DepartmentPage: FC = () => {
     const tableTitle = "Отдели"
     const tableURL = "/api/hr/department"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
-    const [selectedRow, setSelectedRow] = useState<Department>({} as Department);
+    const [selectedRow, setSelectedRow] = useState<DepartmentView>({} as DepartmentView);
 
     const dialogSwitchGetter = () => { return dialogSwitch}
     const dialogSwitchSetter = (dialogSwitch: DailogSwitch) => {setDialogSwitch(dialogSwitch)}

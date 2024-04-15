@@ -18,6 +18,8 @@ import { depTeamJoinTableInfo } from '@/models/JoinTableInfo/DepTeamJoinTablesIn
 import { getNewFormDataFromNestedForms } from '@/utils/forms/formData';
 import DataType from '@/types/DataType';
 import { DepartmentView } from '@/models/TableViews/DepartmentView';
+import { getUpdateData } from '@/utils/getData';
+import { createUpdateDTO } from '@/utils/createUpdateDTO';
 
 
 interface UpdateDepartmentFormProps {
@@ -44,6 +46,16 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
         setEditMode(false)
     }
 
+    const init = async () => {
+        if(rowState) {
+            const tableRow = await getUpdateData<Department, number>(rowState.selectedRow.id, `${tableURL}/find-by-id`)
+            if (tableRow) {
+                setFormData(createUpdateDTO(formData, tableRow))
+                setUpdateData(createDepartmentUpdateData(rowState.selectedRow))
+            }
+        }
+    }
+
     const successCalback = ():void => {
         dispatchIsSuccess(toggle())
         setDefaultValues()
@@ -65,8 +77,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
     useEffect(() => {
         if(rowState) {
             if (Object.keys(rowState.selectedRow).length > 0) {
-                // setFormData(rowState.selectedRow); 
-                setUpdateData(createDepartmentUpdateData(rowState.selectedRow))
+                init()
             }
         }
     }, [rowState]);

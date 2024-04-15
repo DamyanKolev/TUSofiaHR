@@ -18,6 +18,8 @@ import { getNewFormDataFromNestedForms } from "@utils/forms/formData";
 import { depTeamJoinTableInfo } from "@models/JoinTableInfo/DepTeamJoinTablesInfo";
 import { DepartmentTeamPageContext } from "@pages/hr/DepartmentTeamPage";
 import { DepartmentTeamView } from "@models/TableViews/DepartmentTeamView";
+import { createUpdateDTO } from "@/utils/createUpdateDTO";
+import { getUpdateData } from "@/utils/getData";
 
 
 
@@ -42,6 +44,16 @@ const UpdateDepTeamForm: FC<Props> = ({dialogSwitchGetter, dialogSwitchSetter, t
         setFormData(defaultDepTeamUpdateDTO)
         rowState?.setSelectedRow({} as DepartmentTeamView)
         setEditMode(false)
+    }
+
+    const init = async () => {
+        if(rowState) {
+            const tableRow = await getUpdateData<DepartmentTeam, number>(rowState.selectedRow.id, `${tableURL}/find-by-id`)
+            if (tableRow) {
+                setFormData(createUpdateDTO(formData, tableRow))
+                setUpdateData(createDepartmentTeamUpdateData(rowState.selectedRow))
+            }
+        }
     }
 
     const successCalback = ():void => {
@@ -70,8 +82,7 @@ const UpdateDepTeamForm: FC<Props> = ({dialogSwitchGetter, dialogSwitchSetter, t
     useEffect(() => {
         if(rowState) {
             if (Object.keys(rowState.selectedRow).length > 0) {
-                // setFormData(createUpdateDTO(formData.update_data, rowState.selectedRow));
-                setUpdateData(createDepartmentTeamUpdateData(rowState.selectedRow))
+                init()
             }
         }
     }, [rowState]);

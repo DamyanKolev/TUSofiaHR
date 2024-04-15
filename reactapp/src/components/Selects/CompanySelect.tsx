@@ -9,7 +9,7 @@ import { FC, useEffect, useState } from "react";
 
 const CompanySelect: FC = () => {
     const [companies, setCompanies] = useState<Array<Database>>([])
-    const getURL = "/auth/company/all"
+    const getURL = "/api/auth/company/all"
     const storageCompany = localStorage.getItem("company")
     const currentCompany:Database| null = storageCompany? JSON.parse(storageCompany) : null
 
@@ -48,8 +48,8 @@ const CompanySelect: FC = () => {
                             const selected = (currentCompany?.id === company.id)? true : false
 
                             return (
-                                <StandardListItem key={key} additionalText={company.company_eic} selected={selected}>
-                                    {company.company_name}
+                                <StandardListItem key={key} additionalText={company.companyEic} selected={selected}>
+                                    {company.companyName}
                                 </StandardListItem>
                             )
                         })

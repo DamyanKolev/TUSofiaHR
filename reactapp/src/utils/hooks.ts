@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { isJWTTokenValid } from "./auth";
+import { useAppDispatch, useAppSelector } from "@/store/storeHooks";
+import { loginToggle } from "@/store/slices/loginSlice";
 
 export const useLogout = () => {
   const IDLE_TIMEOUT = 30000;
@@ -46,19 +48,27 @@ export const useLogout = () => {
 
 const VALIDATE_ACCESS_TOKEN_TIMER: number = 15 * 60 * 1000;
 
-export const useValidateAccessToken = () => {
+export const useValidateAccessToken = () => {  
+  const isLoggedIn = useAppSelector((state) => state.isLoggedIn.value)
+  const dispatchIsLoggedIn = useAppDispatch()
   const navigate = useNavigate();
+
+  
   const checkIsLogin = async () => {
-    const result = await isJWTTokenValid();
-      if (!result) {
-        if (location.pathname != "/login") {
-          navigate("/login");
+    const isValid = await isJWTTokenValid();
+      if (isValid) {
+        if (!isLoggedIn) {
+          dispatchIsLoggedIn(loginToggle())
         }
-      } else {
         if (location.pathname == "/login") {
           navigate("/");
         }
       }
+      else {
+        if (location.pathname != "/login") {
+          navigate("/login");
+        }
+      } 
   }
 
   checkIsLogin()

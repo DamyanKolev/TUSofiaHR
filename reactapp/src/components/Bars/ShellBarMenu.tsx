@@ -3,6 +3,8 @@ import { ActionSheet, Avatar, Button, Popover, PopoverDomRef, ShellBar } from "@
 import "@ui5/webcomponents-icons/journey-arrive"
 import { useNavigate, useLocation } from 'react-router-dom';
 import HRProductSwitch from "@components/Menus/HRProductSwitch"
+import { useAppDispatch, useAppSelector } from '@/store/storeHooks';
+import { loginToggle } from '@/store/slices/loginSlice';
 
 interface ShellBarMenuProps {
     hideShowSideNav: () => void;
@@ -18,6 +20,8 @@ const ShellBarMenu: FC<ShellBarMenuProps> = ({ hideShowSideNav }) => {
     }
 
     const onLogoutClick = () => {
+        const isLoggedIn = useAppSelector((state) => state.isLoggedIn.value)
+        const dispatchIsLoggedIn = useAppDispatch()
         let rememberMe = localStorage.getItem("rememberMe")
         
         if (rememberMe != null) {
@@ -25,16 +29,16 @@ const ShellBarMenu: FC<ShellBarMenuProps> = ({ hideShowSideNav }) => {
             if (rememberMe) {
                 localStorage.removeItem("refreshToken")
             }
-            else {
-                sessionStorage.removeItem("refreshToken")
-            }
         }
         else {
             sessionStorage.removeItem("refreshToken")
         }
-
         sessionStorage.removeItem("accessToken")
         
+
+        if (isLoggedIn) {
+            dispatchIsLoggedIn(loginToggle())
+          }
         if (location.pathname != "/login") {
             navigate("/login")
         }

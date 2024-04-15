@@ -93,26 +93,28 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
         let object: EmployeeDataUpdateDTO = formData
         let isSubmittable = false
 
-        Object.entries(formState).forEach(([key, value]) => {
-            const fieldType = typeof value
-            if(fieldType == "object"){
-                if (isFormChanged(value)){
-                    if (isFilledForm(value)) {
-                        isSubmittable = true
-                    }
-                    else {
-                        isSubmittable = false
-                        setErrorInputStates(value, (newState): void => {setFormState({...formState, [key]: newState})})
-                    }
+        Object.entries(formState).forEach(([key, stateObject]) => {
+            if (isFormChanged(stateObject)){
+                if (isFilledForm(stateObject)) {
+                    isSubmittable = true
                 }
                 else {
-                    object = {...object, [key]: null}
+                    isSubmittable = false
                 }
+            }
+            else {
+                object = {...object, [key]: null}
             }
         })
 
+
         if (isSubmittable) {
             submitPutForm(tableURL, object, successCalback)  
+        }
+                else {
+            Object.entries(formState).forEach(([key, value]) => {
+                setErrorInputStates(value, (newState): void => {setFormState({...formState, [key]: newState})})
+            })
         }
     };
 

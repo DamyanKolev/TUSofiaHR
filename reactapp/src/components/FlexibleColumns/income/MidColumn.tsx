@@ -4,7 +4,7 @@ import { toggle } from '@store/slices/toggleSlice';
 import { useAppDispatch } from '@store/storeHooks';
 import { submitPutForm } from '@utils/forms/submitForm';
 import { updateFormInfo } from '@utils/forms/updateFormInfo';
-import { isFilledForm } from '@utils/validation';
+import { isFilledForm, isFormChanged } from '@utils/validation';
 import { TableRowState } from '@app-types/TableRowState';
 import { ChangeData } from '@models/EventData/ChangeData';
 import { defaultScheduleIncomeUpdate, ScheduleIncomeUpdate } from '@models/HR/ScheduleIncome';
@@ -13,6 +13,7 @@ import { IncomePageContext, IncomePageDataContext } from '@pages/hr/EmployeeInco
 import UpdateIncomeForm from '@components/Forms/income/UpdateIncomeForm';
 import { defaultSchedueleIncomeUpdateFormState, SchedueleIncomeFormState } from '@models/States/scheduleIncome/SchedueleIncomeFormState';
 import UpdateScheduleForm from '@components/Forms/schedule/UpdateScheduleForm';
+import { setErrorInputStates } from '@/utils/forms/formState';
 
 
 
@@ -56,25 +57,30 @@ const MidColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
     }
 
     const onSubmitForm = () => {
+        let object = {}
         let isSubmittable = false
 
-        Object.entries(formState).forEach(([, value]) => {
-            const formStateObj = value 
-            if(isFilledForm(formStateObj)){
-                isSubmittable = true
+        Object.entries(formState).forEach(([key, stateObject]) => {
+            if (isFormChanged(stateObject)){
+                if (isFilledForm(stateObject)) {
+                    isSubmittable = true
+                }
+                else {
+                    isSubmittable = false
+                }
             }
             else {
-                isSubmittable = false
+                object = {...object, [key]: null}
             }
-            
         })
+
         if (isSubmittable) {
-            submitPutForm(tableURL, formData, successCalback) 
+            submitPutForm(tableURL, object, successCalback) 
         }
         else {
-            // Object.entries(formState).forEach(([key, value]) => {
-            //     setErrorInputStates(value, (newState): void => {setFormState({...formState, [key]: newState})})
-            // })
+            Object.entries(formState).forEach(([key, value]) => {
+                setErrorInputStates(value, (newState): void => {setFormState({...formState, [key]: newState})})
+            })
         }
     };
 

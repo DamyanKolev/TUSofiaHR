@@ -1,5 +1,5 @@
 import { FormState, FormFieldState } from "@models/States/FormState";
-import { setErrorInputStates } from "./forms/formState";
+import { FormValidation } from "@/types/FormValidation";
 
 
 export function isFilledCertainField<T extends FormState>(formState: T, fieldName: string): boolean {
@@ -49,51 +49,54 @@ export function isFormChanged<T extends FormState>(formState: T): boolean {
 }
 
 
-export function isFilledMultipleForms<T extends object>(object: T): boolean{
-    let isAllFilled = false
-    Object.entries(object).forEach(([, objectValue]) => {
-        const fieldType = typeof objectValue
-        if(fieldType == "object"){
-            const isFilled = isFilledForm(objectValue)
-            isAllFilled = isFilled? true : false
-        }
-    })
-    return isAllFilled
-}
 
 
+export function isFilledMultipleInsertForms<T extends object>(formState: T, requiredForms: Array<string> = [""]): boolean{
+    let isSubmittable = false
 
-export function isChangedMultipleForms<T extends object>(object: T): boolean{
-    let isAllChaged = false
-    Object.entries(object).forEach(([, objectValue]) => {
-        const fieldType = typeof objectValue
-        if(fieldType == "object"){
-            const isChaged = isFormChanged(objectValue)
-            isAllChaged = isChaged? true : false
-        }
-    })
-    return isAllChaged
-}
-
-
-
-
-export function validateFormAndSetData<T extends object, S>(
-    formData: T, formState: S, setState:(formState: S) => void) 
-{
-    let newFormData: T = formData
-    Object.entries(formData).forEach(([key, value]) => {
-        const fieldType = typeof value
-        if(fieldType == "object"){
-            if (isFormChanged(value)){
-                if (isFilledForm(value)) {
-                    newFormData = {...formData, [key]: null}
-                }
-                else {
-                    setErrorInputStates(value, (newState): void => {setState({...formState, [key]: newState})})
-                }
+    Object.entries(formState).forEach(([key, stateObject]) => {
+        if (requiredForms.includes(key)) {
+            if (isFilledForm(stateObject)) {
+                isSubmittable = true
+            }
+            else {
+                isSubmittable = false
             }
         }
     })
-    return newFormData
+
+    return isSubmittable
+}
+
+
+
+export function isFilledMultipleUpdateForms<T extends object, D>(
+    formState: T, formData: D, requiredForms: Array<string> = [""]
+): FormValidation<D>{
+    let newObject = formData
+    let isSubmittable = false
+
+    Object.entries(formState).forEach(([key, stateObject]) => {
+        if (isFormChanged(stateObject)){
+            if (isFilledForm(stateObject)) {
+                isSubmittable = true
+            }
+            else {
+                isSubmittable = false
+            }
+        }
+        else {
+            if (requiredForms.includes(key)) {
+                isSubmittable = false
+            }
+            else {
+                newObject = {...newObject, [key]: null}
+            }
+        }
+    })
+
+    return {
+        isSubmittable,
+        object: newObject
+    }
 }

@@ -16,6 +16,7 @@ namespace webapi
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<DepartmentTeam> DepartmentTeams { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<EmployeeContracts> EmployeeContracts { get; set; }
         public DbSet<Insurance> Insurances { get; set; }

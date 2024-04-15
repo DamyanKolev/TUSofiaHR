@@ -2,12 +2,9 @@ import { FC, useEffect, useState } from 'react';
 import { 
     Bar, BarDesign, Button, FCLLayout, ObjectPage, ObjectPageSection, ObjectPageSubSection, ButtonDesign, StandardListItemDomRef, FlexBox
 } from "@ui5/webcomponents-react";
-import { EmployeeInsertFormState } from '@models/States/employee/EmployeeInsertFormState';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
-import { isFilledCertainField, isFilledForm, isFormChanged } from '@utils/validation';
-import { ContractInsertFormState } from '@models/States/contract/ContractInsertFormState';
-import { PDataFormState } from '@models/States/personalData/PersonalDataFormState';
+import { isFilledCertainField, isFilledMultipleInsertForms, isFormChanged } from '@utils/validation';
 import CreateEmployeeForm from '@components/Forms/employee/CreateEmployeeForm';
 import CreatePersonalDataForm from '@components/Forms/personalData/CreatePersonalDataForm';
 import CreateContract from '@components/Forms/contract/CreateContractForm';
@@ -20,9 +17,7 @@ import { updateFormInfo } from '@utils/forms/updateFormInfo';
 import DataType from '@app-types/enums/DataType';
 import { ChangeData } from '@models/EventData/ChangeData';
 import CreateAddressForm from '@components/Forms/address/CreateAddressForm';
-import { AddressFormState } from '@models/States/address/AddressFormState';
 import CreateInsuranceForm from '@components/Forms/insurance/CreateInsuranceForm';
-import { InsuranceFormState } from '@models/States/insurance/InsuranceFormState';
 import { InsuranceDTO } from '@models/HR/Insurance';
 
 
@@ -39,12 +34,6 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
     const [disabled, setDisabled] = useState<boolean>(true)
     const [isIconomicSelected, setIsIconomicSelected] = useState<boolean>(false)
     const dispatchIsSuccess = useAppDispatch()
-
-    const setInsuranceFormState = (newState: InsuranceFormState) => {setFormState({...formState, insurance: newState})}
-    const setAddressFormState = (newState: AddressFormState) => {setFormState({...formState, address: newState})}
-    const setPDataFormState = (newState: PDataFormState) => {setFormState({...formState, personalData: newState})}
-    const setContractFormState = (newState: ContractInsertFormState) => {setFormState({...formState, contract: newState})}
-    const setEmployeeFormState = (newState: EmployeeInsertFormState) => {setFormState({...formState, employee: newState})}
 
     
     const setDefaultValues = () => {
@@ -71,41 +60,38 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
     }
 
     const onSubmitForm = async () => {
-        const isFilledEmployee = isFilledForm(formState.employee)
-        const isFilledContract = isFilledForm(formState.contract)
-        const isFilledPersonalData = isFilledForm(formState.personalData)
-        const isFilledAddress = isFilledForm(formState.address)
-        const isFilledInsurance = isFilledForm(formState.insurance)
         const isChangedContract = isFormChanged(formState.contract)
-
-        let formObject: EmployeeDataInsertDTO = createEmployeeDataInsertDTO(
+        const formObject: EmployeeDataInsertDTO = createEmployeeDataInsertDTO(
             formData.employee, formData.personalData, null, null, formData.address
         )
 
-        if(isChangedContract){
-            const isFilled = isFilledEmployee && isFilledContract && isFilledPersonalData && isFilledAddress && isFilledInsurance
-            if(isFilled) {
+        if (isChangedContract) {
+            let isSubmittable = isFilledMultipleInsertForms(formState)
+            
+            if(isSubmittable) {
                 formObject.contract= formData.contract
                 formObject.insurance= formData.insurance
                 await submitPostForm(`${tableURL}/create`, formObject, successCalback)
             }
             else {
-                setErrorInputStates(formState.employee, setEmployeeFormState)
-                setErrorInputStates(formState.contract, setContractFormState)
-                setErrorInputStates(formState.personalData, setPDataFormState)
-                setErrorInputStates(formState.address, setAddressFormState)
-                setErrorInputStates(formState.insurance, setInsuranceFormState)
+                Object.entries(formState).forEach(([key, value]) => {
+                    setErrorInputStates(value, (newState): void => {setFormState({...formState, [key]: newState})})
+                })
             }
         }
         else {
-            const isFilled = isFilledEmployee && isFilledPersonalData
-            if(isFilled) {
+            const requiredForms = ["employee", "personalData", "address"]
+            let isSubmittable = isFilledMultipleInsertForms(formState, requiredForms)
+            console.log(formObject)
+            if(isSubmittable) {
                 await submitPostForm(`${tableURL}/create`, formObject, successCalback)
             }
             else {
-                setErrorInputStates(formState.employee, setEmployeeFormState)
-                setErrorInputStates(formState.personalData, setPDataFormState)
-                setErrorInputStates(formState.address, setAddressFormState)
+                Object.entries(formState).forEach(([key, value]) => {
+                    if (requiredForms.includes(key)) {
+                        setErrorInputStates(value, (newState): void => {setFormState({...formState, [key]: newState})})
+                    }
+                })
             }
         }
     };

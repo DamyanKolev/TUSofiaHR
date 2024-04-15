@@ -1,5 +1,5 @@
 ﻿import { FC, useContext, useState, useEffect } from 'react';
-import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, InputDomRef, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
+import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
 import { StandardInputField } from '../StandartFields/StandartInputField';
 import { Position, defaultPositionUpdateDTO } from '@models/HR/Position';
 import { useAppDispatch } from '@store/storeHooks';
@@ -92,39 +92,40 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                 </Bar>
             }
         >
-            <div className="form-container">
-                <Form id="update-form">
-                    <FormItem label="Позиция">
-                        <StandardInputField
-                            editMode={editMode}
-                            value={formData.positionName}
-                            onChange={handleInputChange}
-                            name={"positionName"}
-                            valueState={formState.positionName.valueState}
-                        />
-                    </FormItem>
+            <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{padding: "1rem 2rem", gap: ".5rem", width:"fit-content"}}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <Label>Позиция</Label>
+                    <StandardInputField
+                        editMode={editMode}
+                        value={formData.positionName}
+                        onChange={handleInputChange}
+                        name={"positionName"}
+                        valueState={formState.positionName.valueState}
+                    />
+                </FlexBox>
 
-                    <FormItem label="Минимална заплата">
-                        <StandardInputField
-                            editMode={editMode}
-                            value={formData.minSalary}
-                            onChange={handleInputChange}
-                            name={"minSalary"}
-                            valueState={formState.minSalary.valueState}
-                        />
-                    </FormItem>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <Label>Минимална заплата</Label>
+                    <StandardInputField
+                        editMode={editMode}
+                        value={formData.minSalary}
+                        onChange={handleInputChange}
+                        name={"minSalary"}
+                        valueState={formState.minSalary.valueState}
+                    />
+                </FlexBox>
 
-                    <FormItem label="Максимална заплата">
-                        <StandardInputField
-                            editMode={editMode}
-                            value={formData.maxSalary}
-                            onChange={handleInputChange}
-                            name={"maxSalary"}
-                            valueState={formState.maxSalary.valueState}
-                        />
-                    </FormItem>
-                </Form>
-            </div>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <Label>Максимална заплата</Label>
+                    <StandardInputField
+                        editMode={editMode}
+                        value={formData.maxSalary}
+                        onChange={handleInputChange}
+                        name={"maxSalary"}
+                        valueState={formState.maxSalary.valueState}
+                    />
+                </FlexBox>
+            </FlexBox>
 
         </Dialog>
     );

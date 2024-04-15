@@ -10,7 +10,7 @@ import EmployeeReports from './hr/EmployeeReports'
 import References from './references/References'
 import Article123Page from './references/Article123Page'
 import DeclarationPage from './references/DeclarationPage'
-import InsurancePage from './hr/InsurancePage'
+import InsurancePage from './hr/EmployeeIncomePage'
 
 
 

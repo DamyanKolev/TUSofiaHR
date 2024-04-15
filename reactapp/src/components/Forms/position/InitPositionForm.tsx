@@ -4,7 +4,7 @@ import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Input
 import { CSSProperties, FC } from "react";
 import { ChangeData } from "@models/EventData/ChangeData";
 
-interface CreatePositionProps {
+interface Props {
     getFormState: () => PositionFormState,
     getFormData: () => PositionDTO,
     setFormStates: (changeData: ChangeData) => void,
@@ -21,7 +21,7 @@ const formItemsStyles: CSSProperties = {
     gap: ".5rem"
 }
 
-const CreatePosition: FC<CreatePositionProps> = ({getFormState, getFormData, setFormStates}) => {
+const InitPositionForm: FC<Props> = ({getFormState, getFormData, setFormStates}) => {
     const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
@@ -66,4 +66,4 @@ const CreatePosition: FC<CreatePositionProps> = ({getFormState, getFormData, set
     )
 }
 
-export default CreatePosition
+export default InitPositionForm

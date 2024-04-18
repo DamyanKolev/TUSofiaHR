@@ -8,6 +8,7 @@ namespace webapi.Controllers.System
 {
     //[Authorize(Roles = IdentityRoles.Admin)]
     //[Authorize(Roles = IdentityRoles.Accountant)]
+    [Authorize]
     [ApiController]
     public class SysAdministrativeTerritoryController : ControllerBase
     {

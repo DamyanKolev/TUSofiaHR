@@ -9,6 +9,7 @@ namespace webapi.Controllers.HR
 {
     // [Authorize(Roles = IdentityRoles.Admin)]
     // [Authorize(Roles = IdentityRoles.Accountant)]
+    [Authorize]
     [ApiController]
     public class PersonalDataController : ControllerBase
     {

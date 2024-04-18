@@ -13,7 +13,7 @@ namespace webapi.Models.HR
         public Employee? Manager { get; set; }
     }
 
-    public record DepartmentInsert
+    public record DepartmentDTO
     {
         public required string DepartmentName { get; set; }
         public string? Description { get; set; }

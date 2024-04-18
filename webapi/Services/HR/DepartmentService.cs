@@ -7,7 +7,7 @@ namespace webapi.Services.HR
 {
     public interface IDepartmentService
     {
-        public ResponseWithStatus<Response> CreateDepartment(DepartmentInsert departmentInsert);
+        public ResponseWithStatus<Response> CreateDepartment(DepartmentDTO departmentInsert);
         public ResponseWithStatus<Response> UpdateDepartment(Department updateRequest);
         public ResponseWithStatus<Response> DeleteDepartment(int departmentId);
         public ResponseWithStatus<DataResponse<PageResponse<Department>>> GetDepartmentsPage(PageInfo pageInfo);
@@ -22,7 +22,7 @@ namespace webapi.Services.HR
             _context = context;
         }
 
-        public ResponseWithStatus<Response> CreateDepartment(DepartmentInsert departmentInsert)
+        public ResponseWithStatus<Response> CreateDepartment(DepartmentDTO departmentInsert)
         {
             Department department = new Department() { DepartmentName = departmentInsert.DepartmentName };
             _context.Departments.Add(department);

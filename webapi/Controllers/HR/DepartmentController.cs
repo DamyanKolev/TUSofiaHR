@@ -10,6 +10,7 @@ namespace webapi.Controllers.HR
 {
     // [Authorize(Roles = IdentityRoles.Admin)]
     // [Authorize(Roles = IdentityRoles.Accountant)]
+    [Authorize]
     [ApiController]
     public class DepartmentController: ControllerBase
     {
@@ -22,7 +23,7 @@ namespace webapi.Controllers.HR
 
 
         [HttpPost("/api/departments/create", Name = "CreateDepartment")]
-        public IActionResult CreateDepartment([FromBody] DepartmentInsert departmentInsert)
+        public IActionResult CreateDepartment([FromBody] DepartmentDTO departmentInsert)
         {
             var result = _departmentService.CreateDepartment(departmentInsert);
 

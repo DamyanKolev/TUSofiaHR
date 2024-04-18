@@ -15,6 +15,8 @@ namespace webapi.Services.HR
         public ResponseWithStatus<DataResponse<List<EmployeeV>>> SelectAll();
         public ResponseWithStatus<DataResponse<EmployeeDataSelect>> GetUpdateData(EmployeeDataSelectDTO selectDTO);
         public ResponseWithStatus<DataResponse<Employee>> GetById(int employeeId);
+        public ResponseWithStatus<Response> CreateIncome(ScheduleIncomeInsert scheduleIncomeInsert);
+        public ResponseWithStatus<DataResponse<ScheduleIncomeSelect>> SelectMonthIncome(int employeeId);
     }
 
     public class EmployeeService : IEmployeeService
@@ -32,23 +34,38 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<Response> CreateEmployee(EmployeeDataInsert employeeDataInsert)
         {
-            var personalData = _mapper.Map<PersonalData>(employeeDataInsert.PersonalData);
-            var contract = _mapper.Map<Contract>(employeeDataInsert.Contract);
-            var employee = _mapper.Map<Employee>(employeeDataInsert.Employee);
-
-            employee.PersonalData = personalData;
-            _context.Employees.Add(employee);
-
-            var employeeContract = new EmployeeContracts { Employee = employee, Contract = contract, IsActive = true };
-            _context.EmployeeContracts.Add(employeeContract);
-            var changes = _context.SaveChanges();
-
-            if (changes == 0)
+            using var transaction = _context.Database.BeginTransaction();
+            try
             {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
-            }
+                var address = _mapper.Map<Address>(employeeDataInsert.Address);
+                var personalData = _mapper.Map<PersonalData>(employeeDataInsert.PersonalData);
+                var contract = _mapper.Map<Contract>(employeeDataInsert.Contract);
+                var employee = _mapper.Map<Employee>(employeeDataInsert.Employee);
+                var insurance = _mapper.Map<Insurance>(employeeDataInsert.Insurance);
 
-            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
+                personalData.Address = address;
+                //_context.PersonalDatas.Add(personalData);
+
+                if (insurance != null)
+                {
+                    employee.Insurance = insurance;
+                }
+                employee.PersonalData = personalData;
+                _context.Employees.Add(employee);
+
+                var employeeContract = new EmployeeContracts { Employee = employee, Contract = contract, IsActive = true };
+                _context.EmployeeContracts.Add(employeeContract);
+
+                var result = _context.SaveChanges();
+
+                transaction.Commit();
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_FAILED);
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_SUCCESS);
+            }
         }
 
         public ResponseWithStatus<Response> UpdateEmployee(EmployeeDataUpdate employeeDataUpdate)
@@ -79,12 +96,12 @@ namespace webapi.Services.HR
                 var result = _context.SaveChanges();
 
                 transaction.Commit();
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_FAILED);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_FAILED);
             }
             catch (Exception)
             {
                 transaction.Rollback();
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_SUCCESS);
             }
         }
 
@@ -161,6 +178,63 @@ namespace webapi.Services.HR
             }
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, employee);
+        }
+
+
+
+        public ResponseWithStatus<Response> CreateIncome(ScheduleIncomeInsert scheduleIncomeInsert)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var schedule = _mapper.Map<Schedule>(scheduleIncomeInsert.Schedule);
+                var income = _mapper.Map<Income>(scheduleIncomeInsert.Income);
+
+                _context.Schedules.Add(schedule);
+                _context.Incomes.Add(income);
+
+
+                var result = _context.SaveChanges();
+
+                transaction.Commit();
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_FAILED);
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_SUCCESS);
+            }
+        }
+
+
+        public ResponseWithStatus<DataResponse<ScheduleIncomeSelect>> SelectMonthIncome(int employeeId)
+        {
+            DateTime now = DateTime.Now;
+            int year = now.Year;
+            int month = now.Month;
+            int maxDays = DateTime.DaysInMonth(year, month);
+
+            var schedule = _context.Schedules
+                .Where(x =>  x.EmployeeId == employeeId)
+                .Where(x => 
+                    x.CreationDate.Year == year && x.CreationDate.Month == month && 
+                    x.CreationDate.Day > 1 && x.CreationDate.Day <= maxDays
+                ).First();
+
+            var income = _context.Incomes
+                .Where(x => x.EmployeeId == employeeId)
+                .Where(x =>
+                    x.CreationDate.Year == year && x.CreationDate.Month == month &&
+                    x.CreationDate.Day > 1 && x.CreationDate.Day <= maxDays
+                ).First();
+
+            var scheduleIncome = new ScheduleIncomeSelect
+            {
+                Income = income,
+                Schedule = schedule
+            };
+
+            return ResponseBuilder.CreateDataResponseWithStatus<ScheduleIncomeSelect>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, scheduleIncome);
         }
     }
 }

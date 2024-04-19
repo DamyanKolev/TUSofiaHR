@@ -10,6 +10,7 @@ namespace webapi.Controllers.HR
 {
     //[Authorize(Roles = IdentityRoles.Admin)]
     //[Authorize(Roles = IdentityRoles.Accountant)]
+    [Authorize]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -73,6 +74,22 @@ namespace webapi.Controllers.HR
         public IActionResult GetUpdateData([FromBody] EmployeeDataSelectDTO selectDTO)
         {
             var result = _employeeService.GetUpdateData(selectDTO);
+
+            return Ok(result.Response);
+        }
+
+        [HttpPost("/api/employees/income", Name = "CreateScheduleIncome")]
+        public IActionResult CreateIncome([FromBody] ScheduleIncomeInsert selectDTO)
+        {
+            var result = _employeeService.CreateIncome(selectDTO);
+
+            return Ok(result.Response);
+        }
+
+        [HttpPost("/api/employees/income-select", Name = "SelectMonthIncome")]
+        public IActionResult SelectMonthIncome([FromBody] int employeeId)
+        {
+            var result = _employeeService.SelectMonthIncome(employeeId);
 
             return Ok(result.Response);
         }

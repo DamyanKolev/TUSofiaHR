@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata;
 
 namespace webapi.Models.HR
 {
@@ -23,8 +24,12 @@ namespace webapi.Models.HR
         public int PersonalDataId { get; set; }
         public PersonalData? PersonalData { get; set; }
 
+        [ForeignKey(nameof(DepartmentTeamId))]
         public int DepartmentTeamId { get; set; }
-        public DepartmentTeam? DepartmentTeam { get; set; }
+        [ForeignKey(nameof(DepartmentTeamId))]
+
+        public virtual DepartmentTeam? DepartmentTeam { get; set; }
+
 
 
         public Nullable<int> PositionId { get; set; }

@@ -1,4 +1,6 @@
-﻿namespace webapi.Models.HR
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace webapi.Models.HR
 {
     public class DepartmentTeam
     {
@@ -6,8 +8,11 @@
         public required string TeamName { get; set; }
         public int DepartmentId { get; set; }
         public Department? Department { get; set; }
+        [ForeignKey(nameof(ManagerId))]
         public Nullable<int> ManagerId { get; set; }
-        public Employee? Manager { get; set; }
+        [ForeignKey(nameof(ManagerId))]
+        public virtual Employee? Manager { get; set; }
+
     }
 
 

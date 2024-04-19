@@ -9,16 +9,16 @@ namespace webapi.Models.System
         [MaxLength(2)]
         public required string Code { get; set; }
         public required string InsuranceType { get; set; }
-        public required List<decimal> HealthInsuranceArticle40 { get; set; }
-        public required List<decimal> DooWithouthTzpbInsurer { get; set; }
-        public required List<decimal> DooWithouthTzpbEmployee { get; set; }
-        public required List<decimal> HealthInsuranceInsurer { get; set; }
-        public required List<decimal> HealthInsuranceEmployee { get; set; }
-        public required List<decimal> TeacherPensionFund { get; set; }
-        public required List<decimal> ProfessionalPensionFund { get; set; }
-        public required List<decimal> UniversalPensionInsurer { get; set; }
-        public required List<decimal> UniversalPensionEmployee { get; set; }
-        public required List<decimal> HealthInsurance { get; set; }
+        public required decimal[] HealthInsuranceArticle40 { get; set; }
+        public required decimal[] DooWithouthTzpbInsurer { get; set; }
+        public required decimal[] DooWithouthTzpbEmployee { get; set; }
+        public required decimal[] HealthInsuranceInsurer { get; set; }
+        public required decimal[] HealthInsuranceEmployee { get; set; }
+        public required decimal[] TeacherPensionFund { get; set; }
+        public required decimal[] ProfessionalPensionFund { get; set; }
+        public required decimal[] UniversalPensionInsurer { get; set; }
+        public required decimal[] UniversalPensionEmployee { get; set; }
+        public required decimal[] HealthInsurance { get; set; }
         public decimal GvrcFund { get; set; }
     }
 }

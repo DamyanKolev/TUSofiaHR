@@ -42,6 +42,8 @@ namespace webapi
         public DbSet<ContractV> ContractV { get; set; }
         public DbSet<AnnexV> AnnexV { get; set; }
         public DbSet<InsuranceV> InsuranceV { get; set; }
+        public DbSet<DepartmentV> DepartmentV { get; set; }
+        public DbSet<DepartmentTeamV> DepartmentTeamV { get; set; }
 
 
 
@@ -53,7 +55,7 @@ namespace webapi
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Seed();
+            //builder.SeedSytemTables();
             builder.UpdateIdentityTablesNames();
 
             builder.Entity<EmployeeV>(v =>
@@ -79,6 +81,20 @@ namespace webapi
                 v.HasNoKey();
                 v.ToView("insurance_v");
             });
+
+            builder.Entity<DepartmentV>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("departments_v");
+            });
+
+
+            builder.Entity<DepartmentTeamV>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("department_teams_v");
+            });
+
         }
     }
 }

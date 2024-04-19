@@ -20,13 +20,17 @@ builder.Services.AddControllers()
 builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MapperProfile>(); });
 
 // Human Resources services
+builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IContractService, ContractService>();
 builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IDepartmentTeamService, DepartmentTeamService>();
 builder.Services.AddScoped<IPositionService, PositionService>();
 builder.Services.AddScoped<IEmployeeContractService, EmployeeContractService>();
+builder.Services.AddScoped<IInitService, InitService>();
+
 
 
 // Auth services
@@ -43,6 +47,9 @@ builder.Services.AddScoped<ISysContractTypeService, SysContractTypeService>();
 builder.Services.AddScoped<ISysIconomicActivityService, SysIconomicActivityService>();
 builder.Services.AddScoped<ISysPositionService, SysPositionService>(); 
 builder.Services.AddScoped<ISysContractDocumentTypeService, SysContractDocumentTypeService>();
+builder.Services.AddScoped<ISysPaymentTypeService, SysPaymentTypeService>();
+builder.Services.AddScoped<ISysInsuranceTypesService, SysInsuranceTypesService>();
+
 
 
 builder.Services.AddIdentity<User, Role>()

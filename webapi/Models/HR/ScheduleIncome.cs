@@ -1,8 +1,13 @@
 ﻿namespace webapi.Models.HR
 {
-    public class ScheduleIncome
+    public record ScheduleIncomeInsert
     {
-        public required IEnumerable<IncomeDTO> Incomes { get; set; }
-        public required IEnumerable<ScheduleDTO> Schedules { get; set; }
+        public required IncomeDTO Income { get; set; }
+        public required ScheduleDTO Schedule { get; set; }
+    }
+    public record ScheduleIncomeSelect
+    {
+        public Income? Income { get; set; }
+        public Schedule? Schedule { get; set; }
     }
 }

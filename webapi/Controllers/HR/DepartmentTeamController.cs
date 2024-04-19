@@ -19,7 +19,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/department-team/create", Name = "CreateDepartmentTeam")]
+        [HttpPost("/api/hr/department-team/create", Name = "CreateDepartmentTeam")]
         public IActionResult CreateDepartment([FromBody] DepartmentTeamInsert departmentTeamInsert)
         {
             var result = _departmentTeamService.CreateDepartmentTeam(departmentTeamInsert);
@@ -31,7 +31,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPut("/api/department-team/update", Name = "UpdateDepartemntTeam")]
+        [HttpPut("/api/hr/department-team/update", Name = "UpdateDepartemntTeam")]
         public IActionResult UpdateDepartment([FromBody] DepartmentTeam departmentTeam)
         {
             var result = _departmentTeamService.UpdateDepartmentTeam(departmentTeam);
@@ -45,7 +45,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpDelete("/api/department-team/delete", Name = "DeleteDepartmentTeam")]
+        [HttpDelete("/api/hr/department-team/delete", Name = "DeleteDepartmentTeam")]
         public IActionResult DeleteDepartment([FromBody] int departmentTeamId)
         {
             var result = _departmentTeamService.DeleteDepartmentTeam(departmentTeamId);
@@ -59,7 +59,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/department-team/page", Name = "GetDepartmentTeamsPage")]
+        [HttpPost("/api/hr/department-team/page", Name = "GetDepartmentTeamsPage")]
         public IActionResult GetDepartmentsPage([FromBody] PageInfo pageInfo)
         {
             var result = _departmentTeamService.GetDepartmentTeamsPage(pageInfo);
@@ -68,7 +68,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpGet("/api/department-team/all", Name = "GetAllDepartmentTeams")]
+        [HttpGet("/api/hr/department-team/all", Name = "GetAllDepartmentTeams")]
         public IActionResult GetAllDepartments()
         {
             var result = _departmentTeamService.GetAllDepartmentTeams();

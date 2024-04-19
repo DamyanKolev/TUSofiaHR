@@ -17,7 +17,7 @@ namespace webapi.Controllers.HR
             _initService = initService;
         }
 
-        [HttpPost("/api/init-hr", Name = "InitHR")]
+        [HttpPost("/api/hr/init-hr", Name = "InitHR")]
         public IActionResult InitHR([FromBody] InitAppData initData)
         {
             var result = _initService.InitHR(initData);
@@ -29,7 +29,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpGet("/api/is-init", Name = "IsInit")]
+        [HttpGet("/api/hr/is-init", Name = "IsInit")]
         public IActionResult IsInit()
         {
             var result = _initService.IsInit();

@@ -21,7 +21,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/personal-data/create", Name = "CreatePersonalData")]
+        [HttpPost("/api/hr/personal-data/create", Name = "CreatePersonalData")]
         public IActionResult Post([FromBody] PersonalDataDTO personalDataDTO)
         {
             var response = _personalDataService.CreatePersonalData(personalDataDTO);
@@ -33,7 +33,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPut("/api/personal-data/update", Name = "UpdatePersonalData")]
+        [HttpPut("/api/hr/personal-data/update", Name = "UpdatePersonalData")]
         public IActionResult Put([FromBody] PersonalData personalData)
         {
             var response = _personalDataService.UpdatePersonalData(personalData);

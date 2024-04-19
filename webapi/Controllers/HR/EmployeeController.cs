@@ -21,7 +21,7 @@ namespace webapi.Controllers.HR
             _employeeService = employeeService;
         }
 
-        [HttpPost("/api/employees/create", Name = "CreateEmployee")]
+        [HttpPost("/api/hr/employees/create", Name = "CreateEmployee")]
         public IActionResult Post([FromBody] EmployeeDataInsert employeeDataInsert)
         {
             var result = _employeeService.CreateEmployee(employeeDataInsert);
@@ -33,7 +33,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPut("/api/employees/update", Name = "UpdateEmployee")]
+        [HttpPut("/api/hr/employees/update", Name = "UpdateEmployee")]
         public IActionResult Put([FromBody] EmployeeDataUpdate employeeDataUpdate)
         {
             var result = _employeeService.UpdateEmployee(employeeDataUpdate);
@@ -46,7 +46,7 @@ namespace webapi.Controllers.HR
             return Ok(result.Response);
         }
 
-        [HttpPost("/api/employees/page", Name = "GetEmployeesPage")]
+        [HttpPost("/api/hr/employees/page", Name = "GetEmployeesPage")]
         public IActionResult GetEmployeesPage([FromBody] PageInfo pageInfo)
         {
             var result = _employeeService.GetEmployeesPage(pageInfo);
@@ -54,7 +54,7 @@ namespace webapi.Controllers.HR
             return Ok(result.Response);
         }
 
-        [HttpGet("/api/employees/all", Name = "SelectAll")]
+        [HttpGet("/api/hr/employees/all", Name = "SelectAll")]
         public IActionResult SelectAll()
         {
             var result = _employeeService.SelectAll();
@@ -62,7 +62,7 @@ namespace webapi.Controllers.HR
             return Ok(result.Response);
         }
 
-        [HttpGet("/api/employees/find-by-id", Name = "FindEmployeeById")]
+        [HttpGet("/api/hr/employees/find-by-id", Name = "FindEmployeeById")]
         public IActionResult FindById([FromBody] int employeeId)
         {
             var result = _employeeService.GetById(employeeId);
@@ -70,7 +70,7 @@ namespace webapi.Controllers.HR
             return Ok(result.Response);
         }
 
-        [HttpPost("/api/employees/update-data", Name = "GetUpdateData")]
+        [HttpPost("/api/hr/employees/update-data", Name = "GetUpdateData")]
         public IActionResult GetUpdateData([FromBody] EmployeeDataSelectDTO selectDTO)
         {
             var result = _employeeService.GetUpdateData(selectDTO);
@@ -78,7 +78,7 @@ namespace webapi.Controllers.HR
             return Ok(result.Response);
         }
 
-        [HttpPost("/api/employees/income", Name = "CreateScheduleIncome")]
+        [HttpPost("/api/hr/employees/income", Name = "CreateScheduleIncome")]
         public IActionResult CreateIncome([FromBody] ScheduleIncomeInsert selectDTO)
         {
             var result = _employeeService.CreateIncome(selectDTO);
@@ -86,7 +86,7 @@ namespace webapi.Controllers.HR
             return Ok(result.Response);
         }
 
-        [HttpPost("/api/employees/income-select", Name = "SelectMonthIncome")]
+        [HttpPost("/api/hr/employees/income-select", Name = "SelectMonthIncome")]
         public IActionResult SelectMonthIncome([FromBody] int employeeId)
         {
             var result = _employeeService.SelectMonthIncome(employeeId);

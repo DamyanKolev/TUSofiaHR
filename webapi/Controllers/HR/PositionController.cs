@@ -21,7 +21,7 @@ namespace webapi.Controllers.HR
             _positionService = positionService;
         }
 
-        [HttpPost("/api/positions/create", Name = "CreatePosition")]
+        [HttpPost("/api/hr/positions/create", Name = "CreatePosition")]
         public IActionResult CreatePosition([FromBody] PositionDTO positionDTO)
         {
             var result = _positionService.CreatePosition(positionDTO);
@@ -33,7 +33,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPut("/api/positions/update", Name = "UpdatePosition")]
+        [HttpPut("/api/hr/positions/update", Name = "UpdatePosition")]
         public IActionResult UpdateDepartment([FromBody] Position position)
         {
             var result = _positionService.UpdatePosition(position);
@@ -47,7 +47,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpDelete("/api/positions/delete", Name = "DeletePosition")]
+        [HttpDelete("/api/hr/positions/delete", Name = "DeletePosition")]
         public IActionResult DeleteDepartment([FromBody] int positionId)
         {
             var result = _positionService.DeletePosition(positionId);
@@ -60,7 +60,7 @@ namespace webapi.Controllers.HR
             return Ok(result.Response);
         }
 
-        [HttpPost("/api/positions/page", Name = "GetPositionsPage")]
+        [HttpPost("/api/hr/positions/page", Name = "GetPositionsPage")]
         public IActionResult GetPositionsPage([FromBody] PageInfo pageInfo)
         {
             var result = _positionService.GetPositionsPage(pageInfo);
@@ -69,7 +69,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpGet("/api/positions/all", Name = "GetAllPositions")]
+        [HttpGet("/api/hr/positions/all", Name = "GetAllPositions")]
         public IActionResult GetAllPositions(){
             var result = _positionService.GetAllPositions();
 

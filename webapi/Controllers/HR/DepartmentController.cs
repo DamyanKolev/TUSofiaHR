@@ -22,7 +22,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/departments/create", Name = "CreateDepartment")]
+        [HttpPost("/api/hr/departments/create", Name = "CreateDepartment")]
         public IActionResult CreateDepartment([FromBody] DepartmentDTO departmentInsert)
         {
             var result = _departmentService.CreateDepartment(departmentInsert);
@@ -34,7 +34,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPut("/api/departments/update", Name = "UpdateDepartemnt")]
+        [HttpPut("/api/hr/departments/update", Name = "UpdateDepartemnt")]
         public IActionResult UpdateDepartment([FromBody] Department department)
         {
             var result = _departmentService.UpdateDepartment(department);
@@ -48,7 +48,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpDelete("/api/departments/delete", Name = "DeleteDepartment")]
+        [HttpDelete("/api/hr/departments/delete", Name = "DeleteDepartment")]
         public IActionResult DeleteDepartment([FromBody] int departmentId)
         {
             var result = _departmentService.DeleteDepartment(departmentId);
@@ -62,7 +62,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/departments/page", Name = "GetDepartmentsPage")]
+        [HttpPost("/api/hr/departments/page", Name = "GetDepartmentsPage")]
         public IActionResult GetDepartmentsPage([FromBody] PageInfo pageInfo)
         {
             var result = _departmentService.GetDepartmentsPage(pageInfo);
@@ -71,7 +71,7 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpGet("/api/departments/all", Name = "GetAllDepartments")]
+        [HttpGet("/api/hr/departments/all", Name = "GetAllDepartments")]
         public IActionResult GetAllDepartments(){
             var result = _departmentService.GetAllDepartments();
 

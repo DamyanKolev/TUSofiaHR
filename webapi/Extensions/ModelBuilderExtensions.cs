@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webapi.Models.Auth;
+using webapi.Models.HR;
 using webapi.Models.System;
 
 namespace webapi.Extensions
 {
     public static class ModelBuilderExtensions
     {
-        public static void Seed(this ModelBuilder modelBuilder)
+        public static void SeedSytemTables(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SysAdministrativeTerritory>().HasData(
                     CSVFileProcessor.ParseCSVToList<SysAdministrativeTerritory>("SysAdministrativeTerritories.csv")

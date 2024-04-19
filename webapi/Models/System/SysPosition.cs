@@ -8,6 +8,6 @@ namespace webapi.Models.System
         [Key]
         public int Id { get; set; }
         public required string PositionName { get; set; }
-        public required string Npkd { get; set; }
+        public required string Nkpd { get; set; }
     }
 }

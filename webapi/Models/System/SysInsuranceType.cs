@@ -20,5 +20,6 @@ namespace webapi.Models.System
         public required decimal[] UniversalPensionEmployee { get; set; }
         public required decimal[] HealthInsurance { get; set; }
         public decimal GvrcFund { get; set; }
+        public decimal DodTax {get; set; }
     }
 }

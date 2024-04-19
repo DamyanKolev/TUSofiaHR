@@ -19,28 +19,28 @@ namespace webapi.Models.HR
         public Nullable<DateOnly> ChangeDate { get; set; }
 
 
-        public int ContractTypeId { get; set; }
-        public SysContractType? ContractType { get; set; }
+        public int SysContractTypeId { get; set; }
+        public SysContractType? SysContractType { get; set; }
 
 
-        public int PositionId { get; set; }
-        public SysPosition? Position { get; set; }
+        public int SysPositionId { get; set; }
+        public SysPosition? SysPosition { get; set; }
 
 
-        public int IconomicActivityId { get; set; }
-        public SysIconomicActivity? IconomicActivity { get; set; }
+        public int SysIconomicActivityId { get; set; }
+        public SysIconomicActivity? SysIconomicActivity { get; set; }
 
 
-        public int DocumentTypeId { get; set; }
-        public SysContractDocumentType? DocumentType { get; set; }
+        public int SysDocumentTypeId { get; set; }
+        public SysContractDocumentType? SysDocumentType { get; set; }
 
 
-        public int TerminationTypeId { get; set; }
-        public SysContractTerminationType? TerminationType { get; set; }
+        public int SysTerminationTypeId { get; set; }
+        public SysContractTerminationType? SysTerminationType { get; set; }
 
 
-        public int AdministrativeTerritoryId { get; set; }
-        public SysAdministrativeTerritory? AdministrativeTerritory { get; set; }
+        public int SysAdministrativeTerritoryId { get; set; }
+        public SysAdministrativeTerritory? SysAdministrativeTerritory { get; set; }
 
 
         public required string CompanyEic { get; set; }

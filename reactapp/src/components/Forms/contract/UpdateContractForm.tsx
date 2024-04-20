@@ -80,7 +80,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <Label>Работна заплата</Label>
                     <StandardInputField
                         editMode={getEditMode()}
-                        value={getFormData().workingWage}
+                        value={getFormData().workingWage? getFormData().workingWage! : ""}
                         onChange={handleInputChange}
                         name={"workingWage"}
                         valueState={getFormState().workingWage.valueState}
@@ -91,7 +91,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <Label>Седмични часове</Label>
                     <StandardInputField
                         editMode={getEditMode()}
-                        value={getFormData().workTime.toString()}
+                        value={getFormData().workTime? getFormData().workTime!.toString() : ""}
                         onChange={handleInputChange}
                         name={"workTime"}
                         dataType={DataType.Int}
@@ -103,7 +103,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <Label>Седмични часове</Label>
                     <StandardInputField
                         editMode={getEditMode()}
-                        value={getFormData().annualLeave.toString()}
+                        value={getFormData().annualLeave? getFormData().annualLeave!.toString() : ""}
                         onChange={handleInputChange}
                         name={"annualLeave"}
                         dataType={DataType.Int}
@@ -137,7 +137,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <Label>Дата на започване</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().contractTerm.toString()}
+                        value={getFormData().contractTerm? getFormData().contractTerm!.toString() : ""}
                         onChange={handleDateChange}
                         name={"contractTerm"}
                         valueState={getFormState().contractTerm.valueState}
@@ -148,7 +148,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <Label>Дата на Допълнително споразумение</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().additionalAgreementDate.toString()}
+                        value={getFormData().additionalAgreementDate? getFormData().additionalAgreementDate!.toString() : ""}
                         onChange={handleDateChange}
                         name={"additionalAgreementDate"}
                         valueState={getFormState().additionalAgreementDate.valueState}
@@ -161,7 +161,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <Label>Дата на терминиране</Label>
                     <StandardDateField
                         editMode={getEditMode()}
-                        value={getFormData().terminationDate.toString()}
+                        value={getFormData().terminationDate? getFormData().terminationDate!.toString() : ""}
                         onChange={handleDateChange}
                         name={"terminationDate"}
                         valueState={getFormState().terminationDate.valueState}

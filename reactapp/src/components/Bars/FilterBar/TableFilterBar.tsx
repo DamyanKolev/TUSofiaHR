@@ -58,16 +58,14 @@ const TableFilterBar: FC<TableFilterBarProps> = ({fields, title}) => {
             >
         
         {/* {
-            fields.map((field: BionaField, key: number) => {
+            fields.map((field: any, key: number) => {
                 if (field.filterable) {
                     return (
                         <FilterGroupItem 
                             key={key}
                             label={field.display_name}
                         >
-                            <FilterItem
-                                fieldName="Test"
-                            />
+                            <Input name=field></Input>
                         </FilterGroupItem>
                     )
                 }

@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "@store/storeHooks";
 import { toggle } from "@store/slices/toggleSlice";
 import { PageInfo, initialPageState } from "@models/Page/Page";
 import PageResponse, { defaultPageResponse } from "@/models/Page/PageResponse";
+import PaginationBar from "../Bars/PaginationBar";
+import PageBar from "../Bars/PageBar";
 
 
 
@@ -69,9 +71,10 @@ const SmartTable: FC<TableProps> = ({ title, tableURL, columns, filterBar = true
                 filterable
                 header={
                     <div style={{width: "100%"}}>
-                        {filterBar? 
+                        {/* {filterBar? 
                             <TableFilterBar fields={data.fields} title={title}/> : <></>
-                        }
+                        } */}
+                        <PageBar title={title}/>
                         {header}
                     </div>
                 }
@@ -84,7 +87,7 @@ const SmartTable: FC<TableProps> = ({ title, tableURL, columns, filterBar = true
             />
             <PaginationBar 
                 pages={data.pages}
-                setPage={(page: int) => {setPageDTO({...pageDTO, page_number: page})}}
+                setPage={(page: int) => {setPageDTO({...pageDTO, pageNumber: page})}}
             />
         </Fragment>
     )

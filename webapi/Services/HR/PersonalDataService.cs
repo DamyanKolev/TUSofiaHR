@@ -24,7 +24,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreatePersonalData(PersonalDataDTO personalDataDTO)
         {
             var data = _mapper.Map<PersonalData>(personalDataDTO);
-            _context.PersonalDatas.Add(data);
+            _context.PersonalData.Add(data);
             var changes = _context.SaveChanges();
 
             if (changes > 0)

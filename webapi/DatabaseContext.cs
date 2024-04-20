@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using webapi.Extensions;
 using webapi.Models.Auth;
@@ -12,7 +13,7 @@ namespace webapi
     {
         //Employee Tables
         public DbSet<Contract> Contracts { get; set; }
-        public DbSet<PersonalData> PersonalDatas { get; set; }
+        public DbSet<PersonalData> PersonalData { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Department> Departments { get; set; }
@@ -57,6 +58,26 @@ namespace webapi
             base.OnModelCreating(builder);
             //builder.SeedSytemTables();
             builder.UpdateIdentityTablesNames();
+
+            builder.Entity<Contract>()
+                .Property(p => p.Article62Flag)
+                .HasDefaultValue(false);
+
+            builder.Entity<Contract>()
+                .Property(p => p.IsTerminate)
+                .HasDefaultValue(false);
+
+            builder.Entity<Contract>()
+                .Property(p => p.CreationDate)
+                .HasDefaultValueSql("now()");
+
+            builder.Entity<Income>()
+                .Property(p => p.CreationDate)
+                .HasDefaultValueSql("now()");
+
+            builder.Entity<Schedule>()
+                .Property(p => p.CreationDate)
+                .HasDefaultValueSql("now()");
 
             builder.Entity<EmployeeV>(v =>
             {

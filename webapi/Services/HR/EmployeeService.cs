@@ -132,7 +132,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<DataResponse<EmployeeDataSelect>> GetUpdateData(EmployeeDataSelectDTO selectDTO) {
             var employee = _context.Employees.Find(selectDTO.EmployeeId);
             var contract = _contractService.GetByEmployeeId(selectDTO.EmployeeId).Response.Data;
-            var personalData = _context.PersonalDatas.Find(selectDTO.PersonalDataId);
+            var personalData = _context.PersonalData.Find(selectDTO.PersonalDataId);
             ContractV? contractV = null;
             Insurance? insurance = null;
             Address? address = null;

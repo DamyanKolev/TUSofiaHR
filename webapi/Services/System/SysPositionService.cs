@@ -24,7 +24,7 @@ namespace webapi.Services.System
                 .OrderBy(p => p.Id)
                 .Skip((pageFilterInfo.PageNumber - 1) * pageFilterInfo.PageSize)
                 .Take(pageFilterInfo.PageSize)
-                .Where(rec => rec.Npkd.Contains(pageFilterInfo.Filter.Value))
+                .Where(rec => rec.Nkpd.Contains(pageFilterInfo.Filter.Value))
                 .ToList();
 
             var countRecords = _context.EmployeeV.ToList().Count;

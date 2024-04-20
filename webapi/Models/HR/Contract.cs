@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using webapi.Models.System;
 
@@ -19,24 +20,24 @@ namespace webapi.Models.HR
         public Nullable<DateOnly> ChangeDate { get; set; }
 
 
-        public int SysContractTypeId { get; set; }
-        public SysContractType? SysContractType { get; set; }
+        public int ContractTypeId { get; set; }
+        public SysContractType? ContractType { get; set; }
 
 
-        public int SysPositionId { get; set; }
+        public Nullable<int> SysPositionId { get; set; }
         public SysPosition? SysPosition { get; set; }
 
 
-        public int SysIconomicActivityId { get; set; }
+        public Nullable<int> SysIconomicActivityId { get; set; }
         public SysIconomicActivity? SysIconomicActivity { get; set; }
 
 
-        public int SysDocumentTypeId { get; set; }
-        public SysContractDocumentType? SysDocumentType { get; set; }
+        public int DocumentTypeId { get; set; }
+        public SysContractDocumentType? DocumentType { get; set; }
 
 
-        public int SysTerminationTypeId { get; set; }
-        public SysContractTerminationType? SysTerminationType { get; set; }
+        public Nullable<int> TerminationTypeId { get; set; }
+        public SysContractTerminationType? TerminationType { get; set; }
 
 
         public int SysAdministrativeTerritoryId { get; set; }
@@ -46,7 +47,7 @@ namespace webapi.Models.HR
         public required string CompanyEic { get; set; }
         public Nullable<int> ContractId { get; set; }
         public required Int16 CodeCorection { get; set; }
-        public required bool IsTerminate {  get; set; }
+        public Nullable<bool> IsTerminate {  get; set; }
         [Column("article62_flag")]
         public required bool Article62Flag {  get; set; }
         public required bool IsAnnex { get; set; }

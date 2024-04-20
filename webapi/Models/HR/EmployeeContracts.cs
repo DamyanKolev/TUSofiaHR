@@ -11,7 +11,7 @@ namespace webapi.Models.HR
         public Employee? Employee { get; set; }
         public int ContractId { get; set; }
         public Contract? Contract { get; set; }
-        public bool Active { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public record EmployeeContractInsert

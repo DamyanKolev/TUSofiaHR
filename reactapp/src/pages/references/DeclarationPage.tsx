@@ -80,7 +80,7 @@ const DeclarationPage: FC = () => {
 
 
     const onClickD6 = async () => {
-        const result = await getData<Array<EmployeeView>>("/api/hr/employee/all")
+        const result = await getData<Array<EmployeeView>>("/api/hr/employees/all")
         if (result != null) {
             setEmployees(result)
             let newMap = new Map<number, CompanyEmployeeTax>();

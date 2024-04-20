@@ -18,7 +18,7 @@ export const IncomePageDataContext = createContext<ScheduleIncomeUpdate | undefi
 
 const EmployeeIncomePage: FC = () => {
     const tableTitle = "Служители";
-    const tableURL = "/api/hr/employee";
+    const tableURL = "/api/hr/employees";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<EmployeeView>({} as EmployeeView);
     const [scheduleIncome, setScheduleIncome] = useState<ScheduleIncomeUpdate>({} as ScheduleIncomeUpdate)

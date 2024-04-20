@@ -14,7 +14,7 @@ export const EmployeePageContext = createContext<TableRowState<EmployeeView> | u
 
 const EmployeePage: FC = () => {
     const tableTitle = "Служители";
-    const tableURL = "/api/hr/employee";
+    const tableURL = "/api/hr/employees";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<EmployeeView>({} as EmployeeView);
 

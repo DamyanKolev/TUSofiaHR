@@ -20,6 +20,6 @@ export const depTeamJoinTableInfo:DepTeamJoinTablesInfo = {
         description: "companyEmployeeId",
         contentFields: ["employeeName"],
         headerText: "Служители",
-        tableURL: "/api/hr/employee/page"
+        tableURL: "/api/hr/employees/page"
     },
 }

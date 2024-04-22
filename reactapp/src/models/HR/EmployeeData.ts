@@ -4,12 +4,13 @@ import { PersonalData, PersonalDataDTO, defaultPDataUpdateDTO, defaultPersonalDa
 import { ContractView } from "@models/TableViews/ContractView";
 import { Address, AddressDTO, defaultAddressDTO, defaultUpdateAddressDTO } from "./Address";
 import { Insurance, InsuranceDTO, defaultInsuranceDTO, defaultInsuranceUpdateDTO } from "./Insurance";
+import { Optional } from "@/types/Optional";
 
 
 export interface EmployeeData {
     employee: Employee,
     personalData: PersonalData,
-    contract: Contract,
+    contract: Optional<Contract>,
     contractView: ContractView,
     insurance: Insurance
     address: Address
@@ -20,7 +21,7 @@ export interface EmployeeData {
 export interface EmployeeDataUpdate {
     employee: Employee,
     personalData: PersonalData,
-    contract: Contract,
+    contract: Optional<Contract>,
     insurance: Insurance,
     address: Address,
 }

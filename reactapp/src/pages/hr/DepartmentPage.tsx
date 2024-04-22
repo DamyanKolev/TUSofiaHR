@@ -19,7 +19,7 @@ const tableStyle: CSSProperties = {
 
 const DepartmentPage: FC = () => {
     const tableTitle = "Отдели"
-    const tableURL = "/api/hr/department"
+    const tableURL = "/api/hr/departments"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
     const [selectedRow, setSelectedRow] = useState<DepartmentView>({} as DepartmentView);
 

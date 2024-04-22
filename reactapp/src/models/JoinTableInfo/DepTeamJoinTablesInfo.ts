@@ -13,7 +13,7 @@ export const depTeamJoinTableInfo:DepTeamJoinTablesInfo = {
         description: "departmentName",
         contentFields: ["departmentName"],
         headerText: "Служители",
-        tableURL: "/api/hr/department/all"
+        tableURL: "/api/hr/departments/all"
     },
     managerId: {
         filterField: "employeeName",

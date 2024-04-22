@@ -21,14 +21,14 @@ export const employeeJoinTableInfo:EmployeeJoinTablesInfo = {
         description: "departmentName",
         contentFields: ["departmentName"],
         headerText: "Служители",
-        tableURL: "/api/hr/department/all"
+        tableURL: "/api/hr/departments/all"
     },
     positionId: {
         filterField: "positionName",
         description: "positionName",
         contentFields: ["positionName"],
         headerText: "Служители",
-        tableURL: "/api/hr/position/select-all"
+        tableURL: "/api/hr/positions/select-all"
     },
 }
 

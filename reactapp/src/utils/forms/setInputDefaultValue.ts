@@ -1,3 +1,4 @@
+import { parseDateToRFC2822 } from "../parsers"
 
 
 
@@ -16,11 +17,9 @@ export function setInputDefaultValue(value: number | string | null): string {
 }
 
 
-export function setDateToInputDefaultValue(value: Date | null): string {
-    if (value == null) {
-        return ""
+export function setDateToInputDefaultValue(date: Date | null): string {
+    if (date) {
+        return parseDateToRFC2822(date)
     }
-    else {
-        return value.toString()
-    }
+    else return ""
 }

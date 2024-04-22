@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect  } from "react";
 import { Button, ButtonDesign, CheckBox, CheckBoxDomRef, FlexBox, FlexBoxDirection, Input, InputDomRef, Label, MessageBox, Title, TitleLevel, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js";
 import { useNavigate } from "react-router-dom";
@@ -55,12 +55,12 @@ export default function Login() {
         }
     };
 
-    const handleInputChange = (e: Ui5CustomEvent<InputDomRef, never>) => {
-        const { name, value } = e.target;
+    const onInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const { name, value } = event.target;
         if (name) {
             setFormData({ ...formData, [name]: value });
         }
-    };
+    }
 
 
     const handleOnChange = (event: Ui5CustomEvent<CheckBoxDomRef, never>) => {
@@ -69,6 +69,21 @@ export default function Login() {
             setRememberMe(checked)
         }
     }
+
+    useEffect(() => {
+        const listener = (event: { code: string; preventDefault: () => void; }) => {
+            if (event.code === "Enter" || event.code === "NumpadEnter") {
+                console.log("Enter key was pressed. Run your function.");
+                event.preventDefault();
+                submitHandler();
+            }
+        };
+        addEventListener("keydown", listener);
+
+        return () => {
+            removeEventListener("keydown", listener);
+        };
+    }, []);
 
 
     return (
@@ -84,7 +99,7 @@ export default function Login() {
                         <Input 
                             name="username" 
                             value={formData.username} 
-                            onChange={handleInputChange} 
+                            onInput={onInput}
                             style={{width:"18rem"}}
                         />
                     </FlexBox>
@@ -95,7 +110,7 @@ export default function Login() {
                             name="password" 
                             type="Password" 
                             value={formData.password} 
-                            onChange={handleInputChange} 
+                            onInput={onInput}
                             style={{width:"18rem"}}
                         />
                     </FlexBox>

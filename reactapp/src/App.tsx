@@ -20,7 +20,7 @@ const App: FC = () => {
     const isInizializateApp = async () => {
         if (isLoggedIn) {
             if (!isInit && location.pathname != "/login") {
-                const result = await getData<boolean>("/api/hr/is-created")
+                const result = await getData<boolean>("/api/hr/is-init")
                 if (result != null) {
                     setIsInit(!result)
                 }

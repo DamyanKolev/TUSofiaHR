@@ -12,8 +12,8 @@ using webapi;
 namespace webapi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240420154244_AddViewsAndSeedSysTables")]
-    partial class AddViewsAndSeedSysTables
+    [Migration("20240422082455_SeedHRTables")]
+    partial class SeedHRTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1285,15 +1285,48 @@ namespace webapi.Migrations
 
             modelBuilder.Entity("webapi.Models.Views.ContractV", b =>
                 {
-                    b.Property<string>("DepartmentName")
-                        .IsRequired()
+                    b.Property<string>("ActivityName")
                         .HasColumnType("text")
-                        .HasColumnName("department_name");
+                        .HasColumnName("activity_name");
 
-                    b.Property<string>("Email")
+                    b.Property<DateOnly?>("AdditionalAgreementDate")
+                        .HasColumnType("date")
+                        .HasColumnName("additional_agreement_date");
+
+                    b.Property<bool>("Article62Flag")
+                        .HasColumnType("boolean")
+                        .HasColumnName("article62_flag");
+
+                    b.Property<DateOnly>("ConclusionDate")
+                        .HasColumnType("date")
+                        .HasColumnName("conclusion_date");
+
+                    b.Property<int>("ContractId")
+                        .HasColumnType("integer")
+                        .HasColumnName("contract_id");
+
+                    b.Property<DateOnly?>("ContractTerm")
+                        .HasColumnType("date")
+                        .HasColumnName("contract_term");
+
+                    b.Property<string>("ContractType")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("email");
+                        .HasColumnName("contract_type");
+
+                    b.Property<string>("ContractTypeCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("contract_type_code");
+
+                    b.Property<string>("DocumentType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("document_type");
+
+                    b.Property<string>("Ekatte")
+                        .HasColumnType("text")
+                        .HasColumnName("ekatte");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("integer")
@@ -1304,26 +1337,37 @@ namespace webapi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("employee_name");
 
+                    b.Property<DateOnly>("ExecutionDate")
+                        .HasColumnType("date")
+                        .HasColumnName("execution_date");
+
                     b.Property<string>("InsuranceTypeCode")
                         .HasColumnType("text")
                         .HasColumnName("insurance_type_code");
 
-                    b.Property<string>("ManagerName")
-                        .HasColumnType("text")
-                        .HasColumnName("manager_name");
+                    b.Property<bool>("IsTerminate")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_terminate");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
+                    b.Property<string>("Nkid")
                         .HasColumnType("text")
-                        .HasColumnName("phone_number");
+                        .HasColumnName("nkid");
+
+                    b.Property<string>("Nkpd")
+                        .HasColumnType("text")
+                        .HasColumnName("nkpd");
 
                     b.Property<string>("PositionName")
                         .HasColumnType("text")
                         .HasColumnName("position_name");
 
-                    b.Property<int>("personalDataId")
-                        .HasColumnType("integer")
-                        .HasColumnName("personal_data_id");
+                    b.Property<string>("TerminationCode")
+                        .HasColumnType("text")
+                        .HasColumnName("termination_code");
+
+                    b.Property<DateOnly?>("TerminationDate")
+                        .HasColumnType("date")
+                        .HasColumnName("termination_date");
 
                     b.ToTable((string)null);
 
@@ -1381,10 +1425,6 @@ namespace webapi.Migrations
 
             modelBuilder.Entity("webapi.Models.Views.EmployeeV", b =>
                 {
-                    b.Property<long?>("ContractId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("contract_id");
-
                     b.Property<string>("DepartmentName")
                         .IsRequired()
                         .HasColumnType("text")
@@ -1404,12 +1444,25 @@ namespace webapi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("employee_name");
 
+                    b.Property<string>("Gender")
+                        .HasColumnType("text")
+                        .HasColumnName("gender");
+
+                    b.Property<string>("IdentityText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("identity_text");
+
+                    b.Property<string>("InsuranceTypeCode")
+                        .HasColumnType("text")
+                        .HasColumnName("insurance_type_code");
+
                     b.Property<string>("ManagerName")
                         .HasColumnType("text")
                         .HasColumnName("manager_name");
 
-                    b.Property<long>("PersonalDataId")
-                        .HasColumnType("bigint")
+                    b.Property<int>("PersonalDataId")
+                        .HasColumnType("integer")
                         .HasColumnName("personal_data_id");
 
                     b.Property<string>("PhoneNumber")
@@ -1421,6 +1474,11 @@ namespace webapi.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("position_name");
+
+                    b.Property<string>("TeamName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("team_name");
 
                     b.ToTable((string)null);
 

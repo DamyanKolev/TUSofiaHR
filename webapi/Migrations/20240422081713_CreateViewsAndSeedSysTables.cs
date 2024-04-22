@@ -5,7 +5,7 @@
 namespace webapi.Migrations
 {
     /// <inheritdoc />
-    public partial class AddViewsAndSeedSysTables : Migration
+    public partial class CreateViewsAndSeedSysTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

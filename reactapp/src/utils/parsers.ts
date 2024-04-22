@@ -1,5 +1,5 @@
 import DataType from "@app-types/enums/DataType";
-import { formatDate } from "./formaters";
+import moment from 'moment';
 
 export function parseValueByType<T>(
     object: T,
@@ -10,11 +10,17 @@ export function parseValueByType<T>(
     switch (type) {
         case DataType.Int:
             {
-                return { ...object, [fieldName]: Number.parseInt(value) }
+                if (typeof value == "string"){
+                    return { ...object, [fieldName]: Number.parseInt(value) }
+                }
+                throw new Error("Invalid Type");
             }
         case DataType.Float:
             {
-                return { ...object, [fieldName]: Number.parseFloat(value) }
+                if (typeof value == "string"){
+                    return { ...object, [fieldName]: Number.parseFloat(value) }
+                }
+                throw new Error("Invalid Type");
             }
         case DataType.String:
             {
@@ -22,14 +28,36 @@ export function parseValueByType<T>(
             }
         case DataType.Date:
             {
-                const date = new Date(value)
-                return { ...object, [fieldName]: formatDate(date) };
+                if (typeof value == "string"){
+                    return { ...object, [fieldName]: parseDateToISO(value) };
+                }
+                throw new Error("Invalid Type");
             }
         default:
             {
                 throw new Error("Invalid Type");
             }
     }
+}
+
+export function parseDateToRFC2822(date: Date | string): string {
+    const dateConvert = new Date(date)
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+    const formattedDate:string = dateConvert.toLocaleDateString(undefined, options)
+    return formattedDate
+}
+
+export function parseDateToISO(date: Date | string){
+    moment.locale('bg');
+    const dateConvert = new Date(date).toISOString()
+    const dateValue = Date.parse(dateConvert)
+    const formattedDate = moment(dateValue).format('YYYY-MM-DD');
+
+    return formattedDate
 }
 
 export function parseObjectFields<T extends object>(formData: T): T {
@@ -43,12 +71,17 @@ export function parseObjectFields<T extends object>(formData: T): T {
                 }
             }
             else {
-                newData = {...newData, [key]: formatDate(new Date())}
+                newData = {...newData, [key]: parseDateToISO(new Date())}
             }
         }
         else {
-            let result = parseObjectFields(value)
-            newData = {...newData, [key]: result}
+            if (value != null) {
+                let result = parseObjectFields(value)
+                newData = {...newData, [key]: result}
+            }
+            else {
+                newData = {...newData, [key]: value}
+            }
         }
     }) 
     return newData

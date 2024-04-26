@@ -1,4 +1,6 @@
-﻿namespace webapi.Models.Views
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace webapi.Models.Views
 {
     public class ContractV
     {
@@ -21,6 +23,7 @@
         public required string ContractTypeCode { get; set; }
         public string? TerminationCode { get; set; }
         public bool IsTerminate { get; set; }
+        [Column("article62_flag")]
         public bool Article62Flag { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using webapi.Models;
 using System.Net;
 using webapi.Constants;
 using AutoMapper;
+using webapi.Models.Views;
 
 namespace webapi.Services.HR
 {
@@ -11,8 +12,8 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreatePosition(PositionDTO positionDTO);
         public ResponseWithStatus<Response> UpdatePosition(Position position);
         public ResponseWithStatus<Response> DeletePosition(int positionId);
-        public ResponseWithStatus<DataResponse<PageResponse<Position>>> GetPositionsPage(PageInfo pageInfo);
-        public ResponseWithStatus<DataResponse<List<Position>>> GetAllPositions();
+        public ResponseWithStatus<DataResponse<PageResponse<PositionV>>> GetPositionsPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<List<PositionV>>> GetAllPositions();
 
     }
     public class PositionService : IPositionService
@@ -73,9 +74,9 @@ namespace webapi.Services.HR
         }
 
 
-        public ResponseWithStatus<DataResponse<PageResponse<Position>>> GetPositionsPage(PageInfo pageInfo)
+        public ResponseWithStatus<DataResponse<PageResponse<PositionV>>> GetPositionsPage(PageInfo pageInfo)
         {
-            var positions = _context.Positions
+            var positions = _context.PositionV
                 .OrderBy(p => p.Id)
                 .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
                 .Take(pageInfo.PageSize)
@@ -83,14 +84,14 @@ namespace webapi.Services.HR
 
             var countRecords = _context.EmployeeV.ToList().Count;
             var pages = (int) Math.Ceiling(Decimal.Divide(countRecords, pageInfo.PageSize));
-            PageResponse<Position> pageResponse = new (pages, countRecords, positions);
+            PageResponse<PositionV> pageResponse = new (pages, countRecords, positions);
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
         }
 
 
-        public ResponseWithStatus<DataResponse<List<Position>>> GetAllPositions() {
-            var positions = _context.Positions.ToList();
+        public ResponseWithStatus<DataResponse<List<PositionV>>> GetAllPositions() {
+            var positions = _context.PositionV.ToList();
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, positions);
         }

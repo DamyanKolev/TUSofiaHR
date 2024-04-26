@@ -7,6 +7,10 @@ namespace webapi.Models.HR
     {
         [Key]
         public int Id { get; set; }
+        [EmailAddress]
+        public required string PersonalEmail { get; set; }
+        [EmailAddress]
+        public required string WorkEmail { get; set; }
         public required string IdentityText { get; set; }
         public int IdentityCode { get; set; }
         public Nullable<DateOnly> BirthDate { get; set; }
@@ -20,6 +24,8 @@ namespace webapi.Models.HR
 
     public record PersonalDataDTO
     {
+        public required string PersonalEmail { get; set; }
+        public required string WorkEmail { get; set; }
         public required string IdentityText { get; set; }
         public int IdentityCode { get; set; }
         public Nullable<DateOnly> BirthDate { get; set; }

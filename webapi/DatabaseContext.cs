@@ -17,7 +17,6 @@ namespace webapi
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<DepartmentTeam> DepartmentTeams { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<EmployeeContracts> EmployeeContracts { get; set; }
         public DbSet<Insurance> Insurances { get; set; }
@@ -44,7 +43,7 @@ namespace webapi
         public DbSet<AnnexV> AnnexV { get; set; }
         public DbSet<InsuranceV> InsuranceV { get; set; }
         public DbSet<DepartmentV> DepartmentV { get; set; }
-        public DbSet<DepartmentTeamV> DepartmentTeamV { get; set; }
+        public DbSet<PositionV> PositionV { get; set; }
 
 
 
@@ -109,13 +108,11 @@ namespace webapi
                 v.ToView("departments_v");
             });
 
-
-            builder.Entity<DepartmentTeamV>(v =>
+            builder.Entity<PositionV>(v =>
             {
                 v.HasNoKey();
-                v.ToView("department_teams_v");
+                v.ToView("positions_v");
             });
-
         }
     }
 }

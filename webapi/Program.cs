@@ -7,6 +7,7 @@ using webapi;
 using webapi.Models.Auth;
 using webapi.Services.Auth;
 using webapi.Services.HR;
+using webapi.Services.References;
 using webapi.Services.System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,10 +27,13 @@ builder.Services.AddScoped<IContractService, ContractService>();
 builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-builder.Services.AddScoped<IDepartmentTeamService, DepartmentTeamService>();
 builder.Services.AddScoped<IPositionService, PositionService>();
 builder.Services.AddScoped<IEmployeeContractService, EmployeeContractService>();
 builder.Services.AddScoped<IInitService, InitService>();
+
+
+//Reference services
+builder.Services.AddScoped<IArticle62Service, Article62Service>();
 
 
 

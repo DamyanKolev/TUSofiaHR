@@ -11,6 +11,8 @@ namespace webapi.Models.HR
         public string? Description { get; set; }
         public Nullable<int> ManagerId { get; set; }
         public Employee? Manager { get; set; }
+        public Nullable<int> ParentId {get; set;}
+        public Department? Parent {get; set;}
     }
 
     public record DepartmentDTO
@@ -18,5 +20,6 @@ namespace webapi.Models.HR
         public required string DepartmentName { get; set; }
         public string? Description { get; set; }
         public Nullable<int> ManagerId { get; set; }
+        public Nullable<int> ParentId {get; set;}
     }
 }

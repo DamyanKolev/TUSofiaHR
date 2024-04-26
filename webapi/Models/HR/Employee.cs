@@ -14,21 +14,17 @@ namespace webapi.Models.HR
         public required string MiddleName {  get; set; }
         [StringLength(100)]
         public required string Surname { get; set; }
-        [EmailAddress]
-        public required string Email { get; set; }
         [StringLength(15)]
         public required string PhoneNumber { get; set; }
         public required Int32 CompanyEmployeeId { get; set; }
-
-
         public int PersonalDataId { get; set; }
         public PersonalData? PersonalData { get; set; }
 
-        [ForeignKey(nameof(DepartmentTeamId))]
-        public int DepartmentTeamId { get; set; }
-        [ForeignKey(nameof(DepartmentTeamId))]
+        [ForeignKey(nameof(DepartmentId))]
+        public int DepartmentId { get; set; }
+        [ForeignKey(nameof(DepartmentId))]
 
-        public virtual DepartmentTeam? DepartmentTeam { get; set; }
+        public virtual Department? Department { get; set; }
 
 
 

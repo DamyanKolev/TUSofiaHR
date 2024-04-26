@@ -111,9 +111,11 @@ namespace webapi.Services.HR
         public ResponseWithStatus<DataResponse<Contract>> GetByEmployeeId(int employeeId)
         {
             var contract = (from ec in _context.Set<EmployeeContracts>()
-                                   join c in _context.Set<Contract>() on ec.ContractId equals c.Id                                
+                                   join c in _context.Set<Contract>() on ec.ContractId equals c.Id    
+                                   join emp in _context.Set<Employee>() on ec.EmployeeId equals emp.Id                                
                                    where ec.EmployeeId == employeeId && ec.IsActive
                                    select c).FirstOrDefault();
+
 
             if(contract == null) {
                 return ResponseBuilder.CreateDataResponseWithStatus<Contract>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);

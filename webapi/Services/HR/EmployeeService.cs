@@ -138,7 +138,7 @@ namespace webapi.Services.HR
             Address? address = null;
 
 
-            if (employee == null || contract == null || personalData == null) {
+            if (employee == null || personalData == null) {
                 return ResponseBuilder.CreateDataResponseWithStatus<EmployeeDataSelect>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
             }
 

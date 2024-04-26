@@ -2,7 +2,7 @@
 export interface EmployeeView {
     employeeId: int,
     employeeName: string;
-    email: string;
+    workEmail: string;
     phoneNumber: string;
     managerName: string;
     departmentName: string;

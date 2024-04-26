@@ -1,27 +1,45 @@
+import { Optional } from "@/types/Optional";
+import { PositionView } from "../TableViews/PositionView";
+
 // select type
 export interface Position {
     id: int;
     positionName: string,
-    minSalary: string
-    maxSalary: string
+    description: Optional<string>,
+    sysPositionId: int
 }
 
 export const defaultPositionUpdateDTO: Position= {
     id: 0,
     positionName: "",
-    minSalary: "",
-    maxSalary: ""
+    description: null,
+    sysPositionId: 0
 }
 
 //insert and update represention type
 export interface PositionDTO {
     positionName: string,
-    minSalary: string
-    maxSalary: string
+    description: Optional<string>,
+    sysPositionId: int
 }
 
 export const defaultPositionDTO: PositionDTO= {
     positionName: "",
-    minSalary: "",
-    maxSalary: ""
+    description: null,
+    sysPositionId: 0
+}
+
+
+export interface PositionUpdateData {
+    statePositionName: string
+}
+
+export const defaultPositionUpdateData: PositionUpdateData = {
+    statePositionName: "",
+}
+
+export function createPositionUpdateData(positionView: PositionView): PositionUpdateData {
+    return {
+        statePositionName: positionView.statePositionName,
+    }
 }

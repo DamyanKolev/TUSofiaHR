@@ -1,8 +1,11 @@
 import { PositionFormState } from "@models/States/position/PositionFormState";
 import { PositionDTO } from "@models/HR/Position";
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, InputType, Label, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { CSSProperties, FC } from "react";
 import { ChangeData } from "@models/EventData/ChangeData";
+import LargeTableSelect from "@/components/Selects/TableSelect/LargeTableSelect";
+import { contractJoinTablesInfo } from "@/models/JoinTableInfo/ContractJoinTablesInfo";
+import DataType from "@/types/DataType";
 
 interface Props {
     getFormState: () => PositionFormState,
@@ -31,6 +34,15 @@ const InitPositionForm: FC<Props> = ({getFormState, getFormData, setFormStates})
         setFormStates(changeData)
     }
 
+    const handleConfirm = (selectedItem: StandardListItemDomRef, name: string) => {
+        const changeData: ChangeData = {
+            value: selectedItem.id,
+            name: name,
+            valueType: DataType.Int,
+        }
+        setFormStates(changeData)
+    }
+
     return (
         <FlexBox direction={FlexBoxDirection.Column} alignItems={FlexBoxAlignItems.End} style={mainContainerStyles}>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={formItemsStyles}>
@@ -42,24 +54,20 @@ const InitPositionForm: FC<Props> = ({getFormState, getFormData, setFormStates})
                     valueState={getFormState().positionName.valueState}
                 />
             </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={formItemsStyles}>
-                <Label>Минимална заплата</Label>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap: ".5rem"}}>
+                <Label>Описание</Label>
                 <Input
-                    name="minSalary"
-                    type={InputType.Number}
-                    value={getFormData().minSalary}
+                    name="description"
+                    value={getFormData().description? getFormData().description! : ""}
                     onChange={handleInputChange}
-                    valueState={getFormState().minSalary.valueState}
                 />
             </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={formItemsStyles}>
-                <Label>Максимална заплата</Label>
-                <Input
-                    name="maxSalary"
-                    type={InputType.Number}
-                    value={getFormData().maxSalary}
-                    onChange={handleInputChange}
-                    valueState={getFormState().maxSalary.valueState}
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap: ".5rem"}}>
+                <Label>Код на позицията</Label>
+                <LargeTableSelect
+                    name="sysPositionId"
+                    joinInfo={contractJoinTablesInfo.positionId}
+                    formDataSetter={handleConfirm}
                 />
             </FlexBox>
         </FlexBox>

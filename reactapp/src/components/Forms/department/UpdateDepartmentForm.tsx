@@ -14,12 +14,11 @@ import { DepartmentFormState, defaultDepartmentUpdateFormState } from '@models/S
 import { TableRowState } from '@app-types/TableRowState';
 import { ChangeData } from '@models/EventData/ChangeData';
 import StandardTableSelectField from '../StandartFields/StandartTableSelectField';
-import { depTeamJoinTableInfo } from '@/models/JoinTableInfo/DepTeamJoinTablesInfo';
 import { getNewFormDataFromNestedForms } from '@/utils/forms/formData';
 import DataType from '@/types/DataType';
 import { DepartmentView } from '@/models/TableViews/DepartmentView';
-import { getUpdateData } from '@/utils/getData';
 import { createUpdateDTO } from '@/utils/createUpdateDTO';
+import { departmentJoinTableInfo } from '@/models/JoinTableInfo/DepartmentJoinTableInfo';
 
 
 interface UpdateDepartmentFormProps {
@@ -46,16 +45,6 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
         setEditMode(false)
     }
 
-    const init = async () => {
-        if(rowState) {
-            const tableRow = await getUpdateData<Department, number>(rowState.selectedRow.id, `${tableURL}/find-by-id`)
-            if (tableRow) {
-                setFormData(createUpdateDTO(formData, tableRow))
-                setUpdateData(createDepartmentUpdateData(rowState.selectedRow))
-            }
-        }
-    }
-
     const successCalback = ():void => {
         dispatchIsSuccess(toggle())
         setDefaultValues()
@@ -77,7 +66,8 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
     useEffect(() => {
         if(rowState) {
             if (Object.keys(rowState.selectedRow).length > 0) {
-                init()
+                setFormData(createUpdateDTO(formData, rowState.selectedRow))
+                setUpdateData(createDepartmentUpdateData(rowState.selectedRow))
             }
         }
     }, [rowState]);
@@ -153,10 +143,21 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
                             name="managerId"
                             editMode={editMode}
                             value={updateData.managerName? updateData.managerName : ""}
-                            joinInfo={depTeamJoinTableInfo.managerId}
+                            joinInfo={departmentJoinTableInfo.managerId}
                             formDataSetter={handleConfirm}
                         />
                     </FlexBox>
+                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem", paddingInlineStart:"2.5rem"}}>
+                        <Label>Родителска Структура</Label>
+                        <StandardTableSelectField
+                            name="parentId"
+                            isLargeTable={false}
+                            editMode={editMode}
+                            value={updateData.parentDepartmentName? updateData.parentDepartmentName : ""}
+                            joinInfo={departmentJoinTableInfo.managerId}
+                            formDataSetter={handleConfirm}
+                        />
+                    </FlexBox> 
             </FlexBox>
         </Dialog>
     );

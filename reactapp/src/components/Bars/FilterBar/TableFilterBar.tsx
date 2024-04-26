@@ -1,4 +1,4 @@
-import { Button, ButtonDesign, FilterBar, FilterGroupItem, FlexBox, FlexBoxAlignItems, Title, TitleLevel} from "@ui5/webcomponents-react"
+import { Button, ButtonDesign, FilterBar, FilterGroupItem, FlexBox, FlexBoxAlignItems, Input, Title, TitleLevel} from "@ui5/webcomponents-react"
 import { FC } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import FilterItem from "./FilterItem"
@@ -57,7 +57,7 @@ const TableFilterBar: FC<TableFilterBarProps> = ({fields, title}) => {
             onGo={onGo}
             >
         
-        {/* {
+        {
             fields.map((field: any, key: number) => {
                 if (field.filterable) {
                     return (
@@ -65,12 +65,12 @@ const TableFilterBar: FC<TableFilterBarProps> = ({fields, title}) => {
                             key={key}
                             label={field.display_name}
                         >
-                            <Input name=field></Input>
+                            <Input name={field}></Input>
                         </FilterGroupItem>
                     )
                 }
             })
-        } */}
+        }
 
             <FilterGroupItem 
                 label={"Test"}

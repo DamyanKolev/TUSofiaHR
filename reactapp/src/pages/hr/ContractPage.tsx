@@ -13,7 +13,7 @@ export const ContractPageContext = createContext<TableRowState<ContractView> | u
 
 const ContractPage: FC = () => {
     const tableTitle = "Договори";
-    const tableURL = "/api/hr/contract  ";
+    const tableURL = "/api/hr/contracts";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<ContractView>({} as ContractView);
 

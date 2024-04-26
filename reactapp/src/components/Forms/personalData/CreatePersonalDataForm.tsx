@@ -2,7 +2,7 @@ import DataType from "@app-types/enums/DataType"
 import Gender from "@app-types/enums/Gender"
 import { PDataFormState } from "@models/States/personalData/PersonalDataFormState"
 import { PersonalDataDTO } from "@models/HR/PersonalData"
-import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Input, InputDomRef, Label, RadioButton, RadioButtonDomRef, Select, SelectDomRef, StandardListItem, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { DatePicker, DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Input, InputDomRef, InputType, Label, RadioButton, RadioButtonDomRef, Select, SelectDomRef, StandardListItem, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js"
 import { setDateToInputDefaultValue, setInputDefaultValue } from "@utils/forms/setInputDefaultValue"
 import { FC } from "react"
@@ -60,6 +60,28 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
 
     return (
         <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <Label required>Личен E-mail</Label>
+                <Input
+                    name="personalEmail"
+                    value={getFormData().personalEmail}
+                    type={InputType.Email}
+                    onChange={handleInputChange}
+                    valueState={getFormState().personalEmail.valueState}
+                    data-type={DataType.String}
+                />
+            </FlexBox>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <Label required>Служебен E-mail</Label>
+                <Input
+                    name="workEmail"
+                    value={getFormData().workEmail}
+                    type={InputType.Email}
+                    onChange={handleInputChange}
+                    valueState={getFormState().workEmail.valueState}
+                    data-type={DataType.String}
+                />
+            </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Select name="identity_code" data-type={DataType.Int} onChange={handleSelectChange} style={{width:"8rem"}}>
                     <StandardListItem additionalText="0">ЕГН</StandardListItem>

@@ -1,4 +1,4 @@
-﻿import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, InputType, Label, Ui5CustomEvent } from "@ui5/webcomponents-react"
+﻿import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { FC, useState } from "react"
 import { PositionDTO, defaultPositionDTO } from "@models/HR/Position"
 import { PositionFormState, defualtPositionInsertFormState } from "@models/States/position/PositionFormState"
@@ -10,6 +10,9 @@ import { setErrorInputStates } from "@utils/forms/formState"
 import { submitPostForm } from "@utils/forms/submitForm"
 import { updateFormInfo } from "@utils/forms/updateFormInfo"
 import { ChangeData } from "@models/EventData/ChangeData"
+import { contractJoinTablesInfo } from "@/models/JoinTableInfo/ContractJoinTablesInfo"
+import LargeTableSelect from "@/components/Selects/TableSelect/LargeTableSelect"
+import DataType from "@/types/DataType"
 
 
 interface CreatePositionFormProps {
@@ -65,6 +68,15 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
         setFormStates(changeData)
     }
 
+    const handleConfirm = (selectedItem: StandardListItemDomRef, name: string) => {
+        const changeData: ChangeData = {
+            value: selectedItem.id,
+            name: name,
+            valueType: DataType.Int,
+        }
+        setFormStates(changeData)
+    }
+
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenInsertDialog}
             headerText="Нова Позиция"
@@ -88,23 +100,19 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
                     />
                 </FlexBox>
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap: ".5rem"}}>
-                    <Label>Минимална заплата</Label>
+                    <Label>Описание</Label>
                     <Input
-                        name="minSalary"
-                        type={InputType.Number}
-                        value={formData.minSalary}
+                        name="description"
+                        value={formData.description? formData.description : ""}
                         onChange={handleInputChange}
-                        valueState={formState.minSalary.valueState}
                     />
                 </FlexBox>
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap: ".5rem"}}>
-                    <Label>Максимална заплата</Label>
-                    <Input
-                        name="maxSalary"
-                        type={InputType.Number}
-                        value={formData.maxSalary}
-                        onChange={handleInputChange}
-                        valueState={formState.maxSalary.valueState}
+                    <Label>Код на позицията</Label>
+                    <LargeTableSelect
+                        name="sysPositionId"
+                        joinInfo={contractJoinTablesInfo.positionId}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
             </FlexBox>

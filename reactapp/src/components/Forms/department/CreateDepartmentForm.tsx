@@ -1,4 +1,4 @@
-﻿import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, MessageStrip, MessageStripDesign, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+﻿import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Input, InputDomRef, Label, MessageStrip, MessageStripDesign, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { FC, useState } from "react"
 import { DepartmentDTO, defaultDepartmentDTO } from "@models/HR/Departmnet"
 import { DepartmentFormState, defaultDepartmentInsertFormState } from "@models/States/department/DepartmentFormState"
@@ -13,8 +13,9 @@ import { ChangeData } from "@models/EventData/ChangeData"
 import { largeFormItem } from "@utils/css"
 import { setInputDefaultValue } from "@utils/forms/setInputDefaultValue"
 import DataType from "@app-types/enums/DataType"
-import { depTeamJoinTableInfo } from "@models/JoinTableInfo/DepTeamJoinTablesInfo"
 import LargeTableSelect from "@components/Selects/TableSelect/LargeTableSelect"
+import SmallTableSelect from "@/components/Selects/TableSelect/SmallTableSelect"
+import { departmentJoinTableInfo } from "@/models/JoinTableInfo/DepartmentJoinTableInfo"
 
 
 interface CreateDepartmentFormProps {
@@ -95,7 +96,7 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
                 Success
             </MessageStrip>
             <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{padding: "1rem 2rem", gap: ".5rem", width:"fit-content"}}>
-                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.End} style={{gap:"1rem"}}>
                     <Label>Отдел</Label>
                     <Input
                         style={largeFormItem}
@@ -105,7 +106,7 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
                         valueState={formState.departmentName.valueState}
                     />
                 </FlexBox>
-                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.End} style={{gap:"1rem"}}>
                     <Label>Описание</Label>
                     <Input
                         style={largeFormItem}
@@ -114,15 +115,23 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
                         onChange={handleInputChange}
                     />
                 </FlexBox>
-                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.End} style={{gap:"1rem"}}>
                     <Label>Мениджър</Label>
                     <LargeTableSelect
                         name="managerId"
                         tableId="employeeId"
-                        joinInfo={depTeamJoinTableInfo.managerId}
+                        joinInfo={departmentJoinTableInfo.managerId}
                         formDataSetter={handleConfirm}
                     />
                 </FlexBox>
+                <FlexBox alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.End} style={{gap:"1rem", paddingInlineStart:"2.5rem"}}>
+                    <Label>Родителска Единица</Label>
+                    <SmallTableSelect
+                        name="parent_id"
+                        joinInfo={departmentJoinTableInfo.parentId}
+                        formDataSetter={handleConfirm}
+                    />
+                </FlexBox> 
             </FlexBox>
         </Dialog>
     )

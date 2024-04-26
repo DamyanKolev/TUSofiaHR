@@ -1,7 +1,7 @@
 ﻿import { FC, useContext, useState, useEffect } from 'react';
-import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
+import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
 import { StandardInputField } from '../StandartFields/StandartInputField';
-import { Position, defaultPositionUpdateDTO } from '@models/HR/Position';
+import { Position, PositionUpdateData, createPositionUpdateData, defaultPositionUpdateDTO, defaultPositionUpdateData } from '@models/HR/Position';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
 import DailogSwitch from '@app-types/enums/DialogSwitch';
@@ -13,6 +13,11 @@ import { PositionFormState, defualtPositionUpdateFormState } from '@models/State
 import { updateFormInfo } from '@utils/forms/updateFormInfo';
 import { TableRowState } from '@app-types/TableRowState';
 import { ChangeData } from '@models/EventData/ChangeData';
+import { contractJoinTablesInfo } from '@/models/JoinTableInfo/ContractJoinTablesInfo';
+import StandardTableSelectField from '../StandartFields/StandartTableSelectField';
+import DataType from '@/types/DataType';
+import { PositionView } from '@/models/TableViews/PositionView';
+import { createUpdateDTO } from '@/utils/createUpdateDTO';
 
 
 interface UpdatePositionFormProps {
@@ -23,18 +28,19 @@ interface UpdatePositionFormProps {
 
 
 const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, dialogSwitchSetter, tableURL}) => {
-    const rowState = useContext<TableRowState<Position> | undefined>(PositionPageContext)
+    const rowState = useContext<TableRowState<PositionView> | undefined>(PositionPageContext)
     const [formState, setFormState] = useState<PositionFormState>(defualtPositionUpdateFormState)
     const [formData, setFormData] = useState<Position>(defaultPositionUpdateDTO)
     const [editMode, setEditMode] = useState<boolean>(false)
     const [disabled, setDisabled] = useState<boolean>(true)
+    const [updateData, setUpdateData] = useState<PositionUpdateData>(defaultPositionUpdateData)
     const dispatchIsSuccess = useAppDispatch()
 
     const setDefaultValues = () => {
         setFormState(defualtPositionUpdateFormState)
         dialogSwitchSetter(DailogSwitch.Close)
         setFormData(defaultPositionUpdateDTO)
-        rowState?.setSelectedRow({} as Position)
+        rowState?.setSelectedRow({} as PositionView)
         setEditMode(false)
     }
 
@@ -59,7 +65,8 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
     useEffect(() => {
         if(rowState) {
             if (Object.keys(rowState.selectedRow).length > 0) {
-                setFormData(rowState.selectedRow);
+                setFormData(createUpdateDTO(formData, rowState.selectedRow))
+                setUpdateData(createPositionUpdateData(rowState.selectedRow))
             }
         }
     }, [rowState]);
@@ -70,6 +77,16 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
             value: event.target.value,
             valueType: event.target.dataset.type,
             name: event.target.name,
+        }
+        updateFormInfo(changeData, formData, setFormData, formState, setFormState)
+        if(disabled) {setDisabled(false)}
+    }
+
+    const handleConfirm = (selectedItem: StandardListItemDomRef, name: string) => {
+        const changeData: ChangeData = {
+            value: selectedItem.id,
+            name: name,
+            valueType: DataType.Int,
         }
         updateFormInfo(changeData, formData, setFormData, formState, setFormState)
         if(disabled) {setDisabled(false)}
@@ -105,24 +122,23 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                 </FlexBox>
 
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label>Минимална заплата</Label>
+                    <Label>Описание</Label>
                     <StandardInputField
                         editMode={editMode}
-                        value={formData.minSalary}
+                        value={formData.description? formData.description : ""}
                         onChange={handleInputChange}
-                        name={"minSalary"}
-                        valueState={formState.minSalary.valueState}
+                        name={"description"}
                     />
                 </FlexBox>
 
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label>Максимална заплата</Label>
-                    <StandardInputField
+                    <Label>Позиция</Label>
+                    <StandardTableSelectField
+                        name="sysPositionId"
                         editMode={editMode}
-                        value={formData.maxSalary}
-                        onChange={handleInputChange}
-                        name={"maxSalary"}
-                        valueState={formState.maxSalary.valueState}
+                        value={updateData.statePositionName}
+                        joinInfo={contractJoinTablesInfo.positionId}
+                        formDataSetter={handleConfirm}
                     />
                 </FlexBox>
             </FlexBox>

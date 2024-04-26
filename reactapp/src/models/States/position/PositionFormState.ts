@@ -2,18 +2,15 @@ import { FormFieldState, FormState, defaultInsertFieldState, defaultUpdateFieldS
 
 export interface PositionFormState extends FormState{
     positionName: FormFieldState,
-    minSalary: FormFieldState
-    maxSalary: FormFieldState
+    sysPositionId: FormFieldState
 }
 
 export const defualtPositionInsertFormState: PositionFormState = {
     positionName: defaultInsertFieldState,
-    minSalary: defaultInsertFieldState,
-    maxSalary: defaultInsertFieldState
+    sysPositionId: defaultInsertFieldState,
 }
 
 export const defualtPositionUpdateFormState: PositionFormState = {
     positionName: defaultUpdateFieldState,
-    minSalary: defaultUpdateFieldState,
-    maxSalary: defaultUpdateFieldState
+    sysPositionId: defaultUpdateFieldState,
 }

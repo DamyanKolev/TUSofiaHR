@@ -44,15 +44,17 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
     const init = async () => {
         if(rowState) {
             const bodyData = {
-                employee_id: rowState.selectedRow.employeeId,
-                personal_data_id: rowState.selectedRow.personalDataId
+                employeeId: rowState.selectedRow.employeeId,
+                personalDataId: rowState.selectedRow.personalDataId
             }
             const data = await getUpdateData<EmployeeData, object>(bodyData, `${tableURL}/update-data`)
+            console.log(data)
     
             if (data != null) {
+                console.log(data.contract)
                 const newFormData:EmployeeDataUpdate = {
                     employee: data.employee,
-                    contract: data.contract,
+                    contract: data.contract? data.contract : null,
                     personalData: data.personalData,
                     insurance: data.insurance,
                     address: data.address
@@ -214,28 +216,31 @@ const EmployeeMidColumn: FC<EmployeeMidColumnProps> = ({ handleLayoutState, tabl
             </ObjectPageSection>
 
 
-            <ObjectPageSection
-                id="contract"
-                titleText="Договор"
-            >
-                <ObjectPageSubSection
-                    hideTitleText
+            {
+                formData.contract != null &&
+                <ObjectPageSection
+                    id="contract"
                     titleText="Договор"
-                    id="contract-info"
                 >
-                    <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
-                        <Button onClick={()=>setEditMode({...editMode, conEdit: !editMode.conEdit})}>{editMode.conEdit ? 'Display-Only' : 'Edit Mode'}</Button>
-                    </FlexBox>
-                    <UpdateContract
-                        getEditMode={() => {return editMode.conEdit}}
-                        getFormData={() => {return formData.contract}}
-                        getFormState={() => {return formState.contract}}
-                        getUpdateData={() => {return updateData.contract}}
-                        setFormStates={setFormStates}
-                        handleConfirm={handleConfirm}
-                    />
-                </ObjectPageSubSection>
-            </ObjectPageSection>
+                    <ObjectPageSubSection
+                        hideTitleText
+                        titleText="Договор"
+                        id="contract-info"
+                    >
+                        <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
+                            <Button onClick={()=>setEditMode({...editMode, conEdit: !editMode.conEdit})}>{editMode.conEdit ? 'Display-Only' : 'Edit Mode'}</Button>
+                        </FlexBox>
+                        <UpdateContract
+                            getEditMode={() => {return editMode.conEdit}}
+                            getFormData={() => {return formData.contract!}}
+                            getFormState={() => {return formState.contract}}
+                            getUpdateData={() => {return updateData.contract}}
+                            setFormStates={setFormStates}
+                            handleConfirm={handleConfirm}
+                        />
+                    </ObjectPageSubSection>
+                </ObjectPageSection>
+            }
 
 
             <ObjectPageSection

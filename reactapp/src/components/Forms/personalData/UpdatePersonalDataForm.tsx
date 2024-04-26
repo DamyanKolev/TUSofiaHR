@@ -1,4 +1,4 @@
-import { DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, InputDomRef, Label, RadioButtonDomRef, SelectDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { DatePickerDomRef, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, InputDomRef, InputType, Label, RadioButtonDomRef, SelectDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { CSSProperties, FC } from "react"
 import { StandardInputField } from "../StandartFields/StandartInputField"
 import { PersonalData } from "@models/HR/PersonalData"
@@ -73,6 +73,30 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
 
     return (
         <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{width: "fit-content", gap:".5rem"}}>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <Label required>Личен E-mail</Label>
+                <StandardInputField
+                    editMode={getEditMode()}
+                    name="personalEmail"
+                    value={setInputDefaultValue(getFormData().personalEmail)}
+                    valueState={getFormState().personalEmail.valueState}
+                    onChange={handleInputChange}
+                    dataType={DataType.String}
+                    inputType={InputType.Email}
+                />
+            </FlexBox>
+            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+                <Label required>Служебен E-mail</Label>
+                <StandardInputField
+                    editMode={getEditMode()}
+                    name="workEmail"
+                    value={setInputDefaultValue(getFormData().workEmail)}
+                    valueState={getFormState().workEmail.valueState}
+                    onChange={handleInputChange}
+                    dataType={DataType.String}
+                    inputType={InputType.Email}
+                />
+            </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <StandartListSelectField
                     values={[

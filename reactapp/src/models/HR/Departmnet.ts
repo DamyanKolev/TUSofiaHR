@@ -6,6 +6,7 @@ export interface Department {
     departmentName: string,
     description: Optional<string>
     managerId: Optional<string>
+    parentId: Optional<int>
 }
 
 export interface DepartmentDTO {
@@ -24,19 +25,23 @@ export const defaultDepartmentUpdateDTO: Department = {
     id: 0,
     departmentName: "",
     description: null,
-    managerId: null
+    managerId: null,
+    parentId: null
 }
 
 export interface DepartmentUpdateData {
     managerName: Optional<string>
+    parentDepartmentName: Optional<string>,
 }
 
 export const defaultDepartmentUpdateData: DepartmentUpdateData = {
     managerName: "",
+    parentDepartmentName: "",
 }
 
 export function createDepartmentUpdateData(departmentView: DepartmentView): DepartmentUpdateData {
     return {
         managerName: departmentView.managerName,
-    }
+        parentDepartmentName: departmentView.parentDepartmentName,
+}
 }

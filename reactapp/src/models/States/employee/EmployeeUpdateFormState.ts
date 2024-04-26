@@ -5,7 +5,6 @@ export interface EmployeeUpdateFormState extends FormState{
     firstName: FormFieldState;
     middleName: FormFieldState;
     surname: FormFieldState;
-    email: FormFieldState;
     phoneNumber: FormFieldState
     managerId: FormFieldState;
     departmentId: FormFieldState;
@@ -16,7 +15,6 @@ export const defaultEmployeeUpdateFormState: EmployeeUpdateFormState = {
     firstName: defaultUpdateFieldState,
     middleName: defaultUpdateFieldState,
     surname: defaultUpdateFieldState,
-    email: defaultUpdateFieldState,
     phoneNumber: defaultUpdateFieldState,
     managerId: defaultUpdateFieldState,
     departmentId: defaultUpdateFieldState,

@@ -4,5 +4,8 @@ export interface DepartmentView {
     id: int
     departmentName: string
     managerName: Optional<string>
-    description: string
+    description: Optional<string>
+    parentDepartmentName: Optional<string>
+    managerId: int,
+    parentId: int
 }

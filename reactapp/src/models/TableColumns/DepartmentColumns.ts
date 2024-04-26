@@ -5,6 +5,18 @@ const departmentColumns: AnalyticalTableColumnDefinition[] = [
         accessor: "departmentName",
         Header: "Отдел",
     },
+    {
+        accessor: "description",
+        Header: "Описание",
+    },
+    {
+        accessor: "managerName",
+        Header: "Мениджър",
+    },
+    {
+        accessor: "parentDepartmentName",
+        Header: "Родителска Единица",
+    },
 ];
 
 

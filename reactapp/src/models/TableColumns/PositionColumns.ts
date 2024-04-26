@@ -3,15 +3,19 @@ import { AnalyticalTableColumnDefinition } from "@ui5/webcomponents-react";
 const positionColumns: AnalyticalTableColumnDefinition[] = [
     {
         accessor: "positionName",
-        Header: "Позиция",
+        Header: "Фирмена длъжност",
     },
     {
-        accessor: "minSalary",
-        Header: "Минимална заплата",
+        accessor: "description",
+        Header: "Описание",
     },
     {
-        accessor: "maxSalary",
-        Header: "Максимална заплата",
+        accessor: "statePositionName",
+        Header: "Законова длъжност",
+    },
+    {
+        accessor: "nkpd",
+        Header: "Код на длъжност",
     },
 ];
 

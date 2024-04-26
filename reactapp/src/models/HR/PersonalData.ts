@@ -1,47 +1,55 @@
+import { Optional } from "@/types/Optional";
 import Gender from "@app-types/enums/Gender";
-import { UpdateDTO } from "@models/UpdateDTO";
 
 export interface PersonalData {
     id: int
+    personalEmail: string,
+    workEmail: string,
     identityText: string,
     identityCode: int,
-    birthDate: Date,
-    gender: Gender,
-    personalIdNumber: string,
-    personalIdIssueDate: Date,
-    personalIdIssueBy: string,
-    addressId: int
+    birthDate: Optional<Date>,
+    gender: Optional<Gender>,
+    personalIdNumber: Optional<string>,
+    personalIdIssueDate: Optional<Date>,
+    personalIdIssueBy: Optional<string>,
+    addressId: Optional<int>
 }
 
 export const defaultPDataUpdateDTO: PersonalData = {
     id: 0,
-    identityText: "",
-    identityCode: 0,
-    birthDate: null,
-    gender: "",
-    personalIdNumber: "",
-    personalIdIssueDate: null,
-    personalIdIssueBy: "",
-    addressId: 0
-}
-
-export interface PersonalDataDTO {
-    identityText: string,
-    identityCode: int,
-    birthDate: Date | null,
-    gender: Gender | null,
-    personalIdNumber: string | null,
-    personalIdIssueDate: Date | null,
-    personalIdIssueBy: string | null,
-}
-
-
-export const defaultPersonalDataDTO: PersonalDataDTO = {
+    personalEmail: "",
+    workEmail: "",
     identityText: "",
     identityCode: 0,
     birthDate: null,
     gender: null,
-    personalIdNumber: "",
+    personalIdNumber: null,
     personalIdIssueDate: null,
-    personalIdIssueBy: "",
+    personalIdIssueBy: null,
+    addressId: null
+}
+
+export interface PersonalDataDTO {
+    personalEmail: "",
+    workEmail: "",
+    identityText: string,
+    identityCode: int,
+    birthDate: Optional<Date>,
+    gender: Optional<Gender>,
+    personalIdNumber: Optional<string>,
+    personalIdIssueDate: Optional<Date>,
+    personalIdIssueBy: Optional<string>,
+}
+
+
+export const defaultPersonalDataDTO: PersonalDataDTO = {
+    personalEmail: "",
+    workEmail: "",
+    identityText: "",
+    identityCode: 0,
+    birthDate: null,
+    gender: null,
+    personalIdNumber: null,
+    personalIdIssueDate: null,
+    personalIdIssueBy: null,
 }

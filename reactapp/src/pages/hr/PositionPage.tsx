@@ -4,13 +4,13 @@ import SmartTable from "@components/Table/SmartTable";
 import CreatePositionForm from "@components/Forms/position/CreatePositionForm";
 import positionColumns from "@models/TableColumns/PositionColumns";
 import DailogSwitch from "@app-types/enums/DialogSwitch";
-import { Position } from "@models/HR/Position";
 import UpdatePositionForm from "@components/Forms/position/UpdatePositionForm";
 import { createPortal } from "react-dom";
 import { TableRowState } from "@app-types/TableRowState";
+import { PositionView } from "@/models/TableViews/PositionView";
 
 
-export const PositionPageContext = createContext<TableRowState<Position> | undefined>(undefined);
+export const PositionPageContext = createContext<TableRowState<PositionView> | undefined>(undefined);
 
 
 const tableStyle: CSSProperties = {
@@ -24,7 +24,7 @@ const PositionPage: FC = () => {
     const tableTile = "Позиции"
     const tableURL = "/api/hr/positions"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
-    const [selectedRow, setSelectedRow] = useState<Position>({} as Position);
+    const [selectedRow, setSelectedRow] = useState<PositionView>({} as PositionView);
 
     const dialogSwitchGetter = () => { return dialogSwitch}
     const dialogSwitchSetter = (dialogSwitch: DailogSwitch) => {setDialogSwitch(dialogSwitch)}

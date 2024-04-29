@@ -1,39 +1,29 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webapi.Models.Auth;
-using webapi.Models.HR;
-using webapi.Models.System;
+
 
 namespace webapi.Extensions
 {
     public static class ModelBuilderExtensions
     {
-        public static void SeedSytemTables(this ModelBuilder modelBuilder)
+        public static void SeedUser(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SysAdministrativeTerritory>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysAdministrativeTerritory>("SysAdministrativeTerritories.csv")
-                );
-            modelBuilder.Entity<SysContractTerminationType>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysContractTerminationType>("SysContractTerminationTypes.csv")
-                );
-            modelBuilder.Entity<SysContractType>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysContractType>("SysContractTypes.csv")
-                );
-            modelBuilder.Entity<SysIconomicActivity>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysIconomicActivity>("SysIconomicActivities.csv")
-                );
-            modelBuilder.Entity<SysPosition>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysPosition>("SysPositions.csv")
-                );
-            modelBuilder.Entity<SysContractDocumentType>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysContractDocumentType>("SysContractDocumentTypes.csv")
-                );
-            //modelBuilder.Entity<SysInsuranceType>().HasData(
-            //        CSVFileProcessor.ParseCSVToList<SysInsuranceType>("SysInsuranceTypes.csv")
-            //    );
-            modelBuilder.Entity<SysPaymentType>().HasData(
-                    CSVFileProcessor.ParseCSVToList<SysPaymentType>("SysPaymentTypes.csv")
-                );
+
+            var hasher = new PasswordHasher<User>();
+            User user = new User()
+            {
+                Id = 1,
+                Email = "damkolev@test.net",
+                NormalizedUserName = "DAMYAN",
+                NormalizedEmail = "DAMKOLEV@TEST.NET",
+                UserName = "Damyan",
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+            var passwordHash = hasher.HashPassword(user, "Admin123#");
+            user.PasswordHash = passwordHash;
+
+            modelBuilder.Entity<User>().HasData(user);
         }
 
         public static void UpdateIdentityTablesNames(this ModelBuilder modelBuilder)

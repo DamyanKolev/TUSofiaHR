@@ -1,5 +1,5 @@
 ﻿import { FC, useContext, useState, useEffect } from 'react';
-import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
+import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, TextAreaDomRef, Title, TitleLevel, Ui5CustomEvent } from '@ui5/webcomponents-react';
 import { StandardInputField } from '../StandartFields/StandartInputField';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
@@ -19,6 +19,7 @@ import DataType from '@/types/DataType';
 import { DepartmentView } from '@/models/TableViews/DepartmentView';
 import { createUpdateDTO } from '@/utils/createUpdateDTO';
 import { departmentJoinTableInfo } from '@/models/JoinTableInfo/DepartmentJoinTableInfo';
+import StandardTextAreaField from '../StandartFields/StandardTextAreaField';
 
 
 interface UpdateDepartmentFormProps {
@@ -45,14 +46,17 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
         setEditMode(false)
     }
 
+
+
     const successCalback = ():void => {
         dispatchIsSuccess(toggle())
         setDefaultValues()
     }
 
-    const cancelOnClick = () => {
+    const onClose = () => {
         setDefaultValues()
     }
+
 
     const submitForm = () => {
         if(isFilledForm(formState)) {
@@ -77,7 +81,16 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
         if(disabled) {setDisabled(false)}
     }
 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+    const handleTextAreaOnInput = (event: Ui5CustomEvent<TextAreaDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -101,6 +114,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
 
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
+            onAfterClose={onClose}
             header={
                 <Bar
                     startContent={<Title level={TitleLevel.H6}>Промяна на Отдел</Title>}
@@ -111,7 +125,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
             }
             footer={
                 <Bar design="Footer">
-                        <Button onClick={cancelOnClick} design={ButtonDesign.Transparent}>Отказ</Button>
+                        <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
                         <Button onClick={submitForm} design={ButtonDesign.Emphasized} disabled={disabled}>Запази</Button>
                 </Bar>
             }
@@ -123,17 +137,17 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
                         <StandardInputField
                             editMode={editMode}
                             value={formData.departmentName}
-                            onChange={handleInputChange}
+                            onInput={handleOnInput}
                             name={"departmentName"}
                             valueState={formState.departmentName.valueState}
                         />
                     </FlexBox>
                     <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Описание</Label>
-                        <StandardInputField
+                        <StandardTextAreaField
                             editMode={editMode}
                             value={formData.description? formData.description: ""}
-                            onChange={handleInputChange}
+                            onInput={handleTextAreaOnInput}
                             name={"description"}
                         />
                     </FlexBox>

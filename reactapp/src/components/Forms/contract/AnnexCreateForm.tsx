@@ -26,7 +26,7 @@ const AnnexCreateForm: FC<AnnexCreateFormProps> = ({ getFormData, getFormState, 
 
 
     //input change event listener 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -75,7 +75,7 @@ const AnnexCreateForm: FC<AnnexCreateFormProps> = ({ getFormData, getFormState, 
                         name="workingWage"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().workingWage)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.String}
                         />
                 </FlexBox>
@@ -87,7 +87,7 @@ const AnnexCreateForm: FC<AnnexCreateFormProps> = ({ getFormData, getFormState, 
                         name="workTime"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().workTime)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -99,7 +99,7 @@ const AnnexCreateForm: FC<AnnexCreateFormProps> = ({ getFormData, getFormState, 
                         name="annualLeave"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().annualLeave)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>

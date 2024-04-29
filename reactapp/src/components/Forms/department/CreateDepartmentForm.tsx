@@ -1,4 +1,4 @@
-﻿import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Input, InputDomRef, Label, MessageStrip, MessageStripDesign, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+﻿import { Bar, Button, ButtonDesign, Dialog, FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Input, InputDomRef, Label, MessageStrip, MessageStripDesign, StandardListItemDomRef, TextArea, TextAreaDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { FC, useState } from "react"
 import { DepartmentDTO, defaultDepartmentDTO } from "@models/HR/Departmnet"
 import { DepartmentFormState, defaultDepartmentInsertFormState } from "@models/States/department/DepartmentFormState"
@@ -47,7 +47,7 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
         setDefaultState()
     }
     
-    const cancelOnClick = () => {
+    const onClose = () => {
         setDefaultState()
     }
 
@@ -62,7 +62,16 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
         }
     };
 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+    const handleTextAreaOnInput = (event: Ui5CustomEvent<TextAreaDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -82,11 +91,12 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
 
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenInsertDialog}
+            onAfterClose={onClose}
             headerText="Нов Отдел"
             footer={
                 <Bar endContent={
                     <>
-                        <Button onClick={cancelOnClick} design={ButtonDesign.Transparent}>Отказ</Button>
+                        <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
                         <Button onClick={submitForm} design={ButtonDesign.Emphasized} disabled={disabled}>Създай</Button>
                     </>
                 }/>
@@ -102,17 +112,18 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
                         style={largeFormItem}
                         name="departmentName"
                         value={formData.departmentName}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={formState.departmentName.valueState}
                     />
                 </FlexBox>
                 <FlexBox alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.End} style={{gap:"1rem"}}>
                     <Label>Описание</Label>
-                    <Input
+                    <TextArea
+                        rows={3}
                         style={largeFormItem}
                         name="description"
                         value={setInputDefaultValue(formData.description)}
-                        onChange={handleInputChange}
+                        onInput={handleTextAreaOnInput}
                     />
                 </FlexBox>
                 <FlexBox alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.End} style={{gap:"1rem"}}>

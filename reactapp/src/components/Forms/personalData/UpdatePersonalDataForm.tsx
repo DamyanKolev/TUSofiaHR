@@ -31,7 +31,7 @@ interface UpdatePersonalDataFormProps {
 
 const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, getFormData, getFormState, setFormStates}) => {
     //input change event listener 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -80,7 +80,7 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                     name="personalEmail"
                     value={setInputDefaultValue(getFormData().personalEmail)}
                     valueState={getFormState().personalEmail.valueState}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     dataType={DataType.String}
                     inputType={InputType.Email}
                 />
@@ -92,7 +92,7 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                     name="workEmail"
                     value={setInputDefaultValue(getFormData().workEmail)}
                     valueState={getFormState().workEmail.valueState}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     dataType={DataType.String}
                     inputType={InputType.Email}
                 />
@@ -117,7 +117,7 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                     editMode={getEditMode()}
                     name="identityText"
                     value={getFormData().identityText}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     dataType={DataType.String}
                     valueState={getFormState().identityText.valueState}
                 />
@@ -153,7 +153,7 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                     editMode={getEditMode()}
                     name="personalIdNumber"
                     value={setInputDefaultValue(getFormData().personalIdNumber)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     dataType={DataType.String}
                 />
             </FlexBox>
@@ -176,7 +176,7 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, g
                     editMode={getEditMode()}
                     name="personalIdIssueBy"
                     value={setInputDefaultValue(getFormData().personalIdIssueBy)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     dataType={DataType.String}
                 />
             </FlexBox>

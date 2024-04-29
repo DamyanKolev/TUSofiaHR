@@ -20,7 +20,7 @@ interface UpdateEmployeeFormProps {
 
 const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormData, getUpdateData, getFormState, setFormStates, handleConfirm}) => {
     //input change event listener 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -38,7 +38,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     <StandardInputField
                         editMode={getEditMode()}
                         value={getFormData().firstName}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"firstName"}
                         valueState={getFormState().firstName.valueState}
                     />
@@ -48,7 +48,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     <StandardInputField
                         editMode={getEditMode()}
                         value={getFormData().middleName}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"middleName"}
                         valueState={getFormState().middleName.valueState}
                     />
@@ -58,7 +58,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     <StandardInputField
                         editMode={getEditMode()}
                         value={getFormData().surname}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"surname"}
                         valueState={getFormState().surname.valueState}
                     />
@@ -68,7 +68,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                     <StandardInputField
                         editMode={getEditMode()}
                         value={getFormData().phoneNumber}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"phoneNumber"}
                         valueState={getFormState().phoneNumber.valueState}
                     />

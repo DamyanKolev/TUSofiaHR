@@ -13,7 +13,7 @@ interface Props {
 
 
 const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -29,7 +29,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                 <Input
                     name="healtInsuranceArt40"
                     value={setInputDefaultValue(getFormData().healtInsuranceArt40)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     type={InputType.Number}
                 />
             </FlexBox>
@@ -39,7 +39,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     type={InputType.Number}
                     name="totalInsurance"
                     value={setInputDefaultValue(getFormData().totalInsurance)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
@@ -48,7 +48,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     type={InputType.Number}
                     name="healthInsurance"
                     value={setInputDefaultValue(getFormData().healthInsurance)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
@@ -57,7 +57,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     type={InputType.Number}
                     name="grossRemuneration"
                     value={setInputDefaultValue(getFormData().grossRemuneration)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
@@ -66,7 +66,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     type={InputType.Number}
                     name="bonusIncome"
                     value={setInputDefaultValue(getFormData().bonusIncome)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                 />
             </FlexBox>
         </FlexBox>

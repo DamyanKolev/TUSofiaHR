@@ -20,7 +20,7 @@ interface CreateEmployeeFormProps {
 
 const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormData, setFormStates, handleConfirm}) => {
     //input change event listener 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -39,7 +39,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
                         style={largeFormItem}
                         name="firstName"
                         value={getFormData().firstName}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={getFormState().firstName.valueState}
                         data-type={DataType.String}
                     />
@@ -50,7 +50,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
                         style={largeFormItem}
                         name="middleName"
                         value={getFormData().middleName}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={getFormState().middleName.valueState}
                         data-type={DataType.String}
                     />
@@ -61,7 +61,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
                         style={largeFormItem}
                         name="surname"
                         value={getFormData().surname}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={getFormState().surname.valueState}
                         data-type={DataType.String}
                     />
@@ -72,7 +72,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
                         style={largeFormItem}
                         name="phoneNumber"
                         value={getFormData().phoneNumber}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={getFormState().phoneNumber.valueState}
                         data-type={DataType.String}
                     />

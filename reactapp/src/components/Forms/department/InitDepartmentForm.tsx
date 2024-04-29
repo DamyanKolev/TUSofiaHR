@@ -1,6 +1,6 @@
 import { DepartmentFormState } from "@models/States/department/DepartmentFormState";
 import { DepartmentDTO } from "@models/HR/Departmnet";
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, TextArea, TextAreaDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { FC } from "react";
 import { ChangeData } from "@models/EventData/ChangeData";
 import { largeFormItem } from "@utils/css";
@@ -14,6 +14,15 @@ interface Props {
 
 const InitDepartmentForm: FC<Props> = ({getFormState, getFormData, setFormStates}) => {
     const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+        const changeData: ChangeData = {
+            value: event.target.value,
+            valueType: event.target.dataset.type,
+            name: event.target.name,
+        }
+        setFormStates(changeData)
+    }
+
+    const handleTextAreaOnInput = (event: Ui5CustomEvent<TextAreaDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -36,11 +45,11 @@ const InitDepartmentForm: FC<Props> = ({getFormState, getFormData, setFormStates
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Label>Описание</Label>
-                <Input
+                <TextArea
                     style={largeFormItem}
                     name="description"
                     value={setInputDefaultValue(getFormData().description)}
-                    onChange={handleInputChange}
+                    onInput={handleTextAreaOnInput}
                 />
             </FlexBox>
         </FlexBox>

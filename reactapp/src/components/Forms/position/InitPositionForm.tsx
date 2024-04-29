@@ -25,7 +25,7 @@ const formItemsStyles: CSSProperties = {
 }
 
 const InitPositionForm: FC<Props> = ({getFormState, getFormData, setFormStates}) => {
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -50,7 +50,7 @@ const InitPositionForm: FC<Props> = ({getFormState, getFormData, setFormStates})
                 <Input
                     name="positionName"
                     value={getFormData().positionName}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     valueState={getFormState().positionName.valueState}
                 />
             </FlexBox>
@@ -59,7 +59,7 @@ const InitPositionForm: FC<Props> = ({getFormState, getFormData, setFormStates})
                 <Input
                     name="description"
                     value={getFormData().description? getFormData().description! : ""}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap: ".5rem"}}>

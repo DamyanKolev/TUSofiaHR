@@ -16,7 +16,7 @@ interface Props {
 }
 
 const UpdateIncomeForm: FC<Props> = ({getEditMode, getFormData, getFormState, setFormStates}) => {
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -32,7 +32,7 @@ const UpdateIncomeForm: FC<Props> = ({getEditMode, getFormData, getFormState, se
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().healtInsuranceArt40.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"healtInsuranceArt40"}
                     valueState={getFormState().healtInsuranceArt40.valueState}
                     dataType={DataType.Float}
@@ -43,7 +43,7 @@ const UpdateIncomeForm: FC<Props> = ({getEditMode, getFormData, getFormState, se
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().totalInsurance.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"totalInsurance"}
                     valueState={getFormState().totalInsurance.valueState}
                     dataType={DataType.Float}
@@ -54,7 +54,7 @@ const UpdateIncomeForm: FC<Props> = ({getEditMode, getFormData, getFormState, se
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().healthInsurance.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"healthInsurance"}
                     valueState={getFormState().healthInsurance.valueState}
                     dataType={DataType.Float}
@@ -65,7 +65,7 @@ const UpdateIncomeForm: FC<Props> = ({getEditMode, getFormData, getFormState, se
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().grossRemuneration.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"grossRemuneration"}
                     valueState={getFormState().grossRemuneration.valueState}
                     dataType={DataType.Float}
@@ -76,7 +76,7 @@ const UpdateIncomeForm: FC<Props> = ({getEditMode, getFormData, getFormState, se
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().bonusIncome.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"bonusIncome"}
                     valueState={getFormState().bonusIncome.valueState}
                     dataType={DataType.Float}

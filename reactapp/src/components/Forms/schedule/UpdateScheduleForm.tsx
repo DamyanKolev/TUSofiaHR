@@ -16,7 +16,7 @@ interface Props {
 }
 
 const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, setFormStates}) => {
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -32,7 +32,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().insuranceDays.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"insuranceDays"}
                     valueState={getFormState().insuranceDays.valueState}
                     dataType={DataType.Int}
@@ -43,7 +43,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().insuranceExperienceDays.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"insuranceExperienceDays"}
                     valueState={getFormState().insuranceExperienceDays.valueState}
                     dataType={DataType.Int}
@@ -54,7 +54,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().incapacityDays.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"incapacityDays"}
                     valueState={getFormState().incapacityDays.valueState}
                     dataType={DataType.Int}
@@ -65,7 +65,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().childcareDays.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"childcareDays"}
                     valueState={getFormState().childcareDays.valueState}
                     dataType={DataType.Int}
@@ -76,7 +76,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().withoutInsuranceDays.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"withoutInsuranceDays"}
                     valueState={getFormState().withoutInsuranceDays.valueState}
                     dataType={DataType.Int}
@@ -87,7 +87,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().unpaidLeaveDays.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"unpaidLeaveDays"}
                     valueState={getFormState().unpaidLeaveDays.valueState}
                     dataType={DataType.Int}
@@ -98,7 +98,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().paidIncapacityDays.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"paidIncapacityDays"}
                     valueState={getFormState().paidIncapacityDays.valueState}
                     dataType={DataType.Int}
@@ -109,7 +109,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().workedHours.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"workedHours"}
                     valueState={getFormState().workedHours.valueState}
                     dataType={DataType.Int}
@@ -120,7 +120,7 @@ const UpdateScheduleForm: FC<Props> = ({getEditMode, getFormData, getFormState, 
                 <StandardInputField
                     editMode={getEditMode()}
                     value={getFormData().overtimeHours.toString()}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     name={"overtimeHours"}
                     valueState={getFormState().overtimeHours.valueState}
                     dataType={DataType.Int}

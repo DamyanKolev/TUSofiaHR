@@ -18,7 +18,7 @@ interface PersonalDataFormProps {
 
 const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFormData, setFormStates }) => {
     //input change event listener 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -66,7 +66,7 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
                     name="personalEmail"
                     value={getFormData().personalEmail}
                     type={InputType.Email}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     valueState={getFormState().personalEmail.valueState}
                     data-type={DataType.String}
                 />
@@ -77,7 +77,7 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
                     name="workEmail"
                     value={getFormData().workEmail}
                     type={InputType.Email}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     valueState={getFormState().workEmail.valueState}
                     data-type={DataType.String}
                 />
@@ -90,7 +90,7 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
                 <Input
                     name="identityText"
                     value={getFormData().identityText}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     valueState={getFormState().identityText.valueState}
                     data-type={DataType.String}
                 />
@@ -127,7 +127,7 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
                 <Input
                     name="personalIdNumber"
                     value={setInputDefaultValue(getFormData().personalIdNumber)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     data-type={DataType.String}
                 />
             </FlexBox>
@@ -147,7 +147,7 @@ const CreatePersonalDataForm: FC<PersonalDataFormProps> = ({getFormState, getFor
                     required
                     name="personalIdIssueBy"
                     value={setInputDefaultValue(getFormData().personalIdIssueBy)}
-                    onChange={handleInputChange}
+                    onInput={handleOnInput}
                     data-type={DataType.String}
                 />
             </FlexBox>

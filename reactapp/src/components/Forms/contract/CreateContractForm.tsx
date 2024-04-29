@@ -26,7 +26,7 @@ interface CreateContractFormProps {
 
 const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormState, setFormStates, handleConfirm, style}) => {
     //input change event listener 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -54,31 +54,12 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
         }
         setFormStates(changeData)
     }
-
-
-    // const handleSelectChange = (event: Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
-    //     const changeData: ChangeData = {
-    //         value: event.detail.selectedOption.additionalText,
-    //         valueType: event.target.dataset.type,
-    //         name: event.target.name,
-    //     }
-    //     setFormStates(changeData)
-    // }
     
     
     
     return (
         <FlexBox style={style}>
             <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
-                {/* <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column}>
-                    <Label required>Код корекция</Label>
-                    <Select style={largeFormItem} name="code_corection" onChange={handleSelectChange} data-type={DataType.Int}>
-                        <StandardListItem additionalText="0">Редовни данни</StandardListItem>
-                        <StandardListItem additionalText="1">Коригиране</StandardListItem>
-                        <StandardListItem additionalText="2">Заличаване</StandardListItem>
-                    </Select>
-                </FlexBox> */}
-                
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Трудово възнаграждение</Label>
                     <Input
@@ -86,7 +67,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                         name="workingWage"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().workingWage)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={getFormState().workingWage.valueState}
                         data-type={DataType.String}
                         />
@@ -99,7 +80,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                         name="workTime"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().workTime)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={getFormState().workTime.valueState}
                         data-type={DataType.Int}
                     />
@@ -112,7 +93,7 @@ const CreateContractForm: FC<CreateContractFormProps> = ({ getFormData, getFormS
                         name="annualLeave"
                         type={InputType.Number}
                         value={setInputDefaultValue(getFormData().annualLeave)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={getFormState().annualLeave.valueState}
                         data-type={DataType.Int}
                     />

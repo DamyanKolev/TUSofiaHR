@@ -50,8 +50,8 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
         setDefaultValues()
     }
 
-    const cancelOnClick = () => {
-        dialogSwitchSetter(DailogSwitch.Close)
+    const onClose = () => {
+        setDefaultValues()
     }
 
     const submitForm = () => {
@@ -73,7 +73,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
     }, [rowState]);
 
 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -95,6 +95,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
 
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenUpdateDialog}
+            onAfterClose={onClose}
             header={
                 <Bar
                     startContent={<Title level={TitleLevel.H6}>Промяна на Позиция</Title>}
@@ -105,7 +106,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
             }
             footer={
                 <Bar design="Footer">
-                        <Button onClick={cancelOnClick} design={ButtonDesign.Transparent}>Отказ</Button>
+                        <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
                         <Button onClick={submitForm} design={ButtonDesign.Emphasized} disabled={disabled}>Запази</Button>
                 </Bar>
             }
@@ -117,7 +118,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                         style={largeFormItem}
                         editMode={editMode}
                         value={formData.positionName}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"positionName"}
                         valueState={formState.positionName.valueState}
                     />
@@ -129,7 +130,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                         style={largeFormItem}
                         editMode={editMode}
                         value={formData.description? formData.description : ""}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"description"}
                     />
                 </FlexBox>

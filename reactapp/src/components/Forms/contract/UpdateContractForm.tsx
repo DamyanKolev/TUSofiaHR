@@ -25,7 +25,7 @@ interface UpdateContractProps {
 
 const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getFormState, getUpdateData, setFormStates, handleConfirm}) => {
     //input change event listener 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -81,7 +81,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <StandardInputField
                         editMode={getEditMode()}
                         value={getFormData().workingWage? getFormData().workingWage! : ""}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"workingWage"}
                         valueState={getFormState().workingWage.valueState}
                     />
@@ -92,7 +92,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <StandardInputField
                         editMode={getEditMode()}
                         value={getFormData().workTime? getFormData().workTime!.toString() : ""}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"workTime"}
                         dataType={DataType.Int}
                         valueState={getFormState().workTime.valueState}
@@ -104,7 +104,7 @@ const UpdateContract: FC<UpdateContractProps> = ({getEditMode, getFormData, getF
                     <StandardInputField
                         editMode={getEditMode()}
                         value={getFormData().annualLeave? getFormData().annualLeave!.toString() : ""}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         name={"annualLeave"}
                         dataType={DataType.Int}
                         valueState={getFormState().annualLeave.valueState}

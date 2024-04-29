@@ -45,7 +45,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
         if(disabled) {setDisabled(false)}
     }
 
-    const cancelOnClick = () => {
+    const onClose = () => {
         setDefaultState()
     }
 
@@ -60,7 +60,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
         }
     };
 
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -80,11 +80,12 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
 
     return (
         <Dialog className="flexible-columns ui5-content-density-compact" open={dialogSwitchGetter() == DailogSwitch.OpenInsertDialog}
+            onAfterClose={onClose}
             headerText="Нова Позиция"
             footer={
                 <Bar endContent={
                     <>
-                        <Button onClick={cancelOnClick} design={ButtonDesign.Transparent}>Отказ</Button>
+                        <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
                         <Button onClick={submitForm} design={ButtonDesign.Emphasized} disabled={disabled}>Създай</Button>
                     </>
                 }/>
@@ -97,7 +98,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
                         style={largeFormItem}
                         name="positionName"
                         value={formData.positionName}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         valueState={formState.positionName.valueState}
                     />
                 </FlexBox>
@@ -107,7 +108,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
                         style={largeFormItem}
                         name="description"
                         value={formData.description? formData.description : ""}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                     />
                 </FlexBox>
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap: ".5rem"}}>

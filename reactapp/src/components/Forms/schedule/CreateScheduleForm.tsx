@@ -14,7 +14,7 @@ interface Props {
 
 
 const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
-    const handleInputChange = (event: Ui5CustomEvent<InputDomRef, never>) => {
+    const handleOnInput = (event: Ui5CustomEvent<InputDomRef, never>) => {
         const changeData: ChangeData = {
             value: event.target.value,
             valueType: event.target.dataset.type,
@@ -32,7 +32,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="insuranceDays"
                         value={setInputDefaultValue(getFormData().insuranceDays)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -42,7 +42,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="insuranceExperienceDays"
                         value={setInputDefaultValue(getFormData().insuranceExperienceDays)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -52,7 +52,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="incapacityDays"
                         value={setInputDefaultValue(getFormData().incapacityDays)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -62,7 +62,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="childcareDays"
                         value={setInputDefaultValue(getFormData().childcareDays)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -72,7 +72,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="withoutInsuranceDays"
                         value={setInputDefaultValue(getFormData().withoutInsuranceDays)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -86,7 +86,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="unpaidLeaveDays"
                         value={setInputDefaultValue(getFormData().unpaidLeaveDays)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -96,7 +96,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="paidIncapacityDays"
                         value={setInputDefaultValue(getFormData().paidIncapacityDays)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -106,7 +106,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="workedHours"
                         value={setInputDefaultValue(getFormData().workedHours)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>
@@ -116,7 +116,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
                         type={InputType.Number}
                         name="overtimeHours"
                         value={setInputDefaultValue(getFormData().overtimeHours)}
-                        onChange={handleInputChange}
+                        onInput={handleOnInput}
                         data-type={DataType.Int}
                     />
                 </FlexBox>

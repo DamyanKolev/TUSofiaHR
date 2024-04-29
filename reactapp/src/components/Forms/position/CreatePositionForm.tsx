@@ -13,6 +13,7 @@ import { ChangeData } from "@models/EventData/ChangeData"
 import { contractJoinTablesInfo } from "@/models/JoinTableInfo/ContractJoinTablesInfo"
 import LargeTableSelect from "@/components/Selects/TableSelect/LargeTableSelect"
 import DataType from "@/types/DataType"
+import { largeFormItem } from "@/utils/css"
 
 
 interface CreatePositionFormProps {
@@ -93,6 +94,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap: ".5rem"}}>
                     <Label>Позиция</Label>
                     <Input
+                        style={largeFormItem}
                         name="positionName"
                         value={formData.positionName}
                         onChange={handleInputChange}
@@ -102,6 +104,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap: ".5rem"}}>
                     <Label>Описание</Label>
                     <Input
+                        style={largeFormItem}
                         name="description"
                         value={formData.description? formData.description : ""}
                         onChange={handleInputChange}

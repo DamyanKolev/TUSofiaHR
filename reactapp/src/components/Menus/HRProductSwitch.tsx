@@ -9,42 +9,42 @@ const HRProductSwitch: FC = () => {
         <ProductSwitch>
             <ProductSwitchItem
                 icon="employee"
-                targetSrc="/hr/employee"
+                targetSrc="/employee"
                 titleText="Служители"
                 subtitleText="Служители"
             />
 
             <ProductSwitchItem
                 icon="BusinessSuiteInAppSymbols/icon-contract"
-                targetSrc="/hr/contract"
+                targetSrc="/contract"
                 titleText="Договори"
                 subtitleText="Договори"
             />
 
             <ProductSwitchItem
                 icon="insurance-life"
-                targetSrc="/hr/insurance"
+                targetSrc="/insurance"
                 titleText="Осигуровки"
                 subtitleText="Осигуровки"
             />
 
             <ProductSwitchItem
                 icon="company-view"
-                targetSrc="/hr/department"
+                targetSrc="/department"
                 titleText="Структурни Единици"
                 subtitleText="Структурни Единици"
             />
 
             <ProductSwitchItem
                 icon="suitcase"
-                targetSrc="/hr/position"
+                targetSrc="/position"
                 titleText="Позиции"
                 subtitleText="Позиции"
             />
 
             <ProductSwitchItem
                 icon="detail-view"
-                targetSrc="/hr/references"
+                targetSrc="/references"
                 titleText="Справки"
                 subtitleText="Справки"
             />

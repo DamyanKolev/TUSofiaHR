@@ -10,42 +10,58 @@ namespace webapi.Services.Auth
 {
     public interface IAuthenticationService
     {
-        public Task<ResponseWithStatus<DataResponse<AuthTokens>>> SingIn(LoginModel model);
+        public Task<ResponseWithStatus<DataResponse<UserData>>> SingIn(LoginModel model);
         public Task<ResponseWithStatus<DataResponse<string>>> RefreshToken(string token);
     }
 
     public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IConfiguration _configuration;
         private readonly IJWTService _jwtService;
+        public readonly DatabaseContext _context;
 
-        public AuthenticationService(UserManager<User> userManager, IConfiguration configuration, IJWTService jwtService)
+        public AuthenticationService(UserManager<User> userManager, IJWTService jwtService, DatabaseContext context)
         {
             _userManager = userManager;
-            _configuration = configuration;
             _jwtService = jwtService;
+            _context = context;
         }
 
-        public async Task<ResponseWithStatus<DataResponse<AuthTokens>>> SingIn(LoginModel model)
+        public async Task<ResponseWithStatus<DataResponse<UserData>>> SingIn(LoginModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Username);
 
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
-                string accessToken = _jwtService.GenerateAccessToken(user, userRoles);
-                string refreshToken = await _jwtService.GenerateRefreshToken(user);
-                AuthTokens authTokens = new AuthTokens {
-                    AccessToken = accessToken,
-                    RefreshToken = refreshToken
-                };
+                var company = _context.Companies
+                    .Where(c => c.UserId == user.Id)
+                    .FirstOrDefault();
 
-                return ResponseBuilder.CreateDataResponseWithStatus(
-                    HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, authTokens);
+                if (company != null)
+                {
+
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    string accessToken = _jwtService.GenerateAccessToken(user, userRoles);
+                    string refreshToken = await _jwtService.GenerateRefreshToken(user);
+                    AuthTokens authTokens = new AuthTokens
+                    {
+                        AccessToken = accessToken,
+                        RefreshToken = refreshToken
+                    };
+
+                    company.User = null;
+                    UserData userData = new UserData
+                    {
+                        Company = company,
+                        Tokens = authTokens
+                    };
+
+                    return ResponseBuilder.CreateDataResponseWithStatus(
+                        HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SIGN_IN, userData);
+                }
             }
 
-            return ResponseBuilder.CreateDataResponseWithStatus<AuthTokens>(
+            return ResponseBuilder.CreateDataResponseWithStatus<UserData>(
                 HttpStatusCode.BadRequest, MessageConstants.MESSAGE_FAILED_SIGN_IN, null!);
         }
 

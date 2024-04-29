@@ -44,8 +44,13 @@ namespace webapi.Models.HR
         public SysAdministrativeTerritory? SysAdministrativeTerritory { get; set; }
 
 
-        public required string CompanyEic { get; set; }
+        [ForeignKey(nameof(ContractId))]
         public Nullable<int> ContractId { get; set; }
+        [ForeignKey(nameof(ContractId))]
+        public Contract? ParentContract { get; set; }
+
+
+        public required string CompanyEic { get; set; }
         public required Int16 CodeCorection { get; set; }
         public Nullable<bool> IsTerminate {  get; set; }
         [Column("article62_flag")]
@@ -71,11 +76,11 @@ namespace webapi.Models.HR
         public Nullable<DateOnly> TerminationDate { get; set; }
         public Nullable<DateOnly> ChangeDate { get; set; }
         public int ContractTypeId { get; set; }
-        public Nullable<int> PositionId { get; set; }
-        public Nullable<int> IconomicActivityId { get; set; }
+        public Nullable<int> SysPositionId { get; set; }
+        public Nullable<int> SysIconomicActivityId { get; set; }
         public Int16 DocumentTypeId { get; set; }
         public Nullable<int> TerminationTypeId { get; set; }
-        public Nullable<int> AdministrativeTerritoryId { get; set; }
+        public Nullable<int> SysAdministrativeTerritoryId { get; set; }
         public required string CompanyEic { get; set; }
         public Nullable<int> ContractId { get; set; }
         public Int16 CodeCorection { get; set; }

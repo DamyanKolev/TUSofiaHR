@@ -141,6 +141,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
                     <Label>Мениджър</Label>
                         <StandardTableSelectField
                             name="managerId"
+                            tableId='employeeId'
                             editMode={editMode}
                             value={updateData.managerName? updateData.managerName : ""}
                             joinInfo={departmentJoinTableInfo.managerId}
@@ -154,7 +155,7 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
                             isLargeTable={false}
                             editMode={editMode}
                             value={updateData.parentDepartmentName? updateData.parentDepartmentName : ""}
-                            joinInfo={departmentJoinTableInfo.managerId}
+                            joinInfo={departmentJoinTableInfo.parentId}
                             formDataSetter={handleConfirm}
                         />
                     </FlexBox> 

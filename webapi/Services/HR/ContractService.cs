@@ -46,7 +46,10 @@ namespace webapi.Services.HR
             }
 
             var contract = _mapper.Map<Contract>(employeeContractInsert.Contract);
-            var employeeContract = new EmployeeContracts { Employee = employee, Contract = contract, IsActive = true };
+            _context.Contracts.Add(contract);
+            _context.SaveChanges();
+
+            EmployeeContracts employeeContract = new EmployeeContracts { EmployeeId = employee.Id, ContractId = contract.Id, IsActive = true };
             _context.EmployeeContracts.Add(employeeContract);
             var changes = _context.SaveChanges();
 

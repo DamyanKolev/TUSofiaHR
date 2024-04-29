@@ -53,7 +53,7 @@ namespace webapi.Services.HR
                 employee.PersonalData = personalData;
                 _context.Employees.Add(employee);
 
-                var employeeContract = new EmployeeContracts { Employee = employee, Contract = contract, IsActive = true };
+                var employeeContract = new EmployeeContracts { EmployeeId = employee.Id, ContractId = contract.Id, IsActive = true };
                 _context.EmployeeContracts.Add(employeeContract);
 
                 var result = _context.SaveChanges();

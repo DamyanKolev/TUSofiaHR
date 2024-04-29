@@ -31,8 +31,8 @@ const HRProductSwitch: FC = () => {
             <ProductSwitchItem
                 icon="company-view"
                 targetSrc="/hr/department"
-                titleText="Отдели"
-                subtitleText="Отдели"
+                titleText="Структурни Единици"
+                subtitleText="Структурни Единици"
             />
 
             <ProductSwitchItem

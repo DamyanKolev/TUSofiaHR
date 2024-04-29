@@ -24,6 +24,7 @@ namespace webapi
             CreateMap<AddressDTO, Address>();
             CreateMap<InsuranceDTO, Insurance>();
             CreateMap<ScheduleDTO, Schedule>();
+            CreateMap<DepartmentDTO, Department>();
 
             CreateMap<ContractV, Article62V>();
 

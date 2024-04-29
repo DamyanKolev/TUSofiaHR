@@ -1,5 +1,5 @@
 export interface Employee {
-    employeeId: int,
+    id: int,
     firstName: string;
     middleName: string;
     surname: string;
@@ -13,7 +13,7 @@ export interface Employee {
 
 
 export const defaultEmployeeUpdateDTO: Employee = {
-    employeeId: 0,
+    id: 0,
     firstName: "",
     middleName: "",
     surname: "",

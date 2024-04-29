@@ -1,11 +1,15 @@
 ﻿using System.Reflection.Emit;
+using System.Reflection.Metadata;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using webapi.Extensions;
 using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Models.System;
 using webapi.Models.Views;
+using webapi.Services.Auth;
 
 namespace webapi
 {
@@ -55,7 +59,7 @@ namespace webapi
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            //builder.SeedSytemTables();
+            builder.SeedUser();
             builder.UpdateIdentityTablesNames();
 
             builder.Entity<Contract>()

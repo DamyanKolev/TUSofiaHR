@@ -8,6 +8,7 @@ namespace webapi.Services.System
     public interface ISysInsuranceTypesService
     {
         public ResponseWithStatus<DataResponse<List<SysInsuranceType>>> SelectAll();
+        public ResponseWithStatus<DataResponse<SysInsuranceType>> GetInsuranceByCode(string code);
     }
     public class SysInsuranceTypesService : ISysInsuranceTypesService
     {
@@ -25,6 +26,19 @@ namespace webapi.Services.System
                 .ToList();
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, insuranceTypes);
+        }
+
+        public ResponseWithStatus<DataResponse<SysInsuranceType>> GetInsuranceByCode(string code)
+        {
+            var insuranceType = _context.SysInsuranceTypes
+                .FirstOrDefault(x => x.Code == code);
+
+            if (insuranceType == null)
+            {
+                return ResponseBuilder.CreateDataResponseWithStatus<SysInsuranceType>(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_SUCCESS_SELECT, null!);
+            }
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, insuranceType);
         }
     }
 }

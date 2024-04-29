@@ -25,5 +25,15 @@ namespace webapi.Controllers.System
 
             return Ok(result.Response);
         }
+
+
+        [HttpPost("/api/sys/insurance-type/by-code", Name = "GetInsuranceByCode")]
+        public IActionResult GetInsuranceByCode([FromBody] string code)
+        {
+            var result = _insuranceTypesService.GetInsuranceByCode(code);
+
+            return Ok(result.Response);
+        }
+
     }
 }

@@ -6,7 +6,6 @@ import PositionPage from './hr/PositionPage'
 import DepartmentPage from './hr/DepartmentPage'
 import Article62 from './references/Article62'
 import Settings from './SettingsPage'
-import EmployeeReports from './hr/EmployeeReports'
 import References from './references/References'
 import Article123Page from './references/Article123Page'
 import DeclarationPage from './references/DeclarationPage'
@@ -15,6 +14,6 @@ import InsurancePage from './hr/EmployeeIncomePage'
 
 
 export {
-    EmployeePage, Home, Login, ContractPage, PositionPage, DepartmentPage, Article62, Settings, EmployeeReports, References, Article123Page, 
+    EmployeePage, Home, Login, ContractPage, PositionPage, DepartmentPage, Article62, Settings, References, Article123Page, 
     DeclarationPage, InsurancePage
 }

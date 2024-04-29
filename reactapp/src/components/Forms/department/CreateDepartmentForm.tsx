@@ -127,7 +127,7 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
                 <FlexBox alignItems={FlexBoxAlignItems.Center} justifyContent={FlexBoxJustifyContent.End} style={{gap:"1rem", paddingInlineStart:"2.5rem"}}>
                     <Label>Родителска Единица</Label>
                     <SmallTableSelect
-                        name="parent_id"
+                        name="parentId"
                         joinInfo={departmentJoinTableInfo.parentId}
                         formDataSetter={handleConfirm}
                     />

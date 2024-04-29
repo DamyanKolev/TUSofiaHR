@@ -30,16 +30,11 @@ namespace webapi.Services.HR
             {
                 var position = _mapper.Map<Position>(initData.PositionInsert);
                 var department = _mapper.Map<Department>(initData.DepartmentInsert);
-                var departmentTeam = _mapper.Map<DepartmentTeam>(initData.DepartmentTeamInsert);
 
                 _context.Departments.Add(department);
-                departmentTeam.DepartmentId = department.Id;
-
                 _context.Positions.Add(position);
-                _context.DepartmentTeams.Add(departmentTeam);
 
                 _context.SaveChanges();
-
                 transaction.Commit();
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_FAILED);
             }
@@ -54,9 +49,8 @@ namespace webapi.Services.HR
         {
             var anyDepartments = _context.Departments.Any();
             var anyPositions = _context.Positions.Any();
-            var anyDepartmentTeams = _context.DepartmentTeams.Any();
 
-            if (anyDepartments &&  anyPositions && anyDepartmentTeams)
+            if (anyDepartments &&  anyPositions)
             {
                 return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, true);
             }

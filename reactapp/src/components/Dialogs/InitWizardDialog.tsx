@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { InitAppData, defaultInitAppData } from "@models/HR/InitAppData";
 import { InitAppDataFormState, defaultInitAppDataFormState } from "@models/States/InitAppDataFormState";
 import { ChangeData } from "@models/EventData/ChangeData";
-import InitDepTeamForm from "@components/Forms/departmentTeam/InitDepTeamForm";
 
 
 
@@ -123,19 +122,6 @@ const InitWizardDialog: FC<InitWizardDialogProps> = ({open}) => {
                         <InitDepartmentForm
                             getFormState={() => {return formState.departmentInsert}}
                             getFormData={() => {return formData.departmentInsert}}
-                            setFormStates={setFormStates}
-                        />
-                    </FlexBox>
-                </WizardStep>
-
-
-
-                <WizardStep titleText="Екип" icon="sap-icon://group"  selected={selected == 3} data-step={3} disabled={disabled[3]}>
-                    <FlexBox direction={FlexBoxDirection.Column} style={{padding:"1rem 2rem"}}>
-                        <Title>Нов Екип</Title>
-                        <InitDepTeamForm
-                            getFormState={() => {return formState.departmentTeamInsert}}
-                            getFormData={() => {return formData.departmentTeamInsert}}
                             setFormStates={setFormStates}
                         />
                     </FlexBox>

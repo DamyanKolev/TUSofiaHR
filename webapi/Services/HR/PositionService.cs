@@ -32,7 +32,7 @@ namespace webapi.Services.HR
             _context.Positions.Add(position);
             var changes = _context.SaveChanges();
 
-            if (changes > 0)
+            if (changes == 0)
             {
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }

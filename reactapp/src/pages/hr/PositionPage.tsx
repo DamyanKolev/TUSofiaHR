@@ -14,7 +14,6 @@ export const PositionPageContext = createContext<TableRowState<PositionView> | u
 
 
 const tableStyle: CSSProperties = {
-    padding: "0 4rem 0 4rem",
     height: "100%",
     maxHeight: "calc(100vh - 6.48rem)"   
 }

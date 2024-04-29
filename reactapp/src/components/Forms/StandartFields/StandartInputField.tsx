@@ -12,11 +12,11 @@ interface StandardInputFieldProps {
     inputType?: InputType;
     valueState?: ValueState,
     name: string;
-    onChange: (e: Ui5CustomEvent<InputDomRef, never>) => void;
+    onInput: (e: Ui5CustomEvent<InputDomRef, never>) => void;
 }
 
 export const StandardInputField: FC<StandardInputFieldProps> = (
-    { style = largeFormItem, textFieldWidth = "15.625rem", editMode, value, dataType = DataType.String, name, onChange, inputType = InputType.Text, valueState }
+    { style = largeFormItem, textFieldWidth = "15.625rem", editMode, value, dataType = DataType.String, name, onInput, inputType = InputType.Text, valueState }
 ) => {
     if (editMode) {
         return <Input
@@ -25,7 +25,7 @@ export const StandardInputField: FC<StandardInputFieldProps> = (
             type={inputType}
             data-type={dataType}
             name={name}
-            onChange={onChange}
+            onInput={onInput}
             valueState={valueState}
         />;
     }

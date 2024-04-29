@@ -12,13 +12,12 @@ import { DepartmentView } from "@/models/TableViews/DepartmentView";
 export const DepartmentPageContext = createContext<TableRowState<DepartmentView> | undefined>(undefined);
 
 const tableStyle: CSSProperties = {
-    padding: "0 4rem 0 4rem",
     height: "100%",
     maxHeight: "calc(100vh - 6.48rem)"   
 }
 
 const DepartmentPage: FC = () => {
-    const tableTitle = "Отдели"
+    const tableTitle = "Структурни Единици"
     const tableURL = "/api/hr/departments"
     const [dialogSwitch, setDialogSwitch] = useState<DailogSwitch>(DailogSwitch.Close)
     const [selectedRow, setSelectedRow] = useState<DepartmentView>({} as DepartmentView);

@@ -1,4 +1,4 @@
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, InputType, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { FC } from "react";
 import { StandardInputField } from "../StandartFields/StandartInputField";
 import { Employee } from "@models/HR/Employee";
@@ -61,17 +61,6 @@ const UpdateEmployeeForm: FC<UpdateEmployeeFormProps> = ({getEditMode, getFormDa
                         onChange={handleInputChange}
                         name={"surname"}
                         valueState={getFormState().surname.valueState}
-                    />
-                </FlexBox>
-                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                    <Label>E-mail</Label>
-                    <StandardInputField
-                        editMode={getEditMode()}
-                        value={getFormData().email}
-                        inputType={InputType.Email}
-                        onChange={handleInputChange}
-                        name={"email"}
-                        valueState={getFormState().email.valueState}
                     />
                 </FlexBox>
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>

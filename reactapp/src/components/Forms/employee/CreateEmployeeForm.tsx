@@ -4,7 +4,7 @@ import SmallTableSelect from "@components/Selects/TableSelect/SmallTableSelect"
 import { EmployeeInsertFormState } from "@models/States/employee/EmployeeInsertFormState"
 import { EmployeeInsertDTO } from "@models/HR/Employee"
 import { employeeJoinTableInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo"
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, InputType, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
+import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Input, InputDomRef, Label, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react"
 import { FC } from "react"
 import { ChangeData } from "@models/EventData/ChangeData"
 import { largeFormItem } from "@utils/css"
@@ -63,18 +63,6 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({getFormState, getFormD
                         value={getFormData().surname}
                         onChange={handleInputChange}
                         valueState={getFormState().surname.valueState}
-                        data-type={DataType.String}
-                    />
-                </FlexBox>
-                <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                    <Label required>E-mail</Label>
-                    <Input
-                        style={largeFormItem}
-                        name="email"
-                        value={getFormData().email}
-                        type={InputType.Email}
-                        onChange={handleInputChange}
-                        valueState={getFormState().email.valueState}
                         data-type={DataType.String}
                     />
                 </FlexBox>

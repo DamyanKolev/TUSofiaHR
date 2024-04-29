@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using webapi.Models.Views;
 
 namespace webapi.Models.HR
 {
@@ -9,8 +11,10 @@ namespace webapi.Models.HR
         public int Id { get; set; }
         public required string DepartmentName { get; set; }
         public string? Description { get; set; }
+        [ForeignKey(nameof(ManagerId))]
         public Nullable<int> ManagerId { get; set; }
-        public Employee? Manager { get; set; }
+        [ForeignKey(nameof(ManagerId))]
+        public virtual Employee? Manager { get; set; }
         public Nullable<int> ParentId {get; set;}
         public Department? Parent {get; set;}
     }

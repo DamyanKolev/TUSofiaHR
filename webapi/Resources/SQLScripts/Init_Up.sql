@@ -2,10 +2,9 @@ CREATE VIEW employee_v AS
 SELECT
   e1.id AS employee_id,
   CONCAT(e1.first_name, ' ', e1.middle_name, ' ', e1.surname) AS employee_name,
-  e1.email,
+  pd.work_email,
   e1.phone_number,
   CONCAT(e2.first_name, ' ', e2.middle_name, ' ', e2.surname) AS manager_name,
-  dpt.team_name,
   pos.position_name,
   dep.department_name,
   pd.identity_text,
@@ -13,10 +12,9 @@ SELECT
   e1.personal_data_id,
   sit.code AS insurance_type_code
 FROM employees e1
-JOIN department_teams dpt ON dpt.id = e1.department_team_id
-JOIN departments dep ON dep.id = dpt.department_id
-LEFT JOIN employees e2 ON dpt.manager_id = e2.id
-JOIN positions pos ON pos.id = e1.position_id
+LEFT JOIN departments dep ON dep.id = e1.department_id
+LEFT JOIN employees e2 ON dep.manager_id = e2.id
+LEFT JOIN positions pos ON pos.id = e1.position_id
 JOIN personal_data pd ON pd.id = e1.personal_data_id
 LEFT JOIN insurances ins ON e1.insurance_id = ins.id
 LEFT JOIN sys_insurance_types sit ON ins.insurance_type_id = sit.id
@@ -26,74 +24,34 @@ ORDER BY e1.id ASC;
 
 
 
-CREATE VIEW department_teams_v AS
-SELECT
-  dpt.id,
-  dpt.team_name,
-  CONCAT(e1.first_name, ' ', e1.middle_name, ' ', e1.surname) AS manager_name,
-  dp.department_name
-FROM department_teams dpt
-LEFT JOIN employees e1 ON dpt.manager_id = e1.id
-JOIN departments dp ON dpt.department_id = dp.id
-ORDER BY dpt.id ASC;
-
-
-
 
 CREATE VIEW departments_v AS
 SELECT
   dp.id,
   dp.department_name,
   CONCAT(e1.first_name, ' ', e1.middle_name, ' ', e1.surname) AS manager_name,
-  dp.description
+  dp2.department_name AS parent_department_name,
+  dp.description,
+  dp.manager_id,
+  dp.parent_id
 FROM departments dp
 LEFT JOIN employees e1 ON dp.manager_id = e1.id
+LEFT JOIN departments dp2 ON dp.parent_id = dp2.id
 ORDER BY dp.id ASC;
 
 
-
-
-CREATE VIEW insurance_v AS
+CREATE VIEW positions_v AS
 SELECT
-  e1.id AS employee_id,
-  e1.surname,
-  CONCAT(e1.first_name, ' ', e1.middle_name, ' ', e1.surname) AS employee_name,
-  e1.email,
-  e1.phone_number,
-  CONCAT(SUBSTRING(e1.first_name, 1, 1), SUBSTRING(e1.surname, 1, 1)) as initials,
-  pd1.identity_text,
-  pd1.identity_code,
-  con.working_wage,
-  con.execution_date,
-  con.company_eic,
-  ins.doo_withouth_tzpb_insurer,
-  ins.doo_withouth_tzpb_employee,
-  ins.health_insurance,
-  ins.health_insurance_article40,
-  ins.health_insurance_insurer,
-  ins.health_insurance_employee,
-  ins.teacher_pension_fund,
-  ins.professional_pension_fund,
-  ins.universal_pension_insurer,
-  ins.universal_pension_employee,
-  sit.gvrc_fund,
-  sit.dod_tax,
-  SUBSTRING(sp.nkpd, 1, 1) as nkpd_group,
-  sia.nkid,
-  sia.nkid_sector,
-  sia.tzpb_percent,
-  sit.code as insurance_type_code
-FROM employees e1
-JOIN employee_contracts em_c ON em_c.employee_id = e1.id
-JOIN contracts con ON em_c.contract_id = con.id
-LEFT JOIN contracts anex_c ON anex_c.id = con.contract_id
-JOIN personal_data pd1 ON pd1.id = e1.personal_data_id
-JOIN insurances ins ON e1.insurance_id = ins.id
-JOIN sys_positions sp ON sp.id = CASE WHEN con.sys_position_id IS NULL THEN anex_c.sys_position_id ELSE con.sys_position_id END 
-JOIN sys_iconomic_activities sia ON sia.id = CASE WHEN con.sys_position_id IS NULL THEN anex_c.sys_iconomic_activity_id ELSE con.sys_iconomic_activity_id END
-JOIN sys_insurance_types sit ON sit.id = ins.insurance_type_id
-WHERE em_c.is_active
-ORDER BY e1.id ASC;
+  pos.id,
+  pos.position_name,
+  pos.description,
+  spos.position_name AS state_position_name,
+  spos.nkpd,
+  pos.sys_position_id
+FROM positions pos
+JOIN sys_positions spos ON pos.sys_position_id = spos.id
+ORDER BY pos.id ASC;
+
 
 
 

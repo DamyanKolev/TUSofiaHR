@@ -20,12 +20,11 @@ namespace webapi.Models.HR
         public int PersonalDataId { get; set; }
         public PersonalData? PersonalData { get; set; }
 
-        [ForeignKey(nameof(DepartmentId))]
-        public int DepartmentId { get; set; }
-        [ForeignKey(nameof(DepartmentId))]
 
+        [ForeignKey(nameof(DepartmentId))]
+        public Nullable<int> DepartmentId { get; set; }
+        [ForeignKey(nameof(DepartmentId))]
         public virtual Department? Department { get; set; }
-
 
 
         public Nullable<int> PositionId { get; set; }
@@ -41,11 +40,10 @@ namespace webapi.Models.HR
         public required string FirstName { get; set; }
         public required string MiddleName { get; set; }
         public required string Surname { get; set; }
-        public required string Email { get; set; }
         public required string PhoneNumber { get; set; }
         public int CompanyEmployeeId { get; set; }
         public int PersonalDataId { get; set; }
-        public int DepartmentTeamId { get; set; }
+        public Nullable<int> DepartmentTeamId { get; set; }
         public Nullable<int> PositionId { get; set; }
         public Nullable<int> InsuranceId { get; set; }
     }

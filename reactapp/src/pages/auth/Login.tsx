@@ -6,6 +6,7 @@ import { LoginDTO, defaultLoginDTO } from "@models/Auth/LoginDTO";
 import { createPortal } from "react-dom";
 import "./Login.css"
 import { AuthTokens } from "@models/Auth/AuthTokens";
+import { UserData } from "@/models/Auth/UserData";
 
 
 export interface InitAccountModel {
@@ -46,9 +47,10 @@ export default function Login() {
 
         if (response.ok) {
             const res = await response.json();
+            const data = res.data as UserData
             navigate("/")
-            setToken(res.data.tokens)
-            sessionStorage.setItem("companyEIC", res.data.company.companyEic);
+            setToken(data.tokens)
+            sessionStorage.setItem("companyEIC", data.company.companyEic);
         } else {
             setErrorMsg("Невалидно потребителско име или парола")
             setIsError(true)

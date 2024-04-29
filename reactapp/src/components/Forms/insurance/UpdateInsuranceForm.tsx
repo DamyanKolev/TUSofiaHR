@@ -8,7 +8,6 @@ import { insuranceJoinTableInfo } from "@models/JoinTableInfo/InsuranceJoinTable
 import StandardTableSelectField from "../StandartFields/StandartTableSelectField"
 import { SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js"
 import { SysInsuranceType } from "@models/System/SysInsuranceType"
-import { Filter } from "@models/Page/Page"
 import StandardSelectField from "../StandartFields/StandartSelectField"
 
 const textFieldWidth: string = "2.5rem"
@@ -34,26 +33,20 @@ const UpdateInsuranceForm: FC<UpdateInsuranceFormProps> = ({getEditMode, getForm
     const [initialization, setInitialization] = useState<boolean>(false)
 
     const initValues = async () => {
-        const postURL = "/api/sys/insurance-type/filtered"
+        const postURL = "/api/sys/insurance-type/by-code"
         const token = sessionStorage.getItem("accessToken")
-        const bodyData:Filter = {
-            field_name: "code",
-            filter_type: "like",
-            r_value: getUpdateData().sysInsuranceTypeId,
-            or: false,
-        }
         const response = await fetch(postURL, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify([bodyData]),
+            body: JSON.stringify(getUpdateData().sysInsuranceTypeId),
         });
 
         if (response.ok) {
             const json = await response.json()
-            setSelectedRow(json.data[0])
+            setSelectedRow(json.data)
             setInitialization(true)
         }
         else {

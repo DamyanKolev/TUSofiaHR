@@ -18,6 +18,7 @@ import StandardTableSelectField from '../StandartFields/StandartTableSelectField
 import DataType from '@/types/DataType';
 import { PositionView } from '@/models/TableViews/PositionView';
 import { createUpdateDTO } from '@/utils/createUpdateDTO';
+import { largeFormItem } from '@/utils/css';
 
 
 interface UpdatePositionFormProps {
@@ -55,7 +56,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
 
     const submitForm = () => {
         if(isFilledForm(formState)) {
-            submitPutForm(tableURL, formData, successCalback) 
+            submitPutForm(tableURL, formData, successCalback)
         }
         else {
             setErrorInputStates(formState, setFormState)
@@ -113,6 +114,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                 <Label>Позиция</Label>
                     <StandardInputField
+                        style={largeFormItem}
                         editMode={editMode}
                         value={formData.positionName}
                         onChange={handleInputChange}
@@ -124,6 +126,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label>Описание</Label>
                     <StandardInputField
+                        style={largeFormItem}
                         editMode={editMode}
                         value={formData.description? formData.description : ""}
                         onChange={handleInputChange}
@@ -132,7 +135,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                 </FlexBox>
 
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                    <Label>Позиция</Label>
+                    <Label>Код на позицията</Label>
                     <StandardTableSelectField
                         name="sysPositionId"
                         editMode={editMode}

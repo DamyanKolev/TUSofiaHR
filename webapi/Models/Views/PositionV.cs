@@ -7,5 +7,6 @@ namespace webapi.Models.Views
         public string? Description { get; set; }
         public required string StatePositionName { get; set; }
         public required string Nkpd { get; set; }
+        public int SysPositionId { get; set ; }
     }
 }

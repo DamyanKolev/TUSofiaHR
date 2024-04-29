@@ -5,20 +5,22 @@ export interface Department {
     id: int;
     departmentName: string,
     description: Optional<string>
-    managerId: Optional<string>
+    managerId: Optional<int>
     parentId: Optional<int>
 }
 
 export interface DepartmentDTO {
     departmentName: string,
     description: Optional<string>
-    managerId: Optional<string>
+    managerId: Optional<int>
+    parentId: Optional<int>
 }
 
 export const defaultDepartmentDTO: DepartmentDTO = {
     departmentName: "",
     description: null,
-    managerId: null
+    managerId: null,
+    parentId: null
 }
 
 export const defaultDepartmentUpdateDTO: Department = {

@@ -9,16 +9,16 @@ export interface DepartmentJoinTablesInfo {
 
 export const departmentJoinTableInfo:DepartmentJoinTablesInfo = {
     managerId: {
-        filterField: "first_name",
-        description: "employee_name",
-        contentFields: ["position_name"],
+        filterField: "firstName",
+        description: "employeeName",
+        contentFields: ["employeeName"],
         headerText: "Служители",
         tableURL: "/api/hr/employees/page"
     },
     parentId: {
-        filterField: "department_name",
-        description: "department_name",
-        contentFields: ["department_name"],
+        filterField: "departmentName",
+        description: "departmentName",
+        contentFields: ["departmentName"],
         headerText: "Отдел",
         tableURL: "/api/hr/departments/all"
     },

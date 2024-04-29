@@ -1,11 +1,12 @@
 import {
-    Button, CustomListItem, FlexBox, FlexBoxAlignItems, FlexBoxDirection, IconDomRef, Input, InputDomRef, ListDomRef, SelectDialog, StandardListItemDomRef, Ui5CustomEvent
+    CustomListItem, FlexBox, FlexBoxAlignItems, FlexBoxDirection, IconDomRef, Input, InputDomRef, ListDomRef, SelectDialog, StandardListItemDomRef, Ui5CustomEvent
 } from "@ui5/webcomponents-react"
 import { Dispatch, FC, Fragment, SetStateAction, useEffect, useState } from "react"
 import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
 import { formToggle } from "@store/slices/formToggleSlice";
 import { createPortal } from "react-dom";
+import { largeFormItem } from "@/utils/css";
 
 
 interface SmallTableSelectProps {
@@ -94,8 +95,7 @@ const SmallTableSelect: FC<SmallTableSelectProps> = ({ joinInfo, value = "", nam
     return (
         <Fragment>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:".5rem"}}>
-                <Input value={inputValue} readonly/>
-                <Button onClick={onClickHandler}>Избор</Button>
+                <Input value={inputValue} onClick={onClickHandler} readonly style={largeFormItem}/>
             </FlexBox>
             {createPortal(
                 <SelectDialog

@@ -1,10 +1,11 @@
 import { createFilter, defaultFilter, Filter } from "@/models/Filter";
 import { createPageFilterInfo } from "@/models/Page/Page";
+import { largeFormItem } from "@/utils/css";
 import { employeeContractJoinTablesInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
 import { formToggle } from "@store/slices/formToggleSlice";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
-import { Button, FlexBox, FlexBoxAlignItems, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItem, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
+import { FlexBox, FlexBoxAlignItems, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItem, StandardListItemDomRef, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { FC, Fragment, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -111,8 +112,7 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
     return (
         <Fragment>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:".3rem"}}>
-                <Input value={inputValue} readonly/>
-                <Button onClick={onClickHandler}>Избор</Button>
+                <Input value={inputValue} onClick={onClickHandler} readonly style={largeFormItem}/>
             </FlexBox>
             {createPortal(
                 <SelectDialog
@@ -129,7 +129,7 @@ const EmployeeTableSelect: FC<EmployeeTableSelectProps> = ({formDataSetter}) => 
                         data.records.map((item, key) => (
                             <StandardListItem
                                 description={item[description]}
-                                key={key}
+                                key={`employee.${key}`}
                                 id={item["employeeId"]}
                             >
                                 {contentFields.map((field) => {

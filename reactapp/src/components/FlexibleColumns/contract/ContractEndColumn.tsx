@@ -30,7 +30,7 @@ interface CreateEndColumnProps {
 const CreateEndColumn: FC<CreateEndColumnProps> = ({tableURL, handleLayoutState}) => {
     const [formData, setFormData] = useState<ContractInsertDTO>(defaultContractInsert);
     const [contractFormState, setContractFormState] = useState<ContractInsertFormState>(defaultContractInsertFormState);
-    const [addAgreementformState, setAddAgreementFormState] = useState<AnnexInsertFormState>(defaultContractInsertFormState);
+    const [addAgreementformState, setAddAgreementFormState] = useState<AnnexInsertFormState>(defaultAnnexInsertFormState);
     const [employeeId, setEmployeeId] = useState<int>(0);
     const [contractId, setContractId] = useState<int>(0);
     const [disabled, setDisabled] = useState<boolean>(true)

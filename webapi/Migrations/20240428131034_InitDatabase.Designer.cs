@@ -12,7 +12,7 @@ using webapi;
 namespace webapi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240422081500_InitDatabase")]
+    [Migration("20240428131034_InitDatabase")]
     partial class InitDatabase
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace webapi.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -275,6 +275,24 @@ namespace webapi.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "34f908d1-b8c6-4c9b-ac70-5157dcb099bb",
+                            Email = "damkolev@test.net",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DAMKOLEV@TEST.NET",
+                            NormalizedUserName = "DAMYAN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH/GLMFD5Tc8O9QXvz9fc/nPhxvIdbJNGr+fimyx7ByXJjyW5RvjhXzP6TZNII2urw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "95487e41-f03a-4612-9fd2-38aaa7a4ceb6",
+                            TwoFactorEnabled = false,
+                            UserName = "Damyan"
+                        });
                 });
 
             modelBuilder.Entity("webapi.Models.HR.Address", b =>
@@ -341,8 +359,15 @@ namespace webapi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("company_name");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id")
                         .HasName("pk_companies");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_companies_user_id");
 
                     b.ToTable("companies", (string)null);
                 });
@@ -458,6 +483,9 @@ namespace webapi.Migrations
                     b.HasKey("Id")
                         .HasName("pk_contracts");
 
+                    b.HasIndex("ContractId")
+                        .HasDatabaseName("ix_contracts_contract_id");
+
                     b.HasIndex("ContractTypeId")
                         .HasDatabaseName("ix_contracts_contract_type_id");
 
@@ -501,47 +529,20 @@ namespace webapi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("manager_id");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("parent_id");
+
                     b.HasKey("Id")
                         .HasName("pk_departments");
 
                     b.HasIndex("ManagerId")
                         .HasDatabaseName("ix_departments_manager_id");
 
+                    b.HasIndex("ParentId")
+                        .HasDatabaseName("ix_departments_parent_id");
+
                     b.ToTable("departments", (string)null);
-                });
-
-            modelBuilder.Entity("webapi.Models.HR.DepartmentTeam", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("integer")
-                        .HasColumnName("department_id");
-
-                    b.Property<int?>("ManagerId")
-                        .HasColumnType("integer")
-                        .HasColumnName("manager_id");
-
-                    b.Property<string>("TeamName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("team_name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_department_teams");
-
-                    b.HasIndex("DepartmentId")
-                        .HasDatabaseName("ix_department_teams_department_id");
-
-                    b.HasIndex("ManagerId")
-                        .HasDatabaseName("ix_department_teams_manager_id");
-
-                    b.ToTable("department_teams", (string)null);
                 });
 
             modelBuilder.Entity("webapi.Models.HR.Employee", b =>
@@ -557,14 +558,9 @@ namespace webapi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("company_employee_id");
 
-                    b.Property<int>("DepartmentTeamId")
+                    b.Property<int?>("DepartmentId")
                         .HasColumnType("integer")
-                        .HasColumnName("department_team_id");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("email");
+                        .HasColumnName("department_id");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -605,8 +601,8 @@ namespace webapi.Migrations
                     b.HasKey("Id")
                         .HasName("pk_employees");
 
-                    b.HasIndex("DepartmentTeamId")
-                        .HasDatabaseName("ix_employees_department_team_id");
+                    b.HasIndex("DepartmentId")
+                        .HasDatabaseName("ix_employees_department_id");
 
                     b.HasIndex("InsuranceId")
                         .HasDatabaseName("ix_employees_insurance_id");
@@ -797,6 +793,11 @@ namespace webapi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("identity_text");
 
+                    b.Property<string>("PersonalEmail")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("personal_email");
+
                     b.Property<string>("PersonalIdIssueBy")
                         .HasColumnType("text")
                         .HasColumnName("personal_id_issue_by");
@@ -808,6 +809,11 @@ namespace webapi.Migrations
                     b.Property<string>("PersonalIdNumber")
                         .HasColumnType("text")
                         .HasColumnName("personal_id_number");
+
+                    b.Property<string>("WorkEmail")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("work_email");
 
                     b.HasKey("Id")
                         .HasName("pk_personal_data");
@@ -827,21 +833,24 @@ namespace webapi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("MaxSalary")
-                        .HasColumnType("numeric")
-                        .HasColumnName("max_salary");
-
-                    b.Property<decimal>("MinSalary")
-                        .HasColumnType("numeric")
-                        .HasColumnName("min_salary");
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
 
                     b.Property<string>("PositionName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("position_name");
 
+                    b.Property<int>("SysPositionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sys_position_id");
+
                     b.HasKey("Id")
                         .HasName("pk_positions");
+
+                    b.HasIndex("SysPositionId")
+                        .HasDatabaseName("ix_positions_sys_position_id");
 
                     b.ToTable("positions", (string)null);
                 });
@@ -1207,10 +1216,6 @@ namespace webapi.Migrations
                         .HasColumnType("date")
                         .HasColumnName("additional_agreement_date");
 
-                    b.Property<bool>("Article62Flag")
-                        .HasColumnType("boolean")
-                        .HasColumnName("article62flag");
-
                     b.Property<DateOnly>("ConclusionDate")
                         .HasColumnType("date")
                         .HasColumnName("conclusion_date");
@@ -1374,31 +1379,6 @@ namespace webapi.Migrations
                     b.ToView("contract_v", (string)null);
                 });
 
-            modelBuilder.Entity("webapi.Models.Views.DepartmentTeamV", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    b.Property<string>("ManagerName")
-                        .HasColumnType("text")
-                        .HasColumnName("manager_name");
-
-                    b.Property<string>("TeamName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("team_name");
-
-                    b.Property<string>("ddepartmentName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("ddepartment_name");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("department_teams_v", (string)null);
-                });
-
             modelBuilder.Entity("webapi.Models.Views.DepartmentV", b =>
                 {
                     b.Property<string>("DepartmentName")
@@ -1414,9 +1394,21 @@ namespace webapi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("id");
 
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("integer")
+                        .HasColumnName("manager_id");
+
                     b.Property<string>("ManagerName")
                         .HasColumnType("text")
                         .HasColumnName("manager_name");
+
+                    b.Property<string>("ParentDepartmentName")
+                        .HasColumnType("text")
+                        .HasColumnName("parent_department_name");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("parent_id");
 
                     b.ToTable((string)null);
 
@@ -1429,11 +1421,6 @@ namespace webapi.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("department_name");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("email");
 
                     b.Property<long>("EmployeeId")
                         .HasColumnType("bigint")
@@ -1475,10 +1462,10 @@ namespace webapi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("position_name");
 
-                    b.Property<string>("TeamName")
+                    b.Property<string>("WorkEmail")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("team_name");
+                        .HasColumnName("work_email");
 
                     b.ToTable((string)null);
 
@@ -1602,6 +1589,40 @@ namespace webapi.Migrations
                     b.ToView("insurance_v", (string)null);
                 });
 
+            modelBuilder.Entity("webapi.Models.Views.PositionV", b =>
+                {
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Nkpd")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nkpd");
+
+                    b.Property<string>("PositionName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("position_name");
+
+                    b.Property<string>("StatePositionName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("state_position_name");
+
+                    b.Property<int>("SysPositionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sys_position_id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("positions_v", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("webapi.Models.Auth.Role", null)
@@ -1659,8 +1680,25 @@ namespace webapi.Migrations
                         .HasConstraintName("fk_user_tokens_users_user_id");
                 });
 
+            modelBuilder.Entity("webapi.Models.HR.Company", b =>
+                {
+                    b.HasOne("webapi.Models.Auth.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_companies_users_user_id");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("webapi.Models.HR.Contract", b =>
                 {
+                    b.HasOne("webapi.Models.HR.Contract", "ParentContract")
+                        .WithMany()
+                        .HasForeignKey("ContractId")
+                        .HasConstraintName("fk_contracts_contracts_contract_id");
+
                     b.HasOne("webapi.Models.System.SysContractType", "ContractType")
                         .WithMany()
                         .HasForeignKey("ContractTypeId")
@@ -1701,6 +1739,8 @@ namespace webapi.Migrations
 
                     b.Navigation("DocumentType");
 
+                    b.Navigation("ParentContract");
+
                     b.Navigation("SysAdministrativeTerritory");
 
                     b.Navigation("SysIconomicActivity");
@@ -1717,36 +1757,22 @@ namespace webapi.Migrations
                         .HasForeignKey("ManagerId")
                         .HasConstraintName("fk_departments_employees_manager_id");
 
-                    b.Navigation("Manager");
-                });
-
-            modelBuilder.Entity("webapi.Models.HR.DepartmentTeam", b =>
-                {
-                    b.HasOne("webapi.Models.HR.Department", "Department")
+                    b.HasOne("webapi.Models.HR.Department", "Parent")
                         .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_department_teams_departments_department_id");
-
-                    b.HasOne("webapi.Models.HR.Employee", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId")
-                        .HasConstraintName("fk_department_teams_employees_manager_id");
-
-                    b.Navigation("Department");
+                        .HasForeignKey("ParentId")
+                        .HasConstraintName("fk_departments_departments_parent_id");
 
                     b.Navigation("Manager");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("webapi.Models.HR.Employee", b =>
                 {
-                    b.HasOne("webapi.Models.HR.DepartmentTeam", "DepartmentTeam")
+                    b.HasOne("webapi.Models.HR.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentTeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_employees_department_teams_department_team_id");
+                        .HasForeignKey("DepartmentId")
+                        .HasConstraintName("fk_employees_departments_department_id");
 
                     b.HasOne("webapi.Models.HR.Insurance", "Insurance")
                         .WithMany()
@@ -1765,7 +1791,7 @@ namespace webapi.Migrations
                         .HasForeignKey("PositionId")
                         .HasConstraintName("fk_employees_positions_position_id");
 
-                    b.Navigation("DepartmentTeam");
+                    b.Navigation("Department");
 
                     b.Navigation("Insurance");
 
@@ -1827,6 +1853,18 @@ namespace webapi.Migrations
                         .HasConstraintName("fk_personal_data_addresses_address_id");
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("webapi.Models.HR.Position", b =>
+                {
+                    b.HasOne("webapi.Models.System.SysPosition", "SysPosition")
+                        .WithMany()
+                        .HasForeignKey("SysPositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_positions_sys_positions_sys_position_id");
+
+                    b.Navigation("SysPosition");
                 });
 
             modelBuilder.Entity("webapi.Models.HR.Schedule", b =>

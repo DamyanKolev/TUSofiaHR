@@ -31,35 +31,6 @@ namespace webapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "companies",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    company_name = table.Column<string>(type: "text", nullable: false),
-                    company_eic = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_companies", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "positions",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    position_name = table.Column<string>(type: "text", nullable: false),
-                    min_salary = table.Column<decimal>(type: "numeric", nullable: false),
-                    max_salary = table.Column<decimal>(type: "numeric", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_positions", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "roles",
                 columns: table => new
                 {
@@ -237,6 +208,8 @@ namespace webapi.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    personal_email = table.Column<string>(type: "text", nullable: false),
+                    work_email = table.Column<string>(type: "text", nullable: false),
                     identity_text = table.Column<string>(type: "text", nullable: false),
                     identity_code = table.Column<int>(type: "integer", nullable: false),
                     birth_date = table.Column<DateOnly>(type: "date", nullable: true),
@@ -328,8 +301,8 @@ namespace webapi.Migrations
                     document_type_id = table.Column<int>(type: "integer", nullable: false),
                     termination_type_id = table.Column<int>(type: "integer", nullable: true),
                     sys_administrative_territory_id = table.Column<int>(type: "integer", nullable: false),
-                    company_eic = table.Column<string>(type: "text", nullable: false),
                     contract_id = table.Column<int>(type: "integer", nullable: true),
+                    company_eic = table.Column<string>(type: "text", nullable: false),
                     code_corection = table.Column<short>(type: "smallint", nullable: false),
                     is_terminate = table.Column<bool>(type: "boolean", nullable: true, defaultValue: false),
                     article62_flag = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
@@ -339,6 +312,11 @@ namespace webapi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_contracts", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_contracts_contracts_contract_id",
+                        column: x => x.contract_id,
+                        principalTable: "contracts",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_contracts_sys_administrative_territories_sys_administrative",
                         column: x => x.sys_administrative_territory_id,
@@ -372,6 +350,48 @@ namespace webapi.Migrations
                         column: x => x.sys_position_id,
                         principalTable: "sys_positions",
                         principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "positions",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    position_name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    sys_position_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_positions", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_positions_sys_positions_sys_position_id",
+                        column: x => x.sys_position_id,
+                        principalTable: "sys_positions",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "companies",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    company_name = table.Column<string>(type: "text", nullable: false),
+                    company_eic = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_companies", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_companies_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -460,18 +480,24 @@ namespace webapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "department_teams",
+                name: "departments",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    team_name = table.Column<string>(type: "text", nullable: false),
-                    department_id = table.Column<int>(type: "integer", nullable: false),
-                    manager_id = table.Column<int>(type: "integer", nullable: true)
+                    department_name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    manager_id = table.Column<int>(type: "integer", nullable: true),
+                    parent_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_department_teams", x => x.id);
+                    table.PrimaryKey("pk_departments", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_departments_departments_parent_id",
+                        column: x => x.parent_id,
+                        principalTable: "departments",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -483,11 +509,10 @@ namespace webapi.Migrations
                     first_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     middle_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     surname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    email = table.Column<string>(type: "text", nullable: false),
                     phone_number = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     company_employee_id = table.Column<int>(type: "integer", nullable: false),
                     personal_data_id = table.Column<int>(type: "integer", nullable: false),
-                    department_team_id = table.Column<int>(type: "integer", nullable: false),
+                    department_id = table.Column<int>(type: "integer", nullable: true),
                     position_id = table.Column<int>(type: "integer", nullable: true),
                     insurance_id = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -495,11 +520,10 @@ namespace webapi.Migrations
                 {
                     table.PrimaryKey("pk_employees", x => x.id);
                     table.ForeignKey(
-                        name: "fk_employees_department_teams_department_team_id",
-                        column: x => x.department_team_id,
-                        principalTable: "department_teams",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "fk_employees_departments_department_id",
+                        column: x => x.department_id,
+                        principalTable: "departments",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_employees_insurances_insurance_id",
                         column: x => x.insurance_id,
@@ -515,26 +539,6 @@ namespace webapi.Migrations
                         name: "fk_employees_positions_position_id",
                         column: x => x.position_id,
                         principalTable: "positions",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "departments",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    department_name = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: true),
-                    manager_id = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_departments", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_departments_employees_manager_id",
-                        column: x => x.manager_id,
-                        principalTable: "employees",
                         principalColumn: "id");
                 });
 
@@ -620,6 +624,21 @@ namespace webapi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "id", "access_failed_count", "concurrency_stamp", "email", "email_confirmed", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
+                values: new object[] { 1, 0, "34f908d1-b8c6-4c9b-ac70-5157dcb099bb", "damkolev@test.net", false, false, null, "DAMKOLEV@TEST.NET", "DAMYAN", "AQAAAAIAAYagAAAAEH/GLMFD5Tc8O9QXvz9fc/nPhxvIdbJNGr+fimyx7ByXJjyW5RvjhXzP6TZNII2urw==", null, false, "95487e41-f03a-4612-9fd2-38aaa7a4ceb6", false, "Damyan" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_companies_user_id",
+                table: "companies",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_contracts_contract_id",
+                table: "contracts",
+                column: "contract_id");
+
             migrationBuilder.CreateIndex(
                 name: "ix_contracts_contract_type_id",
                 table: "contracts",
@@ -651,19 +670,14 @@ namespace webapi.Migrations
                 column: "termination_type_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_department_teams_department_id",
-                table: "department_teams",
-                column: "department_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_department_teams_manager_id",
-                table: "department_teams",
-                column: "manager_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_departments_manager_id",
                 table: "departments",
                 column: "manager_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_departments_parent_id",
+                table: "departments",
+                column: "parent_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_employee_contracts_contract_id",
@@ -676,9 +690,9 @@ namespace webapi.Migrations
                 column: "employee_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_employees_department_team_id",
+                name: "ix_employees_department_id",
                 table: "employees",
-                column: "department_team_id");
+                column: "department_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_employees_insurance_id",
@@ -709,6 +723,11 @@ namespace webapi.Migrations
                 name: "ix_personal_data_address_id",
                 table: "personal_data",
                 column: "address_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_positions_sys_position_id",
+                table: "positions",
+                column: "sys_position_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_role_claims_role_id",
@@ -753,16 +772,8 @@ namespace webapi.Migrations
                 unique: true);
 
             migrationBuilder.AddForeignKey(
-                name: "fk_department_teams_departments_department_id",
-                table: "department_teams",
-                column: "department_id",
-                principalTable: "departments",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_department_teams_employees_manager_id",
-                table: "department_teams",
+                name: "fk_departments_employees_manager_id",
+                table: "departments",
                 column: "manager_id",
                 principalTable: "employees",
                 principalColumn: "id");
@@ -772,12 +783,12 @@ namespace webapi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "fk_department_teams_departments_department_id",
-                table: "department_teams");
+                name: "fk_positions_sys_positions_sys_position_id",
+                table: "positions");
 
             migrationBuilder.DropForeignKey(
-                name: "fk_department_teams_employees_manager_id",
-                table: "department_teams");
+                name: "fk_departments_employees_manager_id",
+                table: "departments");
 
             migrationBuilder.DropTable(
                 name: "companies");
@@ -837,13 +848,10 @@ namespace webapi.Migrations
                 name: "sys_positions");
 
             migrationBuilder.DropTable(
-                name: "departments");
-
-            migrationBuilder.DropTable(
                 name: "employees");
 
             migrationBuilder.DropTable(
-                name: "department_teams");
+                name: "departments");
 
             migrationBuilder.DropTable(
                 name: "insurances");

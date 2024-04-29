@@ -78,7 +78,7 @@ export const defaultContractInsert: ContractInsertDTO = {
     sysPositionId: null,
     sysIconomicActivityId: null,
     documentTypeId: 0,
-    companyEic: "",
+    companyEic: sessionStorage.getItem("companyEIC")!,
     contractId: null,
     sysAdministrativeTerritoryId: null,
     codeCorection: 0,

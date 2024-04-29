@@ -20,6 +20,5 @@
         public required string ContractTypeCode { get; set; }
         public string? TerminationCode { get; set; }
         public bool IsTerminate { get; set; }
-        public bool Article62Flag { get; set; }
     }
 }

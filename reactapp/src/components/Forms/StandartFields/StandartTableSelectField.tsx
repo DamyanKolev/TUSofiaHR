@@ -5,6 +5,7 @@ import LargeTableSelect from "@components/Selects/TableSelect/LargeTableSelect";
 import SmallTableSelect from "@components/Selects/TableSelect/SmallTableSelect";
 
 interface StandardTableSelectFieldProps {
+    tableId?: string
     textFieldWidth?: string,
     editMode: boolean;
     value: string;
@@ -16,12 +17,13 @@ interface StandardTableSelectFieldProps {
 }
 
 export const StandardTableSelectField: FC<StandardTableSelectFieldProps> = (
-    { textFieldWidth = "15.625rem", editMode, value, name, joinInfo, isLargeTable = true, formDataSetter, setSelectedRow }
+    {tableId="id", textFieldWidth = "15.625rem", editMode, value, name, joinInfo, isLargeTable = true, formDataSetter, setSelectedRow }
 ) => {
     if (editMode) {
         if (isLargeTable) {
             return (
                 <LargeTableSelect
+                    tableId={tableId}
                     name={name}
                     joinInfo={joinInfo}
                     value={value}

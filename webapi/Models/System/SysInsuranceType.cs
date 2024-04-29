@@ -2,7 +2,7 @@
 
 namespace webapi.Models.System
 {
-    public class SysInsuranceType
+    public record SysInsuranceType
     {
         [Key]
         public int Id { get; set; }

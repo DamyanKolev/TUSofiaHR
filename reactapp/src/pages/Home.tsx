@@ -1,11 +1,11 @@
 // import FilterMultiInput from '@components/FilterFields/FilterMultiInput';
+import HRProductSwitch from '@/components/Menus/HRProductSwitch';
 import { FC, Fragment } from 'react';
 
 const Home: FC = () => {
     return (
        <Fragment>
-                {/* <FilterMultiInput fieldName='Тест'/> */}
-            
+            <HRProductSwitch/>
        </Fragment>
     )
 }

@@ -2,6 +2,8 @@
 using webapi.Constants;
 using webapi.Models.HR;
 using webapi.Models;
+using webapi.Models.Views;
+using AutoMapper;
 
 namespace webapi.Services.HR
 {
@@ -10,21 +12,23 @@ namespace webapi.Services.HR
         public ResponseWithStatus<Response> CreateDepartment(DepartmentDTO departmentInsert);
         public ResponseWithStatus<Response> UpdateDepartment(Department updateRequest);
         public ResponseWithStatus<Response> DeleteDepartment(int departmentId);
-        public ResponseWithStatus<DataResponse<PageResponse<Department>>> GetDepartmentsPage(PageInfo pageInfo);
-        public ResponseWithStatus<DataResponse<List<Department>>> GetAllDepartments();
+        public ResponseWithStatus<DataResponse<PageResponse<DepartmentV>>> GetDepartmentsPage(PageInfo pageInfo);
+        public ResponseWithStatus<DataResponse<List<DepartmentV>>> GetAllDepartments();
 
     }
     public class DepartmentService : IDepartmentService
     {
         public readonly DatabaseContext _context;
-        public DepartmentService(DatabaseContext context)
+        public readonly IMapper _mapper;
+        public DepartmentService(DatabaseContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public ResponseWithStatus<Response> CreateDepartment(DepartmentDTO departmentInsert)
+        public ResponseWithStatus<Response> CreateDepartment(DepartmentDTO departmentDTO)
         {
-            Department department = new Department() { DepartmentName = departmentInsert.DepartmentName };
+            var department = _mapper.Map<Department>(departmentDTO);
             _context.Departments.Add(department);
             var result = _context.SaveChanges();
             if(result == 0)
@@ -71,24 +75,24 @@ namespace webapi.Services.HR
         }
 
 
-        public ResponseWithStatus<DataResponse<PageResponse<Department>>> GetDepartmentsPage(PageInfo pageInfo)
+        public ResponseWithStatus<DataResponse<PageResponse<DepartmentV>>> GetDepartmentsPage(PageInfo pageInfo)
         {
-            var departments = _context.Departments
+            var departments = _context.DepartmentV
                 .OrderBy(p => p.Id)
                 .Skip((pageInfo.PageNumber - 1) * pageInfo.PageSize)
                 .Take(pageInfo.PageSize)
                 .ToList();
 
-            var countRecords = _context.EmployeeV.ToList().Count;
+            var countRecords = _context.DepartmentV.ToList().Count;
             var pages = (int) Math.Ceiling(Decimal.Divide(countRecords, pageInfo.PageSize));
-            PageResponse<Department> pageResponse = new (pages, countRecords, departments);
+            PageResponse<DepartmentV> pageResponse = new (pages, countRecords, departments);
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, pageResponse);
         }
 
 
-        public ResponseWithStatus<DataResponse<List<Department>>> GetAllDepartments(){
-            var departments = _context.Departments.ToList();
+        public ResponseWithStatus<DataResponse<List<DepartmentV>>> GetAllDepartments(){
+            var departments = _context.DepartmentV.ToList();
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, departments);
         }

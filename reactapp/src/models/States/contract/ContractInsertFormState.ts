@@ -7,7 +7,6 @@ export interface ContractInsertFormState extends FormState{
     conclusionDate: FormFieldState;
     executionDate: FormFieldState;
     contractTerm: FormFieldState;
-    additionalAgreementDate: FormFieldState;
     contractTypeId: FormFieldState;
     sysPositionId: FormFieldState;
     sysIconomicActivityId: FormFieldState;
@@ -22,7 +21,6 @@ export const defaultContractInsertFormState: ContractInsertFormState = {
     conclusionDate: defaultInsertFieldState,
     executionDate: defaultInsertFieldState,
     contractTerm: defaultInsertFieldState,
-    additionalAgreementDate: defaultInsertFieldState,
     contractTypeId: defaultInsertFieldState,
     sysPositionId: defaultInsertFieldState,
     sysIconomicActivityId: defaultInsertFieldState,

@@ -12,8 +12,8 @@ using webapi;
 namespace webapi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240428131034_InitDatabase")]
-    partial class InitDatabase
+    [Migration("20240506123745_CreateViewsAndSeedSysTables")]
+    partial class CreateViewsAndSeedSysTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -281,15 +281,15 @@ namespace webapi.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "34f908d1-b8c6-4c9b-ac70-5157dcb099bb",
+                            ConcurrencyStamp = "3d1b26af-d054-4742-aff6-ffbd9990fa91",
                             Email = "damkolev@test.net",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "DAMKOLEV@TEST.NET",
                             NormalizedUserName = "DAMYAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH/GLMFD5Tc8O9QXvz9fc/nPhxvIdbJNGr+fimyx7ByXJjyW5RvjhXzP6TZNII2urw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGCBhPv8GUsBIdZ7EUalDRJamm8JB6Td0vueoSajEEBTa+kMC1O5VviIrok/2RqxbA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "95487e41-f03a-4612-9fd2-38aaa7a4ceb6",
+                            SecurityStamp = "5300b833-5f1a-4833-9b7e-8bd464c15236",
                             TwoFactorEnabled = false,
                             UserName = "Damyan"
                         });
@@ -370,6 +370,45 @@ namespace webapi.Migrations
                         .HasDatabaseName("ix_companies_user_id");
 
                     b.ToTable("companies", (string)null);
+                });
+
+            modelBuilder.Entity("webapi.Models.HR.CompanyEmployeeTax", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("CreationDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("date")
+                        .HasColumnName("creation_date")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateOnly>("DisbursementAccrualDate")
+                        .HasColumnType("date")
+                        .HasColumnName("disbursement_accrual_date");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("employee_id");
+
+                    b.Property<int>("SysPaymentTypeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sys_payment_type_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_company_employee_taxes");
+
+                    b.HasIndex("EmployeeId")
+                        .HasDatabaseName("ix_company_employee_taxes_employee_id");
+
+                    b.HasIndex("SysPaymentTypeId")
+                        .HasDatabaseName("ix_company_employee_taxes_sys_payment_type_id");
+
+                    b.ToTable("company_employee_taxes", (string)null);
                 });
 
             modelBuilder.Entity("webapi.Models.HR.Contract", b =>
@@ -1288,6 +1327,23 @@ namespace webapi.Migrations
                     b.ToView("annex_v", (string)null);
                 });
 
+            modelBuilder.Entity("webapi.Models.Views.Article62V", b =>
+                {
+                    b.Property<string>("CsvString")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("csv_string");
+
+                    b.Property<string>("JsonObject")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("json_object");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("article62_v", (string)null);
+                });
+
             modelBuilder.Entity("webapi.Models.Views.ContractV", b =>
                 {
                     b.Property<string>("ActivityName")
@@ -1377,6 +1433,40 @@ namespace webapi.Migrations
                     b.ToTable((string)null);
 
                     b.ToView("contract_v", (string)null);
+                });
+
+            modelBuilder.Entity("webapi.Models.Views.Declaration1V", b =>
+                {
+                    b.Property<string>("CsvString")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("csv_string");
+
+                    b.Property<string>("JsonObject")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("json_object");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("declaration1_v", (string)null);
+                });
+
+            modelBuilder.Entity("webapi.Models.Views.Declaration6V", b =>
+                {
+                    b.Property<string>("CsvString")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("csv_string");
+
+                    b.Property<string>("JsonObject")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("json_object");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("declaration6_v", (string)null);
                 });
 
             modelBuilder.Entity("webapi.Models.Views.DepartmentV", b =>
@@ -1690,6 +1780,27 @@ namespace webapi.Migrations
                         .HasConstraintName("fk_companies_users_user_id");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("webapi.Models.HR.CompanyEmployeeTax", b =>
+                {
+                    b.HasOne("webapi.Models.HR.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_company_employee_taxes_employees_employee_id");
+
+                    b.HasOne("webapi.Models.System.SysPaymentType", "SysPaymentType")
+                        .WithMany()
+                        .HasForeignKey("SysPaymentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_company_employee_taxes_sys_payment_types_sys_payment_type_id");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("SysPaymentType");
                 });
 
             modelBuilder.Entity("webapi.Models.HR.Contract", b =>

@@ -480,6 +480,28 @@ namespace webapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "company_employee_taxes",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    employee_id = table.Column<int>(type: "integer", nullable: false),
+                    sys_payment_type_id = table.Column<int>(type: "integer", nullable: false),
+                    disbursement_accrual_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    creation_date = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_company_employee_taxes", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_company_employee_taxes_sys_payment_types_sys_payment_type_id",
+                        column: x => x.sys_payment_type_id,
+                        principalTable: "sys_payment_types",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "departments",
                 columns: table => new
                 {
@@ -627,12 +649,22 @@ namespace webapi.Migrations
             migrationBuilder.InsertData(
                 table: "users",
                 columns: new[] { "id", "access_failed_count", "concurrency_stamp", "email", "email_confirmed", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
-                values: new object[] { 1, 0, "34f908d1-b8c6-4c9b-ac70-5157dcb099bb", "damkolev@test.net", false, false, null, "DAMKOLEV@TEST.NET", "DAMYAN", "AQAAAAIAAYagAAAAEH/GLMFD5Tc8O9QXvz9fc/nPhxvIdbJNGr+fimyx7ByXJjyW5RvjhXzP6TZNII2urw==", null, false, "95487e41-f03a-4612-9fd2-38aaa7a4ceb6", false, "Damyan" });
+                values: new object[] { 1, 0, "e02b626d-b133-4ce8-a2de-a897f7e275e0", "damkolev@test.net", false, false, null, "DAMKOLEV@TEST.NET", "DAMYAN", "AQAAAAIAAYagAAAAEMmQlnK9ez7FhKivEdBEteEfzlRGFwYhyPCatXH5Q6aTY/xXYDS/FzUfZzk6zkNGHg==", null, false, "ac0b2fce-7410-4f12-bd54-71cc253997fe", false, "Damyan" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_companies_user_id",
                 table: "companies",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_company_employee_taxes_employee_id",
+                table: "company_employee_taxes",
+                column: "employee_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_company_employee_taxes_sys_payment_type_id",
+                table: "company_employee_taxes",
+                column: "sys_payment_type_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_contracts_contract_id",
@@ -772,6 +804,14 @@ namespace webapi.Migrations
                 unique: true);
 
             migrationBuilder.AddForeignKey(
+                name: "fk_company_employee_taxes_employees_employee_id",
+                table: "company_employee_taxes",
+                column: "employee_id",
+                principalTable: "employees",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
                 name: "fk_departments_employees_manager_id",
                 table: "departments",
                 column: "manager_id",
@@ -783,15 +823,14 @@ namespace webapi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "fk_positions_sys_positions_sys_position_id",
-                table: "positions");
-
-            migrationBuilder.DropForeignKey(
                 name: "fk_departments_employees_manager_id",
                 table: "departments");
 
             migrationBuilder.DropTable(
                 name: "companies");
+
+            migrationBuilder.DropTable(
+                name: "company_employee_taxes");
 
             migrationBuilder.DropTable(
                 name: "employee_contracts");
@@ -806,9 +845,6 @@ namespace webapi.Migrations
                 name: "schedules");
 
             migrationBuilder.DropTable(
-                name: "sys_payment_types");
-
-            migrationBuilder.DropTable(
                 name: "user_claims");
 
             migrationBuilder.DropTable(
@@ -819,6 +855,9 @@ namespace webapi.Migrations
 
             migrationBuilder.DropTable(
                 name: "user_tokens");
+
+            migrationBuilder.DropTable(
+                name: "sys_payment_types");
 
             migrationBuilder.DropTable(
                 name: "contracts");
@@ -845,9 +884,6 @@ namespace webapi.Migrations
                 name: "sys_iconomic_activities");
 
             migrationBuilder.DropTable(
-                name: "sys_positions");
-
-            migrationBuilder.DropTable(
                 name: "employees");
 
             migrationBuilder.DropTable(
@@ -867,6 +903,9 @@ namespace webapi.Migrations
 
             migrationBuilder.DropTable(
                 name: "addresses");
+
+            migrationBuilder.DropTable(
+                name: "sys_positions");
         }
     }
 }

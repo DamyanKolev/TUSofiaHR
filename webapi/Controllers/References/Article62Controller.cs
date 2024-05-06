@@ -5,7 +5,7 @@ using webapi.Services.References;
 
 namespace webapi.Controllers.References
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class Article62Controller: ControllerBase
     {
@@ -16,12 +16,21 @@ namespace webapi.Controllers.References
             _articleService = articleService;
         }
 
-        [HttpPost("/api/hr/references/article62/page", Name = "GetArticle62Page")]
-        public IActionResult GetArticle62Page([FromBody] PageInfo pageInfo)
+        [HttpGet("/api/hr/references/article62/pdf", Name = "GetArticle62PDF")]
+        public async Task<IActionResult> GetArticle62PDF()
         {
-            var result = _articleService.GetArticle62Page(pageInfo);
+            var bytes = await _articleService.GetArticle62PDF();
 
-            return Ok(result.Response);
+            return File(bytes, "application/octet-stream"); ;
+        }
+
+
+        [HttpGet("/api/hr/references/article62/csv", Name = "GetArticle62CSV")]
+        public IActionResult GetArticle62CSV()
+        {
+            var bytes = _articleService.GetArticle62CSV();
+
+            return File(bytes, "text/csv"); ;
         }
     }
 }

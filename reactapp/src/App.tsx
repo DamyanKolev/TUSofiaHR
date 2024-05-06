@@ -2,8 +2,7 @@
 import { FC, Suspense, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Layout from './layouts/Layout';
-import { Article62, ContractPage, DeclarationPage, DepartmentPage, EmployeePage, Home, InsurancePage, Login, PositionPage, References, Settings } from './pages/PagesBundle';
-import setSelectedTheme from '@utils/themesUtils';
+import { ContractPage, DepartmentPage, EmployeePage, Home, EndMonthPage, Login, PositionPage, References, Settings } from './pages/PagesBundle';
 import { useValidateAccessToken } from './utils/hooks';
 import { useAppSelector } from './store/storeHooks';
 import { getData } from './utils/getData';
@@ -30,7 +29,6 @@ const App: FC = () => {
     
     useEffect(() => {
         isInizializateApp()
-        setSelectedTheme();
         validateAccessToken
     }, [location]);
 
@@ -45,9 +43,7 @@ const App: FC = () => {
                     <Route path="position" element={<PositionPage />} />
                     <Route path="department" element={<DepartmentPage />} />
                     <Route path="references" element={<References />} />
-                    <Route path="insurance" element={<InsurancePage />} />
-                    <Route path="references/article62" element={<Article62 />} />
-                    <Route path="references/declaration" element={<DeclarationPage />} />
+                    <Route path="insurance" element={<EndMonthPage />} />
                 </Route>
                     <Route path="login" element={<Login />} />
             </Routes>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .reference-container {
+            width: fit-content;
+            border: #000 0.15rem solid;
+            display: flex;
+            flex-direction: column;
+        }
+        .row {
+            display: flex;
+        }
+        .bottom-row {
+            border-bottom: #000 0.15rem solid;
+        }
+        .text-container {
+            padding: 0.5rem;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .centered-values {
+            text-align: center;
+        }
+        .bold-text {
+            font-weight: bold;
+            background-color: #b4c7dc;
+        }
+        .left-container {
+            border-right: #000 0.15rem solid;
+        }
+        .signature-text {
+            padding: 0.5rem;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .container {
+            max-height: 21cm;
+            max-width: 29.7cm;
+            page-break-after: always;
+        }
+        .upper-information {
+            display: flex;
+        }
+        .article-font-size {
+            font-size: 0.65rem;
+        }
+        .current-date {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    {{#each declarations}}
+        <div class="container">
+            <div class="reference-container article-font-size">
+                <div class="row bottom-row">
+                    <div class="text-container bold-text left-container" style="width: 25rem;align-items:center;">
+                        <span>НАЦИОНАЛНА АГЕНЦИЯ ПО ПРИХОДИТЕ</span>
+                        <span>ДЕКЛАРАЦИЯ</span>
+                        <span>Образец №6</span>
+                        <span>„Данни за осигуреното лице“</span>
+                    </div>
+                    <div>
+                        <div class="upper-information bottom-row">
+                            <div class="text-container left-container" style="width:8.1rem">1. Код корекция</div>
+                            <div class="text-container left-container" style="width: 0.4rem;">{{this.code_corection}}</div>
+                            <div class="text-container left-container" style="width:4rem">2. Месец</div>
+                            <div class="text-container left-container">{{this.month}}</div>
+                            <div class="text-container left-container" style="width:4rem">3. Година</div>
+                            <div class="text-container left-container">{{this.year}}</div>
+                            <div class="text-container left-container" style="width:11.05rem">4. Код на задълженото лице</div>
+                            <div class="text-container" style="width:4.46rem">{{this.company_eic}}</div>
+                        </div>
+                        <div style="display: flex;">
+                            <div class="text-container left-container" style="width:8.1rem">5. ЕГН/ ЛН, ЛНЧ/<br>Сл. номер от НАП</div>
+                            <div class="text-container left-container" style="width: 4.5rem;">{{this.identity_text}}</div>
+                            <div class="text-container left-container" style="width:11.94rem">5.1 Код за ЕГН/ ЛН, ЛНЧ/ Сл. номер</div>
+                            <div class="text-container left-container">{{this.identity_code}}</div>
+                            <div class="text-container left-container" style="width:4rem">6. Фамилия</div>
+                            <div class="text-container">{{this.surname}}</div>
+                        </div>
+                    </div>
+                </div>
+        
+        
+                <div class="row bottom-row">
+                    <div class="text-container left-container" style="width:4.1rem">7. Инициали</div>
+                    <div class="text-container left-container centered-values" style="width: 1.1rem;">{{this.initials}}</div>
+                    <div class="text-container left-container">12. Вид<br>осигурен</div>
+                    <div class="text-container left-container centered-values">{{this.insurance_code}}</div>
+                    <div class="text-container left-container" style="width:9.88rem">12.1. Пореден номер на<br>квалификационна група<br>професии на осигурения</div>
+                    <div class="text-container left-container" style="width: .9rem;">{{this.nkpd_group}}</div>
+                    <div class="text-container left-container" style="width:7.38rem">12.2. Код иконом.<br>дейност на<br>осигурителя</div>
+                    <div class="text-container left-container centered-values">{{this.nkid_sector}}</div>
+                    <div class="text-container left-container">12.3. Пореден номер на<br>основна икономическа<br>дейност на осигурителя</div>
+                    <div class="text-container left-container centered-values">{{this.nkid}}</div>
+                    <div class="text-container left-container">13. Код за сумирано<br>изчисляване на<br>работното време</div>
+                    <div class="text-container left-container centered-values" style="width:1.46rem"></div>
+                    <div class="text-container left-container">14. Ден, от който<br>осигуряването е<br>бъзникнало/възобновено</div>
+                    <div class="text-container" style="width:.73rem">{{this.insurance_start_day}}</div>
+                </div>
+        
+                <div class="row bottom-row">
+                    <div class="text-container left-container" style="width:12rem">15. Последен ден в<br>осигуряване</div>
+                    <div class="text-container left-container centered-values" style="width:0.9rem">{{this.insurance_end_day}}</div>
+                    <div class="text-container left-container bold-text" style="width:18.36rem"></div>
+                    <div>
+                        <div class="upper-information bottom-row">
+                            <div class="text-container left-container bold-text" style="width:16.66rem">Размер на осигурителните вноски за<br>социално осигиряване</div>
+                            <div class="text-container bold-text" style="width:15.39rem">Размер на осигурителните вноски за<br>здравно осигиряване</div>
+                        </div>
+                        <div style="display: flex;">
+                            <div class="text-container left-container bold-text" style="width:6.2rem"></div>
+                            <div class="text-container left-container bold-text" style="width:4.1rem">За сметка на<br>осигурителя</div>
+                            <div class="text-container left-container bold-text" style="width:4.1rem">За сметка на<br>осигуреното<br>лице</div>
+                            <div class="text-container left-container bold-text" style="width:4.51rem"></div>
+                            <div class="text-container left-container bold-text" style="width:4.1rem">За сметка на<br>осигурителя</div>
+                            <div class="text-container bold-text" style="width:4.54rem">За сметка на<br>осигуреното<br>лице</div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="row bottom-row">
+                    <div class="text-container left-container" style="width:12rem">16. Дни в<br>осигуряване - общо</div>
+                    <div class="text-container left-container centered-values" style="width:2.93rem">{{this.insurance_days}}</div>
+                    <div class="text-container left-container" style="width:12.5rem">17. Доход, върху който се дължат<br>здравноусигорителни вноски за<br>лицата по чл, 40, ал. 1, т. 5 от ЗЗО</div>
+                    <div class="text-container left-container centered-values" style="width:2.72rem">{{this.healt_insurance_art40_income}}</div>
+                    <div class="text-container left-container" style="width:16.66rem"></div>
+                    <div class="text-container left-container" style="width:4.51rem">18. Върху<br>сумите в т. 17</div>
+                    {{#if this.health_insurance_article40 }}
+                    <div class="text-container left-container centered-values" style="width:4.06rem">{{this.health_insurance_article40}}</div>
+                    {{else}}
+                    <div class="text-container left-container" style="width:4.06rem"></div>
+                    {{/if}}
+                    <div class="text-container" style="width:4.57rem"></div> 
+                </div>
+        
+                <div class="row">
+                    <div class="text-container left-container bottom-row" style="width:12rem">16.1. Обработени и други дни<br>с осигурителни вноски</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:0.9rem">{{this.insurance_experience_days}}</div>
+                    <div class="text-container left-container" style="width:0.9rem"></div>
+                    <div class="text-container left-container bottom-row" style="width:12.5rem">21. Осигурителен доход, върху който<br>се дължат осигурителни вноски, вкл.<br>сумата по чл. 40, ал. 5 от КСО</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:2.72rem">{{this.total_insurance_income}}</div>
+                    <div class="text-container left-container bottom-row" style="width:6.2rem">22. За фондове на<br>ДОО без ТЗПБ в/у<br>суммите в т. 21</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.doo_withouth_tzpb_insurer}}</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.doo_withouth_tzpb_employee}}</div>
+                    <div class="text-container left-container bottom-row" style="width:4.51rem">22.1. Върху<br>сумите в т. 21</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.health_insurance_insurer}}</div>
+                    <div class="text-container bottom-row centered-values" style="width:4.54rem">{{this.health_insurance_employee}}</div>
+                </div>
+        
+                <div class="row">
+                    <div class="text-container left-container bottom-row" style="width:12rem">16.2. Дни във временнна нерабо-<br>тоспособност и/или дни с право<br>на обезщетение по чл. 53в КСО</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:0.9rem">{{this.incapacity_days}}</div>
+                    <div class="text-container left-container" style="width:0.9rem"></div>
+                    <div class="text-container left-container bottom-row" style="width:12.5rem">27. Доход върху който се дължат<br>вноски само за здравно осигуряване</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:2.72rem">{{this.health_insurance_income}}</div>
+                    <div class="text-container left-container bottom-row" style="width:6.2rem">22.2 За фонд<br>ТЗПБ върху<br>сумите в т. 21</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.tzpb_percent}}</div>
+                    <div class="text-container left-container" style="width:4.1rem"></div>
+                    <div class="text-container left-container bottom-row" style="width:4.51rem">28. Върху<br>сумата в т. 27</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.health_insurance}}</div>
+                    <div class="text-container bottom-row" style="width:4.54rem"></div>
+                </div>
+        
+                <div class="row">
+                    <div class="text-container left-container bottom-row" style="width:12rem">16.3. Дни за отглеждане на<br>дете</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:0.9rem">{{this.childcare_days}}</div>
+                    <div class="text-container left-container" style="width:0.9rem"></div>
+                    <div class="text-container left-container bottom-row" style="width:10.8rem">29. Брутно трудово<br>възнаграждение</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.41rem; text-align:center">{{this.gross_remuneration}}</div>
+                    <div class="text-container left-container bottom-row" style="width:6.2rem">23.3а. Учителски<br>песионен фонд в/у<br>сумата в т. 21</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.teacher_pension_fund}}</div>
+                    <div class="text-container left-container" style="width:4.1rem"></div>
+                </div>
+        
+                <div class="row">
+                    <div class="text-container left-container bottom-row" style="width:12rem">16.4. Дни без осигурителени<br>вноски, зачетени за осигурителен<br>стаж</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:0.9rem">{{this.without_insurance_days}}</div>
+                    <div class="text-container left-container" style="width:0.9rem"></div>
+                    <div class="text-container left-container bottom-row" style="width:10.8rem">31. Начислен месечен облагаем<br>доход по чл. 24 от ЗДДФЛ</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.41rem; text-align:center">{{this.professional_pension_fund}}</div>
+                    <div class="text-container left-container bottom-row" style="width:6.2rem">25. За ППФ или за<br>фонд Пенсии в<br>размер за ППФ в/у<br>сумата в т. 21</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.professional_pension_fund}}</div>
+                    <div class="text-container left-container bottom-row" style="width:4.1rem"></div>
+                </div>
+        
+                <div class="row">
+                    <div class="text-container left-container bottom-row" style="width:12rem">16.5. Дни в неплатен отпуск<br>зачетени за осигурителен стаж</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:0.9rem">{{this.unpaid_leave_days}}</div>
+                    <div class="text-container left-container" style="width:0.9rem"></div>
+                    <div class="text-container left-container bottom-row" style="width:10.8rem">34. Нетно възнаграждение</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.41rem; text-align:center">{{this.net_remuneration}}</div>
+                    <div class="text-container left-container bottom-row" style="width:6.2rem">26. За УПФ или за<br>фондове Пенсии в<br>размер за УПФ в/у<br>сумата в т. 21</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.universal_pension_insurer}}</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.universal_pension_employee}}</div>
+                </div>
+        
+                <div class="row">
+                    <div class="text-container left-container bottom-row" style="width:12rem">16.А. Дни във временна нерабо-<br>тоспособност с възнаграждение<br>от работодателя</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:0.9rem">{{this.paid_incapacity_days}}</div>
+                    <div class="text-container left-container" style="width:18.37rem"></div>
+                    <div class="text-container left-container bottom-row" style="width:6.2rem">30. Размер вноска<br>за фонд ГВРС в/у<br>сумата  в т. 29</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.gvrc_fund}}</div>
+                </div>
+        
+                <div class="row">
+                    <div class="text-container left-container bottom-row" style="width:11.5rem">16.7. Отработени часове -<br>общо</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:1.4rem">{{this.worked_hours}}</div>
+                    <div class="text-container left-container" style="width:18.37rem"></div>
+                    <div class="text-container left-container bottom-row" style="width:6.2rem">31. А. Начислен<br>месечен данък</div>
+                    <div class="text-container left-container bottom-row centered-values" style="width:4.1rem">{{this.dod_tax}}</div>
+                    <div class="text-container bottom-row" style="width:20.61rem"></div>
+                </div>
+        
+                <div class="row">
+                    <div class="text-container left-container" style="width:11.5rem">16.8. В т.ч. часове положен<br>извънреден труд</div>
+                    <div class="text-container left-container centered-values" style="width:1.4rem">{{this.overtime_hours}}</div>
+                    <div class="text-container left-container" style="width:18.37rem"></div>
+                    <div class="bold-text signature-text" style="width:33.16rem">
+                        <div class="current-date">
+                            <span>Дата:</span><span>{{current_date}}</span>
+                        </div>
+                        <span>Подпис:</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</body>
+</html>
+
+
+
+
+
+
+

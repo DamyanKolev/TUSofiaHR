@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .reference-container {
+            width: fit-content;
+            border-left: #000 0.15rem solid;
+            border-top: #000 0.15rem solid;
+            border-bottom: #000 0.15rem solid;
+            display: flex;
+            flex-direction: column;
+        }
+        .row {
+            display: flex;
+        }
+        .bottom-row {
+            border-bottom: #000 0.15rem solid;
+        }
+        .text-container {
+            padding: 0.5rem;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .bold-text {
+            font-weight: bold;
+            background-color: #b4c7dc;
+        }
+        .left-container {
+            border-right: #000 0.15rem solid;
+        }
+        .signature-text {
+            padding: 0.5rem;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .container {
+            max-height: 21cm;
+            max-width: 29.7cm;
+            page-break-after: always;
+        }
+        .upper-information {
+            display: flex;
+        }
+        .article-font-size {
+            font-size: 0.85rem;
+        }
+        .flex-container {
+            display: grid;
+            grid-template-columns: 23.6rem;
+            grid-template-rows: repeat(11, 1fr);
+        }
+        .grid-container-taxes {
+            display: grid;
+            grid-template-columns: 10.83rem;
+            grid-template-rows: repeat(11, 1fr);
+        }
+        .current-date {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    {{#each declarations}}
+        <div class="container">
+            <div class="reference-container article-font-size">
+                <div class="row bottom-row">
+                    <div class="text-container bold-text left-container" style="width: 25rem;align-items:center;">
+                        <span>НАЦИОНАЛНА АГЕНЦИЯ ПО ПРИХОДИТЕ</span>
+                        <span>ДЕКЛАРАЦИЯ Образец №6</span>
+                        <span></span>
+                        <span>„Данни за дължими вноски и данък по чл. 42 ЗДДФЛ“</span>
+                    </div>
+                    <div>
+                        <div class="upper-information bottom-row">
+                            <div class="text-container left-container" style="width: 30.03rem;">1. Код на задълженото лице</div>
+                            <div class="text-container left-container" style="width: 8.52rem;">{{this.company_eic}}</div>
+                        </div>
+                        <div class="left-container" style="background-color: #b4c7dc; width:40.68rem; height:1.85rem;"></div>
+                    </div>
+                </div>
+        
+                <div class="row bottom-row">
+                    <div class="text-container left-container" style="width:23.12rem">2. Наименование на задълженото лице</div>
+                    <div class="text-container left-container" style="width:23.13rem">{{this.employee_name}}</div>
+                    <div class="text-container left-container" style="width:15.66rem;">3. Член на осигурителната каса</div>
+                    <div class="text-container left-container" style="width:0.5rem">{{this.insurance_fund_member}}</div>
+                </div>
+        
+                <div class="row bottom-row">
+                    <div class="text-container left-container" style="width:6rem">4. E-mail</div>
+                    <div class="text-container left-container" style="width:16rem">{{this.email}}</div>
+                    <div class="text-container left-container" style="width:19.31rem;">5. Телефони за връзка</div>
+                    <div class="text-container left-container" style="width:10rem;">{{this.phone_number}}</div>
+                    <div class="text-container left-container" style="width:10rem"></div>
+                </div>
+
+
+                <div style="display: flex;">
+                    <div class="row bottom-row flex-container">
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row">9. Месец и година</div>
+                        <div class="text-container left-container row bottom-row">10. Дължими вноски за ДОО</div>
+                        <div class="text-container left-container row bottom-row">11. Дължими за вноски за Учителски пенсионен фонд</div>
+                        <div class="text-container left-container row bottom-row">
+                            12. Дължими вноски за ДЗПО в УПФ и/или фонд „Пенсии“ за лицата по чл.4б, ал. 1 КСО
+                        </div>
+                        <div class="text-container left-container row bottom-row">
+                            13. Дължими вноски за ДЗПО в ППФ и/или фонд „Пенсии“ за лицата по чл. 4в, ал. 1 КСО
+                        </div>
+                        <div class="text-container left-container row bottom-row">14. Дължими вноски за здравно осигуряване</div>
+                        <div class="text-container left-container row bottom-row">15. Дължими вноски за фонд „ГВРС“</div>
+                        <div class="text-container left-container row bottom-row">16. Удържан данък по чл. 42 и чл. 49, ал. 5 от ЗДДФЛ</div>
+                        <div class="text-container left-container row bottom-row">17. Авансов данък по чл. 42, ал. 6 от ЗДДФЛ</div>
+                        <div class="text-container left-container">18. Дата на изплащане/начисляване</div>
+                    </div>
+
+
+
+                    <div class="row bottom-row grid-container-taxes">
+                        <div class="row bottom-row" style="display: flex;">
+                            <div class="text-container left-container" style="width:3.5rem">7.1. Код<br>корекция</div>
+                            <div class="text-container left-container" style="width:0.5rem">{{this.code_corection}}</div>
+                            <div class="text-container left-container" style="width:3.5rem;background-color: #b4c7dc;">8.1. Вид<br>плащане</div>
+                        </div>
+                        <div class="row bottom-row" style="display: flex;">
+                            <div class="text-container left-container" style="width:1.5rem;align-items:center;">{{this.month}}</div>
+                            <div class="text-container left-container" style="width:4.5rem;align-items:center;">{{this.year}}</div>
+                            <div class="text-container left-container" style="width:1.5rem;background-color:#b4c7dc;">{{this.payment_type_code}}</div>
+                        </div>
+                        <div class="text-container left-container row bottom-row">{{this.doo_insurance}}</div>
+                        <div class="text-container left-container row bottom-row">{{this.teacher_pension_fund}}</div>
+                        <div class="text-container left-container row bottom-row">{{this.universal_pension_fund}}</div>
+                        <div class="text-container left-container row bottom-row">{{this.professional_pension_fund}}</div>
+                        <div class="text-container left-container row bottom-row">{{this.health_insurance}}</div>
+                        <div class="text-container left-container row bottom-row">{{this.gvrc_fund}}</div>
+                        <div class="text-container left-container row bottom-row">{{this.zddfl_tax}}</div>
+                        <div class="text-container left-container row bottom-row">{{this.zddfl_advance_tax}}</div>
+                        <div class="text-container left-container">{{this.disbursement_accrual_date}}</div>
+                    </div>
+
+
+
+
+                    <div class="row bottom-row grid-container-taxes">
+                        <div class="row bottom-row" style="display: flex;">
+                            <div class="text-container left-container" style="width:3.5rem">7.1. Код<br>корекция</div>
+                            <div class="text-container left-container" style="width:0.5rem"></div>
+                            <div class="text-container left-container" style="width:3.5rem;background-color: #b4c7dc;">8.1. Вид<br>плащане</div>
+                        </div>
+                        <div class="row bottom-row" style="display: flex;">
+                            <div class="text-container left-container" style="width:1.5rem;align-items:center;"></div>
+                            <div class="text-container left-container" style="width:4.5rem;align-items:center;"></div>
+                            <div class="text-container left-container" style="width:1.5rem;background-color:#b4c7dc;"></div>
+                        </div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container"></div>
+                    </div>
+
+
+
+                    
+                    <div class="row bottom-row grid-container-taxes">
+                        <div class="row bottom-row" style="display: flex;">
+                            <div class="text-container left-container" style="width:3.5rem">7.1. Код<br>корекция</div>
+                            <div class="text-container left-container" style="width:0.5rem"></div>
+                            <div class="text-container left-container" style="width:3.5rem;background-color: #b4c7dc;">8.1. Вид<br>плащане</div>
+                        </div>
+                        <div class="row bottom-row" style="display: flex;">
+                            <div class="text-container left-container" style="width:1.5rem;align-items:center;"></div>
+                            <div class="text-container left-container" style="width:4.5rem;align-items:center;"></div>
+                            <div class="text-container left-container" style="width:1.5rem;background-color:#b4c7dc;"></div>
+                        </div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container"></div>
+                    </div>
+
+
+
+                    
+                    <div class="row bottom-row grid-container-taxes">
+                        <div class="row bottom-row" style="display: flex;">
+                            <div class="text-container left-container" style="width:3.5rem">7.1. Код<br>корекция</div>
+                            <div class="text-container left-container" style="width:0.5rem"></div>
+                            <div class="text-container left-container" style="width:3.5rem;background-color: #b4c7dc;">8.1. Вид<br>плащане</div>
+                        </div>
+                        <div class="row bottom-row" style="display: flex;">
+                            <div class="text-container left-container" style="width:1.5rem;align-items:center;"></div>
+                            <div class="text-container left-container" style="width:4.5rem;align-items:center;"></div>
+                            <div class="text-container left-container" style="width:1.5rem;background-color:#b4c7dc;"></div>
+                        </div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container row bottom-row"></div>
+                        <div class="text-container left-container"></div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="bold-text signature-text" style="width:65.8rem">
+                        <div class="current-date">
+                            <span>Дата</span><span>{{current_date}}</span>
+                        </div>
+                        <span>Подпис</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</body>
+</html>
+
+
+
+
+
+

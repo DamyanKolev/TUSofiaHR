@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .reference-container {
+            width: fit-content;
+            border: #000 0.15rem solid;
+            display: flex;
+            flex-direction: column;
+        }
+        .row {
+            display: flex;
+        }
+        .bottom-row {
+            border-bottom: #000 0.15rem solid;
+        }
+        .text-container {
+            padding: 0.5rem;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .bold-text {
+            font-weight: bold;
+            background-color: #b4c7dc;
+        }
+        .left-container {
+            border-right: #000 0.15rem solid;
+        }
+        .signature-text {
+            padding: 0.5rem;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .container {
+            max-width: 21cm;
+            max-height: 29.7cm;
+            page-break-after: always;
+        }
+        .title-container {
+            display: flex;
+            font-size: 1.8rem;
+            font-weight: bold;
+            justify-content: center;
+            padding-bottom: 1rem;
+            text-align: center;
+        }
+        .article-font-size {
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    {{#each articles}}
+    <div class="container">
+        <div class="title-container">
+            <div><span style="letter-spacing: 0.25rem;">УВЕДОМЛЕНИЕ</span><br>по чл. 62, ал. 5 от Кодекса на труда</div>
+        </div>
+        <div class="reference-container article-font-size">
+            <div class="row bottom-row">
+                <div class="text-container bold-text left-container" style="width: 16rem">Уведомление – НАП 2023</div>
+                <div class="text-container left-container" style="width: 12rem">1. Код корекция</div>
+                <div class="text-container left-container">{{this.code_corection}}</div>
+                <div class="text-container left-container" style="width: 18rem">2. Тип на документа</div>
+                <div class="text-container">{{this.document_code}}</div>
+            </div>
+
+            <div class="row bottom-row">
+                <div class="text-container bold-text left-container" style="width: 16rem">Данни за работодателя</div>
+                <div class="text-container left-container" style="width: 22rem">3. ЕИК на работодател</div>
+                <div class="text-container">{{this.company_eic}}</div>
+            </div>
+
+            <div class="row bottom-row">
+                <div class="text-container bold-text left-container" style="width: 13rem">Данни за наетото лице</div>
+                <div class="text-container left-container" style="width: 11rem">4. ЕГН(ЛН, ЛНЧ):<br>сл. номер от НАП</div>
+                <div class="text-container left-container">{{this.identity_text}}</div>
+                <div class="text-container left-container" style="width: 15.3rem">4.1 Код за ЕГН/ЛН<br>ЛНЧ/ Сл. номер от НАП</div>
+                <div class="text-container">{{this.identity_code}}</div>
+            </div>
+
+            <div class="row bottom-row">
+                <div class="text-container left-container" style="width: 10rem">5. Име</div>
+                <div class="text-container">{{this.first_name}}</div>
+            </div>
+
+            <div class="row bottom-row">
+                <div class="text-container left-container" style="width: 10rem">6. Презиме</div>
+                <div class="text-container">{{this.middle_name}}</div>
+            </div>
+
+            <div class="row bottom-row">
+                <div class="text-container left-container" style="width: 10rem">7. Фамилия</div>
+                <div class="text-container">{{this.surname}}</div>
+            </div>
+
+            <div class="row bottom-row">
+                <div class="text-container bold-text left-container" style="width: 36.7rem">Данни за трудовия договор</div>
+                <div class="text-container left-container">8. Основание за договора</div>
+                <div class="text-container">{{this.contract_type_code}}</div>
+            </div>
+
+            <div class="row bottom-row">
+                <div class="text-container left-container" style="width: 18rem">9. Дата на сключване на<br>трудовия договор</div>
+                <div class="text-container left-container">{{this.conclusion_date}}</div>
+                <div class="text-container left-container" style="width: 20rem">10. Дата на сключване на<br>допълнително споразомение</div>
+                {{#if article.is_terminate}}
+                <div class="text-container"></div>
+                {{else}}
+                <div class="text-container">{{this.additional_agreement_date}}</div>
+                {{/if}}
+            </div>
+
+            <div class="row bottom-row">
+                {{#if article.is_terminate}}
+                <div class="text-container left-container" style="width: 23.05rem">11. Основно трудово възнаграждение</div>
+                <div class="text-container left-container"></div>
+                <div class="text-container left-container" style="width: 14.65rem">12. Срок на договора</div>
+                <div class="text-container"></div>
+                {{else}}
+                <div class="text-container left-container" style="width: 23.05rem">11. Основно трудово възнаграждение</div>
+                <div class="text-container left-container">{{this.working_wage}}</div>
+                <div class="text-container left-container" style="width: 14.65rem">12. Срок на договора</div>
+                <div class="text-container">{{this.contract_term}}</div>
+                {{/if}}
+            </div>
+
+            <div class="row bottom-row">
+                {{#if article.is_terminate}}
+                <div class="text-container left-container" style="width: 12.2rem">13. Код по НКПД</div>
+                <div class="text-container left-container"></div>
+                <div class="text-container left-container" style="width: 12.2rem">14. Код по ЕКАТТЕ</div>
+                <div class="text-container left-container"></div>
+                <div class="text-container left-container" style="width: 12.2rem">15. Код по КИД 2008</div>
+                <div class="text-container"></div>
+                {{else}}
+                <div class="text-container left-container" style="width: 12.2rem">13. Код по НКПД</div>
+                <div class="text-container left-container">{{this.nkpd}}</div>
+                <div class="text-container left-container" style="width: 12.2rem">14. Код по ЕКАТТЕ</div>
+                <div class="text-container left-container">{{this.ekatte}}</div>
+                <div class="text-container left-container" style="width: 12.2rem">15. Код по КИД 2008</div>
+                <div class="text-container">{{this.nkid}}</div>
+                {{/if}}
+            </div>
+
+            <div class="row bottom-row">
+                <div class="text-container left-container" style="width: 17.73rem">16. Дата на прекратяване<br>трудовия договор</div>
+                <div class="text-container left-container">{{this.termination_date}}</div>
+                <div class="text-container left-container" style="width: 20.4rem">17. Основание за прекратяване<br>на трудовия договор</div>
+                <div class="text-container">{{this.termination_code}}</div>
+            </div>
+
+            <div class="row">
+                <div class="bold-text signature-text" style="width:51.68rem">
+                    <div style="display: flex; gap: 1rem">
+                        <span>Дата</span>
+                        <span>{{current_date}}</span>
+                    </div>
+                    <span>Подпис</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</body>
+</html>
+
+

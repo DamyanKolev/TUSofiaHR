@@ -30,10 +30,13 @@ builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPositionService, PositionService>();
 builder.Services.AddScoped<IEmployeeContractService, EmployeeContractService>();
 builder.Services.AddScoped<IInitService, InitService>();
+builder.Services.AddScoped<IEndMonthService, EndMonthService>();
 
 
 //Reference services
 builder.Services.AddScoped<IArticle62Service, Article62Service>();
+builder.Services.AddScoped<IDeclaration1Service, Declaration1Service>();
+builder.Services.AddScoped<IDeclaration6Service, Declaration6Service>();
 
 
 

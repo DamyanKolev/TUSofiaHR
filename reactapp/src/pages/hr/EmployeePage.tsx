@@ -33,7 +33,7 @@ const EmployeePage: FC = () => {
         <EmployeePageContext.Provider value={{selectedRow, setSelectedRow}}>
                 <FlexibleColumnLayout
                     className="flexible-columns ui5-content-density-compact"
-                    style={{backgroundColor:"white"}}
+                    style={{backgroundColor:"var(--sapBackgroundColor)"}}
                     layout={layout}
                     startColumn={
                         <div>

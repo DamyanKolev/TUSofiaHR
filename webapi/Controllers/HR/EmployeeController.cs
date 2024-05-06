@@ -77,21 +77,5 @@ namespace webapi.Controllers.HR
 
             return Ok(result.Response);
         }
-
-        [HttpPost("/api/hr/employees/income", Name = "CreateScheduleIncome")]
-        public IActionResult CreateIncome([FromBody] ScheduleIncomeInsert selectDTO)
-        {
-            var result = _employeeService.CreateIncome(selectDTO);
-
-            return Ok(result.Response);
-        }
-
-        [HttpPost("/api/hr/employees/income-select", Name = "SelectMonthIncome")]
-        public IActionResult SelectMonthIncome([FromBody] int employeeId)
-        {
-            var result = _employeeService.SelectMonthIncome(employeeId);
-
-            return Ok(result.Response);
-        }
     }
 }

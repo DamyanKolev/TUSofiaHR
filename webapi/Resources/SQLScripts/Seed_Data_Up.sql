@@ -35,10 +35,10 @@ VALUES
 	('Петър', 'Димитров', 'Иванов', '08433449891', 222, 2, 1, 2, 2);
 
 
-INSERT INTO contracts (working_wage, work_time, annual_leave, conclusion_date, execution_date, contract_type_id, sys_position_id, sys_iconomic_activity_id, document_type_id, sys_administrative_territory_id, code_corection, is_annex, company_eic)
+INSERT INTO contracts (working_wage, work_time, annual_leave, conclusion_date, execution_date, contract_type_id, sys_position_id, sys_iconomic_activity_id, document_type_id, sys_administrative_territory_id, code_corection, is_annex, company_eic, article62_flag)
 VALUES 
-	('1800.00', 40, 30, '2024-04-18', '2024-04-19', 5, 555, 234, 1, 555, 0, False, '2243424232'),
-	('1500.00', 40, 30, '2024-04-20', '2024-04-21', 5, 333, 343, 1, 666, 0, False, '2243424232');
+	('1800.00', 40, 30, '2024-04-18', '2024-04-19', 5, 555, 234, 1, 555, 0, False, '2243424232', True),
+	('1500.00', 40, 30, '2024-04-20', '2024-04-21', 5, 333, 343, 1, 666, 0, False, '2243424232', False);
 
 
 INSERT INTO employee_contracts (employee_id, contract_id, is_active)
@@ -46,6 +46,20 @@ VALUES
 	(1, 1, False),
 	(2, 2, False);
 
+
+INSERT INTO incomes (employee_id, healt_insurance_art40, total_insurance, health_insurance, gross_remuneration, bonus_income, additional_income)
+VALUES 
+	(1, '0', '1000', '1000', '1300', '0', '0');
+
+
+INSERT INTO schedules (employee_id, insurance_days, insurance_experience_days, incapacity_days, childcare_days, without_insurance_days, unpaid_leave_days, paid_incapacity_days, worked_hours, overtime_hours)
+VALUES 
+	(1, 1, 22, 22, 0, 0, 0, 0, 176, 0);
+
+
+INSERT INTO company_employee_taxes (sys_payment_type_id, employee_id, disbursement_accrual_date)
+VALUES 
+	(1, 1, '2024-05-06');
 
 INSERT INTO companies (company_name, company_eic, user_id)
 VALUES 

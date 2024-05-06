@@ -150,6 +150,375 @@ ORDER BY c1.id ASC;
 
 
 
+CREATE VIEW article62_v AS
+SELECT
+	e1.id AS id,
+	jsonb_build_object(
+		'first_name', e1.first_name,
+		'middle_name', e1.middle_name,
+		'surname', e1.surname,
+		'working_wage', c1.working_wage,
+		'identity_text', pd1.identity_text,
+		'identity_code', pd1.identity_code,
+		'conclusion_date', c1.conclusion_date,
+		'contract_term', c1.contract_term,
+		'additional_agreement_date', c1.additional_agreement_date,
+		'termination_date', c1.termination_date,
+		'is_terminate', c1.is_terminate,
+		'code_corection', c1.code_corection,
+		'company_eic', c1.company_eic,
+		'nkpd', sp.nkpd,
+		'nkid', sia.nkid,
+		'termination_code', sctt.code,
+		'ekatte', sat.ekatte,
+		'contract_type_code', sct.code,
+		'document_code', scdt.code
+	) AS json_object,
+	concat_ws(',', 
+		c1.code_corection,
+		scdt.code,
+		c1.company_eic,
+		pd1.identity_text,
+		pd1.identity_code,
+		e1.first_name,
+		e1.middle_name,
+		e1.surname,
+		sct.code,
+		to_char(c1.conclusion_date, 'DD,MM,YYYY'),
+		coalesce(to_char(c1.additional_agreement_date, 'DD,MM,YYYY'), ''),
+		coalesce(c1.working_wage::varchar, ''),
+		coalesce(to_char(c1.contract_term, 'DD,MM,YYYY'), ''),
+		coalesce(sp.nkpd, ''),
+		sat.ekatte,
+		coalesce(sia.nkid, ''),
+		coalesce(to_char(c1.termination_date, 'DD,MM,YYYY'), ''),
+		coalesce(sctt.code, '')
+	) as csv_string
+FROM contracts c1
+JOIN employee_contracts ec1 ON ec1.contract_id = c1.id
+JOIN employees e1 ON e1.id = ec1.employee_id
+JOIN personal_data pd1 ON pd1.id = e1.personal_data_id
+LEFT JOIN sys_positions sp ON sp.id = c1.sys_position_id
+LEFT JOIN sys_iconomic_activities sia ON sia.id = c1.sys_iconomic_activity_id
+LEFT JOIN sys_contract_termination_types sctt ON sctt.id = c1.termination_type_id
+LEFT JOIN sys_administrative_territories sat ON sat.id = c1.sys_administrative_territory_id
+JOIN sys_contract_types sct ON sct.id = c1.contract_type_id
+JOIN sys_contract_document_types scdt ON scdt.id = c1.document_type_id
+WHERE c1.article62_flag = False
+ORDER BY c1.id;
+
+
+
+
+
+
+
+
+CREATE FUNCTION is_current_month_year(date_to_check DATE)
+RETURNS BOOLEAN
+AS $$
+BEGIN
+  RETURN EXTRACT(MONTH FROM date_to_check) = EXTRACT(MONTH FROM CURRENT_DATE)
+         AND EXTRACT(YEAR FROM date_to_check) = EXTRACT(YEAR FROM CURRENT_DATE);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+CREATE FUNCTION calculate_net_salary(inc RECORD, ins RECORD)
+RETURNS NUMERIC
+AS $$
+BEGIN
+  RETURN (ROUND(inc.gross_remuneration -
+			(
+				inc.total_insurance * (ins.doo_withouth_tzpb_employee / 100) + 
+				inc.total_insurance * (ins.health_insurance_employee / 100) +
+				inc.total_insurance * (ins.universal_pension_employee / 100)
+			)
+		, 2));
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+CREATE FUNCTION calculate_employee_taxes(inc RECORD, ins RECORD, sit RECORD)
+RETURNS NUMERIC
+AS $$
+BEGIN
+  RETURN (ROUND( 
+			(
+				ROUND(inc.total_insurance * (ins.doo_withouth_tzpb_employee / 100), 2) + 
+				ROUND(inc.total_insurance * (ins.health_insurance_employee / 100), 2) +
+				ROUND(inc.total_insurance * (ins.universal_pension_employee / 100), 2)
+			) * (sit.dod_tax / 100)
+		,2));
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+CREATE FUNCTION calculate_employee_zddfl_tax(inc RECORD, ins RECORD, income NUMERIC)
+RETURNS NUMERIC
+AS $$
+BEGIN
+	DECLARE
+		doo_tax NUMERIC;
+		health_tax NUMERIC;
+		pension_tax NUMERIC;
+		zddfl_tax_amount NUMERIC;
+  BEGIN
+  	-- Retrieve values from records
+  	doo_tax := inc.total_insurance, (ins.doo_withouth_tzpb_employee/ 100);
+	health_tax := inc.total_insurance, (ins.health_insurance_employee / 100);
+	pension_tax := inc.total_insurance, (ins.universal_pension_employee / 100);
+		
+	
+	zddfl_tax_amount := income - (doo_tax + health_tax + gross_income);
+	
+	RETURN ROUND(dod_tax_amount, 2);
+  END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+
+
+CREATE VIEW declaration1_v AS
+SELECT
+	e1.id AS id,
+	jsonb_build_object(
+		'code_corection', '',
+  		'month', EXTRACT(MONTH FROM CURRENT_DATE),
+		'year', EXTRACT(YEAR FROM CURRENT_DATE),
+		'company_eic', con.company_eic,
+		'initials', CONCAT(SUBSTRING(e1.first_name, 1, 1), SUBSTRING(e1.surname, 1, 1)),
+		'identity_text', pd1.identity_text,
+		'identity_code', pd1.identity_code,
+		'surname', e1.surname,
+		'insurance_code', sit.code,
+		'nkpd_group', SUBSTRING(sp.nkpd, 1, 1),
+		'nkid', sia.nkid,
+		'insurance_start_day', CASE 
+			WHEN is_current_month_year(con.execution_date)
+			THEN EXTRACT(DAY FROM con.execution_date)::varchar ELSE '' 
+		END,
+		'insurance_end_day', CASE 
+			WHEN is_current_month_year(con.execution_date)
+			THEN EXTRACT(DAY FROM con.execution_date)::varchar ELSE '' 
+		END,
+		'insurance_days', sch.insurance_days,
+		'insurance_experience_days', sch.insurance_experience_days,
+		'incapacity_days', sch.incapacity_days,
+		'childcare_days', sch.childcare_days,
+		'without_insurance_days', sch.without_insurance_days,
+		'unpaid_leave_days', sch.unpaid_leave_days,
+		'paid_incapacity_days', sch.paid_incapacity_days,
+		'worked_hours', sch.worked_hours,
+		'overtime_hours', sch.overtime_hours,
+		'healt_insurance_art40_income', inc.healt_insurance_art40,
+		'health_insurance_article40', ROUND(inc.healt_insurance_art40 * (ins.health_insurance_article40 / 100), 2),
+		'total_insurance_income', inc.total_insurance,
+		'doo_withouth_tzpb_insurer', ROUND(inc.total_insurance * (ins.doo_withouth_tzpb_insurer / 100), 2),
+		'doo_withouth_tzpb_employee', ROUND(inc.total_insurance * (ins.doo_withouth_tzpb_employee / 100), 2),
+		'health_insurance_insurer', ROUND(inc.total_insurance * (ins.health_insurance_insurer / 100), 2),
+		'health_insurance_employee', ROUND(inc.total_insurance * (ins.health_insurance_employee / 100), 2),
+		'tzpb_percent', ROUND(inc.total_insurance * (sia.tzpb_percent / 100), 2),
+		'teacher_pension_fund', ROUND(inc.total_insurance * (ins.teacher_pension_fund / 100), 2),
+		'professional_pension_fund', ROUND(inc.total_insurance * (ins.professional_pension_fund / 100), 2),
+		'universal_pension_insurer', ROUND(inc.total_insurance * (ins.universal_pension_insurer / 100), 2),
+		'universal_pension_employee', ROUND(inc.total_insurance * (ins.universal_pension_employee / 100), 2),
+		'health_insurance_income', inc.health_insurance,
+		'health_insurance', ROUND(inc.total_insurance * (ins.health_insurance / 100), 2),
+		'gross_remuneration', inc.gross_remuneration,
+		'gvrc_fund', ROUND(inc.gross_remuneration * (sit.gvrc_fund / 100), 2),
+		'dod_tax', calculate_employee_taxes(inc, ins, sit),
+		'net_remuneration', calculate_net_salary(inc, ins)
+	) AS json_object,
+	concat_ws(',',
+		'',
+  		EXTRACT(MONTH FROM CURRENT_DATE),
+		EXTRACT(YEAR FROM CURRENT_DATE),
+		con.company_eic,
+		pd1.identity_text,
+		pd1.identity_code,
+		e1.surname,
+		CONCAT(SUBSTRING(e1.first_name, 1, 1), SUBSTRING(e1.surname, 1, 1)),
+		sit.code,
+		SUBSTRING(sp.nkpd, 1, 1),
+		sia.nkid,
+		CASE 
+			WHEN is_current_month_year(con.execution_date)  
+			THEN EXTRACT(DAY FROM con.execution_date)::varchar ELSE '' 
+		END,
+		CASE 
+			WHEN is_current_month_year(con.execution_date) 
+			THEN EXTRACT(DAY FROM con.execution_date)::varchar ELSE '' 
+		END,
+		CASE WHEN is_current_month_year(con.execution_date) THEN
+			',,,,,,,,,,,,,,,,,,,,,,,,,'
+		ELSE  
+			concat_ws(',',
+				sch.insurance_days,
+				sch.insurance_experience_days,
+				sch.incapacity_days,
+				sch.childcare_days,
+				sch.without_insurance_days,
+				sch.unpaid_leave_days,
+				sch.paid_incapacity_days,
+				sch.worked_hours,
+				sch.overtime_hours,
+				inc.healt_insurance_art40,
+				ROUND(inc.healt_insurance_art40 * (ins.health_insurance_article40 / 100), 2),
+				inc.total_insurance,
+				ROUND(inc.total_insurance * (ins.doo_withouth_tzpb_insurer / 100), 2),
+				ROUND(inc.total_insurance * (ins.doo_withouth_tzpb_employee / 100), 2),
+				ROUND(inc.total_insurance * (ins.health_insurance_insurer / 100), 2),
+				ROUND(inc.total_insurance * (ins.health_insurance_employee / 100), 2),
+				ROUND(inc.total_insurance * (sia.tzpb_percent / 100), 2),
+				ROUND(inc.total_insurance * (ins.teacher_pension_fund / 100), 2),
+				ROUND(inc.total_insurance * (ins.professional_pension_fund / 100), 2),
+				ROUND(inc.total_insurance * (ins.universal_pension_insurer / 100), 2),
+				ROUND(inc.total_insurance * (ins.universal_pension_employee / 100), 2),
+				inc.health_insurance,
+				ROUND(inc.total_insurance * (ins.health_insurance / 100), 2),
+				inc.gross_remuneration,
+				ROUND(inc.gross_remuneration * (sit.gvrc_fund / 100), 2),
+				calculate_employee_taxes(inc, ins, sit),
+				calculate_net_salary(inc, ins)
+			)
+		END
+	) AS csv_string
+FROM employees e1 
+JOIN employee_contracts em_c ON em_c.employee_id = e1.id
+JOIN contracts con ON em_c.contract_id = con.id
+LEFT JOIN contracts anex_c ON anex_c.id = con.contract_id
+JOIN personal_data pd1 ON pd1.id = e1.personal_data_id
+JOIN insurances ins ON e1.insurance_id = ins.id
+JOIN sys_positions sp ON sp.id = CASE WHEN con.sys_position_id IS NULL THEN anex_c.sys_position_id ELSE con.sys_position_id END
+JOIN sys_iconomic_activities sia ON sia.id = CASE WHEN con.sys_position_id IS NULL THEN anex_c.sys_iconomic_activity_id ELSE con.sys_iconomic_activity_id END
+JOIN sys_insurance_types sit ON sit.id = ins.insurance_type_id
+JOIN schedules sch ON sch.employee_id = e1.id
+JOIN incomes inc ON inc.employee_id = e1.id;
+
+
+
+
+
+
+
+
+
+
+CREATE VIEW declaration6_v AS
+SELECT
+	e1.id AS id,
+	jsonb_build_object(
+		'company_eic', c1.company_eic,
+		'employee_name', CONCAT(e1.first_name, ' ', e1.middle_name, ' ', e1.surname),
+		'insurance_fund_member', 0,
+		'email', pd1.personal_email,
+		'phone_number', e1.phone_number,
+		'gsm', '',
+		'code_corection', 0,
+		'payment_type_code', spt.code,
+  		'month', EXTRACT(MONTH FROM CURRENT_DATE),
+		'year', EXTRACT(YEAR FROM CURRENT_DATE),
+		'doo_insurance', ROUND(
+			inc.total_insurance * (ins.doo_withouth_tzpb_insurer / 100) +
+			inc.total_insurance * (sia.tzpb_percent / 100)
+		,2),
+		'teacher_pension_fund', CASE WHEN spt.code = 5 OR spt.code = 6 THEN
+			ROUND(inc.total_insurance * (ins.teacher_pension_fund / 100), 2)::varchar
+		ELSE '' END,
+		'universal_pension_fund', CASE WHEN spt.code = 4 OR spt.code = 5 OR spt.code = 6  OR spt.code = 7 THEN
+			ROUND(inc.total_insurance * (ins.universal_pension_insurer / 100), 2)::varchar
+		ELSE '' END,
+		'professional_pension_fund', CASE WHEN spt.code = 5 OR spt.code = 6 THEN
+			ROUND(inc.total_insurance * (ins.professional_pension_fund / 100), 2)::varchar
+		ELSE '' END,
+		'health_insurance', CASE WHEN spt.code = 4 OR spt.code = 5 OR spt.code = 6 OR spt.code = 7 THEN
+			ROUND(inc.total_insurance * (ins.health_insurance_insurer / 100), 2)::varchar
+		ELSE '' END,
+		'gvrc_fund', 0,
+		'zddfl_tax', CASE WHEN spt.code = 7 OR spt.code = 8 OR spt.code = 9 THEN
+			calculate_employee_zddfl_tax(inc, ins, inc.gross_remuneration)::varchar
+		ELSE '' END,
+		'zddfl_advance_tax', CASE WHEN spt.code = 8 THEN
+			calculate_employee_zddfl_tax(inc, ins, inc.gross_remuneration)::varchar
+		ELSE '' END,
+		'disbursement_accrual_date', cet.disbursement_accrual_date
+	) AS json_object,
+	concat_ws(',', 
+		c1.company_eic,
+		CONCAT(e1.first_name, ' ', e1.middle_name, ' ', e1.surname),
+		0,
+		pd1.personal_email,
+		e1.phone_number,
+		'',
+		0,
+  		EXTRACT(MONTH FROM CURRENT_DATE),
+		EXTRACT(YEAR FROM CURRENT_DATE),
+		spt.code,
+		'doo_insurance', ROUND(
+			inc.total_insurance * (ins.doo_withouth_tzpb_insurer / 100) +
+			inc.total_insurance * (sia.tzpb_percent / 100)
+		,2),
+		CASE WHEN spt.code = 5 OR spt.code = 6 THEN
+			ROUND(inc.total_insurance * (ins.teacher_pension_fund / 100), 2)::varchar
+		ELSE '' END,
+		'universal_pension_fund', CASE WHEN spt.code = 4 OR spt.code = 5 OR spt.code = 6  OR spt.code = 7 THEN
+			ROUND(inc.total_insurance * (ins.universal_pension_insurer / 100), 2)::varchar
+		ELSE '' END,
+		'professional_pension_fund', CASE WHEN spt.code = 5 OR spt.code = 6 THEN
+			ROUND(inc.total_insurance * (ins.professional_pension_fund / 100), 2)::varchar
+		ELSE '' END,
+		'health_insurance', CASE WHEN spt.code = 4 OR spt.code = 5 OR spt.code = 6 OR spt.code = 7 THEN
+			ROUND(inc.total_insurance * (ins.health_insurance_insurer / 100), 2)::varchar
+		ELSE '' END,
+		'gvrc_fund', 0,
+		'zddfl_tax', CASE WHEN spt.code = 7 OR spt.code = 8 OR spt.code = 9 THEN
+			calculate_employee_zddfl_tax(inc, ins, inc.gross_remuneration)::varchar
+		ELSE '' END,
+		'zddfl_advance_tax', CASE WHEN spt.code = 8 THEN
+			calculate_employee_zddfl_tax(inc, ins, inc.gross_remuneration)::varchar
+		ELSE '' END,
+		'disbursement_accrual_date', cet.disbursement_accrual_date
+	) as csv_string
+FROM employees e1
+JOIN employee_contracts ec1 ON ec1.employee_id = e1.id
+JOIN contracts c1 ON c1.id = ec1.contract_id
+JOIN personal_data pd1 ON pd1.id = e1.personal_data_id
+JOIN sys_iconomic_activities sia ON sia.id = c1.sys_iconomic_activity_id
+JOIN company_employee_taxes cet ON e1.id = cet.employee_id
+JOIN sys_payment_types spt ON spt.id = cet.sys_payment_type_id
+JOIN incomes inc ON e1.id = inc.employee_id
+JOIN insurances ins ON ins.id = e1.insurance_id
+WHERE c1.article62_flag = True
+ORDER BY e1.id;
+
+
+
+
+
+
+
+
+
+
+
+
 INSERT INTO sys_administrative_territories (ekatte, territory_name, territory_type, region_name, municipality_name)
 VALUES
     ('00000', 'Неидентифицирано място', '-', '-', '-'),

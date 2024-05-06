@@ -24,7 +24,7 @@ const CreateScheduleForm: FC<Props> = ({getFormData, setFormStates}) => {
     };
 
     return (
-        <FlexBox style={{gap:"4rem", padding:".3rem 2rem", width: "fit-content"}}>
+        <FlexBox style={{gap:"4rem", padding:".3rem 2rem", width: "fit-content"}} direction={FlexBoxDirection.Column}>
             <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{gap:".5rem"}}>
                 <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
                     <Label required>Дни в осигуряване</Label>

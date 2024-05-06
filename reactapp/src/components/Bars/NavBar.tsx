@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import "@ui5/webcomponents-icons/home"
 import "@ui5/webcomponents-icons/settings"
-import "@ui5/webcomponents-icons/chain-link"
 import { SideNavigation, SideNavigationItem } from '@ui5/webcomponents-react';
 import { useNavigate } from "react-router-dom";
 

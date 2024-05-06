@@ -1,4 +1,4 @@
-import { setTheme, getTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
+import { setTheme, getTheme, getDefaultTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
 export default function setSelectedTheme() {
     const theme = localStorage.getItem("theme")
@@ -10,6 +10,9 @@ export default function setSelectedTheme() {
         //checks if the current theme is different from the one saved in local storage
         if (currentTheme !== theme) {
             setTheme(theme);
+        }
+        else {
+            setTheme(getDefaultTheme());
         }
     }
 }

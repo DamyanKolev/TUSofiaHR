@@ -1,15 +1,11 @@
-﻿using System.Reflection.Emit;
-using System.Reflection.Metadata;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using webapi.Extensions;
 using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Models.System;
 using webapi.Models.Views;
-using webapi.Services.Auth;
+
 
 namespace webapi
 {
@@ -27,6 +23,7 @@ namespace webapi
         public DbSet<Income> Incomes { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<CompanyEmployeeTax> CompanyEmployeeTaxes { get; set; }
 
 
 
@@ -48,6 +45,9 @@ namespace webapi
         public DbSet<InsuranceV> InsuranceV { get; set; }
         public DbSet<DepartmentV> DepartmentV { get; set; }
         public DbSet<PositionV> PositionV { get; set; }
+        public DbSet<Article62V> Article62V { get; set; } 
+        public DbSet<Declaration1V> Declaration1V { get; set; }
+        public DbSet<Declaration6V> Declaration6V { get; set; }
 
 
 
@@ -79,6 +79,10 @@ namespace webapi
                 .HasDefaultValueSql("now()");
 
             builder.Entity<Schedule>()
+                .Property(p => p.CreationDate)
+                .HasDefaultValueSql("now()");
+
+            builder.Entity<CompanyEmployeeTax>()
                 .Property(p => p.CreationDate)
                 .HasDefaultValueSql("now()");
 
@@ -116,6 +120,24 @@ namespace webapi
             {
                 v.HasNoKey();
                 v.ToView("positions_v");
+            });
+
+            builder.Entity<Article62V>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("article62_v");
+            });
+
+            builder.Entity<Declaration1V>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("declaration1_v");
+            });
+
+            builder.Entity<Declaration6V>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("declaration6_v");
             });
         }
     }

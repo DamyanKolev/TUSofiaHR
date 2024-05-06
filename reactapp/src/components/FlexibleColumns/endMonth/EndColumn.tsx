@@ -1,20 +1,21 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { toggle } from "@store/slices/toggleSlice";
 import { useAppDispatch } from "@store/storeHooks";
-import { Bar, BarDesign, Button, ButtonDesign, FCLLayout, ObjectPage, ObjectPageSection, ObjectPageSubSection } from "@ui5/webcomponents-react";
+import { Bar, BarDesign, Button, ButtonDesign, FCLLayout, ObjectPage, ObjectPageSection, ObjectPageSubSection, TitleLevel } from "@ui5/webcomponents-react";
 import { formToggle } from "@store/slices/formToggleSlice";
 import { updateFormInfo } from "@utils/forms/updateFormInfo";
 import { ChangeData } from "@models/EventData/ChangeData";
-import { createScheduleIncomeInsert, ScheduleIncomeInsert } from "@models/HR/ScheduleIncome";
 import CreateIncomeForm from "@components/Forms/income/CreateIncomeForm";
 import CreateScheduleForm from "@components/Forms/schedule/CreateScheduleForm";
 import { TableRowState } from "@app-types/TableRowState";
 import { EmployeeView } from "@models/TableViews/EmployeeView";
-import { IncomePageContext } from "@pages/hr/EmployeeIncomePage";
+import { IncomePageContext } from "@/pages/hr/EndMonthPage";
 import { isFilledForm } from "@utils/validation";
-import { defaultSchedueleIncomeInsertFormState, SchedueleIncomeFormState } from "@models/States/scheduleIncome/SchedueleIncomeFormState";
 import { setErrorInputStates } from "@utils/forms/formState";
 import { submitPostForm } from "@utils/forms/submitForm";
+import { createEndMonthDataInsert, EndMonthDataInsert } from "@/models/HR/EndMonthData";
+import { defaultEndMonthInsertFormState, EndMonthFormState } from "@/models/States/endMonth/EndMonthFormState";
+import CreateCompanyEmployeeTaxForm from "@/components/Forms/companyEmployeTax/CreateCompanyEmployeeTaxForm";
 
 
 interface Props {
@@ -25,16 +26,16 @@ interface Props {
 
 const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
     const rowState = useContext<TableRowState<EmployeeView> | undefined>(IncomePageContext)
-    const [formData, setFormData] = useState<ScheduleIncomeInsert>(createScheduleIncomeInsert(0));
-    const [formState, setFormState] = useState<SchedueleIncomeFormState>(defaultSchedueleIncomeInsertFormState);
+    const [formData, setFormData] = useState<EndMonthDataInsert>(createEndMonthDataInsert(0));
+    const [formState, setFormState] = useState<EndMonthFormState>(defaultEndMonthInsertFormState);
     const [disabled, setDisabled] = useState<boolean>(true)
     const dispatchIsSuccess = useAppDispatch()
 
 
     const setDefaultState = () => {
         handleLayoutState(FCLLayout.OneColumn)
-        setFormData(createScheduleIncomeInsert(0))
-        setFormState(defaultSchedueleIncomeInsertFormState)
+        setFormData(createEndMonthDataInsert(0))
+        setFormState(defaultEndMonthInsertFormState)
         setDisabled(true)
         dispatchIsSuccess(formToggle())
     }
@@ -81,10 +82,10 @@ const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
     useEffect(() => {
         if(rowState) {
             if (Object.keys(rowState.selectedRow).length > 0) {
-                setFormData(createScheduleIncomeInsert(rowState.selectedRow.employee_id))
+                setFormData(createEndMonthDataInsert(rowState.selectedRow.employeeId))
             }
         }
-    })
+    },[rowState])
 
 
     return (
@@ -100,18 +101,16 @@ const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
                     startContent={<Button design="Transparent" icon="nav-back" onClick={navBackClick}/>}
                 />
             }
-            style={{
-                height: 'calc(100vh - 3.73rem)'
-            }}
             >
             <ObjectPageSection
                 id="incomes"
                 titleText="Доходи"
             >
                 <ObjectPageSubSection
-                    hideTitleText
                     titleText="Доходи"
-                    id="employee-info"
+                    id="income"
+                    titleTextLevel={TitleLevel.H1}
+                    titleTextUppercase
                 >
                     <CreateIncomeForm
                         getFormState={() => {return formState.income}}
@@ -119,6 +118,20 @@ const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
                         setFormStates={setFormStates}
                     />
                 </ObjectPageSubSection>
+
+                <ObjectPageSubSection
+                    titleText="Декларация 6"
+                    id="declaration6"
+                    titleTextLevel={TitleLevel.H1}
+                    titleTextUppercase
+                >
+                    <CreateCompanyEmployeeTaxForm
+                        getFormState={() => {return formState.companyEmployeeTax}}
+                        getFormData={() => {return formData.companyEmployeeTax}}
+                        setFormStates={setFormStates}
+                    />
+                </ObjectPageSubSection>
+
             </ObjectPageSection>
 
 
@@ -126,11 +139,13 @@ const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
             <ObjectPageSection
                 id="schedule"
                 titleText="График"
+                hideTitleText
             >
                 <ObjectPageSubSection
-                    hideTitleText
                     titleText="График"
-                    id="personal-data-info"
+                    id="schedule"
+                    titleTextUppercase
+                    titleTextLevel={TitleLevel.H1}
                 >
                     <CreateScheduleForm
                         getFormState={() => {return formState.schedule}}

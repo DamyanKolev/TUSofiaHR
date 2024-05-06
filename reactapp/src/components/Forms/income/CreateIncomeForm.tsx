@@ -1,3 +1,4 @@
+import { largeFormItem } from "@/utils/css";
 import { ChangeData } from "@models/EventData/ChangeData";
 import { IncomeInsert } from "@models/HR/Income";
 import { IncomeFormState } from "@models/States/incomes/IncomeFormState";
@@ -31,6 +32,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     value={setInputDefaultValue(getFormData().healtInsuranceArt40)}
                     onInput={handleOnInput}
                     type={InputType.Number}
+                    style={largeFormItem}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
@@ -40,6 +42,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     name="totalInsurance"
                     value={setInputDefaultValue(getFormData().totalInsurance)}
                     onInput={handleOnInput}
+                    style={largeFormItem}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
@@ -49,6 +52,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     name="healthInsurance"
                     value={setInputDefaultValue(getFormData().healthInsurance)}
                     onInput={handleOnInput}
+                    style={largeFormItem}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
@@ -58,6 +62,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     name="grossRemuneration"
                     value={setInputDefaultValue(getFormData().grossRemuneration)}
                     onInput={handleOnInput}
+                    style={largeFormItem}
                 />
             </FlexBox>
             <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
@@ -67,6 +72,7 @@ const CreateIncomeForm: FC<Props> = ({getFormData, setFormStates}) => {
                     name="bonusIncome"
                     value={setInputDefaultValue(getFormData().bonusIncome)}
                     onInput={handleOnInput}
+                    style={largeFormItem}
                 />
             </FlexBox>
         </FlexBox>

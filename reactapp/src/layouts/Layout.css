@@ -1,8 +1,7 @@
 .content-container {
-    margin: 0.5rem 0.8rem 0 0.8rem;
-    /* width: calc(100vw - 17.71rem); */
-    /* width: calc(100vw - 5.1rem); */
-    /* max-width: calc(100vw - 5.9rem); */
-    /* height: calc(100vh - 6.2rem); */
-    height: calc(100vh - 3.73rem);
+    max-width: calc(100vw - 4rem);
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, calc(100vw - 4rem)));
+    grid-auto-flow: column;
 }

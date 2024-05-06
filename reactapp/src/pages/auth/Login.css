@@ -15,7 +15,7 @@
 
 
 .main-container {
-    background-color: white;
+    background-color: var(--sapPageHeader_Background);
     width: fit-content;
     border: 0.03125rem solid #e1e2e5;
     padding: 2.5rem;

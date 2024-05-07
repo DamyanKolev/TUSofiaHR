@@ -33,6 +33,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
         dialogSwitchSetter(DailogSwitch.Close)
         setFormData(defaultPositionDTO)
         setFormState(defualtPositionInsertFormState)
+        setDisabled(true)
     }
 
     const successCalback = () => {

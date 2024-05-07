@@ -43,6 +43,7 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
         setFormData(defaultPositionUpdateDTO)
         rowState?.setSelectedRow({} as PositionView)
         setEditMode(false)
+        setDisabled(true)
     }
 
     const successCalback = ():void => {

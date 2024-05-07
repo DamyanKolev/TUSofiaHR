@@ -44,8 +44,8 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
         setFormData(defaultDepartmentUpdateDTO)
         rowState?.setSelectedRow({} as DepartmentView)
         setEditMode(false)
+        setDisabled(true)
     }
-
 
 
     const successCalback = ():void => {

@@ -35,6 +35,7 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
         dialogSwitchSetter(DailogSwitch.Close)
         setFormData(defaultDepartmentDTO)
         setFormState(defaultDepartmentInsertFormState)
+        setDisabled(true)
     }
 
     const setFormStates = (changeData: ChangeData) => {

@@ -60,14 +60,14 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
     //fired when typed any character in input
     const onSearchInputHandler = (event: Ui5CustomEvent<InputDomRef, { value: string; }>) => {
         const value = event.detail.value
-        const newObject = createFilter(filterField, `${value}%`)
+        const newObject = createFilter(filterField, `${value}`)
         setFilterObject(newObject)
     }
 
     //fired when click icon of the input
     const onSearchHandler = (event: Ui5CustomEvent<IconDomRef, { value: string; }>) => {
         const value = event.detail.value
-        const newObject = createFilter(filterField, `${value}%`)
+        const newObject = createFilter(filterField, `${value}`)
         setFilterObject(newObject)
     }
 
@@ -79,6 +79,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
         const token = sessionStorage.getItem("accessToken")
         const pageDTO = createPageFilterInfo(page, 100, filterObject)
 
+        console.log(pageDTO)
         return fetch(`${tableURL}`, {
             method: "POST",
             headers: {

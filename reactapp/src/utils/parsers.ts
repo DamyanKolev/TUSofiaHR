@@ -29,7 +29,7 @@ export function parseValueByType<T>(
         case DataType.Date:
             {
                 if (typeof value == "string"){
-                    return { ...object, [fieldName]: parseDateToISO(value) };
+                    return { ...object, [fieldName]: moment(value).format("YYYY-MM-DD")};
                 }
                 throw new Error("Invalid Type");
             }

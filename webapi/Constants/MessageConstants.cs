@@ -36,5 +36,8 @@
 
         public const string MESSAGE_REFRESH_TOKEN_FAILED = "Failed to refresh token";
         public const string MESSAGE_REFRESH_TOKEN_SUCCESS = "Success to refresh token";
+
+        public const string END_MONTH_DATA_NOT_FILLED = "The monthly employee data has not been completed";
+        public const string END_MONTH_DATA_IS_FILLED = "Monthly employee data has been completed";
     }
 }

@@ -24,6 +24,7 @@ namespace webapi
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<CompanyEmployeeTax> CompanyEmployeeTaxes { get; set; }
+        public DbSet<EndMonth> EndMonths { get; set; }
 
 
 
@@ -83,6 +84,10 @@ namespace webapi
                 .HasDefaultValueSql("now()");
 
             builder.Entity<CompanyEmployeeTax>()
+                .Property(p => p.CreationDate)
+                .HasDefaultValueSql("now()");
+
+            builder.Entity<EndMonth>()
                 .Property(p => p.CreationDate)
                 .HasDefaultValueSql("now()");
 

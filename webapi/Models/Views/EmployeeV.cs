@@ -7,8 +7,8 @@
         public required string WorkEmail { get; set; }
         public required string PhoneNumber { get; set; }
         public string? ManagerName { get; set; }
-        public required string PositionName { get; set; }
-        public required string DepartmentName { get; set; }
+        public string? PositionName { get; set; }
+        public string? DepartmentName { get; set; }
         public required string IdentityText { get; set; }
         public string? Gender { get; set; }
         public string? InsuranceTypeCode {get; set; }

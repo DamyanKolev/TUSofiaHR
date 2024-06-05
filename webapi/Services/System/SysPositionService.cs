@@ -27,7 +27,7 @@ namespace webapi.Services.System
                 .Where(rec => rec.Nkpd.Contains(pageFilterInfo.Filter.Value))
                 .ToList();
 
-            var countRecords = _context.EmployeeV.ToList().Count;
+            var countRecords = _context.SysPositions.ToList().Count;
             var pages = (int) Math.Ceiling(Decimal.Divide(countRecords, pageFilterInfo.PageSize));
             PageResponse<SysPosition> pageResponse = new (pages, countRecords, positions);
 

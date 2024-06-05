@@ -3,6 +3,7 @@ using webapi.Models;
 using AutoMapper;
 using System.Net;
 using webapi.Constants;
+using webapi.Models.Views;
 
 namespace webapi.Services.HR
 {
@@ -10,6 +11,8 @@ namespace webapi.Services.HR
     {
         public ResponseWithStatus<Response> EndMonth(EndMonthDataInsert insertDTO);
         public ResponseWithStatus<DataResponse<EndMonthDataSelect>> SelectEndMonthData(int employeeId);
+        public ResponseWithStatus<Response> FinishMonth();
+        public ResponseWithStatus<DataResponse<Boolean>> IsFilledAllEmployeesMonthData();
 
     }
     public class EndMonthService : IEndMonthService
@@ -97,6 +100,65 @@ namespace webapi.Services.HR
             };
 
             return ResponseBuilder.CreateDataResponseWithStatus<EndMonthDataSelect>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, scheduleIncome);
+        }
+
+
+        public ResponseWithStatus<Response> FinishMonth()
+        {
+            var date = new DateOnly();
+            EndMonth endCurrentMonth = new EndMonth
+            {
+                Id = 0,
+                CreationDate = date,
+                Month = date.Month,
+                Year = date.Year,
+                IsFinished = true,
+            };
+
+            _context.EndMonths.Add(endCurrentMonth);
+            var result = _context.SaveChanges();
+
+            if (result == 0)
+            {
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
+            }
+
+            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
+        }
+
+
+
+
+        public ResponseWithStatus<DataResponse<Boolean>> IsFilledAllEmployeesMonthData()
+        {
+            DateTime now = DateTime.Now;
+            int year = now.Year;
+            int month = now.Month;
+            int maxDays = DateTime.DaysInMonth(year, month);
+
+            var employeesCount = _context.Employees.Count();
+
+            var schedules = _context.Schedules
+                .Where(x => x.CreationDate.Year == year && x.CreationDate.Month == month)
+                .ToList()
+                .Count;
+
+            var incomes = _context.Incomes
+                .Where(x => x.CreationDate.Year == year && x.CreationDate.Month == month)
+                .ToList()
+                .Count;
+
+            var companyEmployeeTaxes = _context.CompanyEmployeeTaxes
+                .Where(x => x.CreationDate.Year == year && x.CreationDate.Month == month)
+                .ToList()
+                .Count;
+
+
+            if (employeesCount < schedules || employeesCount < incomes || employeesCount < companyEmployeeTaxes) {
+                return ResponseBuilder.CreateDataResponseWithStatus<Boolean>(HttpStatusCode.OK, MessageConstants.END_MONTH_DATA_NOT_FILLED, false);
+            }
+
+            return ResponseBuilder.CreateDataResponseWithStatus<Boolean>(HttpStatusCode.OK, MessageConstants.END_MONTH_DATA_IS_FILLED, true);
         }
     }
 }

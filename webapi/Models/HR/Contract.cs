@@ -12,7 +12,7 @@ namespace webapi.Models.HR
         public Nullable<int> WorkTime { get; set; }
         public Nullable<Int16> AnnualLeave { get; set; }
         public string? AdditionalClause { get; set; }
-        public DateOnly ConclusionDate { get; set; }
+        public Nullable<DateOnly> ConclusionDate { get; set; }
         public DateOnly ExecutionDate { get; set; }
         public Nullable<DateOnly> ContractTerm { get; set; }
         public Nullable<DateOnly> AdditionalAgreementDate { get; set; }
@@ -69,7 +69,7 @@ namespace webapi.Models.HR
         public Nullable<int> WorkTime { get; set; }
         public Nullable<Int16> AnnualLeave { get; set; }
         public string? AdditionalClause { get; set; }
-        public DateOnly ConclusionDate { get; set; }
+        public Nullable<DateOnly> ConclusionDate { get; set; }
         public DateOnly ExecutionDate { get; set; }
         public Nullable<DateOnly> ContractTerm { get; set; }
         public Nullable<DateOnly> AdditionalAgreementDate { get; set; }

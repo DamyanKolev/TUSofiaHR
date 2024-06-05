@@ -1,7 +1,8 @@
 ﻿import {
-    CustomListItem, FlexBox, FlexBoxAlignItems, FlexBoxDirection, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItemDomRef, Ui5CustomEvent
+    CustomListItem, FlexBox, FlexBoxDirection, IconDomRef, Input, InputDomRef, ListDomRef, ListGrowingMode, SelectDialog, StandardListItemDomRef, Ui5CustomEvent,
+    ValueState
 } from "@ui5/webcomponents-react"
-import { FC, Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { JoinTableInfo } from "@models/JoinTableInfo/JoinTableInfo";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
@@ -10,33 +11,57 @@ import { createPortal } from "react-dom";
 import { createFilter, defaultFilter, Filter } from "@/models/Filter";
 import { createPageFilterInfo } from "@/models/Page/Page";
 import { largeFormItem } from "@/utils/css";
+import { Control, FieldPath, FieldValues, RegisterOptions, useController } from "react-hook-form";
+import { postRequest } from "@/utils/forms/submitForm";
 
 
 
 
-interface LargeTableSelectProps {
+interface Props<T extends FieldValues> {
     joinInfo: JoinTableInfo,
     value?: string,
     tableId?: string
-    name: string,
-    formDataSetter: (selectedItem: StandardListItemDomRef, name: string) => void
+    control: Control<T>
+    name: FieldPath<T>;
+    rules?: Omit<RegisterOptions<T, FieldPath<T>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
 }
 
-
-const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tableId="id", name, formDataSetter }) => {
+function LargeTableSelect<T extends FieldValues>({ joinInfo, value = "", tableId="id", control, name, rules }: Props<T>) {
     const { filterField, description, contentFields, headerText, tableURL } = joinInfo
+    const { field, fieldState } = useController({control, name, rules});
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [data, setData] = useState<PageResponse>(defaultPageResponse)
+    const [pageReponse, setPageResponse] = useState<PageResponse>(defaultPageResponse)
     const [filterObject, setFilterObject] = useState<Filter>(defaultFilter)
     const [currentPage, setCurrentPage] = useState<int>(1)
     const [inputValue, setInputValue] = useState<string>(value)
     const isSuccess = useAppSelector((state) => state.isSuccessForm.value)
     const dispatchIsSuccess = useAppDispatch()
 
+
+    const pageRequest = async (page: int, isNextPage: boolean) => {
+        try {
+            const pageDTO = createPageFilterInfo(page, 100, filterObject)
+            const jsonData = JSON.stringify(pageDTO)
+            const data = await postRequest(tableURL, jsonData, () => {})
+
+            if (isNextPage) {
+                const newData = {...pageReponse, records: [...pageReponse.records, ...data.records]}
+                setPageResponse(newData)
+            }
+            else {
+                setPageResponse(data)
+                setCurrentPage(1)
+            }
+        }
+        catch (error){
+            console.log(error)
+        }
+    }
+
     
     const onClickHandler = () => {
         initData(1)
-            .then((res) => {setData(res.data)})
+            .then((res) => {setPageResponse(res.data)})
             .catch(console.error);
         setIsOpen(true)
     }
@@ -44,7 +69,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
     const onAfterCloseHandler = () => {
         setIsOpen(false)
         setFilterObject(defaultFilter)
-        setData(defaultPageResponse)
+        setPageResponse(defaultPageResponse)
         setCurrentPage(1)
     }
 
@@ -52,7 +77,7 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
         const selectedItem = event.detail.selectedItems[0]
         const currentValue = selectedItem.children[0].children[1].textContent
         if (currentValue) {
-            formDataSetter(selectedItem, name)
+            field.onChange(Number(selectedItem.id))
             setInputValue(currentValue)
         }
     }
@@ -79,7 +104,6 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
         const token = sessionStorage.getItem("accessToken")
         const pageDTO = createPageFilterInfo(page, 100, filterObject)
 
-        console.log(pageDTO)
         return fetch(`${tableURL}`, {
             method: "POST",
             headers: {
@@ -92,17 +116,13 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
 
     useEffect(() => {
         if (isOpen) {
-            initData(currentPage)
-                .then((res) => setData({...data, records: [...data.records, ...res.data.records]}))
-                .catch(console.error);
+            pageRequest(currentPage, true)
         }
     }, [currentPage])
 
     useEffect(() => {
         if (isOpen) {
-            initData(1)
-                .then((res) => {setData(res.data)})
-                .catch(console.error);
+            pageRequest(1, false)
         }
     }, [filterObject])
 
@@ -117,11 +137,17 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
 
     return (
         <Fragment>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:".5rem"}}>
-                <Input value={inputValue} onClick={onClickHandler} readonly style={largeFormItem}/>
-            </FlexBox>
+            <Input 
+                value={inputValue} 
+                onClick={onClickHandler} 
+                readonly 
+                style={largeFormItem}
+                valueState={fieldState.error ? ValueState.Error : ValueState.None}
+                valueStateMessage={<span>{fieldState.error?.message}</span>}
+            />
             {createPortal(
                 <SelectDialog
+                    preventFocusRestore={true}
                     resizable
                     open={isOpen}
                     onAfterClose={onAfterCloseHandler}
@@ -130,11 +156,11 @@ const LargeTableSelect: FC<LargeTableSelectProps> = ({ joinInfo, value = "", tab
                     onSearch={onSearchHandler}
                     onLoadMore={onLoadMoreHandler}
                     onConfirm={onConfirmHandler }
-                    growing={currentPage >= data.pages? ListGrowingMode.None: ListGrowingMode.Button}
+                    growing={currentPage >= pageReponse.pages? ListGrowingMode.None: ListGrowingMode.Button}
                 >
                     {
-                        data.records.map((item) => (
-                            <CustomListItem key={`large.${item[tableId]}`} id={item[tableId]}>
+                        pageReponse.records.map((item, key) => (
+                            <CustomListItem key={key} id={item[tableId]}>
                                 <FlexBox direction={FlexBoxDirection.Column} style={{margin: ".8rem 0 .8rem 0", gap: "1rem"}}>
                                     <div>{item[description]}</div>
                                     <div style={{color: "var(--sapContent_LabelColor)", fontSize: "var(--sapFontSize)"}}>

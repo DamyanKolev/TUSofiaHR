@@ -10,7 +10,7 @@ namespace webapi.Controllers.HR
 {
     // [Authorize(Roles = IdentityRoles.Admin)]
     // [Authorize(Roles = IdentityRoles.Accountant)]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class ContractController: ControllerBase
     {

@@ -1,4 +1,3 @@
-import { setNullValuesToEmtyString } from "./forms/formData";
 
 
 export async function getUpdateData<T extends object, D>(data: D, postURL: string): Promise<T | null> {
@@ -15,9 +14,6 @@ export async function getUpdateData<T extends object, D>(data: D, postURL: strin
 
     if (response.ok) {
         let data = json.data
-        if(data != null) {
-            data = setNullValuesToEmtyString<T>(data)
-        }
         return data
     }
     else {

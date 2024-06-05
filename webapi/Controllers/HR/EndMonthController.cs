@@ -31,5 +31,22 @@ namespace webapi.Controllers.HR
 
             return Ok(result.Response);
         }
+
+        [HttpPost("/api/hr/end-month/finish", Name = "FinishMonth")]
+        public IActionResult FinishMonth()
+        {
+            var result = _endMonthService.FinishMonth();
+
+            return Ok(result.Response);
+        }
+
+
+        [HttpPost("/api/hr/end-month/is-filled", Name = "IsFilledAllEmployeesMonthData")]
+        public IActionResult IsFilledAllEmployeesMonthData()
+        {
+            var result = _endMonthService.IsFilledAllEmployeesMonthData();
+
+            return Ok(result.Response);
+        }
     }
 }

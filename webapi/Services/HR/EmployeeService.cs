@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using AutoMapper;
 using webapi.Constants;
 using webapi.Models;
@@ -51,18 +52,22 @@ namespace webapi.Services.HR
                 employee.PersonalData = personalData;
                 _context.Employees.Add(employee);
 
-                var employeeContract = new EmployeeContracts { EmployeeId = employee.Id, ContractId = contract.Id, IsActive = true };
-                _context.EmployeeContracts.Add(employeeContract);
+                if (contract != null)
+                {
+                    _context.Contracts.Add(contract);
+                    var employeeContract = new EmployeeContracts { EmployeeId = employee.Id, ContractId = contract.Id, IsActive = true };
+                    _context.EmployeeContracts.Add(employeeContract);
+                }
 
                 var result = _context.SaveChanges();
 
                 transaction.Commit();
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_FAILED);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS );
             }
-            catch (Exception)
+            catch (Exception е)
             {
                 transaction.Rollback();
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_SUCCESS);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, е.Message);
             }
         }
 
@@ -142,7 +147,7 @@ namespace webapi.Services.HR
 
             if (contract != null)
             {
-                contractV = _context.ContractV.Find(contract.Id);
+                contractV = _context.ContractV.Where(c => c.ContractId == contract.Id).FirstOrDefault();
             }
             if (employee.InsuranceId != null)
             {

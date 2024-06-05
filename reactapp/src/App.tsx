@@ -8,6 +8,7 @@ import { useAppSelector } from './store/storeHooks';
 import { getData } from './utils/getData';
 import InitWizardDialog from './components/Dialogs/InitWizardDialog';
 import { createPortal } from 'react-dom';
+import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 
 const App: FC = () => {
     const location = useLocation();

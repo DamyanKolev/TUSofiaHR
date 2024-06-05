@@ -43,7 +43,7 @@ VALUES
 
 INSERT INTO employee_contracts (employee_id, contract_id, is_active)
 VALUES 
-	(1, 1, False),
+	(1, 1, True),
 	(2, 2, False);
 
 

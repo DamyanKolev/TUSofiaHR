@@ -13,14 +13,14 @@ interface TableProps {
     title: string,
     tableURL: string,
     columns: AnalyticalTableColumnDefinition[],
-    filterBar?: boolean,
     header?: ReactNode,
     style?: CSSProperties,
     onRowClick?: (event: any) => void,
+    onSuccessCalback?: () => void,
 }
 
 
-const SmartTable: FC<TableProps> = ({ title, tableURL, columns, filterBar = true, header, style, onRowClick }) => {
+const SmartTable: FC<TableProps> = ({ title, tableURL, columns, header, style, onRowClick, onSuccessCalback }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const table = useRef<Record<string, any>>(null);
     const [pageDTO, setPageDTO] = useState<PageInfo>(initialPageState)
@@ -56,6 +56,9 @@ const SmartTable: FC<TableProps> = ({ title, tableURL, columns, filterBar = true
         if (isSuccess) {
             dispatchIsSuccess(toggle())
             initTable()
+            if (onSuccessCalback != undefined) {
+                onSuccessCalback()
+            }
         }
     }, [isSuccess])
 
@@ -71,9 +74,6 @@ const SmartTable: FC<TableProps> = ({ title, tableURL, columns, filterBar = true
                 filterable
                 header={
                     <div style={{width: "100%"}}>
-                        {/* {filterBar? 
-                            <TableFilterBar fields={data.fields} title={title}/> : <></>
-                        } */}
                         <PageBar title={title}/>
                         {header}
                     </div>

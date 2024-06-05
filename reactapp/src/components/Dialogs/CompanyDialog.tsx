@@ -47,8 +47,8 @@ const CompanyDialog: FC<CompanyDialogProps> = ({getSelected, setIsSelected, getC
                     {
                         getCompanies().map((company: Database, key: number) => {
                             return (
-                                <StandardListItem key={key} additionalText={company.company_eic} id={company.id.toString()}>
-                                    {company.company_name}
+                                <StandardListItem key={key} additionalText={company.companyEic} id={company.id.toString()}>
+                                    {company.companyName}
                                 </StandardListItem>
                             )
                         })

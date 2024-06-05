@@ -1,36 +1,36 @@
-import { DatePicker, DatePickerDomRef, Text, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
-import { CSSProperties, FC } from "react";
-import { DatePickerChangeEventDetail } from "@ui5/webcomponents/dist/DatePicker.js";
-import DataType from "@app-types/enums/DataType";
-import { largeFormItem } from "@utils/css";
+import { Text } from "@ui5/webcomponents-react";
+import { CSSProperties } from "react";
+import { Control, FieldPath, FieldValues, RegisterOptions, useController } from "react-hook-form";
+import WrapppedDatePicker from "../WrapppedDatePicker";
+import { largeFormItem } from "@/utils/css";
 
-interface StandardDateFieldProps {
+interface Props<T extends FieldValues> {
     style?:CSSProperties,
     textFieldWidth?: string,
-    editMode: boolean;
-    value: string;
-    name: string;
-    valueState?: ValueState,
-    onChange: (event: Ui5CustomEvent<DatePickerDomRef, DatePickerChangeEventDetail>) => void;
+    editMode: boolean
+    name: FieldPath<T>
+    control: Control<T>
+    rules?: Omit<RegisterOptions<T, FieldPath<T>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
 }
 
-export const StandardDateField: FC<StandardDateFieldProps> = ({style = largeFormItem,textFieldWidth = "15.625rem",  editMode, value, valueState, name, onChange }) => {
+export function StandardDateField<T extends FieldValues>(
+    {style = largeFormItem, textFieldWidth = "15.625rem", editMode, name, control, rules }: Props<T>
+) {
+    const { field } = useController({control, name, rules });
+
     if (editMode) {
         return (
-            <DatePicker
-                style={style}
+            <WrapppedDatePicker
+                control={control}
                 name={name}
-                onChange={onChange}
-                value={value}
-                data-type={DataType.Date}
-                valueState={valueState}
+                style={style}
             />
         )
     }
 
     return (
         <Text style={{width:textFieldWidth}}>
-            {value}
+            {field.value}
         </Text>
     )
 };

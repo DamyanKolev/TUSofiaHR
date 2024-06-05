@@ -1,41 +1,35 @@
-import DataType from "@app-types/enums/DataType";
-import { TextArea, TextAreaDomRef, Ui5CustomEvent, ValueState, Text } from "@ui5/webcomponents-react";
-import { largeFormItem } from "@utils/css";
-import { CSSProperties, FC } from "react";
+import { largeFormItem } from "@/utils/css";
+import { TextArea, Text, ValueState } from "@ui5/webcomponents-react";
+import { CSSProperties } from "react";
+import { Control, FieldPath, FieldValues, RegisterOptions, useController } from "react-hook-form";
 
-
-interface Props {
+interface Props<T extends FieldValues> {
     style?: CSSProperties
     textFieldWidth?: string,
     editMode: boolean;
-    value: string;
-    dataType?: DataType;
-    valueState?: ValueState,
-    name: string;
-    onInput: (e: Ui5CustomEvent<TextAreaDomRef, never>) => void;
+    control: Control<T>
+    name: FieldPath<T>
+    rules?: Omit<RegisterOptions<T, FieldPath<T>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
 }
 
 
-const StandardTextAreaField: FC<Props> = (
-    { style = largeFormItem, textFieldWidth = "15.625rem", editMode, value, dataType = DataType.String, name, onInput, valueState }
-) => {
+export function StandardTextAreaField<T extends FieldValues>(
+    { style = largeFormItem, textFieldWidth = "15.625rem", editMode, control, name, rules}: Props<T>
+) {
+    const { field, fieldState } = useController({control, name, rules });
+
     if (editMode) {
         return <TextArea
+            {...field}
             style={style}
-            value={value}
-            data-type={dataType}
-            name={name}
-            onInput={onInput}
-            valueState={valueState}
+            valueState={fieldState.error ? ValueState.Error : ValueState.None}
+            valueStateMessage={<span>{fieldState.error?.message}</span>}
         />;
     }
 
     return (
         <Text style={{width:textFieldWidth}}>
-            {value}
+            {field.value}
         </Text>
     )
 }
-
-
-export default StandardTextAreaField

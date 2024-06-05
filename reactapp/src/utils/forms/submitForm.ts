@@ -1,7 +1,4 @@
-import { parseObjectFields } from "@utils/parsers";
-
-export async function submitPostForm<T extends object>(postUrl: string, data: T, successCalback: () => void) {
-    const bodyData = parseObjectFields<T>(data)
+export async function submitPostForm(postUrl: string, bodyData: string, successCalback: () => void) {
     const token = sessionStorage.getItem("accessToken")
     const response = await fetch(postUrl, {
         method: "POST",
@@ -9,18 +6,19 @@ export async function submitPostForm<T extends object>(postUrl: string, data: T,
             "Content-Type": "application/json",
             'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(bodyData),
+        body: bodyData,
     });
     if (response.ok) {
         successCalback()
     }
     else {
-        console.log(await response.json())
+        const json = await response.json()
+        throw Error(json.message)
     }
 }
 
 
-export async function submitPutForm<T extends object>(tableURL: string, data: T, successCalback: () => void) {
+export async function submitPutForm(tableURL: string, bodyData: string, successCalback: () => void) {
     const token = sessionStorage.getItem("accessToken")
     const response = await fetch(`${tableURL}/update`, {
         method: "PUT",
@@ -28,10 +26,53 @@ export async function submitPutForm<T extends object>(tableURL: string, data: T,
             "Content-Type": "application/json",
             'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(data),
+        body: bodyData,
     });
 
     if (response.ok) {
         successCalback()
     }
 };
+
+
+export async function postRequest(reqURL: string, bodyData: string, successCalback: () => void) {
+    const token = sessionStorage.getItem("accessToken")
+    const response = await fetch(reqURL, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+        },
+        body: bodyData,
+    })
+
+    if (response.ok) {
+        successCalback()
+        const json = await response.json()
+        return json.data
+    }
+    else {
+        const json = await response.json()
+        throw Error(json.message)
+    }
+}
+
+
+export async function getRequest<T>(reqURL: string): Promise<T> {
+        const token = sessionStorage.getItem("accessToken")
+        const response = await fetch(reqURL, {
+        method: "GET",
+        headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+        },
+    })
+    const json = await response.json()
+
+    if (response.ok) {
+        return json.data
+    }
+    else {
+        throw Error(json.message)
+    }
+}

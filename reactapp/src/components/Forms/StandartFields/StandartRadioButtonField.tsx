@@ -1,60 +1,61 @@
-import DataType from "@app-types/enums/DataType";
-import { RadioButtonDomRef, Ui5CustomEvent, Text, RadioButton, ValueState } from "@ui5/webcomponents-react";
-import { largeFormItem } from "@utils/css";
-import { FC, Fragment } from "react";
+import { RadioButton, Text, RadioButtonDomRef, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
+import { Control, FieldPath, FieldValues, RegisterOptions, useController } from "react-hook-form";
+import { Fragment } from "react/jsx-runtime";
 
-
-interface StandardRadioButtonFieldProps {
+interface Props<T extends FieldValues> {
     textFieldWidth?: string,
     buttonsValues: Array<string>,
     editMode: boolean;
-    value: string;
-    valueState?: ValueState,
-    dataType?: DataType;
-    name: string;
-    onChange: (event: Ui5CustomEvent<RadioButtonDomRef, never>) => void;
+    control: Control<T>
+    name: FieldPath<T>;
+    rules?: Omit<RegisterOptions<T, FieldPath<T>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
 }
 
 
 
-const StandardRadioButtonField: FC<StandardRadioButtonFieldProps> = ({textFieldWidth = "15.625rem", buttonsValues, editMode, value, dataType = DataType.String, name, valueState, onChange}) =>{
+export function StandardRadioButtonField<T extends FieldValues>(
+    {textFieldWidth = "15.625rem", buttonsValues, editMode, name, control, rules}: Props<T>
+) {
+    const { field, fieldState } = useController({control, name, rules });
+    const handleOnChange = (event: Ui5CustomEvent<RadioButtonDomRef, never>) => {
+        const checked = event.target.checked
+        if (checked) {
+            const value = event.target.text
+            field.onChange(value)
+        }
+    }
+
+
     if (editMode) {
         return <Fragment>
             {
                 buttonsValues.map((btnValue, key) => {
-                    if (value === btnValue) {
+                    if (field.value === btnValue) {
                         return <RadioButton
-                            style={largeFormItem}
                             checked={true}
                             key={key}
-                            name={name}
                             text={btnValue}
-                            onChange={onChange}
-                            date-type={dataType}
-                            valueState={valueState}
+                            {...control.register(name)}
+                            onChange={handleOnChange}
+                            valueState={fieldState.error ? ValueState.Error : ValueState.None}
                         />
                     }
                     return <RadioButton
-                        style={largeFormItem}
                         key={key}
-                        name={name}
                         text={btnValue}
-                        onChange={onChange}
-                        date-type={dataType}
-                        valueState={valueState}
+                        {...control.register(name)}
+                        onChange={handleOnChange}
+                        valueState={fieldState.error ? ValueState.Error : ValueState.None}
                     />
                 })
             }
         </Fragment>
     }
-    
-    
+
+
     return (
         <Text style={{width:textFieldWidth}}>
-            {value}
+            {field.value}
         </Text>
     )
 }
-
-
-export default StandardRadioButtonField

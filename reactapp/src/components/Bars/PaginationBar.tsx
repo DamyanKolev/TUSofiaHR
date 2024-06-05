@@ -4,7 +4,7 @@ import "@ui5/webcomponents-icons/open-command-field"
 import "@ui5/webcomponents-icons/close-command-field"
 import "@ui5/webcomponents-icons/navigation-right-arrow"
 import "@ui5/webcomponents-icons/navigation-left-arrow"
-import { ButtonsStates, defaultDisabledButtonStates, defaultDisplayButtonStates } from "@models/States/PaginationBarStates";
+import { ButtonsStates, defaultDisabledButtonStates, defaultDisplayButtonStates } from "@/models/PaginationBarStates";
 import { useSearchParams } from "react-router-dom";
 
 

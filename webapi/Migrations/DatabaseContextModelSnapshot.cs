@@ -278,15 +278,15 @@ namespace webapi.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7b18a21f-c260-4936-8e84-422450c23734",
+                            ConcurrencyStamp = "dfbe0639-b271-4f65-afb1-102aff9ca362",
                             Email = "damkolev@test.net",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "DAMKOLEV@TEST.NET",
                             NormalizedUserName = "DAMYAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEHcfnsFlpm1uUFgUlga0pESOkbDbmRzjtKvvlbadQi5+ZCIhEnDfzLyBj6nAq1NgA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJtQTPMXeOyv5Sduui87fJvG8Ko+ASRoEi7ZQhKxQsKcEVDHgRmKTlOBEt8y5XxAgw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "22a3177d-bddc-4bd5-8575-ab677f56471e",
+                            SecurityStamp = "153d2f47-b5fb-4912-af0c-b6ba6873fede",
                             TwoFactorEnabled = false,
                             UserName = "Damyan"
                         });
@@ -448,7 +448,7 @@ namespace webapi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("company_eic");
 
-                    b.Property<DateOnly>("ConclusionDate")
+                    b.Property<DateOnly?>("ConclusionDate")
                         .HasColumnType("date")
                         .HasColumnName("conclusion_date");
 
@@ -683,6 +683,39 @@ namespace webapi.Migrations
                         .HasDatabaseName("ix_employee_contracts_employee_id");
 
                     b.ToTable("employee_contracts", (string)null);
+                });
+
+            modelBuilder.Entity("webapi.Models.HR.EndMonth", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("CreationDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("date")
+                        .HasColumnName("creation_date")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_finished");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("integer")
+                        .HasColumnName("month");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer")
+                        .HasColumnName("year");
+
+                    b.HasKey("Id")
+                        .HasName("pk_end_months");
+
+                    b.ToTable("end_months", (string)null);
                 });
 
             modelBuilder.Entity("webapi.Models.HR.Income", b =>
@@ -1505,7 +1538,6 @@ namespace webapi.Migrations
             modelBuilder.Entity("webapi.Models.Views.EmployeeV", b =>
                 {
                     b.Property<string>("DepartmentName")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("department_name");
 
@@ -1545,7 +1577,6 @@ namespace webapi.Migrations
                         .HasColumnName("phone_number");
 
                     b.Property<string>("PositionName")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("position_name");
 

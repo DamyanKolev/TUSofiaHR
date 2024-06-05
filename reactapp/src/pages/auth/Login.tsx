@@ -36,6 +36,7 @@ export default function Login() {
     }
 
     const submitHandler = async () => {
+        console.log(formData)
         const response = await fetch("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -44,6 +45,11 @@ export default function Login() {
                 password: formData.password
             }),
         });
+
+        console.log({
+            username: formData.username,
+            password: formData.password
+        })
 
         if (response.ok) {
             const res = await response.json();
@@ -73,6 +79,7 @@ export default function Login() {
         }
     }
 
+
     useEffect(() => {
         const listener = (event: { code: string; preventDefault: () => void; }) => {
             if (event.code === "Enter" || event.code === "NumpadEnter") {
@@ -86,7 +93,7 @@ export default function Login() {
         return () => {
             removeEventListener("keydown", listener);
         };
-    }, []);
+    }, [formData]);
 
 
     return (

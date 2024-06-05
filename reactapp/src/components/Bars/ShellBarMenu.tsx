@@ -14,14 +14,14 @@ const ShellBarMenu: FC<ShellBarMenuProps> = ({ hideShowSideNav }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [isProfileClick, setIsProfileClick] = useState<boolean>(false)
+    const isLoggedIn = useAppSelector((state) => state.isLoggedIn.value)
+    const dispatchIsLoggedIn = useAppDispatch()
 
     const onProfileClick = () => { 
         setIsProfileClick(true)        
     }
 
     const onLogoutClick = () => {
-        const isLoggedIn = useAppSelector((state) => state.isLoggedIn.value)
-        const dispatchIsLoggedIn = useAppDispatch()
         let rememberMe = localStorage.getItem("rememberMe")
         
         if (rememberMe != null) {

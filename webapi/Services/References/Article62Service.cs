@@ -119,7 +119,6 @@ namespace webapi.Services.References
                 }
 
                 _context.UpdateRange(contracts);
-                _context.SaveChanges();
 
                 var articles = _context.Article62V
                     .Select(c => c.CsvString)
@@ -138,6 +137,7 @@ namespace webapi.Services.References
                     byte[] csvData = memoryStream.ToArray();
 
                     
+                    _context.SaveChanges();
                     transaction.Commit();
                     return csvData;
                 }

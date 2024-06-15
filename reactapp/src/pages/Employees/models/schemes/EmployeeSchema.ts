@@ -9,7 +9,7 @@ export const EmployeeInsertSchema: ZodType<EmployeeInsertDTO> = z.object(
         surname: z.string().min(1, {message: "Полето е задължително"}),
         phoneNumber: z.string().min(1, {message: "Полето е задължително"}),
         companyEmployeeId: z.number().positive(),
-        personalDataId: z.number().positive(),
+        personalDataId: z.number().nonnegative(),
         departmentId: z.number().positive().nullable(),
         insuranceId: z.number().positive().nullable(),
         positionId: z.number().positive().nullable(),

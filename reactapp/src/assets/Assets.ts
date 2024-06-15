@@ -1,0 +1,22 @@
+import "@ui5/webcomponents-icons/home"
+import "@ui5/webcomponents-icons/settings"
+import "@ui5/webcomponents-icons/nav-back"
+import "@ui5/webcomponents-icons/open-command-field"
+import "@ui5/webcomponents-icons/close-command-field"
+import "@ui5/webcomponents-icons/navigation-right-arrow"
+import "@ui5/webcomponents-icons/navigation-left-arrow"
+import "@ui5/webcomponents-icons/journey-arrive"
+import "@ui5/webcomponents-icons/insurance-life"
+import "@ui5/webcomponents-icons/company-view"
+import "@ui5/webcomponents-icons/suitcase"
+import "@ui5/webcomponents-icons/detail-view"
+import "@ui5/webcomponents-icons-business-suite/contract"
+import '@ui5/webcomponents-icons/dist/menu';
+import "@ui5/webcomponents-icons/excel-attachment"
+import "@ui5/webcomponents-icons/exit-full-screen"
+import "@ui5/webcomponents-icons/full-screen"
+import "@ui5/webcomponents-icons/private"
+import "@ui5/webcomponents-icons/money-bills"
+import "@ui5/webcomponents-icons/accept"
+
+

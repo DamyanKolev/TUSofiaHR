@@ -1,11 +1,8 @@
-import { FC, useContext, useState, useEffect } from 'react';
-import { Bar, BarDesign, Button, ButtonDesign, ButtonType, FCLLayout, ObjectPage, ObjectPageSection, ObjectPageSubSection, TitleLevel } from '@ui5/webcomponents-react';
+import { FC, useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { Bar, BarDesign, Button, ButtonDesign, DynamicPageHeader, DynamicPageTitle, FCLLayout, FlexBox, Form, Label, Link, ObjectPage, ObjectPageSection, ObjectPageSubSection, TitleLevel } from '@ui5/webcomponents-react';
 import { toggle } from '@store/slices/toggleSlice';
 import { useAppDispatch } from '@store/storeHooks';
-import { submitPutForm } from '@utils/forms/submitForm';
-import { TableRowState } from '@app-types/TableRowState';
 import { EmployeeView } from '@/pages/Employees/models/EmployeeView';
-import { IncomePageContext, IncomePageDataContext } from '@/pages/EndMonth/EndMonthPage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EndMonthDataUpdateSchema } from '../../models/schemas/EndMonthDataSchema';
 import { defaultEndMonthUpdate, EndMonthDataUpdate } from '../../models/EndMonthData';
@@ -13,19 +10,22 @@ import { useForm } from 'react-hook-form';
 import UpdateIncomeForm from '../Forms/income/UpdateIncomeForm';
 import UpdateCompanyEmployeeTaxForm from '../Forms/companyEmployeTax/UpdateCompanyEmployeeTaxForm';
 import UpdateScheduleForm from '../Forms/schedule/UpdateScheduleForm';
+import { submitPutForm } from '@/utils/requests';
+import { WorkDataView } from '@/pages/Employees/models/WorkDataView';
 
 
 
 interface Props {
-    handleLayoutState: (layout: FCLLayout) => void,
+    setLayout: Dispatch<SetStateAction<FCLLayout>>,
     tableURL: string
+    workData: WorkDataView | undefined
+    endMonthData: EndMonthDataUpdate | undefined
+    selectedRow: EmployeeView | undefined
 }
 
 
 
-const MidColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
-    const rowState = useContext<TableRowState<EmployeeView> | undefined>(IncomePageContext)
-    const selectedData = useContext<EndMonthDataUpdate | undefined>(IncomePageDataContext)
+const MidColumn: FC<Props> = ({tableURL, setLayout, workData, endMonthData, selectedRow}) => {
     const [editMode, setEditMode] = useState<boolean>(false)
     const dispatchIsSuccess = useAppDispatch()
     const {
@@ -40,7 +40,7 @@ const MidColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
     
     
     const setDefaultValues = () => {
-        handleLayoutState(FCLLayout.OneColumn)
+        setLayout(FCLLayout.OneColumn)
         setEditMode(false)
     }
 
@@ -65,93 +65,107 @@ const MidColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
     };
 
     useEffect(() => {
-        if (rowState && selectedData) {
-            const isSelectRow = Object.keys(rowState.selectedRow).length > 0
-            const isHaveMonthIncome = Object.keys(selectedData).length > 0
-            if (isSelectRow && isHaveMonthIncome) {
-                const newData = {
-                    income: selectedData.income, 
-                    schedule: selectedData.schedule,
-                    companyEmployeeTax: selectedData.companyEmployeeTax
-                }
-                reset(newData)
+        if (endMonthData) {
+            const newData = {
+                income: endMonthData.income, 
+                schedule: endMonthData.schedule,
+                companyEmployeeTax: endMonthData.companyEmployeeTax
             }
+            reset(newData)
         }
-    }, [rowState]);
+    }, [selectedRow]);
 
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} >
-            <ObjectPage
-                footer={
-                    <Bar design={BarDesign.FloatingFooter}>
-                        <Button slot="endContent" design={ButtonDesign.Transparent} onClick={navBackClick}>Отказ</Button>
-                        <Button slot="endContent" design={ButtonDesign.Emphasized} type={ButtonType.Submit}>Запази</Button>
-                    </Bar>
-                }
-                headerContent={
-                    <Bar design={BarDesign.Subheader} 
-                        startContent={<Button design="Transparent" icon="nav-back" onClick={navBackClick}/>}
-                        endContent={
-                            <Button onClick={()=> setEditMode(!editMode)}>{editMode ? 'Display-Only' : 'Edit Mode'}</Button>
-                        }
-                    />
-                }
+        <ObjectPage
+            headerContent={
+                <DynamicPageHeader>
+                    <FlexBox alignItems="Center" wrap="Wrap">
+                        <FlexBox direction="Column">
+                            <Link>{workData?.phoneNumber}</Link>
+                            <Link href={`mailto:${workData?.workEmail}`}>{workData?.workEmail}</Link>
+                        </FlexBox>
+                    <FlexBox direction="Column" style={{padding: '10px'}}>
+                    <Label>{workData?.employeeName}</Label>
+                    <Label>{`${workData?.populatedPlace}, България`}</Label>
+                    </FlexBox></FlexBox>
+                </DynamicPageHeader>
+            }
+            headerTitle={
+                <DynamicPageTitle 
+                    actions={
+                        <Button design={ButtonDesign.Emphasized} onClick={()=>setEditMode(!editMode)}>{editMode ? 'Display-Only' : 'Edit Mode'}</Button>
+                    }
+                    header={workData?.employeeName} 
+                    showSubHeaderRight 
+                    subHeader={workData?.positionName}
+                    breadcrumbs={
+                        <Button icon="nav-back" design={ButtonDesign.Transparent} onClick={navBackClick}></Button>
+                    }
                 >
-                <ObjectPageSection
-                    id="incomes"
-                    titleText="Доход"
-                >
-                    <ObjectPageSubSection
-                        titleText="Доход"
-                        id="incomes"
-                        titleTextLevel={TitleLevel.H1}
-                        titleTextUppercase
-                    >
-                        <UpdateIncomeForm
-                            getEditMode={() => {return editMode}}
-                            control={control}
-                        />
-                    </ObjectPageSubSection>
-
-                    <ObjectPageSubSection
-                        titleText="Декларация 6"
-                        id="declaration6"
-                        titleTextLevel={TitleLevel.H1}
-                        titleTextUppercase
-                    >
-                        <UpdateCompanyEmployeeTaxForm
-                            getEditMode={() => {return editMode}}
-                            control={control}
-                        />
-                    </ObjectPageSubSection>
-
-                </ObjectPageSection>
-
-
-
-                <ObjectPageSection
-                    id="schedule"
+                </DynamicPageTitle>
+            }
+            footer={
+                <Bar design={BarDesign.FloatingFooter}>
+                    <Button slot="endContent" design={ButtonDesign.Transparent} onClick={navBackClick}>Отказ</Button>
+                    <Button slot="endContent" design={ButtonDesign.Emphasized} onClick={handleSubmit(onSubmit)}>Запази</Button>
+                </Bar>
+            }
+            >
+            <ObjectPageSection
+                id="schedule"
+                titleText='График'
+                hideTitleText
+            >
+                <ObjectPageSubSection
                     titleText='График'
-                    hideTitleText
+                    id="schedule"
+                    titleTextLevel={TitleLevel.H1}
+                    titleTextUppercase
                 >
-                    <ObjectPageSubSection
-                        titleText='График'
-                        id="schedule"
-                        titleTextLevel={TitleLevel.H1}
-                        titleTextUppercase
-                    >
+                    <Form>
                         <UpdateScheduleForm
                             getEditMode={() => {return editMode}}
                             control={control}
                         />
-                    </ObjectPageSubSection>
+                    </Form>
+                </ObjectPageSubSection>
+            </ObjectPageSection>
 
-                </ObjectPageSection>
 
+            <ObjectPageSection
+                id="incomes"
+                titleText="Доход"
+            >
+                <ObjectPageSubSection
+                    titleText="Доход"
+                    id="incomes"
+                    titleTextLevel={TitleLevel.H1}
+                    titleTextUppercase
+                >
+                    <Form>
+                        <UpdateIncomeForm
+                            getEditMode={() => {return editMode}}
+                            control={control}
+                        />
+                    </Form>
+                </ObjectPageSubSection>
 
-            </ObjectPage>
-        </form>
+                <ObjectPageSubSection
+                    titleText="Декларация 6"
+                    id="declaration6"
+                    titleTextLevel={TitleLevel.H1}
+                    titleTextUppercase
+                >
+                    <Form>
+                        <UpdateCompanyEmployeeTaxForm
+                            getEditMode={() => {return editMode}}
+                            control={control}
+                        />
+                    </Form>
+                </ObjectPageSubSection>
+            </ObjectPageSection>
+        </ObjectPage>
     );
 };
 

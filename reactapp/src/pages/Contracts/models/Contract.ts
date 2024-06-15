@@ -1,11 +1,13 @@
-import { ContractView } from "@/pages/Contracts/models/ContractView";
 import { Optional } from "@app-types/Optional";
+import { ContractView } from "./Views/ContractView";
+import { parseDateToISO } from "@/utils/parsers";
 
 export interface Contract {
     id: int,
     workingWage: Optional<string>;
     workTime: Optional<int>;
     annualLeave: Optional<int>;
+    additionalClause: Optional<string>,
     conclusionDate: Optional<string>;
     executionDate: string;
     contractTerm: Optional<string>;
@@ -16,11 +18,14 @@ export interface Contract {
     sysPositionId:Optional<int>,
     sysIconomicActivityId: Optional<int>,
     documentTypeId: int,
+    companyEic: string,
     terminationTypeId: Optional<int>,
     sysAdministrativeTerritoryId: Optional<int>,
     codeCorection: int,
     isTerminate: boolean,
     article62Flag: boolean,
+    isAnnex: boolean,
+    creationDate: string
 }
 
 export const defaultContractUpdateDTO: Contract = {
@@ -28,6 +33,7 @@ export const defaultContractUpdateDTO: Contract = {
     workingWage: "",
     workTime: 0,
     annualLeave: 0,
+    additionalClause: null,
     conclusionDate: null,
     executionDate: "",
     contractTerm: null,
@@ -38,11 +44,14 @@ export const defaultContractUpdateDTO: Contract = {
     sysPositionId:0,
     sysIconomicActivityId: 0,
     documentTypeId: 0,
+    companyEic: sessionStorage.getItem("companyEIC")!,
     terminationTypeId: 0,
     sysAdministrativeTerritoryId: 0,
     codeCorection: 0,
     isTerminate: false,
     article62Flag: false,
+    isAnnex: false,
+    creationDate: parseDateToISO(new Date())
 }
 
 export interface ContractInsertDTO {

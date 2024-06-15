@@ -1,3 +1,25 @@
+CREATE VIEW check_end_month_v AS
+SELECT 
+	e1.id AS employee_id,
+	TRUE AS status
+FROM employees e1
+JOIN schedules s1 ON s1.employee_id = e1.id
+JOIN incomes i1 ON i1.employee_id = e1.id
+JOIN company_employee_taxes cet1 ON cet1.employee_id = e1.id
+WHERE EXTRACT(MONTH FROM s1.creation_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+AND EXTRACT(YEAR FROM s1.creation_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+AND EXTRACT(MONTH FROM i1.creation_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+AND EXTRACT(YEAR FROM i1.creation_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+AND EXTRACT(MONTH FROM cet1.creation_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+AND EXTRACT(YEAR FROM cet1.creation_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+ORDER BY e1.id;
+
+
+
+
+
+
+
 CREATE VIEW employee_v AS
 SELECT
   e1.id AS employee_id,
@@ -10,7 +32,8 @@ SELECT
   pd.identity_text,
   pd.gender,
   e1.personal_data_id,
-  sit.code AS insurance_type_code
+  sit.code AS insurance_type_code,
+  COALESCE(cemv.status, FALSE) AS end_month_status
 FROM employees e1
 LEFT JOIN departments dep ON dep.id = e1.department_id
 LEFT JOIN employees e2 ON dep.manager_id = e2.id
@@ -18,6 +41,7 @@ LEFT JOIN positions pos ON pos.id = e1.position_id
 JOIN personal_data pd ON pd.id = e1.personal_data_id
 LEFT JOIN insurances ins ON e1.insurance_id = ins.id
 LEFT JOIN sys_insurance_types sit ON ins.insurance_type_id = sit.id
+LEFT JOIN check_end_month_v cemv ON cemv.employee_id = e1.id
 ORDER BY e1.id ASC;
 
 
@@ -59,94 +83,98 @@ ORDER BY pos.id ASC;
 
 
 
+
+
+ CREATE VIEW annexes_json_v AS
+  SELECT 
+ 	c1.id AS contract_id,
+	jsonb_agg(
+		jsonb_build_object(
+			'contractId', c1.id,
+			'employeeId', e1.id,
+			'conclusionDate', c1.conclusion_date,
+			'executionDate', c1.execution_date,
+			'contractTerm', c1.contract_term,
+			'ekatte', sat.ekatte,
+			'nkpd', sp.nkpd,
+			'nkid', sia.nkid,
+			'contractTypeCode', sct.code,
+			'terminationCode', sctt.code,
+			'isTerminate', c1.is_terminate,
+			'article62Flag', c1.article62_flag
+		)
+	) AS annexes
+FROM contracts c1
+   	JOIN contracts annex ON c1.id = annex.contract_id AND annex.is_annex = true
+    JOIN employee_contracts ec1 ON ec1.contract_id = c1.id
+    JOIN employees e1 ON e1.id = ec1.employee_id
+    LEFT JOIN sys_positions sp ON sp.id = c1.sys_position_id
+    LEFT JOIN sys_iconomic_activities sia ON sia.id = c1.sys_iconomic_activity_id
+    LEFT JOIN sys_contract_termination_types sctt ON sctt.id = c1.termination_type_id
+    LEFT JOIN sys_administrative_territories sat ON sat.id = c1.sys_administrative_territory_id
+    JOIN sys_contract_types sct ON sct.id = c1.contract_type_id
+GROUP BY c1.id;
+
+
+
+
+
+
+
+
+
+
+
+
+
 CREATE VIEW contract_v AS
+SELECT 
+    c1.id AS contract_id,
+    e1.id AS employee_id,
+    c1.conclusion_date,
+    c1.execution_date,
+    c1.contract_term,
+    sat.ekatte,
+    sp.nkpd,
+    sia.nkid,
+    sct.code as contract_type_code,
+    sctt.code as termination_code,
+    c1.is_terminate,
+    c1.article62_flag,
+    coalesce(annex.annexes, '[]') as annexes
+FROM contracts c1
+     JOIN employee_contracts ec1 ON ec1.contract_id = c1.id
+     LEFT JOIN annexes_json_v annex ON c1.id = annex.contract_id
+     JOIN employees e1 ON e1.id = ec1.employee_id
+     JOIN personal_data pd1 ON pd1.id = e1.personal_data_id
+     LEFT JOIN sys_positions sp ON sp.id = c1.sys_position_id
+     LEFT JOIN sys_iconomic_activities sia ON sia.id = c1.sys_iconomic_activity_id
+     LEFT JOIN sys_contract_termination_types sctt ON sctt.id = c1.termination_type_id
+     LEFT JOIN sys_administrative_territories sat ON sat.id = c1.sys_administrative_territory_id
+     JOIN sys_contract_types sct ON sct.id = c1.contract_type_id
+ORDER BY c1.id;
+
+
+
+
+CREATE VIEW work_data_v AS
 SELECT
-  c1.id AS contract_id,
   e1.id AS employee_id,
-  CONCAT(e1.first_name, ' ', e1.middle_name, ' ', e1.surname) AS employee_name,
-  e1.first_name,
-  e1.middle_name,
-  e1.surname,
-  c1.working_wage,
-  c1.work_time,
-  c1.annual_leave,
-  pd1.identity_text,
-  pd1.identity_code,
-  c1.conclusion_date,
-  c1.execution_date,
-  c1.contract_term,
-  c1.additional_agreement_date,
-  c1.termination_date,
-  c1.is_terminate,
-  c1.article62_flag,
-  c1.code_corection,
-  c1.company_eic,
-  sp.position_name as position_name,
-  sp.nkpd,
-  sia.activity_name,
-  sia.nkid,
-  sctt.code as termination_code,
-  sat.ekatte,
-  sct.contract_type,
-  sct.code as contract_type_code,
-  scdt.document_type,
-  scdt.code as document_code,
-  sit.code AS insurance_type_code
-FROM contracts c1
-JOIN employee_contracts ec1 ON ec1.contract_id = c1.id
-JOIN employees e1 ON e1.id = ec1.employee_id
-JOIN personal_data pd1 ON pd1.id = e1.personal_data_id
-LEFT JOIN sys_positions sp ON sp.id = c1.sys_position_id
-LEFT JOIN sys_iconomic_activities sia ON sia.id = c1.sys_iconomic_activity_id
-LEFT JOIN sys_contract_termination_types sctt ON sctt.id = c1.termination_type_id
-LEFT JOIN sys_administrative_territories sat ON sat.id = c1.sys_administrative_territory_id
-JOIN sys_contract_types sct ON sct.id = c1.contract_type_id
-JOIN sys_contract_document_types scdt ON scdt.id = c1.document_type_id
-LEFT JOIN insurances ins ON e1.insurance_id = ins.id
-LEFT JOIN sys_insurance_types sit ON ins.insurance_type_id = sit.id
-ORDER BY c1.id ASC;
+  CONCAT(e1.first_name, ' ', e1.surname) AS employee_name,
+  pd.work_email,
+  e1.phone_number,
+  pos.position_name,
+  dep.department_name,
+  ad.populated_place
+FROM employees e1
+LEFT JOIN departments dep ON dep.id = e1.department_id
+LEFT JOIN positions pos ON pos.id = e1.position_id
+JOIN personal_data pd ON pd.id = e1.personal_data_id
+LEFT JOIN addresses ad ON ad.id = pd.address_id
+ORDER BY e1.id ASC;
 
 
 
-
-
-
-
-
-CREATE VIEW annex_v AS
-SELECT
-  c1.id AS contract_id,
-  e1.id as employee_id,
-  c1.conclusion_date,
-  c1.execution_date,
-  c1.contract_term,
-  c1.additional_agreement_date,
-  c1.termination_date,
-  c1.is_terminate,
-  c1.article62_flag,
-  sp.position_name as position_name,
-  sp.nkpd,
-  sia.activity_name,
-  sia.nkid,
-  sctt.code as termination_code,
-  sat.ekatte,
-  sct.contract_type,
-  sct.code as contract_type_code,
-  scdt.document_type,
-  sit.code AS insurance_type_code
-FROM contracts c1
-JOIN employee_contracts ec1 ON ec1.contract_id = c1.contract_id
-JOIN employees e1 ON e1.id = ec1.employee_id
-LEFT JOIN sys_positions sp ON sp.id = c1.sys_position_id
-LEFT JOIN sys_iconomic_activities sia ON sia.id = c1.sys_iconomic_activity_id
-LEFT JOIN sys_contract_termination_types sctt ON sctt.id = c1.termination_type_id
-LEFT JOIN sys_administrative_territories sat ON sat.id = c1.sys_administrative_territory_id
-JOIN sys_contract_types sct ON sct.id = c1.contract_type_id
-JOIN sys_contract_document_types scdt ON scdt.id = c1.document_type_id
-LEFT JOIN insurances ins ON e1.insurance_id = ins.id
-LEFT JOIN sys_insurance_types sit ON ins.insurance_type_id = sit.id
-WHERE c1.is_annex
-ORDER BY c1.id ASC;
 
 
 

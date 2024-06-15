@@ -1,13 +1,11 @@
-import { CSSProperties, FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import { AnalyticalTableColumnDefinition, Bar, BarDesign, Button, ButtonDesign, FlexBox, FlexBoxAlignItems, FlexBoxDirection, MessageBox, MessageBoxActions, Text } from '@ui5/webcomponents-react';
 import "@ui5/webcomponents-icons/excel-attachment"
-import SmartTable from '@components/Table/SmartTable';
+import SmartTable from '../SmartTable';
+import { getRequest } from '@/utils/requests';
 
 
-const tableStyle: CSSProperties = {
-    height: "100%",
-    maxHeight: "calc(100vh - 6.48rem)"   
-}
+
 
 
 interface StartColumnProps {
@@ -26,14 +24,24 @@ const StartColumn: FC<StartColumnProps> = ({ tableURL, columns, tableTitle, onRo
         setOpen(true)
     }
 
-    const onSuccessCalback = async () => {
-        try {
-            const result = await postRequest("/api/hr/end-month/is-filled")
-            setDisabled(!result.data)
+    const onSuccessCalback = async (data: Array<any>) => {
+        const isMonthFinished = await getRequest<boolean>("/api/hr/end-month/is-month-finished")
+        let isDisabled = false
+
+        for (let index = 0; index < data.length; index++) {
+            const isFilled = data[index].endMonthStatus
+
+            if (!isFilled) {
+                isDisabled = true
+                break;
+            }
         }
-        catch (error) {
-            console.error(error)
+
+        if (isMonthFinished) {
+            isDisabled = isMonthFinished
         }
+
+        setDisabled(isDisabled)
     }
 
     const postRequest = async (postUrl: string) => {
@@ -58,8 +66,8 @@ const StartColumn: FC<StartColumnProps> = ({ tableURL, columns, tableTitle, onRo
     const handleClose = async (event: CustomEvent<{ action: string; }>) => {
         try {
             if (event.detail.action === MessageBoxActions.OK) {
-                const messageData = await postRequest("/api/hr/end-month/finish")
-                console.log(messageData)
+                await postRequest("/api/hr/end-month/finish")
+                setDisabled(true)
             } 
             setOpen(false);
         }
@@ -68,15 +76,10 @@ const StartColumn: FC<StartColumnProps> = ({ tableURL, columns, tableTitle, onRo
         }
     };
 
-    useEffect(() => {
-        onSuccessCalback()
-    }, [])
-
     return (
         <Fragment>
             <SmartTable
                 title={tableTitle}
-                style={tableStyle}
                 tableURL={tableURL}
                 columns={columns}
                 onRowClick={onRowClick}

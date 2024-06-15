@@ -1,5 +1,5 @@
 import { CSSProperties, FC, Fragment } from 'react';
-import { AnalyticalTableColumnDefinition, Bar, BarDesign, Button, ButtonDesign,FCLLayout} from '@ui5/webcomponents-react';
+import { AnalyticalTableColumnDefinition, Bar, BarDesign, Button, ButtonDesign } from '@ui5/webcomponents-react';
 import "@ui5/webcomponents-icons/excel-attachment"
 import SmartTable from '@/components/Table/SmartTable';
 
@@ -14,14 +14,12 @@ interface StartColumnProps {
     tableURL: string,
     columns: AnalyticalTableColumnDefinition[],
     tableTitle: string,
-    handleLayoutState: (layout: FCLLayout) => void,
+    createOnClick: () => void,
     onRowClick: (event: any) => void,
 }
 
 
-const StartColumn: FC<StartColumnProps> = ({ tableURL, columns, tableTitle, handleLayoutState, onRowClick}) => {
-    const createOnClick = () => { handleLayoutState(FCLLayout.EndColumnFullScreen) }
-
+const StartColumn: FC<StartColumnProps> = ({ tableURL, columns, tableTitle, createOnClick, onRowClick}) => {
     return (
         <Fragment>
             <SmartTable

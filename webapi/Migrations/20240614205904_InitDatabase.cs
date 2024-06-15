@@ -665,7 +665,7 @@ namespace webapi.Migrations
             migrationBuilder.InsertData(
                 table: "users",
                 columns: new[] { "id", "access_failed_count", "concurrency_stamp", "email", "email_confirmed", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
-                values: new object[] { 1, 0, "d075e915-6254-4f7a-a3e0-bb69a8343302", "damkolev@test.net", false, false, null, "DAMKOLEV@TEST.NET", "DAMYAN", "AQAAAAIAAYagAAAAEIby5lv2SU9dEEy+s1RSWyAJWPXrD7Qgo+iGerDZo5jCSkzsEpVUEMRl18n91wMomw==", null, false, "4fda8d16-9c0b-4e0c-8f5e-b1a67fb8b147", false, "Damyan" });
+                values: new object[] { 1, 0, "1b423937-7a24-4b59-97c3-96379dda934a", "damkolev@test.net", false, false, null, "DAMKOLEV@TEST.NET", "DAMYAN", "AQAAAAIAAYagAAAAEPzWbis+gq1ayQMTiIK1BCjYaVnf/WjkM4n//NP44xSL+Ke1CMWY8Fr+Ih4qN3uyiQ==", null, false, "87f9726f-981c-440c-8559-897305c93f06", false, "Damyan" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_companies_user_id",

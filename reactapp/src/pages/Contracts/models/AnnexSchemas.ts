@@ -4,16 +4,18 @@ import { parseDateToISO } from "@/utils/parsers"
 
 export const AnnexInsertSchema: ZodType<AnnexInsertDTO> = z.object(
     {
-        workingWage: z.string().min(1, {message: "Полето е задължително"}).transform((value, ctx) => {
-            const parsedValue = Number.parseFloat(value)
-            if (Number.isNaN(parsedValue)) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message:"Невалидно въведена заплата",
-                })
+        workingWage: z.string().nullable().transform((value, ctx) => {
+            if(value) {
+                const parsedValue = Number.parseFloat(value)
+                if (Number.isNaN(parsedValue)) {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message:"Невалидно въведена заплата",
+                    })
+                }
             }
             return value
-        }).nullable(),
+        }),
         workTime: z.coerce.number().positive().nullable(),
         annualLeave: z.coerce.number().positive().nullable(),
         additionalClause: z.string().nullable(),

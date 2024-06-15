@@ -1,31 +1,29 @@
-import { FC } from 'react';
-import { 
-    Bar, BarDesign, Button, FCLLayout, ObjectPage, ObjectPageSection, ObjectPageSubSection, ButtonDesign, FlexBox,
-    ButtonType
-} from "@ui5/webcomponents-react";
+import { Dispatch, FC, SetStateAction } from 'react';
+import { FCLLayout, Form, FormGroup, Button, Bar, Page, ButtonDesign } from "@ui5/webcomponents-react";
 import { useAppDispatch } from '@store/storeHooks';
-import { toggle } from '@store/slices/toggleSlice';
-import CreateEmployeeForm from '@/pages/Employees/components/Forms/employee/CreateEmployeeForm';
-import { submitPostForm } from '@utils/forms/submitForm';
-import { formToggle } from '@store/slices/formToggleSlice';
-import CreateInsuranceForm from '@/pages/Employees/components/Forms/insurance/CreateInsuranceForm';
 import { useForm } from 'react-hook-form';
+import { EmployeeDataInsertSchema } from '@pages/Employees/models/schemes/EmployeeDataSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EmployeeDataInsertSchema } from '../../models/schemes/EmployeeDataSchema';
 import CreatePersonalDataForm from '../Forms/personalData/CreatePersonalDataForm';
-import CreateAddressForm from '../Forms/address/CreateAddressForm';
+import CreateEmployeeForm from '../Forms/employee/CreateEmployeeForm';
 import CreateContractForm from '../Forms/contract/CreateContractForm';
-import { defaultEmployeeDataInsert, EmployeeDataInsert } from '../../models/EmployeeData';
+import CreateAddressForm from '../Forms/address/CreateAddressForm';
+import CreateInsuranceForm from '../Forms/insurance/CreateInsuranceForm';
+import { defaultEmployeeDataInsert, EmployeeDataInsert } from '@pages/Employees/models/EmployeeData';
+import { EndColumnEnum } from '@pages/Employees/models/EndColumnEnum';
+import { toggle } from '@/store/slices/toggleSlice';
+import { submitPostForm } from '@/utils/requests';
 
 
 
 interface EmployeeEndColumnProps {
-    handleLayoutState: (layout: FCLLayout) => void,
-    tableURL: string
+    setLayout: Dispatch<SetStateAction<FCLLayout>>,
+    tableURL: string,
+    setEndColumnOption: Dispatch<SetStateAction<EndColumnEnum>>
 }
 
 
-const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, tableURL}) => {
+const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({setLayout, tableURL, setEndColumnOption}) => {
     const dispatchIsSuccess = useAppDispatch()
     const {
         handleSubmit,
@@ -40,12 +38,11 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
         resolver: zodResolver(EmployeeDataInsertSchema),
     });
 
-    
     const setDefaultValues = () => {
-        handleLayoutState(FCLLayout.OneColumn)
-        dispatchIsSuccess(formToggle())
+        setLayout(FCLLayout.OneColumn)
+        reset(defaultEmployeeDataInsert)            
+        setEndColumnOption(EndColumnEnum.None)
     }
-
 
     const navBackClick = ():void => {
         setDefaultValues()
@@ -56,119 +53,78 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({handleLayoutState, table
         setDefaultValues()
     }
 
-
     const onSubmit = (data: EmployeeDataInsert) => {
         try {
             const formData = JSON.stringify(data, null, 2)
             submitPostForm(`${tableURL}/create`, formData, successCalback)
-            reset(defaultEmployeeDataInsert)            
+            reset(defaultEmployeeDataInsert)  
         }
         catch (error) {
             console.error(error)
         }
     };
 
+
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <ObjectPage
-                footer={
-                    <Bar design={BarDesign.FloatingFooter}>
-                        <Button slot="endContent" design={ButtonDesign.Transparent} onClick={navBackClick}>Отказ</Button>
-                        <Button slot="endContent" design={ButtonDesign.Emphasized} type={ButtonType.Submit}>Запази</Button>
-                    </Bar>
-                }
-                headerContent={
-                    <Bar design={BarDesign.Subheader} 
-                        startContent={<Button design="Transparent" icon="nav-back" onClick={navBackClick}/>}
+        <Page
+                header={
+                    <Bar
+                        startContent={
+                            <Button icon="nav-back" design={ButtonDesign.Transparent} onClick={navBackClick}/>
+                        }
                     />
                 }
-                style={{
-                    height: 'calc(100vh - 3.73rem)'
-                }}
+                footer={
+                    <Bar
+                        endContent={
+                            <Button onClick={handleSubmit(onSubmit)}>Запази</Button>
+                        }
+                    />
+                }
+            >
+                <Form
+                    labelSpanM={4}
+                    titleText="Нов Служител"
                 >
-                <ObjectPageSection
-                    id="employee"
-                    titleText="Служител"
-                >
-                    <ObjectPageSubSection
-                        hideTitleText
-                        titleText="Служител"
-                        id="employee-info"
-                    >
+                    <FormGroup titleText='Информация за служителя'>
                         <CreateEmployeeForm
                             control={control}
                             formState={formState}
                         />
-                    </ObjectPageSubSection>
+                    </FormGroup>
 
-                </ObjectPageSection>
+                    <FormGroup titleText='Лични данни'>
+                        <CreatePersonalDataForm
+                            control={control}
+                            formState={formState}
+                        />
+                    </FormGroup>
 
+                    <FormGroup titleText='Адрес'>
+                        <CreateAddressForm
+                            control={control}
+                            formState={formState}
+                        />
+                    </FormGroup>
 
+                    <FormGroup titleText='Осигуровки'>
+                        <CreateInsuranceForm
+                            control={control}
+                            formState={formState}
+                            setValue={setValue}
+                            getValues={getValues}
+                        />
+                    </FormGroup>
 
-                <ObjectPageSection
-                    id="personal"
-                    titleText="Лична данни"
-                >
-                    <ObjectPageSubSection
-                        hideTitleText
-                        titleText="Лична данни"
-                        id="personal-data-info"
-                    >
-                        <FlexBox style={{gap:"4rem", padding:".3rem 2rem"}}>
-                            <CreatePersonalDataForm
-                                control={control}
-                                formState={formState}
-                            />
-                            <CreateAddressForm
-                                control={control}
-                                formState={formState}
-                            />
-                        </FlexBox>
-                    </ObjectPageSubSection>
-
-                </ObjectPageSection>
-
-
-                <ObjectPageSection
-                    id="contract"
-                    titleText="Договор"
-                >
-                    <ObjectPageSubSection
-                        hideTitleText
-                        titleText="Договор"
-                        id="contract-info"
-                    >
+                    <FormGroup titleText='Договор'>
                         <CreateContractForm
                             control={control}
                             formState={formState}
                         />
-                    </ObjectPageSubSection>
-                </ObjectPageSection>
-
-
-
-                <ObjectPageSection
-                    id="insurance"
-                    titleText={getValues("contract.sysIconomicActivityId") != 0? "Осигуровки" : ""}
-                >
-                    {
-                        getValues("contract.sysIconomicActivityId") != 0 &&
-                        <ObjectPageSubSection
-                            hideTitleText
-                            titleText="Осигуровки"
-                            id="insurance-info"
-                        >
-                            <CreateInsuranceForm
-                                control={control}
-                                formState={formState}
-                                setValue={setValue}
-                                getValues={getValues}
-                            />
-                        </ObjectPageSubSection>
-                    }
-                </ObjectPageSection>
-            </ObjectPage>
-        </form>
+                    </FormGroup>
+                </Form>
+            </Page>
     )
 }
 

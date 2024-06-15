@@ -40,12 +40,13 @@ export interface EmployeeInsertDTO {
     insuranceId: Optional<int>;
     positionId: Optional<int>;
 }
+
 export const defaultEmployeeInsert: EmployeeInsertDTO = {
     firstName: "",
     middleName: "",
     surname: "",
     phoneNumber: "",
-    companyEmployeeId: 0,
+    companyEmployeeId: Math.floor(Math.random() * 9999999 + 1),
     personalDataId: 0,
     departmentId: null,
     insuranceId: null,

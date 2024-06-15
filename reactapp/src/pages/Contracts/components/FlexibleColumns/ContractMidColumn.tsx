@@ -1,186 +1,146 @@
-import { FC, useContext, useState, useEffect, Fragment } from 'react';
-import { Bar, Button, ButtonDesign, ButtonType, FCLLayout, FlexBox, FlexBoxDirection, Form, FormItem, Option, Select, SelectDomRef, Title, Ui5CustomEvent } from '@ui5/webcomponents-react';
-import { Contract, ContractUpdateData, createContractUpdateData, defaultContractUpdateDTO } from '@/pages/Contracts/models/Contract';
-import { toggle } from '@store/slices/toggleSlice';
-import { useAppDispatch } from '@store/storeHooks';
-import { ContractView } from '@/pages/Contracts/models/ContractView';
-import { getUpdateData } from '@utils/getData';
-import { submitPutForm } from '@utils/forms/submitForm';
+import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react';
+import { Button, FCLLayout, ObjectPage, ObjectPageSection, DynamicPageHeader, DynamicPageTitle, FlexBox, Link, Label, TitleLevel, Title, ButtonDesign } from '@ui5/webcomponents-react';
+import { EmployeeView } from '@pages/Employees/models/EmployeeView';
 import { TableRowState } from '@app-types/TableRowState';
-import ContractOperation from '@app-types/enums/ContractOperation';
-import { SelectChangeEventDetail } from '@ui5/webcomponents/dist/Select.js';
-import { formContainerCSS } from '@utils/css';
-import { AnnexView } from '@/pages/Contracts/models/Views/AnnexView';
-import { ContractUpdateSchema } from '../../models/ContractSchema';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import TerminateCreateForm from '../Forms/TerminateCreateForm';
-import UpdateContractForm from '../Forms/UpdateContractForm';
-import { ContractPageContext } from '../../ContractPage';
+import { useAppDispatch } from '@store/storeHooks';
+import { setContract } from '@store/slices/contractSlice';
+import { EndColumnEnum } from '@pages/Employees/models/EndColumnEnum';
+import { ContractPageContext } from '@pages/Contracts/ContractPage';
+import { WorkDataView } from '@/pages/Employees/models/WorkDataView';
+import { getUpdateData } from '@/utils/requests';
+import ContractSmartTable from '../ContractSmartTable';
+import contractColumns from '../../models/Columns/ContractColumns';
 
 
 
-interface ContractMidColumnProps {
-    handleLayoutState: (layout: FCLLayout) => void,
+
+
+
+interface Props {
+    setLayout: Dispatch<SetStateAction<FCLLayout>>,
+    layout: FCLLayout
+    setEndColumnOption: Dispatch<SetStateAction<EndColumnEnum>>
     tableURL: string
 }
 
 
+const ContractMidColumn: FC<Props> = ({ layout, setLayout, setEndColumnOption, tableURL }) => {
+    const rowState = useContext<TableRowState<EmployeeView> | undefined>(ContractPageContext)
+    const [workData, setWorkData] = useState<WorkDataView | undefined>(undefined)
+    const appDispatch = useAppDispatch()
 
-const ContractMidColumn: FC<ContractMidColumnProps> = ({tableURL, handleLayoutState}) => {
-    const rowState = useContext<TableRowState<ContractView> | undefined>(ContractPageContext)
-    const [updateData, setUpdateData] = useState<ContractUpdateData>({} as ContractUpdateData)
-    const [contractOperation, setContractOperation] = useState<string>("")
-    const [editMode, setEditMode] = useState<boolean>(false)
-    const [annex, setAnnex] = useState<Array<AnnexView>>([])
-    const dispatchIsSuccess = useAppDispatch()
-
-    const contractForm = useForm<Contract>({
-        defaultValues: defaultContractUpdateDTO,
-        mode: "onChange",
-        resolver: zodResolver(ContractUpdateSchema),
-    });
-    
     const init = async () => {
-        if(rowState) {
-            const tableRow = await getUpdateData<Contract, number>(rowState.selectedRow.contractId, `${tableURL}/find-by-id`)
-            const employeeAnnex = await getUpdateData<Array<AnnexView>, number>(rowState.selectedRow.employeeId, `${tableURL}/employee-annex`)
-            if (tableRow != null) {
-                contractForm.reset(tableRow)
-                setUpdateData(createContractUpdateData(rowState.selectedRow))
-            }
-            if (employeeAnnex != null) (
-                setAnnex(employeeAnnex)
-            )
-        }
-    }
-
-    const setDefaultValues = () => {
-        setContractOperation("")
-        handleLayoutState(FCLLayout.OneColumn)
-        setEditMode(false)
-    }
-
-
-    const successCalback = ():void => {
-        dispatchIsSuccess(toggle())
-        setDefaultValues()
-    }
-    
-    const navBackClick = () => {
-        setDefaultValues()
-    }
-
-    const onSubmit = (data: Contract) => {
         try {
-            const jsonData = JSON.stringify(data, null, 2)
-            submitPutForm(tableURL, jsonData, successCalback)
-            contractForm.reset()
+            if(rowState) {
+                const data = await getUpdateData<WorkDataView, number>(rowState.selectedRow.employeeId, `${tableURL}/work-data`)
+                setWorkData(data)
+            }
         }
         catch (error) {
             console.error(error)
         }
-    };
+    }
 
+    const setDefaultValues = () => {
+        setLayout(FCLLayout.OneColumn)
+        rowState?.setSelectedRow({} as EmployeeView)
+    }
+
+    const onClickContract = (event: any) => {
+        const row = event.detail.row.original
+        setLayout(FCLLayout.ThreeColumnsMidExpanded)
+        setEndColumnOption(EndColumnEnum.UpdateContract)
+        appDispatch(setContract(row))
+    }
+
+    const onClickFullscreen = () => {
+        if (layout === FCLLayout.TwoColumnsMidExpanded) {
+            setLayout(FCLLayout.MidColumnFullScreen)
+        }
+        else {
+            setLayout(FCLLayout.TwoColumnsMidExpanded)
+        }
+    }
+
+
+    const onCLickCreateContract = () => {
+        setLayout(FCLLayout.ThreeColumnsMidExpanded)
+        setEndColumnOption(EndColumnEnum.InsertContract)
+    }
+
+ 
     useEffect(() => {
-        if (rowState) {
-            if (Object.keys(rowState.selectedRow).length > 0) {
-                init()
-            }
+        if(rowState && Object.keys(rowState.selectedRow).length > 0) {
+            init()
         }
     }, [rowState]);
 
 
-    
-
-
-    const handleSelectChange = (event: Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
-        const selectedItem = event.detail.selectedOption.textContent
-        if(selectedItem) {
-            setContractOperation(selectedItem)
-        }
-    }
-
     return (
-        <Fragment>
-            <Bar startContent={
-                    <Button design="Transparent" icon="nav-back" onClick={navBackClick}/>
-                }
-                endContent={
-                    contractOperation == ContractOperation.Corection &&
-                    <Button onClick={() => setEditMode(!editMode)}>{editMode ? 'Display-Only Mode' : 'Edit Mode'}</Button>
-                }
-            />
-            
+        <ObjectPage
+            headerContent={
+                <DynamicPageHeader>
+                    <FlexBox alignItems="Center" wrap="Wrap">
+                        <FlexBox direction="Column">
+                            <Link>{workData?.phoneNumber}</Link>
+                            <Link href={`mailto:${workData?.workEmail}`}>{workData?.workEmail}</Link>
+                        </FlexBox>
+                    <FlexBox direction="Column" style={{padding: '10px'}}>
+                    <Label>{workData?.employeeName}</Label>
+                    <Label>{`${workData?.populatedPlace}, България`}</Label>
+                    </FlexBox></FlexBox>
+                </DynamicPageHeader>
+            }
+            headerContentPinnable
+            headerTitle={
+                <DynamicPageTitle 
+                    actions={
+                        <>
+                            <Button 
+                                icon={layout == FCLLayout.TwoColumnsMidExpanded ? "full-screen" : "exit-full-screen"}
+                                onClick={onClickFullscreen}
+                                design={ButtonDesign.Transparent}
+                            />
+                        </>
+                    } 
+                    header={workData?.employeeName} 
+                    showSubHeaderRight 
+                    subHeader={workData?.positionName}
+                    breadcrumbs={
+                        <Button design={ButtonDesign.Transparent} icon="nav-back" onClick={setDefaultValues}></Button>
+                    }
+                >
+                    {/* <ObjectStatus state="Success">Назначен</ObjectStatus> */}
+                </DynamicPageTitle>
+            }
+            // image="https://sap.github.io/ui5-webcomponents-react/assets/Person-B7wHqdJw.png"
+            imageShapeCircle
+            showHideHeaderButton
+            style={{
+                height: "calc(100vh - 3.73rem)"
+            }}
+        >
 
-            <FlexBox style={formContainerCSS} direction={FlexBoxDirection.Column}>
-                { annex.length > 0 &&
-                    <FlexBox>
-                        <Title></Title>
-                        <Select>
-
-                        </Select>
-                    </FlexBox>
-                }
-
-
-                {
-                    contractOperation == "" &&
-                    <Select style={{width: "15rem"}} onChange={handleSelectChange}>
-                        <Option></Option>
-                        {
-                            contractForm.getValues("terminationTypeId") == null && 
-                            <Option>{ContractOperation.Termination}</Option>
-                        }
-                        <Option>{ContractOperation.Corection}</Option>
-                        <Option>{ContractOperation.Deletion}</Option>
-                    </Select>
-                }
-
-
-                {
-                    contractOperation == ContractOperation.Termination && 
-                    <Form 
-                        onSubmit={contractForm.handleSubmit(onSubmit)} 
-                        labelSpanM={4}
-                        style={{padding: "1rem 2rem"}}
-                    >
-                        <TerminateCreateForm
-                            control={contractForm.control}
-                            formState={contractForm.formState}
-                        />
-
-                        <FormItem>
-                            <Button type={ButtonType.Submit}>Запази</Button>
-                        </FormItem>
-                    </Form>
-                }
-
-
-                {
-                    contractOperation == ContractOperation.Corection &&
-                    <Form 
-                        onSubmit={contractForm.handleSubmit(onSubmit)} 
-                        labelSpanM={4}
-                        style={{padding: "1rem 2rem"}}
-                    >
-                        <UpdateContractForm
-                            getEditMode={() => {return editMode}}
-                            getUpdateData={() => {return updateData}}
-                            control={contractForm.control}
-                        />
-
-                        <FormItem>
-                            <Button type={ButtonType.Submit}>Запази</Button>
-                        </FormItem>
-                    </Form>
-                }
-            </FlexBox>
-            
-            <Bar design="Footer">
-                <Button slot="endContent" design={ButtonDesign.Transparent} onClick={navBackClick}>Отказ</Button>
-            </Bar>
-        </Fragment>
+            {
+                rowState?.selectedRow !== undefined && Object.keys(rowState.selectedRow).length > 0 &&
+                <ObjectPageSection
+                    header={
+                        <Title level={TitleLevel.H4}>ДОГОВОРИ</Title>
+                    }
+                    aria-label="Договори"
+                    id="contract"
+                    titleText="Договори"
+                    titleTextLevel={TitleLevel.H1}
+                >
+                    <ContractSmartTable
+                        employeeId={rowState?.selectedRow.employeeId}
+                        columns={contractColumns}
+                        onRowClick={onClickContract}
+                        onCreateClick={onCLickCreateContract}
+                    />
+                </ObjectPageSection>
+            }
+        </ObjectPage>
     );
 };
 

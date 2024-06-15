@@ -1,12 +1,9 @@
-import { FC, useContext, useEffect } from "react";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { toggle } from "@store/slices/toggleSlice";
 import { useAppDispatch } from "@store/storeHooks";
-import { Bar, BarDesign, Button, ButtonDesign, ButtonType, FCLLayout, ObjectPage, ObjectPageSection, ObjectPageSubSection, TitleLevel } from "@ui5/webcomponents-react";
+import { Bar, BarDesign, Button, ButtonDesign, DynamicPageHeader, DynamicPageTitle, FCLLayout, FlexBox, Form, Label, Link, ObjectPage, ObjectPageSection, ObjectPageSubSection, TitleLevel } from "@ui5/webcomponents-react";
 import { formToggle } from "@store/slices/formToggleSlice";
-import { TableRowState } from "@app-types/TableRowState";
 import { EmployeeView } from "@/pages/Employees/models/EmployeeView";
-import { IncomePageContext } from "@/pages/EndMonth/EndMonthPage";
-import { submitPostForm } from "@utils/forms/submitForm";
 import { EndMonthDataInsertSchema } from "../../models/schemas/EndMonthDataSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,16 +11,19 @@ import { createEndMonthDataInsert, EndMonthDataInsert } from "../../models/EndMo
 import CreateIncomeForm from "../Forms/income/CreateIncomeForm";
 import CreateCompanyEmployeeTaxForm from "../Forms/companyEmployeTax/CreateCompanyEmployeeTaxForm";
 import CreateScheduleForm from "../Forms/schedule/CreateScheduleForm";
+import { submitPostForm } from "@/utils/requests";
+import { WorkDataView } from "@/pages/Employees/models/WorkDataView";
 
 
 interface Props {
-    handleLayoutState: (layout: FCLLayout) => void,
+    setLayout: Dispatch<SetStateAction<FCLLayout>>,
     tableURL: string
+    workData: WorkDataView | undefined
+    selectedRow: EmployeeView  | undefined
 }
 
 
-const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
-    const rowState = useContext<TableRowState<EmployeeView> | undefined>(IncomePageContext)
+const EndColumn: FC<Props> = ({tableURL, setLayout, workData, selectedRow}) => {
     const dispatchIsSuccess = useAppDispatch()
     const {
         handleSubmit,
@@ -38,7 +38,7 @@ const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
 
 
     const setDefaultState = () => {
-        handleLayoutState(FCLLayout.OneColumn)
+        setLayout(FCLLayout.OneColumn)
         dispatchIsSuccess(formToggle())
     }
 
@@ -55,8 +55,9 @@ const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
     const onSubmit = (data: EndMonthDataInsert) => {
         try {
             const formData = JSON.stringify(data, null, 2)
-            submitPostForm(`${tableURL}/income`, formData, successCalback)
-            reset()            
+            submitPostForm(`${tableURL}/create`, formData, successCalback)
+            reset()  
+            // console.log(formData)
         }
         catch (error) {
             console.error(error)
@@ -65,83 +66,101 @@ const EndColumn: FC<Props> = ({tableURL, handleLayoutState}) => {
 
 
     useEffect(() => {
-        if(rowState) {
-            if (Object.keys(rowState.selectedRow).length > 0) {
-                reset(createEndMonthDataInsert(rowState.selectedRow.employeeId))
-            }
+        if(selectedRow) {
+            reset(createEndMonthDataInsert(selectedRow.employeeId))
         }
-    },[rowState])
+    },[selectedRow])
 
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} >
-            <ObjectPage
-                footer={
-                    <Bar design={BarDesign.FloatingFooter}>
-                        <Button slot="endContent" design={ButtonDesign.Transparent} onClick={navBackClick}>Отказ</Button>
-                        <Button slot="endContent" design={ButtonDesign.Emphasized} type={ButtonType.Submit}>Създай</Button>
-                    </Bar>
-                }
-                headerContent={
-                    <Bar design={BarDesign.Subheader} 
-                        startContent={<Button design="Transparent" icon="nav-back" onClick={navBackClick}/>}
-                    />
-                }
+        <ObjectPage
+            headerContent={
+                <DynamicPageHeader>
+                    <FlexBox alignItems="Center" wrap="Wrap">
+                        <FlexBox direction="Column">
+                            <Link>{workData?.phoneNumber}</Link>
+                            <Link href={`mailto:${workData?.workEmail}`}>{workData?.workEmail}</Link>
+                        </FlexBox>
+                    <FlexBox direction="Column" style={{padding: '10px'}}>
+                    <Label>{workData?.employeeName}</Label>
+                    <Label>{`${workData?.populatedPlace}, България`}</Label>
+                    </FlexBox></FlexBox>
+                </DynamicPageHeader>
+            }
+            headerTitle={
+                <DynamicPageTitle 
+                    header={workData?.employeeName} 
+                    showSubHeaderRight 
+                    subHeader={workData?.positionName}
+                    breadcrumbs={
+                        <Button icon="nav-back" design={ButtonDesign.Transparent} onClick={navBackClick}></Button>
+                    }
                 >
-                <ObjectPageSection
-                    id="incomes"
-                    titleText="Доходи"
-                >
-                    <ObjectPageSubSection
-                        titleText="Доходи"
-                        id="income"
-                        titleTextLevel={TitleLevel.H1}
-                        titleTextUppercase
-                    >
-                        <CreateIncomeForm
-                            control={control}
-                            formState={formState}
-                        />
-                    </ObjectPageSubSection>
-
-                    <ObjectPageSubSection
-                        titleText="Декларация 6"
-                        id="declaration6"
-                        titleTextLevel={TitleLevel.H1}
-                        titleTextUppercase
-                    >
-                        <CreateCompanyEmployeeTaxForm
-                            control={control}
-                            formState={formState}
-                        />
-                    </ObjectPageSubSection>
-
-                </ObjectPageSection>
-
-
-
-                <ObjectPageSection
-                    id="schedule"
+                </DynamicPageTitle>
+            }
+            footer={
+                <Bar design={BarDesign.FloatingFooter}>
+                    <Button slot="endContent" design={ButtonDesign.Transparent} onClick={navBackClick}>Отказ</Button>
+                    <Button slot="endContent" design={ButtonDesign.Emphasized} onClick={handleSubmit(onSubmit)}>Запази</Button>
+                </Bar>
+            }
+        >
+            <ObjectPageSection
+                id="schedule"
+                titleText="График"
+                hideTitleText
+            >
+                <ObjectPageSubSection
                     titleText="График"
-                    hideTitleText
+                    id="schedule"
+                    titleTextUppercase
+                    titleTextLevel={TitleLevel.H1}
                 >
-                    <ObjectPageSubSection
-                        titleText="График"
-                        id="schedule"
-                        titleTextUppercase
-                        titleTextLevel={TitleLevel.H1}
-                    >
+                    <Form>
                         <CreateScheduleForm
                             control={control}
                             formState={formState}
                         />
-                    </ObjectPageSubSection>
+                    </Form>
+                </ObjectPageSubSection>
+            </ObjectPageSection>
 
-                </ObjectPageSection>
 
 
-            </ObjectPage>
-        </form>
+            <ObjectPageSection
+                id="incomes"
+                titleText="Доходи"
+            >
+                <ObjectPageSubSection
+                    titleText="Доходи"
+                    id="income"
+                    titleTextLevel={TitleLevel.H1}
+                    titleTextUppercase
+                >
+                    <Form>
+                        <CreateIncomeForm
+                            control={control}
+                            formState={formState}
+                        />
+                    </Form>
+                </ObjectPageSubSection>
+
+                <ObjectPageSubSection
+                    titleText="Декларация 6"
+                    id="declaration6"
+                    titleTextLevel={TitleLevel.H1}
+                    titleTextUppercase
+                >
+                    <Form>
+                        <CreateCompanyEmployeeTaxForm
+                            control={control}
+                            formState={formState}
+                        />
+                    </Form>
+                </ObjectPageSubSection>
+
+            </ObjectPageSection>
+        </ObjectPage>
     );
 };
 

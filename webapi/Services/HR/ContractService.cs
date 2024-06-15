@@ -4,6 +4,7 @@ using webapi.Constants;
 using AutoMapper;
 using System.Net;
 using webapi.Models.Views;
+using Newtonsoft.Json.Linq;
 
 namespace webapi.Services.HR
 {
@@ -15,7 +16,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<DataResponse<PageResponse<ContractV>>> GetContractsPage(PageInfo pageInfo);
         public ResponseWithStatus<DataResponse<Contract>> GetById(int contractId);
         public ResponseWithStatus<DataResponse<Contract>> GetByEmployeeId(int employeeId);
-        public ResponseWithStatus<DataResponse<Contract>> GetEmployeeAnnex(int anexId);
+        public ResponseWithStatus<DataResponse<List<ContractV>>> FindByEmployeeId(int employeeId);
     }
 
     public class ContractService : IContractService
@@ -33,31 +34,47 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<Response> CreateContract(EmployeeContractInsert employeeContractInsert)
         {
-            var employee = _context.Employees.Find(employeeContractInsert.EmployeeId);
-            if (employee == null)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
-            }
+            using var transaction = _context.Database.BeginTransaction();
+            try {
+                var employee = _context.Employees.Find(employeeContractInsert.EmployeeId);
+                if (employee == null)
+                {
+                    return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_RECORD_NOT_FOUND);
+                }
 
-            var isSuccess = _employeeContractService.SetContractToUnactive(employeeContractInsert.EmployeeId);
-            if (!isSuccess)
+                //set last contract inactive
+                var previousContract = _context.EmployeeContracts
+                    .Where(x => x.EmployeeId == employee.Id)
+                    .Where(x => x.IsActive == true)
+                    .FirstOrDefault();
+
+                if (previousContract != null)
+                {
+                    previousContract.IsActive = false;
+                    _context.Update(previousContract);
+                }
+
+                var contract = _mapper.Map<Contract>(employeeContractInsert.Contract);
+
+
+                EmployeeContracts employeeContract = new EmployeeContracts
+                {
+                    EmployeeId = employee.Id,
+                    Employee = employee,
+                    ContractId = contract.Id,
+                    Contract = contract,
+                    IsActive = true
+                };
+                _context.EmployeeContracts.Add(employeeContract);
+                _context.SaveChanges();
+                transaction.Commit();
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
+            }
+            catch (Exception)
             {
+                transaction.Rollback();
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
             }
-
-            var contract = _mapper.Map<Contract>(employeeContractInsert.Contract);
-            _context.Contracts.Add(contract);
-            _context.SaveChanges();
-
-            EmployeeContracts employeeContract = new EmployeeContracts { EmployeeId = employee.Id, ContractId = contract.Id, IsActive = true };
-            _context.EmployeeContracts.Add(employeeContract);
-            var changes = _context.SaveChanges();
-
-            if (changes == 0)
-            {
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
-            }
-            return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
         }
 
         public ResponseWithStatus<Response> CreateAnnex(ContractDTO annexDTO)
@@ -128,19 +145,19 @@ namespace webapi.Services.HR
         }
 
 
-        public ResponseWithStatus<DataResponse<Contract>> GetEmployeeAnnex(int employeeId)
-        {
-            var annex = _context.AnnexV
-                .FirstOrDefault(c =>  c.EmployeeId == employeeId);
 
-            if(annex == null)
+        public ResponseWithStatus<DataResponse<List<ContractV>>> FindByEmployeeId(int employeeId)
+        {
+            var contract = _context.ContractV
+                .Where(c => c.EmployeeId == employeeId)
+                .ToList();
+
+            if (contract == null)
             {
-                return ResponseBuilder.CreateDataResponseWithStatus<Contract>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
+                return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, new List<ContractV>());
             }
 
-            var contract = _mapper.Map<Contract>(annex);
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, contract);
-
         }
     }
 }

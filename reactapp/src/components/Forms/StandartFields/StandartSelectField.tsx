@@ -20,8 +20,8 @@ export function StandardSelectField<T extends FieldValues>(
 ) {
     const { field, fieldState } = useController({control, name, rules });
     const handleOnChange = (event: Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
-        const id = event.detail.selectedOption.id
-        field.onChange(Number(id))
+        const option = event.detail.selectedOption.textContent
+        field.onChange(option)
     }
 
     if (editMode) {

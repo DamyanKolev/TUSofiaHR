@@ -1,10 +1,6 @@
 import { ProductSwitch, ProductSwitchItem } from "@ui5/webcomponents-react";
 import { FC } from "react";
-import "@ui5/webcomponents-icons/insurance-life"
-import "@ui5/webcomponents-icons/company-view"
-import "@ui5/webcomponents-icons/suitcase"
-import "@ui5/webcomponents-icons/detail-view"
-import "@ui5/webcomponents-icons-business-suite/contract"
+
 
 
 
@@ -29,7 +25,7 @@ const HRProductSwitch: FC = () => {
 
             <ProductSwitchItem
                 icon="insurance-life"
-                targetSrc="/insurance"
+                targetSrc="/end-month"
                 titleText="Приключва на месеца"
                 subtitleText="Приключва на месеца"
             />

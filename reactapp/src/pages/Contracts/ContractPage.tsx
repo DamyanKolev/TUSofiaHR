@@ -1,30 +1,29 @@
 ﻿import { FC, createContext, useState } from "react";
-import contractColumns from "@/pages/Contracts/models/ContractColumns";
 import { FCLLayout, FlexibleColumnLayout } from "@ui5/webcomponents-react";
-import { ContractView } from "@/pages/Contracts/models/ContractView";
-import StartColumn from "@components/FlexibleColumns/StartColumn";
 import { TableRowState } from "@app-types/TableRowState";
+import StartColumn from "./components/FlexibleColumns/StartColumn";
+import { EmployeeView } from "../Employees/models/EmployeeView";
+import { EndColumnEnum } from "../Employees/models/EndColumnEnum";
 import ContractMidColumn from "./components/FlexibleColumns/ContractMidColumn";
-import ContractEndColumn from "./components/FlexibleColumns/ContractEndColumn";
+import ContractCreateEndColumn from "./components/FlexibleColumns/ContractCreateEndColumn";
+import ContractUpdateEndColumn from "./components/FlexibleColumns/ContractUpdateEndColumn";
+import { employeeColumns } from "../Employees/models/EmployeeColumns";
 
 
-export const ContractPageContext = createContext<TableRowState<ContractView> | undefined>(undefined);
+export const ContractPageContext = createContext<TableRowState<EmployeeView> | undefined>(undefined);
 
 
 const ContractPage: FC = () => {
     const tableTitle = "Договори";
-    const tableURL = "/api/hr/contracts";
+    const tableURL = "/api/hr/employees";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
-    const [selectedRow, setSelectedRow] = useState<ContractView>({} as ContractView);
+    const [selectedRow, setSelectedRow] = useState<EmployeeView>({} as EmployeeView);
+    const [endColumnOption, setEndColumnOption] = useState<EndColumnEnum>(EndColumnEnum.None)
 
-
-    const handleLayoutState = (layout: FCLLayout) => {
-        setLayout(layout)
-    }
 
     const onRowClick = (event: any) => {
         const row = event.detail.row.original
-        setLayout(FCLLayout.MidColumnFullScreen)
+        setLayout(FCLLayout.TwoColumnsMidExpanded)
         setSelectedRow(row);
     };
 
@@ -38,18 +37,43 @@ const ContractPage: FC = () => {
                     <div>
                         <StartColumn
                             tableURL={tableURL}
-                            columns={contractColumns}
+                            columns={employeeColumns}
                             tableTitle={tableTitle}
-                            handleLayoutState={handleLayoutState}
                             onRowClick={onRowClick}
                         />  
                     </div>
                 }
                 midColumn={
-                    <div><ContractMidColumn tableURL={tableURL} handleLayoutState={handleLayoutState}/></div>
+                    <div>
+                        <ContractMidColumn
+                            setLayout={setLayout} 
+                            layout={layout} 
+                            setEndColumnOption={setEndColumnOption}
+                            tableURL={tableURL}
+                        />
+                    </div>
                 }
                 endColumn={
-                    <div><ContractEndColumn tableURL={tableURL} handleLayoutState={handleLayoutState}/></div>
+                    <div style={{height:"100%"}}>
+                        {
+                            endColumnOption === EndColumnEnum.InsertContract &&
+                            <ContractCreateEndColumn 
+                                setLayout={setLayout}
+                                layout={layout}
+                                selectedRow={selectedRow} 
+                                setEndColumnOption={setEndColumnOption}
+                            />
+                        }
+
+                        {
+                            endColumnOption === EndColumnEnum.UpdateContract &&
+                            <ContractUpdateEndColumn 
+                                setLayout={setLayout}
+                                layout={layout}
+                                setEndColumnOption={setEndColumnOption}
+                            />
+                        }
+                    </div>
                 }
             />
         </ContractPageContext.Provider>

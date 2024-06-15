@@ -1,7 +1,7 @@
 import { createFilter, defaultFilter, Filter } from "@/models/Filter";
 import { createPageFilterInfo } from "@/models/Page/Page";
+import { employeeContractJoinTablesInfo } from "@/pages/Employees/models/JoinTableInfo/EmployeeContractJoinTableInfo";
 import { largeFormItem } from "@/utils/css";
-import { employeeContractJoinTablesInfo } from "@models/JoinTableInfo/EmployeeContractJoinTableInfo";
 import PageResponse, { defaultPageResponse } from "@models/Page/PageResponse";
 import { formToggle } from "@store/slices/formToggleSlice";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";

@@ -13,5 +13,6 @@
         public string? Gender { get; set; }
         public string? InsuranceTypeCode {get; set; }
         public int PersonalDataId {get; set;}
+        public bool EndMonthStatus { get; set;}
     }
 }

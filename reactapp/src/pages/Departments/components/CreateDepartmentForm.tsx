@@ -1,9 +1,8 @@
-﻿import { Bar, Button, ButtonDesign, ButtonType, Dialog, Form, FormItem, Input, Label, MessageStrip, MessageStripDesign, ValueState } from "@ui5/webcomponents-react"
+﻿import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, Input, Label, TextArea, ValueState } from "@ui5/webcomponents-react"
 import { FC } from "react"
 import { useAppDispatch } from "@store/storeHooks"
 import { toggle } from "@store/slices/toggleSlice"
 import DailogSwitch from "@app-types/enums/DialogSwitch"
-import { submitPostForm } from "@utils/forms/submitForm"
 import { largeFormItem } from "@utils/css"
 import LargeTableSelect from "@components/Selects/TableSelect/LargeTableSelect"
 import { defaultDepartmentDTO, DepartmentDTO } from "../models/Department"
@@ -12,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { DepartmentInsertSchema } from "../models/DepartmentSchema"
 import WrappedSelect from "@/components/Selects/WrappedSelect"
 import { departmentJoinTableInfo } from "../models/DepartmentJoinTableInfo"
+import { submitPostForm } from "@/utils/requests"
 
 
 interface CreateDepartmentFormProps {
@@ -68,20 +68,16 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
                 <Bar endContent={
                     <>
                         <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
+                        <Button onClick={handleSubmit(onSubmit)} design={ButtonDesign.Emphasized}>Запази</Button>
                     </>
                 }/>
             }
         >
-            <MessageStrip hideCloseButton design={MessageStripDesign.Negative} hideIcon>
-                Success
-            </MessageStrip>
             <Form 
-                onSubmit={handleSubmit(onSubmit)} 
                 labelSpanM={4}
                 style={{padding: "1rem 2rem"}}
             >
-                <FormItem>
-                    <Label>Отдел</Label>
+                <FormItem label={<Label>Отдел</Label>}>
                     <Input
                         style={largeFormItem}
                         {...register("departmentName", { required: true })}
@@ -89,27 +85,23 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
                         valueStateMessage={<span>{errors.departmentName?.message}</span>}
                     />
                 </FormItem>
-                <FormItem>
-                    <Label>Описание</Label>
-                    <Input
+                <FormItem label={<Label>Описание</Label>}>
+                    <TextArea
                         style={largeFormItem}
                         {...register("description", { required: true })}
                         valueState={errors.description ? ValueState.Error : ValueState.None}
                         valueStateMessage={<span>{errors.description?.message}</span>}
                     />
                 </FormItem>
-                <FormItem>
-                    <Label>Мениджър</Label>
+                <FormItem label={<Label>Мениджър</Label>}>
                     <LargeTableSelect
                         tableId="employeeId"
                         joinInfo={departmentJoinTableInfo.managerId}
                         control={control}
                         name="managerId"
                     />
-                    
                 </FormItem>
-                <FormItem>
-                    <Label>Родителска Единица</Label>
+                <FormItem label={<Label>Родителска Единица</Label>}>
                     <WrappedSelect
                         style={largeFormItem}
                         tableURL={"/api/hr/departments/all"}
@@ -118,10 +110,6 @@ const CreateDepartmentForm: FC<CreateDepartmentFormProps> = ( { dialogSwitchGett
                         name="parentId"
                     />
                 </FormItem> 
-
-                <FormItem>
-                    <Button type={ButtonType.Submit}>Създай</Button>
-                </FormItem>
             </Form>
         </Dialog>
     )

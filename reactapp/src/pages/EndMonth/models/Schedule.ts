@@ -12,6 +12,7 @@ export interface Schedule {
     paidIncapacityDays: int,
     workedHours: int,
     overtimeHours: int,
+    creationDate: string
 }
 
 
@@ -58,4 +59,5 @@ export const defaultScheduleUpdate: Schedule = {
     paidIncapacityDays: 0,
     workedHours: 0,
     overtimeHours: 0,
+    creationDate: ""
 }

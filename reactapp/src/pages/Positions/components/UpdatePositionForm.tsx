@@ -1,10 +1,9 @@
 ﻿import { FC, useContext, useState, useEffect } from 'react';
-import { Bar, Button, ButtonDesign, ButtonType, Dialog, FlexBox, FlexBoxAlignItems, Form, FormItem, Label, Title, TitleLevel } from '@ui5/webcomponents-react';
+import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, Label, Title, TitleLevel } from '@ui5/webcomponents-react';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
 import DailogSwitch from '@app-types/enums/DialogSwitch';
 import { PositionPageContext } from '@/pages/Positions/PositionPage';
-import { submitPutForm } from '@utils/forms/submitForm';
 import { TableRowState } from '@app-types/TableRowState';
 import { PositionView } from '@/pages/Positions/models/PositionView';
 import { createUpdateDTO } from '@/utils/createUpdateDTO';
@@ -16,6 +15,7 @@ import { StandardInputField } from '@/components/Forms/StandartFields/StandartIn
 import { StandardTextAreaField } from '@/components/Forms/StandartFields/StandardTextAreaField';
 import { contractJoinTablesInfo } from '@/pages/Contracts/models/TableJoins/ContractJoinTablesInfo';
 import { StandardLargeTableSelectField } from '@/components/Forms/StandartFields/StandardLargeTableSelectField';
+import { submitPutForm } from '@/utils/requests';
 
 
 interface UpdatePositionFormProps {
@@ -90,14 +90,18 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                 />
             }
             footer={
-                <Bar design="Footer">
-                        <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
-                </Bar>
+                <Bar design="Footer"
+                    endContent={
+                        <>
+                            <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
+                            <Button onClick={handleSubmit(onSubmit)} design={ButtonDesign.Emphasized}>Запази</Button>
+                        </>
+                    }
+                />
             }
         >
 
             <Form 
-                onSubmit={handleSubmit(onSubmit)} 
                 labelSpanM={4}
                 style={{padding: "1rem 2rem"}}
             >
@@ -122,20 +126,12 @@ const UpdatePositionForm: FC<UpdatePositionFormProps> = ({dialogSwitchGetter, di
                 <FormItem label={<Label>Мениджър</Label>}>
                     <StandardLargeTableSelectField
                         editMode={editMode}
-                        tableId="employee_id"
                         joinInfo={contractJoinTablesInfo.positionId}
                         control={control}
                         name="sysPositionId"
                         displayValue={updateData.statePositionName? updateData.statePositionName : ""}
                     />
                 </FormItem>
-
-                <FormItem>
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{width:"100%"}}>
-                        <Button type={ButtonType.Submit}>Запази</Button>
-                    </FlexBox>
-                </FormItem>
-                
             </Form>
         </Dialog>
     );

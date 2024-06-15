@@ -36,7 +36,6 @@ export default function Login() {
     }
 
     const submitHandler = async () => {
-        console.log(formData)
         const response = await fetch("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -45,11 +44,6 @@ export default function Login() {
                 password: formData.password
             }),
         });
-
-        console.log({
-            username: formData.username,
-            password: formData.password
-        })
 
         if (response.ok) {
             const res = await response.json();

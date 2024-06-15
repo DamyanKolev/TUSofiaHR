@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using PuppeteerSharp;
 using webapi.Constants;
 using webapi.Models;
-using webapi.Models.Views;
+
 
 namespace webapi.Services.References
 {
@@ -14,6 +14,7 @@ namespace webapi.Services.References
     {
         public Task<byte[]> GetArticle62PDF();
         public byte[] GetArticle62CSV();
+        public ResponseWithStatus<DataResponse<Boolean>> IsHaveArticle62Documents();
     }
     public class Article62Service : IArticle62Service
     {
@@ -27,78 +28,141 @@ namespace webapi.Services.References
         }
 
 
-
         public async Task<byte[]> GetArticle62PDF()
         {
-            var articles = _context.Article62V
-                .Select(c => JObject.Parse(c.JsonObject))
-                .ToList();
-            //Initialize HTML to PDF converter. 
-
-
-            var path = Path.Combine("Resources/Templates", "reference-article62.hbs");
-            if (File.Exists(path))
+            using var transaction = _context.Database.BeginTransaction();
+            try
             {
-                string hbsTemplate = File.ReadAllText(path);
-                var template = Handlebars.Compile(hbsTemplate);
-                DateTime today = DateTime.Today;
+                byte[] pdfBytes = Encoding.ASCII.GetBytes("");
+                var contracts = _context.Contracts
+                    .Where(c => c.Article62Flag == false)
+                    .ToList();
 
-                var data = new
+                //update article 62 to true in selected contracts
+                foreach (var contract in contracts)
                 {
-                    articles,
-                    current_date = today
-                };
-                var result = template(data);
-                Console.WriteLine(result);
+                    contract.Article62Flag = true;
+                }
 
+                _context.UpdateRange(contracts);
 
+                var articles = _context.Article62V
+                    .Select(c => JObject.Parse(c.JsonObject))
+                    .ToList();
+                //Initialize HTML to PDF converter. 
 
-                using var browserFetcher = new BrowserFetcher();
-                await browserFetcher.DownloadAsync();
-
-                using (var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+                foreach (var contract in contracts)
                 {
-                    Headless = true,
-                }))
+                    contract.Article62Flag = true;
+                }
+
+                var path = Path.Combine("Resources/Templates", "reference-article62.hbs");
+                if (File.Exists(path))
                 {
-                    using (var page = await browser.NewPageAsync())
+                    string hbsTemplate = File.ReadAllText(path);
+                    var template = Handlebars.Compile(hbsTemplate);
+                    DateTime today = DateTime.Today;
+
+                    var data = new
                     {
-                        var pdfOptions = new PuppeteerSharp.PdfOptions();
-                        pdfOptions.Landscape = true;
+                        articles,
+                        current_date = today
+                    };
+                    var result = template(data);
+                    Console.WriteLine(result);
 
 
-                        await page.SetContentAsync(result);
-                        byte[] pdfBytes = await page.PdfDataAsync(pdfOptions);
-                        return pdfBytes;
+                    using var browserFetcher = new BrowserFetcher();
+                    await browserFetcher.DownloadAsync();
+
+                    using (var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+                    {
+                        Headless = true,
+                    }))
+                    {
+                        using (var page = await browser.NewPageAsync())
+                        {
+                            var pdfOptions = new PuppeteerSharp.PdfOptions();
+                            pdfOptions.Landscape = true;
+
+
+                            await page.SetContentAsync(result);
+                            pdfBytes = await page.PdfDataAsync(pdfOptions);
+                        }
                     }
                 }
+
+                await _context.SaveChangesAsync();
+                transaction.Commit();
+                return pdfBytes;
             }
-            return Encoding.ASCII.GetBytes("");
+            catch (Exception)
+            {
+                transaction.Rollback();
+                return Encoding.ASCII.GetBytes("");
+            }
         }
 
 
         public byte[] GetArticle62CSV()
         {
-            var articles = _context.Article62V
-                .Select(c => c.CsvString)
-                .ToList();
-
-            using (var memoryStream = new MemoryStream())
+            using var transaction = _context.Database.BeginTransaction();
+            try
             {
-                using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+                var contracts = _context.Contracts
+                    .Where(c => c.Article62Flag == false)
+                    .ToList();
+
+                foreach (var contract in contracts)
                 {
-                    foreach (var csvString in articles)
-                    {
-                        streamWriter.WriteLine(csvString);
-                    }
+                    contract.Article62Flag = true;
                 }
 
-                byte[] csvData = memoryStream.ToArray();
+                _context.UpdateRange(contracts);
+                _context.SaveChanges();
 
-                return csvData;
+                var articles = _context.Article62V
+                    .Select(c => c.CsvString)
+                    .ToList();
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+                    {
+                        foreach (var csvString in articles)
+                        {
+                            streamWriter.WriteLine(csvString);
+                        }
+                    }
+
+                    byte[] csvData = memoryStream.ToArray();
+
+                    
+                    transaction.Commit();
+                    return csvData;
+                }
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                return Encoding.ASCII.GetBytes("");
             }
         }
 
 
+
+        public ResponseWithStatus<DataResponse<Boolean>> IsHaveArticle62Documents()
+        {
+            var contracts = _context.Contracts
+                .Where(c => c.Article62Flag == false)
+                .ToList();
+
+            if (contracts.Any())
+            {
+                return ResponseBuilder.CreateDataResponseWithStatus<Boolean>(HttpStatusCode.OK, MessageConstants.HAVE_ARTICLE62, true);
+            }
+
+            return ResponseBuilder.CreateDataResponseWithStatus<Boolean>(HttpStatusCode.OK, MessageConstants.NOT_HAVE_ARTICLE62, false);
+        }
     }
 }

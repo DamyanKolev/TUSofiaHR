@@ -10,7 +10,7 @@ export interface Insurance {
     professionalPensionFund: string,
     universalPensionInsurer: string,
     universalPensionEmployee: string,
-    sysInsuranceTypeId: int,
+    insuranceTypeId: int,
 }
 
 export const defaultInsuranceUpdateDTO: Insurance = {
@@ -25,7 +25,7 @@ export const defaultInsuranceUpdateDTO: Insurance = {
     professionalPensionFund: "",
     universalPensionInsurer: "",
     universalPensionEmployee: "",
-    sysInsuranceTypeId: 0,
+    insuranceTypeId: 0,
 }
 
 export interface InsuranceDTO {
@@ -39,7 +39,7 @@ export interface InsuranceDTO {
     professionalPensionFund: string,
     universalPensionInsurer: string,
     universalPensionEmployee: string,
-    sysInsuranceTypeId: int,
+    insuranceTypeId: int,
 }
 
 
@@ -54,21 +54,21 @@ export const defaultInsuranceDTO: InsuranceDTO = {
     professionalPensionFund: "",
     universalPensionInsurer: "",
     universalPensionEmployee: "",
-    sysInsuranceTypeId: 0,
+    insuranceTypeId: 0,
 }
 
 
 
 export interface InsuranceUpdateData {
-    sysInsuranceTypeId: string,
+    insuranceTypeId: string,
 }
 
 export const defaultInsuranceUpdateData: InsuranceUpdateData = {
-    sysInsuranceTypeId: "",
+    insuranceTypeId: "",
 }
 
 export function createInsuranceUpdateData(code: string): InsuranceUpdateData {
     return {
-        sysInsuranceTypeId: code,
+        insuranceTypeId: code,
     }
 }

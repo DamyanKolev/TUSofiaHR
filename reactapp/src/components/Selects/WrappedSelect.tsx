@@ -1,5 +1,5 @@
 import { formToggle } from "@/store/slices/formToggleSlice";
-import { getRequest } from "@/utils/forms/submitForm";
+import { getRequest } from "@/utils/requests";
 import { useAppDispatch, useAppSelector } from "@store/storeHooks";
 import { Select, Option, SelectDomRef, Ui5CustomEvent, ValueState } from "@ui5/webcomponents-react";
 import { SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js";

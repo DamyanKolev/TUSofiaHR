@@ -18,7 +18,7 @@ namespace webapi.Controllers.System
             _insuranceTypesService = insuranceTypesService;
         }
 
-        [HttpPost("/api/sys/insurance-type/all", Name = "GetAllInsuranceType")]
+        [HttpGet("/api/sys/insurance-type/all", Name = "GetAllInsuranceType")]
         public IActionResult GetInsuranceType()
         {
             var result = _insuranceTypesService.SelectAll();

@@ -13,7 +13,6 @@ namespace webapi.Models.HR
     public record EmployeeDataUpdate {
         public Employee? Employee {get; set;}
         public PersonalData? PersonalData { get; set; }
-        public Contract? Contract {get; set;}
         public Insurance? Insurance { get; set;}
         public Address? Address { get; set;}
     }
@@ -27,8 +26,6 @@ namespace webapi.Models.HR
     {
         public required Employee Employee { get; set; }
         public required PersonalData PersonalData { get; set; }
-        public Contract? Contract { get; set; }
-        public ContractV? ContractView { get; set; }
         public Insurance? Insurance { get; set; }
         public Address? Address { get; set; }
     }

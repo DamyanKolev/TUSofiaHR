@@ -41,7 +41,7 @@ const SmartTable: FC<TableProps> = ({ title, tableURL, columns, header, style, o
             body: JSON.stringify(pageDTO),
         })
             .then((response) => response.json())
-            .then((res) => {setData(res.data); console.log(res)})
+            .then((res) => {setData(res.data)})
             .catch(console.error);
     }
 

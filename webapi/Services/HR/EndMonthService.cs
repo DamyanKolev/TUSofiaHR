@@ -5,14 +5,17 @@ using System.Net;
 using webapi.Constants;
 using webapi.Models.Views;
 
+
 namespace webapi.Services.HR
 {
     public interface IEndMonthService
     {
         public ResponseWithStatus<Response> EndMonth(EndMonthDataInsert insertDTO);
-        public ResponseWithStatus<DataResponse<EndMonthDataSelect>> SelectEndMonthData(int employeeId);
+        public ResponseWithStatus<Response> UpdateEmployeeEndMonth(EndMonthDataUpdate employeeEndMonthUpdate);
+
+        public ResponseWithStatus<DataResponse<EndMonthDataUpdate>> SelectEndMonthData(int employeeId);
         public ResponseWithStatus<Response> FinishMonth();
-        public ResponseWithStatus<DataResponse<Boolean>> IsFilledAllEmployeesMonthData();
+        public ResponseWithStatus<DataResponse<Boolean>> IsMonthFinished();
 
     }
     public class EndMonthService : IEndMonthService
@@ -26,6 +29,60 @@ namespace webapi.Services.HR
         }
 
 
+        int GetWorkingDaysInMonth()
+        {
+            DateTime now = DateTime.Now;
+            int month = now.Month;
+            int year = now.Year;
+            // Проверка за валидни месеци
+            if (month < 1 || month > 12)
+            {
+                throw new ArgumentException("Невалиден месец.");
+            }
+
+            // Изчисляване на броя дни в месеца
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+
+            // Изчисляване на броя работни дни
+            int workingDays = 0;
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                DateTime date = new DateTime(year, month, day);
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    workingDays++;
+                }
+            }
+
+            return workingDays;
+        }
+
+
+        void CalculatePaymentAndInsuranceData(ref Income income, Schedule schedule)
+        {
+            var contract = (from ec in _context.Set<EmployeeContracts>()
+                            join c in _context.Set<Contract>() on ec.ContractId equals c.Id
+                            join emp in _context.Set<Employee>() on ec.EmployeeId equals emp.Id
+                            where ec.EmployeeId == schedule.EmployeeId && ec.IsActive
+                            select c).FirstOrDefault();
+
+
+            var workingDays = GetWorkingDaysInMonth();
+            var payPerDay = Decimal.Divide(contract!.WorkingWage ?? 0, workingDays);
+            var payPerHour = Decimal.Divide(payPerDay, 8);
+
+
+            var totalDayPayed = Decimal.Multiply(schedule.InsuranceDays, payPerDay);
+            var total = Decimal.Add(totalDayPayed, income.AdditionalIncome);
+            total = Decimal.Add(total, income.BonusIncome);
+
+            income.GrossRemuneration = total;
+            income.HealthInsurance = total;
+            income.HealtInsuranceArt40 = total;
+            income.TotalInsurance = total;
+        }
+
+
         public ResponseWithStatus<Response> EndMonth(EndMonthDataInsert insertDTO)
         {
             using var transaction = _context.Database.BeginTransaction();
@@ -34,6 +91,7 @@ namespace webapi.Services.HR
                 var schedule = _mapper.Map<Schedule>(insertDTO.Schedule);
                 var income = _mapper.Map<Income>(insertDTO.Income);
                 var companyEmployeeTax = _mapper.Map<CompanyEmployeeTax>(insertDTO.CompanyEmployeeTax);
+                CalculatePaymentAndInsuranceData(ref income, schedule);
 
                 _context.Schedules.Add(schedule);
                 _context.Incomes.Add(income);
@@ -45,15 +103,41 @@ namespace webapi.Services.HR
                 transaction.Commit();
                 return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 transaction.Rollback();
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_INSERT_FAILED);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, e.Message);
             }
         }
 
 
-        public ResponseWithStatus<DataResponse<EndMonthDataSelect>> SelectEndMonthData(int employeeId)
+        public ResponseWithStatus<Response> UpdateEmployeeEndMonth(EndMonthDataUpdate employeeEndMonthUpdate)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var income = employeeEndMonthUpdate.Income;
+                CalculatePaymentAndInsuranceData(ref income, employeeEndMonthUpdate.Schedule);
+
+                _context.Update(employeeEndMonthUpdate.Schedule);
+                _context.Update(employeeEndMonthUpdate.Income);
+                _context.Update(employeeEndMonthUpdate.CompanyEmployeeTax);
+
+                
+                _context.SaveChanges();
+
+                transaction.Commit();
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_UPDATE_FAILED);
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, MessageConstants.MESSAGE_UPDATE_SUCCESS);
+            }
+        }
+
+
+        public ResponseWithStatus<DataResponse<EndMonthDataUpdate>> SelectEndMonthData(int employeeId)
         {
             DateTime now = DateTime.Now;
             int year = now.Year;
@@ -85,31 +169,32 @@ namespace webapi.Services.HR
                 .FirstOrDefault();
 
 
-            if (schedule == null && income == null && companyEmployeeTax == null)
+            if (schedule != null && income != null && companyEmployeeTax != null)
             {
-                return ResponseBuilder.CreateDataResponseWithStatus<EndMonthDataSelect>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
+                var scheduleIncome = new EndMonthDataUpdate
+                {
+                    Income = income,
+                    Schedule = schedule,
+                    CompanyEmployeeTax = companyEmployeeTax
+
+                };
+
+                return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, scheduleIncome);
             }
-
-
-            var scheduleIncome = new EndMonthDataSelect
+            else
             {
-                Income = income,
-                Schedule = schedule,
-                CompanyEmployeeTax = companyEmployeeTax
-               
-            };
-
-            return ResponseBuilder.CreateDataResponseWithStatus<EndMonthDataSelect>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, scheduleIncome);
+                return ResponseBuilder.CreateDataResponseWithStatus<EndMonthDataUpdate>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
+            }
         }
 
 
         public ResponseWithStatus<Response> FinishMonth()
         {
-            var date = new DateOnly();
+            var date = DateTime.Now;
             EndMonth endCurrentMonth = new EndMonth
             {
                 Id = 0,
-                CreationDate = date,
+                CreationDate = new DateOnly(),
                 Month = date.Month,
                 Year = date.Year,
                 IsFinished = true,
@@ -127,38 +212,22 @@ namespace webapi.Services.HR
         }
 
 
-
-
-        public ResponseWithStatus<DataResponse<Boolean>> IsFilledAllEmployeesMonthData()
+        public ResponseWithStatus<DataResponse<Boolean>> IsMonthFinished()
         {
             DateTime now = DateTime.Now;
             int year = now.Year;
             int month = now.Month;
-            int maxDays = DateTime.DaysInMonth(year, month);
 
-            var employeesCount = _context.Employees.Count();
-
-            var schedules = _context.Schedules
-                .Where(x => x.CreationDate.Year == year && x.CreationDate.Month == month)
-                .ToList()
-                .Count;
-
-            var incomes = _context.Incomes
-                .Where(x => x.CreationDate.Year == year && x.CreationDate.Month == month)
-                .ToList()
-                .Count;
-
-            var companyEmployeeTaxes = _context.CompanyEmployeeTaxes
-                .Where(x => x.CreationDate.Year == year && x.CreationDate.Month == month)
-                .ToList()
-                .Count;
+            var endMonthInfo = _context.EndMonths
+                .Where(x => x.Year == year && x.Month == month)
+                .FirstOrDefault();
 
 
-            if (employeesCount < schedules || employeesCount < incomes || employeesCount < companyEmployeeTaxes) {
-                return ResponseBuilder.CreateDataResponseWithStatus<Boolean>(HttpStatusCode.OK, MessageConstants.END_MONTH_DATA_NOT_FILLED, false);
+            if (endMonthInfo != null)
+            {
+                return ResponseBuilder.CreateDataResponseWithStatus<Boolean>(HttpStatusCode.OK, MessageConstants.END_MONTH_DATA_IS_FILLED, true);
             }
-
-            return ResponseBuilder.CreateDataResponseWithStatus<Boolean>(HttpStatusCode.OK, MessageConstants.END_MONTH_DATA_IS_FILLED, true);
+            return ResponseBuilder.CreateDataResponseWithStatus<Boolean>(HttpStatusCode.OK, MessageConstants.END_MONTH_DATA_NOT_FILLED, false);
         }
     }
 }

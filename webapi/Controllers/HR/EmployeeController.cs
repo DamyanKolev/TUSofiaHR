@@ -77,5 +77,14 @@ namespace webapi.Controllers.HR
 
             return Ok(result.Response);
         }
+
+
+        [HttpPost("/api/hr/employees/work-data", Name = "WorkDataByEmployeeId")]
+        public IActionResult WorkDataByEmployeeId([FromBody] int employeeId)
+        {
+            var result = _employeeService.WorkDataByEmployeeId(employeeId);
+
+            return Ok(result.Response);
+        }
     }
 }

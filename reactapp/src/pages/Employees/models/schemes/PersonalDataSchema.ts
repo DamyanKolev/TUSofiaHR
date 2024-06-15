@@ -9,7 +9,7 @@ export const PersonalDataInsertSchema: ZodType<PersonalDataDTO> = z.object(
         personalEmail: z.string().min(1, {message: "Полето е задължително"}).email("Невалиден email адрес"),
         workEmail: z.string().min(1, {message: "Полето е задължително"}).email("Невалиден email адрес"),
         identityText: z.string().min(1, {message: "Полето е задължително"}),
-        identityCode: z.number().nonnegative("Моля изберете опция"),
+        identityCode: z.coerce.number().nonnegative("Моля изберете опция"),
         birthDate: z.string().transform((date) => {
             if (date != "") {
                 return parseDateToISO(date)

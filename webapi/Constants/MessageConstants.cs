@@ -39,5 +39,8 @@
 
         public const string END_MONTH_DATA_NOT_FILLED = "The monthly employee data has not been completed";
         public const string END_MONTH_DATA_IS_FILLED = "Monthly employee data has been completed";
+
+        public const string NOT_HAVE_ARTICLE62 = "there are no unsent notifications";
+        public const string HAVE_ARTICLE62 = "there are unsent notifications";
     }
 }

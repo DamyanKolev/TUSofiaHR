@@ -1,7 +1,6 @@
 import { Bar, Button, ButtonDesign, Title, TitleLevel } from "@ui5/webcomponents-react";
 import { FC, Fragment, ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "@ui5/webcomponents-icons/nav-back"
 
 interface PageBarProps {
     title?: string

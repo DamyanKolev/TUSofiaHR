@@ -12,7 +12,7 @@ import { createFilter, defaultFilter, Filter } from "@/models/Filter";
 import { createPageFilterInfo } from "@/models/Page/Page";
 import { largeFormItem } from "@/utils/css";
 import { Control, FieldPath, FieldValues, RegisterOptions, useController } from "react-hook-form";
-import { postRequest } from "@/utils/forms/submitForm";
+import { postGetRequest } from "@/utils/requests";
 
 
 
@@ -42,7 +42,7 @@ function LargeTableSelect<T extends FieldValues>({ joinInfo, value = "", tableId
         try {
             const pageDTO = createPageFilterInfo(page, 100, filterObject)
             const jsonData = JSON.stringify(pageDTO)
-            const data = await postRequest(tableURL, jsonData, () => {})
+            const data = await postGetRequest(tableURL, jsonData, () => {})
 
             if (isNextPage) {
                 const newData = {...pageReponse, records: [...pageReponse.records, ...data.records]}
@@ -54,7 +54,7 @@ function LargeTableSelect<T extends FieldValues>({ joinInfo, value = "", tableId
             }
         }
         catch (error){
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -140,7 +140,6 @@ function LargeTableSelect<T extends FieldValues>({ joinInfo, value = "", tableId
             <Input 
                 value={inputValue} 
                 onClick={onClickHandler} 
-                readonly 
                 style={largeFormItem}
                 valueState={fieldState.error ? ValueState.Error : ValueState.None}
                 valueStateMessage={<span>{fieldState.error?.message}</span>}

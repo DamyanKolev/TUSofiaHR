@@ -6,10 +6,10 @@
         public required ScheduleDTO Schedule { get; set; }
         public required CompanyEmployeeTaxDTO CompanyEmployeeTax { get; set; }
     }
-    public record EndMonthDataSelect
+    public record EndMonthDataUpdate
     {
-        public Income? Income { get; set; }
-        public Schedule? Schedule { get; set; }
-        public CompanyEmployeeTax? CompanyEmployeeTax { get; set; }
+        public required Income Income { get; set; }
+        public required Schedule Schedule { get; set; }
+        public required CompanyEmployeeTax CompanyEmployeeTax { get; set; }
     }
 }

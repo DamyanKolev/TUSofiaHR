@@ -32,5 +32,14 @@ namespace webapi.Controllers.References
 
             return File(bytes, "text/csv"); ;
         }
+
+
+        [HttpGet("/api/hr/references/article62/is-have", Name = "IsHaveArticle62Documents")]
+        public IActionResult IsHaveArticle62Documents()
+        {
+            var result = _articleService.IsHaveArticle62Documents();
+
+            return Ok(result.Response);
+        }
     }
 }

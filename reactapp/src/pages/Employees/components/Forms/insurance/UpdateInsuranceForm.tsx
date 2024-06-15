@@ -1,4 +1,4 @@
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, Label, Title, TitleLevel } from "@ui5/webcomponents-react"
+import { FormItem, Label } from "@ui5/webcomponents-react"
 import { CSSProperties, FC, useEffect, useState } from "react"
 import { SysInsuranceType } from "@/pages/Employees/models/System/SysInsuranceType"
 import { EmployeeDataUpdateDTO } from "@/pages/Employees/models/EmployeeData"
@@ -28,7 +28,7 @@ const UpdateInsuranceForm: FC<Props> = ({getEditMode, getUpdateData, control, se
     const [selectedRow, setSelectedRow] = useState<SysInsuranceType>({} as SysInsuranceType)
     const [initialization, setInitialization] = useState<boolean>(false)
 
-    const initValues = async () => {
+    const insuranceRequest = async () => {
         const postURL = "/api/sys/insurance-type/by-code"
         const token = sessionStorage.getItem("accessToken")
         const response = await fetch(postURL, {
@@ -37,16 +37,25 @@ const UpdateInsuranceForm: FC<Props> = ({getEditMode, getUpdateData, control, se
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(getUpdateData().sysInsuranceTypeId),
+            body: JSON.stringify(getUpdateData().insuranceTypeId),
         });
+        const json = await response.json()
 
         if (response.ok) {
-            const json = await response.json()
-            setSelectedRow(json.data[0])
+            setSelectedRow(json.data)
             setInitialization(true)
         }
         else {
-            console.log(await response.json())
+            throw Error(json.errors)
+        }
+    }
+
+    const initValues = async () => {
+        try {
+            insuranceRequest()
+        }
+        catch (error) {
+            console.error(error)
         }
     }
 
@@ -62,176 +71,166 @@ const UpdateInsuranceForm: FC<Props> = ({getEditMode, getUpdateData, control, se
     }
 
     useEffect(() => {
-        const value = getValues("insurance.sysInsuranceTypeId")
+        const value = getValues("insurance.insuranceTypeId")
         if(!initialization && value > 0) {
             initValues()
         }
         else {
             setDefaultValues()
         }
-    }, [getValues("insurance.sysInsuranceTypeId")]);
+    }, [getValues("insurance.insuranceTypeId")]);
 
     return (
-        <FlexBox alignItems={FlexBoxAlignItems.Start} direction={FlexBoxDirection.Column} style={{width: "fit-content", gap:"4rem", padding:".5rem 2rem"}}>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"2rem"}}>
-                <Title level={TitleLevel.H4}>Вид осигурен</Title>
+        <>
+            <FormItem label={<Label>Вид осигурен</Label>}>
                 <StandardSmallTableSelectField
                     textFieldWidth={textFieldWidth}
                     editMode={getEditMode()}
                     control={control}
                     rules={{ required: true }}
                     joinInfo={insuranceJoinTableInfo}
-                    displayValue={getUpdateData().sysInsuranceTypeId ? `${getUpdateData().sysInsuranceTypeId}` : ""}
-                    name='insurance.sysInsuranceTypeId'
+                    displayValue={getUpdateData().insuranceTypeId ? `${getUpdateData().insuranceTypeId}` : ""}
+                    name='insurance.insuranceTypeId'
                     setSelectedRow={setSelectedRow}
                 />
-            </FlexBox>
+            </FormItem>
             {
                 initialization &&
-                <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={getEditMode()? {marginLeft:"3rem"} : {marginLeft:"3rem", gap:".5rem"}}>
-                {
-                    selectedRow.dooWithouthTzpbInsurer.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>ДОО без ТЗПБ осигуровки за сметка на осигурителя</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.dooWithouthTzpbInsurer}
-                            name='insurance.dooWithouthTzpbInsurer'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.dooWithouthTzpbEmployee.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>ДОО без ТЗПБ осигуровки за сметка на осигуреното лице</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.dooWithouthTzpbEmployee}
-                            name='insurance.dooWithouthTzpbEmployee'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.healthInsurance.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>Здравни осигуровки</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.healthInsurance}
-                            name='insurance.healthInsurance'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.healthInsuranceArticle40.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>Здравни осигуровки само по чл. 40</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.healthInsuranceArticle40}
-                            name='insurance.healthInsuranceArticle40'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.healthInsuranceInsurer.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>Всички здрани осигуровки за сметка на осигурителя</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.healthInsuranceInsurer}
-                            name='insurance.healthInsuranceInsurer'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.healthInsuranceEmployee.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>Всички здрани осигуровки за сметка на осигуреното лице</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.healthInsuranceEmployee}
-                            name='insurance.healthInsuranceEmployee'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.teacherPensionFund.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>Учителски пенсионен фонд</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.teacherPensionFund}
-                            name='insurance.teacherPensionFund'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.professionalPensionFund.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>Професионален пенсионен фонд</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.professionalPensionFund}
-                            name='insurance.professionalPensionFund'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.universalPensionInsurer.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>Универсален пенсионен фонд за сметка на осигурителя</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.universalPensionInsurer}
-                            name='insurance.universalPensionInsurer'
-                        />
-                    </FlexBox>
-                }
-                {
-                    selectedRow.universalPensionEmployee.length > 1 &&
-                    <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                        <Label>Универсален пенсионен фонд за сметка на осигуреното лице</Label>
-                        <StandardSelectField
-                            style={selectStyle}
-                            editMode={getEditMode()}
-                            control={control}
-                            rules={{ required: true }}
-                            values={selectedRow.universalPensionEmployee}
-                            name='insurance.universalPensionEmployee'
-                        />
-                    </FlexBox>
-                }
-                </FlexBox>
+                <>
+                    {
+                        selectedRow.dooWithouthTzpbInsurer.length > 1 &&
+                        <FormItem label={<Label>ДОО без ТЗПБ осигуровки за сметка на осигурителя</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.dooWithouthTzpbInsurer}
+                                name='insurance.dooWithouthTzpbInsurer'
+                            />
+                        </FormItem>
+                    }
+                    {
+                        selectedRow.dooWithouthTzpbEmployee.length > 1 &&
+                        <FormItem label={<Label>ДОО без ТЗПБ осигуровки за сметка на осигуреното лице</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.dooWithouthTzpbEmployee}
+                                name='insurance.dooWithouthTzpbEmployee'
+                            />
+                        </FormItem>
+                    }
+                    {
+                        selectedRow.healthInsurance.length > 1 &&
+                        <FormItem label={<Label>Здравни осигуровки</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.healthInsurance}
+                                name='insurance.healthInsurance'
+                            />
+                        </FormItem>
+                    }
+                    {
+                        selectedRow.healthInsuranceArticle40.length > 1 &&
+                        <FormItem label={<Label>Здравни осигуровки само по чл. 40</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.healthInsuranceArticle40}
+                                name='insurance.healthInsuranceArticle40'
+                            />
+                        </FormItem>
+                    }
+                    {
+                        selectedRow.healthInsuranceInsurer.length > 1 &&
+                        <FormItem label={<Label>Всички здрани осигуровки за сметка на осигурителя</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.healthInsuranceInsurer}
+                                name='insurance.healthInsuranceInsurer'
+                            />
+                        </FormItem>
+                    }
+                    {
+                        selectedRow.healthInsuranceEmployee.length > 1 &&
+                        <FormItem label={<Label>Всички здрани осигуровки за сметка на осигуреното лице</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.healthInsuranceEmployee}
+                                name='insurance.healthInsuranceEmployee'
+                            />
+                        </FormItem>
+                    }
+                    {
+                        selectedRow.teacherPensionFund.length > 1 &&
+                        <FormItem label={<Label>Учителски пенсионен фонд</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.teacherPensionFund}
+                                name='insurance.teacherPensionFund'
+                            />
+                        </FormItem>
+                    }
+                    {
+                        selectedRow.professionalPensionFund.length > 1 &&
+                        <FormItem label={<Label>Професионален пенсионен фонд</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.professionalPensionFund}
+                                name='insurance.professionalPensionFund'
+                            />
+                        </FormItem>
+                    }
+                    {
+                        selectedRow.universalPensionInsurer.length > 1 &&
+                        <FormItem label={<Label>Универсален пенсионен фонд за сметка на осигурителя</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.universalPensionInsurer}
+                                name='insurance.universalPensionInsurer'
+                            />
+                        </FormItem>
+                    }
+                    
+                    {
+                        selectedRow.universalPensionEmployee.length > 1 &&
+                        <FormItem label={<Label>Универсален пенсионен фонд за сметка на осигуреното лице</Label>}>
+                            <StandardSelectField
+                                style={selectStyle}
+                                editMode={getEditMode()}
+                                control={control}
+                                rules={{ required: true }}
+                                values={selectedRow.universalPensionEmployee}
+                                name='insurance.universalPensionEmployee'
+                            />
+                        </FormItem>
+                    }
+                </>
             }
-        </FlexBox>
+        </>
     )
 }
 

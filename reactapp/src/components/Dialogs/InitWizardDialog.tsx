@@ -1,6 +1,5 @@
 import { WizardStepChangeEventDetail } from "@ui5/webcomponents-fiori/dist/Wizard.js";
 import { Bar, BarDesign, Button, ButtonDesign, ButtonType, Dialog, FlexBox, FlexBoxDirection, Title, Ui5CustomEvent, Wizard, WizardContentLayout, WizardDomRef, WizardStep } from "@ui5/webcomponents-react";
-import { submitPostForm } from "@utils/forms/submitForm";
 import { FC, Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { InitAppData, defaultInitAppData } from "@models/HR/InitAppData";
@@ -9,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InitPositionForm from "@/pages/Positions/components/InitPositionForm";
 import InitDepartmentForm from "@/pages/Departments/components/InitDepartmentForm";
+import { submitPostForm } from "@/utils/requests";
 
 
 

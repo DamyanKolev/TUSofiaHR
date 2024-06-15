@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models.HR;
 using webapi.Services.HR;
@@ -21,6 +22,20 @@ namespace webapi.Controllers.HR
         {
             var result = _endMonthService.EndMonth(insertDTO);
 
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
+
+            return Ok(result.Response);
+        }
+
+        [HttpPut("/api/hr/end-month/update", Name = "UpdateEmployeeEndMonth")]
+        public IActionResult UpdateEmployeeEndMonth([FromBody] EndMonthDataUpdate updateDTO)
+        {
+            var result = _endMonthService.UpdateEmployeeEndMonth(updateDTO);
+
+            if (result.StatusCode.Equals(HttpStatusCode.BadRequest))
+                return BadRequest(result.Response);
+
             return Ok(result.Response);
         }
 
@@ -41,10 +56,10 @@ namespace webapi.Controllers.HR
         }
 
 
-        [HttpPost("/api/hr/end-month/is-filled", Name = "IsFilledAllEmployeesMonthData")]
-        public IActionResult IsFilledAllEmployeesMonthData()
+        [HttpGet("/api/hr/end-month/is-month-finished", Name = "IsMonthFinished")]
+        public IActionResult IsMonthFinished()
         {
-            var result = _endMonthService.IsFilledAllEmployeesMonthData();
+            var result = _endMonthService.IsMonthFinished();
 
             return Ok(result.Response);
         }

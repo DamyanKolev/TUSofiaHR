@@ -5,10 +5,11 @@ import Layout from './layouts/Layout';
 import { ContractPage, DepartmentPage, EmployeePage, Home, EndMonthPage, Login, PositionPage, References, Settings } from './pages/PagesBundle';
 import { useValidateAccessToken } from './utils/hooks';
 import { useAppSelector } from './store/storeHooks';
-import { getData } from './utils/getData';
+import { getRequest } from './utils/requests';
 import InitWizardDialog from './components/Dialogs/InitWizardDialog';
 import { createPortal } from 'react-dom';
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
+import "./assets/Assets"
 
 const App: FC = () => {
     const location = useLocation();
@@ -18,13 +19,16 @@ const App: FC = () => {
 
     
     const isInizializateApp = async () => {
-        if (isLoggedIn) {
-            if (!isInit && location.pathname != "/login") {
-                const result = await getData<boolean>("/api/hr/is-init")
-                if (result != null) {
+        try {
+            if (isLoggedIn) {
+                if (!isInit && location.pathname != "/login") {
+                    const result = await getRequest<boolean>("/api/hr/is-init")
                     setIsInit(!result)
                 }
             }
+        }
+        catch (error) {
+            console.error(error)
         }
     }
     
@@ -44,7 +48,7 @@ const App: FC = () => {
                     <Route path="position" element={<PositionPage />} />
                     <Route path="department" element={<DepartmentPage />} />
                     <Route path="references" element={<References />} />
-                    <Route path="insurance" element={<EndMonthPage />} />
+                    <Route path="end-month" element={<EndMonthPage />} />
                 </Route>
                     <Route path="login" element={<Login />} />
             </Routes>

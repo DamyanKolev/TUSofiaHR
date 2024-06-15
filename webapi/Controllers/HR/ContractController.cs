@@ -87,11 +87,10 @@ namespace webapi.Controllers.HR
         }
 
 
-
-        [HttpPost("/api/hr/contracts/employee-annex", Name = "GetEmployeeAnnex")]
-        public IActionResult GetEmployeeAnnex([FromBody] int employeeId)
+        [HttpPost("/api/hr/contracts/all-by-employee-id", Name = "FindByEmployeeId")]
+        public IActionResult FindByEmployeeId([FromBody] int employeeId)
         {
-            var result = _contractService.GetEmployeeAnnex(employeeId);
+            var result = _contractService.FindByEmployeeId(employeeId);
 
             return Ok(result.Response);
         }

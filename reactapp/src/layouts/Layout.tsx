@@ -1,7 +1,6 @@
 import { FC, Fragment, useState } from 'react';
 import './Layout.css';
 import { Outlet } from 'react-router-dom';
-import '@ui5/webcomponents-icons/dist/menu';
 import ShellBarMenu from '@components/Bars/ShellBarMenu';
 import NavBar from '@components/Bars/NavBar';
 import { FlexBox } from '@ui5/webcomponents-react';

@@ -1,7 +1,7 @@
+import { getRequest } from "@/utils/requests";
 import { Database } from "@models/Auth/Database";
 import { FlexBox, FlexBoxAlignItems, FlexBoxJustifyContent, Select, SelectDomRef, StandardListItem, Title, TitleLevel, Ui5CustomEvent } from "@ui5/webcomponents-react";
 import { SelectChangeEventDetail } from "@ui5/webcomponents/dist/Select.js";
-import { getData } from "@utils/getData";
 import { FC, useEffect, useState } from "react";
 
 
@@ -16,9 +16,12 @@ const CompanySelect: FC = () => {
 
 
     const init = async () => {
-        const allCompanies = await getData<Array<Database>>(getURL)
-        if (allCompanies != null) {
+        try {
+            const allCompanies = await getRequest<Array<Database>>(getURL)
             setCompanies(allCompanies)
+        }
+        catch (error) {
+            console.error(error)
         }
     }
 

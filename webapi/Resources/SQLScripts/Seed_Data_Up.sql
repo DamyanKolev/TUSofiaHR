@@ -44,7 +44,7 @@ VALUES
 INSERT INTO employee_contracts (employee_id, contract_id, is_active)
 VALUES 
 	(1, 1, True),
-	(2, 2, False);
+	(2, 2, True);
 
 
 INSERT INTO incomes (employee_id, healt_insurance_art40, total_insurance, health_insurance, gross_remuneration, bonus_income, additional_income)

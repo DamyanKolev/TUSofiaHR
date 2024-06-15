@@ -9,7 +9,7 @@ import { formToggle } from "@store/slices/formToggleSlice";
 import { createPortal } from "react-dom";
 import { largeFormItem } from "@/utils/css";
 import { Control, FieldPath, FieldValues, RegisterOptions, useController } from "react-hook-form";
-import { getRequest } from "@/utils/forms/submitForm";
+import { getRequest } from "@/utils/requests";
 
 
 interface Props<T extends FieldValues> {
@@ -40,7 +40,7 @@ function SmallTableSelect<T extends FieldValues>({ joinInfo, value = "", tableId
             setData(data)
         }
         catch (error){
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -101,7 +101,6 @@ function SmallTableSelect<T extends FieldValues>({ joinInfo, value = "", tableId
                 <Input 
                     value={inputValue} 
                     onClick={onClickHandler} 
-                    readonly 
                     style={largeFormItem}
                     valueState={fieldState.error ? ValueState.Error : ValueState.None}
                     valueStateMessage={<span>{fieldState.error?.message}</span>}

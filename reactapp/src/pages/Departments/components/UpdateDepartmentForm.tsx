@@ -1,9 +1,8 @@
 ﻿import { FC, useContext, useState, useEffect } from 'react';
-import { Bar, Button, ButtonDesign, ButtonType, Dialog, Form, FormItem, Label, Title, TitleLevel } from '@ui5/webcomponents-react';
+import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, Label, Title, TitleLevel } from '@ui5/webcomponents-react';
 import { useAppDispatch } from '@store/storeHooks';
 import { toggle } from '@store/slices/toggleSlice';
 import DailogSwitch from '@app-types/enums/DialogSwitch';
-import { submitPutForm } from '@utils/forms/submitForm';
 import { TableRowState } from '@app-types/TableRowState';
 import { DepartmentView } from '@/pages/Departments/models/DepartmentView';
 import { createUpdateDTO } from '@/utils/createUpdateDTO';
@@ -14,6 +13,7 @@ import { StandardInputField, StandardLargeTableSelectField, StandardTextAreaFiel
 import { departmentJoinTableInfo } from '../models/DepartmentJoinTableInfo';
 import { DepartmentPageContext } from '../DepartmentPage';
 import { createDepartmentUpdateData, defaultDepartmentUpdateData, defaultDepartmentUpdateDTO, Department, DepartmentUpdateData } from '../models/Department';
+import { submitPutForm } from '@/utils/requests';
 
 
 interface UpdateDepartmentFormProps {
@@ -90,14 +90,18 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
                 />
             }
             footer={
-                <Bar design="Footer">
-                        <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
-                </Bar>
+                <Bar design="Footer"
+                    endContent={
+                        <>
+                            <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
+                            <Button onClick={handleSubmit(onSubmit)} design={ButtonDesign.Emphasized}>Запази</Button>
+                        </>
+                    }
+                />
             }
         >
             
             <Form 
-                onSubmit={handleSubmit(onSubmit)} 
                 labelSpanM={4}
                 style={{padding: "1rem 2rem"}}
             >
@@ -140,10 +144,6 @@ const UpdateDepartmentForm: FC<UpdateDepartmentFormProps> = ({dialogSwitchGetter
                         displayValue={updateData.parentDepartmentName? updateData.parentDepartmentName : ""}
                         name="parentId"
                     />
-                </FormItem>
-
-                <FormItem>
-                    <Button type={ButtonType.Submit}>Създай</Button>
                 </FormItem>
             </Form>
         </Dialog>

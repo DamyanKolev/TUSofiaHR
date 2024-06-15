@@ -1,6 +1,5 @@
 import { FC, useRef, useState } from 'react';
 import { ActionSheet, Avatar, Button, Popover, PopoverDomRef, ShellBar } from "@ui5/webcomponents-react";
-import "@ui5/webcomponents-icons/journey-arrive"
 import { useNavigate, useLocation } from 'react-router-dom';
 import HRProductSwitch from "@components/Menus/HRProductSwitch"
 import { useAppDispatch, useAppSelector } from '@/store/storeHooks';

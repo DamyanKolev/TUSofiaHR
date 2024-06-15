@@ -1,13 +1,10 @@
-import { FlexBox, FlexBoxAlignItems, FlexBoxDirection, FlexBoxJustifyContent, Label } from "@ui5/webcomponents-react"
+import {  FormItem, Label } from "@ui5/webcomponents-react"
 import { FC } from "react"
 import Gender from "@app-types/enums/Gender"
 import { EmployeeDataUpdateDTO } from "@/pages/Employees/models/EmployeeData"
 import { Control } from "react-hook-form"
 import { StandardInputField } from "@/components/Forms/StandartFields/StandartInputField"
 import { StandardDateField, StandardRadioButtonField, StandartListSelectField } from "@/components/Forms/StandartFields/StandartFieldsBundle"
-
-
-const formFieldWidth = "13.125rem"
 
 
 interface UpdatePersonalDataFormProps {
@@ -20,26 +17,24 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, c
 
 
     return (
-        <FlexBox alignItems={FlexBoxAlignItems.End} direction={FlexBoxDirection.Column} style={{width: "fit-content", gap:".5rem"}}>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label required>Личен E-mail</Label>
+        <>
+            <FormItem label={<Label required>Личен E-mail</Label>}>
                 <StandardInputField
                     editMode={getEditMode()}
                     control={control}
                     rules={{ required: true }}
                     name='personalData.personalEmail'
                 />  
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label required>Служебен E-mail</Label>
+            </FormItem>
+            <FormItem label={<Label required>Служебен E-mail</Label>}>
                 <StandardInputField
                     editMode={getEditMode()}
                     control={control}
                     rules={{ required: true }}
-                    name='personalData.personalEmail'
+                    name='personalData.workEmail'
                 />  
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
+            </FormItem>
+            <FormItem label={<Label required>ЕГН/ЛНЧ</Label>}>
                 <StandartListSelectField
                     values={[
                         {textContent: "ЕГН", additionalText: "0"}, 
@@ -58,51 +53,44 @@ const UpdatePersonalDataForm: FC<UpdatePersonalDataFormProps> = ({getEditMode, c
                     rules={{ required: true }}
                     name='personalData.identityText'
                 /> 
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label>Дата на раждане</Label>
+            </FormItem>
+            <FormItem label={<Label>Дата на раждане</Label>}>
                 <StandardDateField
                     editMode={getEditMode()}
                     control={control}
                     name='personalData.birthDate'
                 />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label>Пол</Label>
-                <FlexBox style={{width:formFieldWidth, gap:"1rem"}} justifyContent={FlexBoxJustifyContent.SpaceBetween}>
-                    <StandardRadioButtonField
-                        buttonsValues={[Gender.Male, Gender.Female]}
-                        editMode={getEditMode()}
-                        control={control}
-                        name='personalData.gender'
-                    />
-                </FlexBox>
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label>Номер на лична карта</Label>
+            </FormItem>
+            <FormItem label={<Label>Пол</Label>}>
+                <StandardRadioButtonField
+                    buttonsValues={[Gender.Male, Gender.Female]}
+                    editMode={getEditMode()}
+                    control={control}
+                    name='personalData.gender'
+                />
+            </FormItem>
+            <FormItem label={<Label>Номер на лична карта</Label>}>
                 <StandardInputField
                     editMode={getEditMode()}
                     control={control}
                     name='personalData.personalIdNumber'
                 />  
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label>Дата на издаване на ЛК</Label>
+            </FormItem>
+            <FormItem label={<Label>Дата на издаване на ЛК</Label>}>
                 <StandardDateField
                     editMode={getEditMode()}
                     control={control}
                     name='personalData.personalIdIssueDate'
                 />
-            </FlexBox>
-            <FlexBox alignItems={FlexBoxAlignItems.Center} style={{gap:"1rem"}}>
-                <Label>ЛК издадена от</Label>
+            </FormItem>
+            <FormItem label={<Label>ЛК издадена от</Label>}>
                 <StandardInputField
                     editMode={getEditMode()}
                     control={control}
                     name='personalData.personalIdIssueBy'
                 />  
-            </FlexBox>
-        </FlexBox>
+            </FormItem>
+        </>
     )
 }
 

@@ -44,8 +44,6 @@ namespace webapi.Services.References
                     current_date = today
                 };
                 var result = template(data);
-                Console.WriteLine(result);
-
 
 
                 using var browserFetcher = new BrowserFetcher();

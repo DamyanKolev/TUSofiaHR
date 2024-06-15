@@ -1,13 +1,9 @@
-import { AnalyticalTableColumnDefinition, Icon, IconDesign} from "@ui5/webcomponents-react";
+import { AnalyticalTableColumnDefinition, FlexBox, FlexBoxJustifyContent, Icon, IconDesign} from "@ui5/webcomponents-react";
 import "@ui5/webcomponents-icons/message-success"
 import "@ui5/webcomponents-icons/message-error"
 
 
 const contractColumns: AnalyticalTableColumnDefinition[] = [
-    {
-        accessor: "employeeName",
-        Header: "Име на служителя",
-    },
     {
         accessor: "conclusionDate",
         Header: "Дата на сключване",
@@ -21,32 +17,16 @@ const contractColumns: AnalyticalTableColumnDefinition[] = [
         Header: "Срок на договора",
     },
     {
-        accessor: "additionalAgreementDate",
-        Header: "Дата на допълнително споразумение",
-    },
-    {
-        accessor: "terminationDate",
-        Header: "Дата на терминиране",
-    },
-    {
-        accessor: "positionName",
-        Header: "Позиция",
-    },
-    {
-        accessor: "activityName",
-        Header: "Дейност",
-    },
-    {
-        accessor: "contractType",
-        Header: "Тип договор",
-    },
-    {
-        accessor: "documentType",
-        Header: "Тип документ",
-    },
-    {
         accessor: "ekatte",
         Header: "ЕКАТТЕ код",
+    },
+    {
+        accessor: "nkpd",
+        Header: "Код позиция",
+    },
+    {
+        accessor: "nkid",
+        Header: "Код икономическа активност",
     },
     {
         accessor: "isTerminate",
@@ -54,10 +34,18 @@ const contractColumns: AnalyticalTableColumnDefinition[] = [
         width: 110,
         Cell: ({ value }:any) => {
             if (value) {
-                return <Icon name="message-error" design={IconDesign.Positive}/>
+                return (
+                    <FlexBox justifyContent={FlexBoxJustifyContent.Center} style={{width:"100%"}}>
+                        <Icon name="accept" design={IconDesign.Positive}/>
+                    </FlexBox>
+                )
             }
             else {
-                return <Icon name="message-error" design={IconDesign.Negative}/>
+                return (
+                    <FlexBox justifyContent={FlexBoxJustifyContent.Center} style={{width:"100%"}}>
+                        <Icon name="message-error" design={IconDesign.Negative}/>
+                    </FlexBox>
+                )
             }
         }
     },
@@ -73,10 +61,18 @@ const contractColumns: AnalyticalTableColumnDefinition[] = [
         // },
         Cell: ({ value }:any) => {
             if (value) {
-                return <Icon name="message-error" design={IconDesign.Positive}/>
+                return (
+                    <FlexBox justifyContent={FlexBoxJustifyContent.Center} style={{width:"100%"}}>
+                        <Icon name="accept" design={IconDesign.Positive}/>
+                    </FlexBox>
+                )
             }
             else {
-                return <Icon name="message-error" design={IconDesign.Negative}/>
+                return (
+                    <FlexBox justifyContent={FlexBoxJustifyContent.Center} style={{width:"100%"}}>
+                        <Icon name="message-error" design={IconDesign.Negative}/>
+                    </FlexBox>
+                )
             }
         }
     }

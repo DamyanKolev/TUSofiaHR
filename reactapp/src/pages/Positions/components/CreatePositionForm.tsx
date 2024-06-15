@@ -1,9 +1,8 @@
-﻿import { Bar, Button, ButtonDesign, ButtonType, Dialog, Form, FormItem, Input, Label, TextArea, ValueState } from "@ui5/webcomponents-react"
+﻿import { Bar, Button, ButtonDesign, Dialog, Form, FormItem, Input, Label, TextArea, ValueState } from "@ui5/webcomponents-react"
 import { FC } from "react"
 import { useAppDispatch } from "@store/storeHooks"
 import { toggle } from "@store/slices/toggleSlice"
 import DailogSwitch from "@app-types/enums/DialogSwitch"
-import { submitPostForm } from "@utils/forms/submitForm"
 import LargeTableSelect from "@/components/Selects/TableSelect/LargeTableSelect"
 import { largeFormItem } from "@/utils/css"
 import { defaultPositionDTO, PositionDTO } from "../models/Position"
@@ -11,6 +10,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PositionInsertSchema } from "../models/PositionSchema"
 import { contractJoinTablesInfo } from "@/pages/Contracts/models/TableJoins/ContractJoinTablesInfo"
+import { submitPostForm } from "@/utils/requests"
 
 
 interface CreatePositionFormProps {
@@ -68,12 +68,12 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
                 <Bar endContent={
                     <>
                         <Button onClick={onClose} design={ButtonDesign.Transparent}>Отказ</Button>
+                        <Button onClick={handleSubmit(onSubmit)} design={ButtonDesign.Emphasized}>Запази</Button>
                     </>
                 }/>
             }
         >
             <Form 
-                onSubmit={handleSubmit(onSubmit)} 
                 labelSpanM={4}
                 style={{padding: "1rem 2rem"}}
             >
@@ -103,12 +103,7 @@ const CreatePositionForm: FC<CreatePositionFormProps> = ({ dialogSwitchGetter, d
                     
                     />
                 </FormItem>
-
-                <FormItem>
-                    <Button type={ButtonType.Submit}>Създай</Button>
-                </FormItem>
             </Form>
-
         </Dialog>
     )
 }

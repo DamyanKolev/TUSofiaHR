@@ -16,6 +16,7 @@ namespace webapi.Services.HR
         public ResponseWithStatus<DataResponse<List<EmployeeV>>> SelectAll();
         public ResponseWithStatus<DataResponse<EmployeeDataSelect>> GetUpdateData(EmployeeDataSelectDTO selectDTO);
         public ResponseWithStatus<DataResponse<Employee>> GetById(int employeeId);
+        public ResponseWithStatus<DataResponse<WorkDataV>> WorkDataByEmployeeId(int employeeId);
     }
 
     public class EmployeeService : IEmployeeService
@@ -55,19 +56,25 @@ namespace webapi.Services.HR
                 if (contract != null)
                 {
                     _context.Contracts.Add(contract);
-                    var employeeContract = new EmployeeContracts { EmployeeId = employee.Id, ContractId = contract.Id, IsActive = true };
+                    var employeeContract = new EmployeeContracts { 
+                        EmployeeId = employee.Id, 
+                        Employee = employee, 
+                        ContractId = contract.Id, 
+                        Contract = contract,
+                        IsActive = true 
+                    };
                     _context.EmployeeContracts.Add(employeeContract);
                 }
 
                 var result = _context.SaveChanges();
 
                 transaction.Commit();
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS );
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_INSERT_SUCCESS);
             }
             catch (Exception е)
             {
                 transaction.Rollback();
-                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, е.Message);
+                return ResponseBuilder.CreateResponseWithStatus(HttpStatusCode.BadRequest, е.ToString());
             }
         }
 
@@ -79,10 +86,6 @@ namespace webapi.Services.HR
                 if (employeeDataUpdate.Employee != null)
                 {
                     _context.Update(employeeDataUpdate.Employee);
-                }
-                if (employeeDataUpdate.Contract != null)
-                {
-                    _context.Update(employeeDataUpdate.Contract);
                 }
                 if (employeeDataUpdate.PersonalData != null)
                 {
@@ -134,9 +137,7 @@ namespace webapi.Services.HR
 
         public ResponseWithStatus<DataResponse<EmployeeDataSelect>> GetUpdateData(EmployeeDataSelectDTO selectDTO) {
             var employee = _context.Employees.Find(selectDTO.EmployeeId);
-            var contract = _contractService.GetByEmployeeId(selectDTO.EmployeeId).Response.Data;
             var personalData = _context.PersonalData.Find(selectDTO.PersonalDataId);
-            ContractV? contractV = null;
             Insurance? insurance = null;
             Address? address = null;
 
@@ -145,10 +146,6 @@ namespace webapi.Services.HR
                 return ResponseBuilder.CreateDataResponseWithStatus<EmployeeDataSelect>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
             }
 
-            if (contract != null)
-            {
-                contractV = _context.ContractV.Where(c => c.ContractId == contract.Id).FirstOrDefault();
-            }
             if (employee.InsuranceId != null)
             {
                 insurance = _context.Insurances.Find(employee.InsuranceId);
@@ -157,13 +154,10 @@ namespace webapi.Services.HR
             {
                 address = _context.Addresses.Find(personalData.Id);
             }
-            var contractView = _mapper.Map<ContractV>(contractV);
 
             EmployeeDataSelect employeeDataSelect = new EmployeeDataSelect {
                 Employee = employee, 
-                Contract = contract, 
                 PersonalData = personalData,
-                ContractView = contractView, 
                 Insurance = insurance, 
                 Address = address 
             }; 
@@ -181,6 +175,21 @@ namespace webapi.Services.HR
             }
 
             return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, employee);
+        }
+
+
+        public ResponseWithStatus<DataResponse<WorkDataV>> WorkDataByEmployeeId(int employeeId)
+        {
+            var workData = _context.WorkDataV
+                .Where(w => w.EmployeeId == employeeId)
+                .FirstOrDefault();
+
+            if (workData == null)
+            {
+                return ResponseBuilder.CreateDataResponseWithStatus<WorkDataV>(HttpStatusCode.OK, MessageConstants.MESSAGE_RECORD_NOT_FOUND, null!);
+            }
+
+            return ResponseBuilder.CreateDataResponseWithStatus(HttpStatusCode.OK, MessageConstants.MESSAGE_SUCCESS_SELECT, workData);
         }
     }
 }

@@ -5,6 +5,7 @@ export interface CompanyEmployeeTax {
     employeeId: int,
     sysPaymentTypeId: int,
     disbursementAccrualDate: string,
+    creationDate: string
 }
 
 
@@ -13,6 +14,7 @@ export const defaultCompanyEmployeeTaxUpdate: CompanyEmployeeTax = {
     employeeId: 0,
     sysPaymentTypeId: 0,
     disbursementAccrualDate: "",
+    creationDate: ""
 }
 
 

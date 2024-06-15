@@ -7,6 +7,9 @@ import { TableRowState } from '@app-types/TableRowState'
 import EmployeeMidColumn from './components/FlexibleColumns/EmployeeMidColumn'
 import EmployeeEndColumn from './components/FlexibleColumns/EmployeeEndColumn'
 import StartColumn from './components/FlexibleColumns/StartColumn'
+import { EndColumnEnum } from './models/EndColumnEnum'
+import ContracCreateEndColumn from './components/FlexibleColumns/EndColumns/ContracCreateEndColumn'
+import ContractUpdateEndColumn from './components/FlexibleColumns/EndColumns/ContractUpdateEndColumn'
 
 
 export const EmployeePageContext = createContext<TableRowState<EmployeeView> | undefined>(undefined);
@@ -17,17 +20,19 @@ const EmployeePage: FC = () => {
     const tableURL = "/api/hr/employees";
     const [layout, setLayout] = useState<FCLLayout>(FCLLayout.OneColumn);
     const [selectedRow, setSelectedRow] = useState<EmployeeView>({} as EmployeeView);
+    const [endColumnOption, setEndColumnOption] = useState<EndColumnEnum>(EndColumnEnum.None)
 
-
-    const handleLayoutState = (layout: FCLLayout) => {
-        setLayout(layout)
-    }
 
     const onRowClick = (event: any) => {
         const row = event.detail.row.original
-        setLayout(FCLLayout.MidColumnFullScreen)
+        setLayout(FCLLayout.TwoColumnsMidExpanded)
         setSelectedRow(row);
     };
+
+    const createOnClick = () => {
+        setLayout(FCLLayout.EndColumnFullScreen)
+        setEndColumnOption(EndColumnEnum.InsertEmployee)
+    }
 
     return (
         <EmployeePageContext.Provider value={{selectedRow, setSelectedRow}}>
@@ -41,16 +46,49 @@ const EmployeePage: FC = () => {
                                 tableURL={tableURL}
                                 columns={employeeColumns}
                                 tableTitle={tableTitle}
-                                handleLayoutState={handleLayoutState}
+                                createOnClick={createOnClick}
                                 onRowClick={onRowClick}
                             />  
                         </div>
                     }
                     midColumn={
-                        <div><EmployeeMidColumn handleLayoutState={handleLayoutState} tableURL={tableURL}/></div>
+                        <div>
+                            <EmployeeMidColumn 
+                                setLayout={setLayout} 
+                                layout={layout} 
+                                tableURL={tableURL} 
+                                setEndColumnOption={setEndColumnOption}
+                            />
+                        </div>
                     }
                     endColumn={
-                        <div><EmployeeEndColumn handleLayoutState={handleLayoutState} tableURL={tableURL}/></div>
+                        <div style={{height:"100%"}}>
+                        {
+                            endColumnOption == EndColumnEnum.InsertEmployee &&
+                            <EmployeeEndColumn 
+                                setLayout={setLayout} 
+                                tableURL={tableURL}
+                                setEndColumnOption={setEndColumnOption}
+                            />
+                        }
+                        {
+                            endColumnOption == EndColumnEnum.InsertContract &&
+                            <ContracCreateEndColumn 
+                                setLayout={setLayout} 
+                                layout={layout} 
+                                selectedRow={selectedRow} 
+                                setEndColumnOption={setEndColumnOption}
+                            />
+                        }
+                        {
+                            endColumnOption == EndColumnEnum.UpdateContract &&
+                            <ContractUpdateEndColumn 
+                                setLayout={setLayout} 
+                                layout={layout}
+                                setEndColumnOption={setEndColumnOption}
+                            />
+                        }
+                    </div>
                     }
             />
         </EmployeePageContext.Provider>

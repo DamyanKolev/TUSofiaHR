@@ -43,7 +43,7 @@ namespace webapi.Models.HR
         public required string PhoneNumber { get; set; }
         public int CompanyEmployeeId { get; set; }
         public int PersonalDataId { get; set; }
-        public Nullable<int> DepartmentTeamId { get; set; }
+        public Nullable<int> DepartmentId { get; set; }
         public Nullable<int> PositionId { get; set; }
         public Nullable<int> InsuranceId { get; set; }
     }

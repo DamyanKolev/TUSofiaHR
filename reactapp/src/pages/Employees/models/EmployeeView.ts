@@ -11,4 +11,5 @@ export interface EmployeeView {
     positionName: Optional<string>;
     insuranceTypeCode: Optional<string>,
     personalDataId: int,
+    endMonthStatus: boolean
 }

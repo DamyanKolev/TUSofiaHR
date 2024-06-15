@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using webapi.Extensions;
 using webapi.Models.Auth;
 using webapi.Models.HR;
@@ -42,13 +44,13 @@ namespace webapi
         //Table Views
         public DbSet<EmployeeV> EmployeeV { get; set; }
         public DbSet<ContractV> ContractV { get; set; }
-        public DbSet<AnnexV> AnnexV { get; set; }
         public DbSet<InsuranceV> InsuranceV { get; set; }
         public DbSet<DepartmentV> DepartmentV { get; set; }
         public DbSet<PositionV> PositionV { get; set; }
         public DbSet<Article62V> Article62V { get; set; } 
         public DbSet<Declaration1V> Declaration1V { get; set; }
         public DbSet<Declaration6V> Declaration6V { get; set; }
+        public DbSet<WorkDataV> WorkDataV { get; set; }
 
 
 
@@ -102,12 +104,14 @@ namespace webapi
                 v.HasNoKey();
                 v.ToView("contract_v");
             });
-
-            builder.Entity<AnnexV>(v =>
-            {
-                v.HasNoKey();
-                v.ToView("annex_v");
-            });
+            
+            builder.Entity<ContractV>().Property(e => e.Annexes)
+                .HasConversion(
+                    v => JsonConvert.SerializeObject(v, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
+                    v => JsonConvert.DeserializeObject<IList<AnnexV>>(v, new JsonSerializerSettings { 
+                        NullValueHandling = NullValueHandling.Include 
+                    })
+             );
 
             builder.Entity<InsuranceV>(v =>
             {
@@ -144,6 +148,14 @@ namespace webapi
                 v.HasNoKey();
                 v.ToView("declaration6_v");
             });
+            builder.Entity<WorkDataV>(v =>
+            {
+                v.HasNoKey();
+                v.ToView("work_data_v");
+            });
+
+            //builder.Entity<ContractV>()
+            //    .OwnsOne(view => view.Annexes, builder => { builder.ToJson(); });
         }
     }
 }

@@ -17,7 +17,7 @@ namespace webapi.Controllers.System
             _paymentTypeService = paymentTypeService;
         }
 
-        [HttpPost("/api/sys/payment-type/all", Name = "GetAllPaymentType")]
+        [HttpGet("/api/sys/payment-type/all", Name = "GetAllPaymentType")]
         public IActionResult GetPaymentType()
         {
             var result = _paymentTypeService.SelectAll();

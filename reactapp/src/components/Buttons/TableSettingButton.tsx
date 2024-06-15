@@ -1,5 +1,4 @@
 import { FC, Fragment, useState } from "react";
-import "@ui5/webcomponents-icons/settings"
 import { Bar, BarDesign, Button, ButtonDesign, Dialog, Title, TitleLevel } from "@ui5/webcomponents-react";
 
 

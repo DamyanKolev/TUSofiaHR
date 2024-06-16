@@ -44,7 +44,6 @@ namespace webapi.Services.HR
                 var insurance = _mapper.Map<Insurance>(employeeDataInsert.Insurance);
 
                 personalData.Address = address;
-                //_context.PersonalDatas.Add(personalData);
 
                 if (insurance != null)
                 {

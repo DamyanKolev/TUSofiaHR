@@ -1,14 +1,14 @@
 ## Windows
   ### Instalation
-    1) install latest LTS nodejs version -> https://nodejs.org/en
-    2) install NET 8.0 -> https://dotnet.microsoft.com/en-us/download/dotnet/8.0
-    3) install PostgresQL 16 -> https://www.postgresql.org/download/
-    4) install Visual Studio 2022 -> https://visualstudio.microsoft.com/vs/
+    Install latest LTS nodejs version -> https://nodejs.org/en
+    Install NET 8.0 -> https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+    Install PostgresQL 16 -> https://www.postgresql.org/download/
+    Install Visual Studio 2022 -> https://visualstudio.microsoft.com/vs/
   
   ### Database configuration
-    1) create empty database named "diplom" 
+    Create empty database named "diplom" 
   
-  ### Lauch
+  ### Launch
     1) git clone https://github.com/DamyanKolev/TUSofiaHR.git
     2) cd reactapp
     3) npm run install
@@ -28,15 +28,15 @@
 
 ## Linux
   ### Instalation
-    1) install latest LTS nodejs version -> https://nodejs.org/en
-    2) install NET 8.0 -> https://dotnet.microsoft.com/en-us/download/dotnet/8.0
-    3) install PostgresQL 16 -> https://www.postgresql.org/download/
-    4) install Visual Studio Code -> [https://visualstudio.microsoft.com/vs/](https://code.visualstudio.com/Download)
+    Install latest LTS nodejs version -> https://nodejs.org/en
+    Install NET 8.0 -> https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+    Install PostgresQL 16 -> https://www.postgresql.org/download/
+    Install Visual Studio Code -> [https://visualstudio.microsoft.com/vs/](https://code.visualstudio.com/Download)
 
   ### Database configuration
-    1) create empty database named "diplom"
+    Create empty database named "diplom"
 
-  ### Lauch
+  ### Launch
     1) git clone https://github.com/DamyanKolev/TUSofiaHR.git
     
     Lauch ASP.NET project

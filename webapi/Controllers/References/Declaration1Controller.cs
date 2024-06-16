@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using webapi.Services.References;
 
 namespace webapi.Controllers.References
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class Declaration1Controller : ControllerBase
     {

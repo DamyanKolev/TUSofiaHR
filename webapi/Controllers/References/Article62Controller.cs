@@ -5,7 +5,7 @@ using webapi.Services.References;
 
 namespace webapi.Controllers.References
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class Article62Controller: ControllerBase
     {

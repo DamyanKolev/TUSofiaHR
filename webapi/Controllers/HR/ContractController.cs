@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
-using webapi.Models.Auth;
 using webapi.Models.HR;
 using webapi.Services.HR;
 
@@ -10,7 +9,7 @@ namespace webapi.Controllers.HR
 {
     // [Authorize(Roles = IdentityRoles.Admin)]
     // [Authorize(Roles = IdentityRoles.Accountant)]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class ContractController: ControllerBase
     {

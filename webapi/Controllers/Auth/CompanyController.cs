@@ -7,8 +7,8 @@ using webapi.Services.HR;
 
 namespace webapi.Controllers.Auth
 {
-    [Authorize(Roles = IdentityRoles.Admin)]
-    [Authorize(Roles = IdentityRoles.Accountant)]
+    // [Authorize(Roles = IdentityRoles.Admin)]
+    // [Authorize(Roles = IdentityRoles.Accountant)]
     [ApiController]
     public class CompanyController : ControllerBase
     {

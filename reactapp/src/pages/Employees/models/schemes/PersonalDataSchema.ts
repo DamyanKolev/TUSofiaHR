@@ -3,12 +3,14 @@ import { parseDateToISO } from "@/utils/parsers"
 import { PersonalData, PersonalDataDTO } from "../PersonalData"
 import Gender from "@/types/enums/Gender"
 
+const identityTextRegex: RegExp = /^\d{10,10}$/
+
 
 export const PersonalDataInsertSchema: ZodType<PersonalDataDTO> = z.object(
     {
         personalEmail: z.string().min(1, {message: "Полето е задължително"}).email("Невалиден email адрес"),
         workEmail: z.string().min(1, {message: "Полето е задължително"}).email("Невалиден email адрес"),
-        identityText: z.string().min(1, {message: "Полето е задължително"}),
+        identityText: z.string().refine((val) => identityTextRegex.test(val), {message: "Невалиден ЕГН" }),
         identityCode: z.coerce.number().nonnegative("Моля изберете опция"),
         birthDate: z.string().transform((date) => {
             if (date != "") {
@@ -39,7 +41,7 @@ export const PersonalDataUpdateSchema: ZodType<PersonalData> = z.object(
         id: z.number().nonnegative(),
         personalEmail: z.string().min(1, {message: "Полето е задължително"}).email("Невалиден email адрес"),
         workEmail: z.string().min(1, {message: "Полето е задължително"}).email("Невалиден email адрес"),
-        identityText: z.string().min(1, {message: "Полето е задължително"}),
+        identityText: z.string().refine((val) => identityTextRegex.test(val), {message: "Невалиден ЕГН" }),
         identityCode: z.number().nonnegative("Моля изберете опция"),
         birthDate: z.string().transform((date) => {
             if (date != "") {

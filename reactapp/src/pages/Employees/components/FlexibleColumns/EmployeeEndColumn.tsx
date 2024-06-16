@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction } from 'react';
-import { FCLLayout, Form, FormGroup, Button, Bar, Page, ButtonDesign } from "@ui5/webcomponents-react";
+import { FCLLayout, Form, FormGroup, Button, Bar, ButtonDesign, DynamicPageTitle, ObjectPage, BarDesign, ObjectPageSection } from "@ui5/webcomponents-react";
 import { useAppDispatch } from '@store/storeHooks';
 import { useForm } from 'react-hook-form';
 import { EmployeeDataInsertSchema } from '@pages/Employees/models/schemes/EmployeeDataSchema';
@@ -44,10 +44,6 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({setLayout, tableURL, set
         setEndColumnOption(EndColumnEnum.None)
     }
 
-    const navBackClick = ():void => {
-        setDefaultValues()
-    }
-
     const successCalback = ():void => {
         dispatchIsSuccess(toggle())
         setDefaultValues()
@@ -67,33 +63,46 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({setLayout, tableURL, set
 
 
     return (
-        <Page
-                header={
-                    <Bar
-                        startContent={
-                            <Button icon="nav-back" design={ButtonDesign.Transparent} onClick={navBackClick}/>
-                        }
-                    />
-                }
-                footer={
-                    <Bar
-                        endContent={
-                            <Button onClick={handleSubmit(onSubmit)}>Запази</Button>
-                        }
-                    />
-                }
-            >
-                <Form
-                    labelSpanM={4}
-                    titleText="Нов Служител"
+        <ObjectPage
+            headerTitle={
+                <DynamicPageTitle 
+                    breadcrumbs={
+                        <Button icon="nav-back" design={ButtonDesign.Transparent} onClick={setDefaultValues}></Button>
+                    }
                 >
-                    <FormGroup titleText='Информация за служителя'>
-                        <CreateEmployeeForm
-                            control={control}
-                            formState={formState}
-                        />
-                    </FormGroup>
+                </DynamicPageTitle>
+            }
+            footer={
+                <Bar
+                    design={BarDesign.FloatingFooter}
+                    endContent={
+                        <Button onClick={handleSubmit(onSubmit)}>Запази</Button>
+                    }
+                />
+            }
+            style={{
+                height: "calc(100vh - 3.73rem)"
+            }}
+        >
+            <ObjectPageSection
+                aria-label="Информация за служителя"
+                id="employee-data"
+                titleText="Информация за служителя"
+            >
+                <Form>
+                    <CreateEmployeeForm
+                        control={control}
+                        formState={formState}
+                    />
+                </Form>
+            </ObjectPageSection>
 
+            <ObjectPageSection
+                aria-label="Лични данни"
+                id="personal-data"
+                titleText="Лични данни"
+            >
+                <Form>
                     <FormGroup titleText='Лични данни'>
                         <CreatePersonalDataForm
                             control={control}
@@ -107,24 +116,39 @@ const EmployeeEndColumn: FC<EmployeeEndColumnProps> = ({setLayout, tableURL, set
                             formState={formState}
                         />
                     </FormGroup>
-
-                    <FormGroup titleText='Осигуровки'>
-                        <CreateInsuranceForm
-                            control={control}
-                            formState={formState}
-                            setValue={setValue}
-                            getValues={getValues}
-                        />
-                    </FormGroup>
-
-                    <FormGroup titleText='Договор'>
-                        <CreateContractForm
-                            control={control}
-                            formState={formState}
-                        />
-                    </FormGroup>
                 </Form>
-            </Page>
+            </ObjectPageSection>
+
+
+            <ObjectPageSection
+                aria-label="Осигуровки"
+                id="insurance"
+                titleText="Осигуровки"
+            >
+                <Form>
+                    <CreateInsuranceForm
+                        control={control}
+                        formState={formState}
+                        setValue={setValue}
+                        getValues={getValues}
+                    />
+                </Form>
+            </ObjectPageSection>
+
+
+            <ObjectPageSection
+                aria-label="Договор"
+                id="contract"
+                titleText="Договор"
+            >
+                <Form>
+                    <CreateContractForm
+                        control={control}
+                        formState={formState}
+                    />
+                </Form>
+            </ObjectPageSection>
+        </ObjectPage>
     )
 }
 
